@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "$@"
+
+options="--verbose"
+
+Library/vendor/phpunit/phpunit/composer/bin/phpunit $options "$@"

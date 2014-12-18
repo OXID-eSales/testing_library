@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if test -z "$1" ; then
+    echo "Please put phpunit.xml to shop and provide path with: ./phpunit path/to/phpunit.xml";
+    exit
+fi
+PHPUNITXML=$1
+TARGET="AllTestsUnit"
+
+rm -Rf report &&
+mkdir -p report/html &&
+chmod -r 777 report
+./phpunit --coverage-clover ./report/clover.xml --coverage-html ./report/html --bootstrap bootstrap.php -c $PHPUNITXML $2 $3 $4 $5 $6 $7 $8 $9 ${TARGET//\//_}

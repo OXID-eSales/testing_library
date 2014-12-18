@@ -1,0 +1,19 @@
+{
+    "name": "OXID-eSales/testing_library",
+    "description": "OXID eShop testing library",
+    "version": "2.0.0",
+    "type": "library",
+    "keywords": ["oxid", "testing", "library", "modules", "eShop"],
+    "homepage": "https://www.oxid-esales.com/en/home.html",
+    "time": "2014-12-18",
+    "license": "GPL-3.0",
+    "require": {
+        "phpunit/phpunit": "~3.7",
+        "behat/mink": "~1.5.0",
+        "behat/mink-goutte-driver": "*",
+        "behat/mink-selenium-driver": "*",
+        "behat/mink-selenium2-driver": "*",
+        "behat/mink-sahi-driver": "*",
+        "behat/mink-zombie-driver": "*"
+    }
+}
