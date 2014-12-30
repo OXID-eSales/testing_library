@@ -4,12 +4,7 @@
  */
 
 require_once TEST_LIBRARY_PATH . 'test_config.inc.php';
-
-if (defined('SHOPRESTORATIONCLASS') && file_exists(TEST_LIBRARY_PATH . SHOPRESTORATIONCLASS.".php")) {
-    include_once TEST_LIBRARY_PATH . SHOPRESTORATIONCLASS.".php";
-} else {
-    include_once TEST_LIBRARY_PATH . "dbRestore.php";
-}
+require_once TEST_LIBRARY_PATH . 'Services/ShopPreparation/DbHandler.php';
 
 /**
  * Class for creating stub objects.

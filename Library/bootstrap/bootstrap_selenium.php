@@ -36,3 +36,24 @@ if (INSTALLSHOP) {
         ));
     $sResponse = $oCurl->execute();
 }
+
+if (RESTORE_SHOP_AFTER_TEST_SUITE) {
+    // dumping original database
+    $oServiceCaller = new oxServiceCaller();
+    $oServiceCaller->setParameter('dumpDB', true);
+    $oServiceCaller->setParameter('dump-prefix', 'orig_db_dump');
+    try {
+        $oServiceCaller->callService('ShopPreparation', 1);
+    } catch (Exception $e) {
+        define('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR', true);
+    }
+}
+
+register_shutdown_function(function () {
+    if (RESTORE_SHOP_AFTER_TEST_SUITE && !defined('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR')) {
+        $oServiceCaller = new oxServiceCaller();
+        $oServiceCaller->setParameter('restoreDB', true);
+        $oServiceCaller->setParameter('dump-prefix', 'orig_db_dump');
+        $oServiceCaller->callService('ShopPreparation', 1);
+    }
+});

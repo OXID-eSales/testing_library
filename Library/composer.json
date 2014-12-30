@@ -14,6 +14,7 @@
         "behat/mink-selenium-driver": "*",
         "behat/mink-selenium2-driver": "*",
         "behat/mink-sahi-driver": "*",
-        "behat/mink-zombie-driver": "*"
+        "behat/mink-zombie-driver": "*",
+        "mikey179/vfsStream": "1.4.0"
     }
 }
