@@ -29,10 +29,10 @@ $sShopSetupPath = null;
 // Whether to add tests data to shop. Can be used when $blInstallShop is set to false and test data is already added.
 $blAddTestData = false;
 // Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it.
-$blRestoreShopAfterTestSuite = false;
+$blRestoreShopAfterTestSuite = true;
 // Whether to restore shop data after test. If this is set to false, shop will be left
 // at a state, at which test was completed (either failed or passed).
-$blRestoreShopAfterTest = true;
+$blRestoreShopAfterTest = false;
 
 // When testing module, add module information here. Otherwise leave all as null.
 // All module files has to be in shop's module directory.
@@ -55,3 +55,7 @@ $sBrowserName = 'firefox';
 // Currently exists dbRestore and dbRestore_largeDb. dbRestore_largeDb tends to be faster, but it is not able to work with
 // external databases - this is why dbRestore is currently a default one.
 $sDataBaseRestore = "dbRestore_largeDb";
+
+// When not needs any special directory where to store DB dump.
+$blSpecialDbDumpFolder = false;
+

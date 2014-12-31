@@ -32,15 +32,8 @@ define('oxADMIN_LOGIN', oxDb::getDb()->getOne("select OXUSERNAME from oxuser whe
 define('oxADMIN_PASSWD', getenv('oxADMIN_PASSWD') ? getenv('oxADMIN_PASSWD') : 'admin');
 
 
-if (RESTORE_SHOP_AFTER_TEST_SUITE) {
+register_shutdown_function(function () {
     $oDbRestore = new DbRestore();
     $oDbRestore->restoreDB();
-  //  define('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR', true);
-}
-
-register_shutdown_function(function () {
-    if (RESTORE_SHOP_AFTER_TEST_SUITE) {
-        $oDbRestore = new DbRestore();
-        $oDbRestore->restoreDB();
-    }
 });
+
