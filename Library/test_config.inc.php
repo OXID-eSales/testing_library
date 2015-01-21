@@ -42,6 +42,9 @@ require_once OX_BASE_PATH . 'core/oxfunctions.php';
 $oConfigFile = new OxConfigFile(OX_BASE_PATH . "config.inc.php");
 OxRegistry::set("OxConfigFile", $oConfigFile);
 oxRegistry::set("oxConfig", new oxConfig());
+if ($sTestType == 'acceptance') {
+    oxRegistry::set("oxConfig", oxNew('oxConfig'));
+}
 
 // As in new bootstrap to get db instance.
 $oDb = new oxDb();

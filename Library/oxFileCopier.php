@@ -22,9 +22,9 @@ class oxFileCopier
     public function copyFiles($sSource, $sTarget, $blSetPermissions = false)
     {
         if (strpos($sTarget, ':') !== false && strpos($sTarget, '@') !== false) {
-            list($sServer, $sDirectory) = explode("/", $sSource, 2);
             $this->_executeCommand("scp -rp ".escapeshellarg($sSource."/.")." ".escapeshellarg($sTarget));
             if ($blSetPermissions) {
+                list($sServer, $sDirectory) = explode(":", $sTarget, 2);
                 $this->_executeCommand("ssh ".escapeshellarg($sServer)." chmod 777 ".escapeshellarg('/'.$sDirectory));
             }
         } else {
@@ -46,7 +46,7 @@ class oxFileCopier
      */
     private function _executeCommand($sCommand)
     {
-        $blResult = exec($sCommand, $sOutput, $iCode);
+        $blResult = @exec($sCommand, $sOutput, $iCode);
         $sOutput = implode("\n", $sOutput);
 
         if ($blResult === false) {

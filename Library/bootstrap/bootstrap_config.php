@@ -17,15 +17,13 @@ define('OXID_PHP_UNIT', true);
 
 $sShopPath = getenv('oxPATH') ? getenv('oxPATH') : $sShopPath;
 define('oxPATH', rtrim($sShopPath, '/') . '/');
+define('REMOTE_DIR', getenv('REMOTE_DIR')? getenv('REMOTE_DIR') : $sRemoteDir);
 
 define('INSTALLSHOP', getenv('oxINSTALLSHOP') !== false ? (bool)getenv('oxINSTALLSHOP') : $blInstallShop);
 define('ADD_TEST_DATA', getenv('oxSKIPSHOPSETUP') !== false ? (bool)!getenv('oxSKIPSHOPSETUP') : $blAddTestData);
 define('RESTORE_SHOP_AFTER_TEST_SUITE', getenv('oxSKIPSHOPRESTORE') !== false ? (bool)!getenv('oxSKIPSHOPRESTORE') : $blRestoreShopAfterTestSuite);
 define('RESTORE_SHOP_AFTER_TEST', getenv('oxSKIPSHOPRESTORE') !== false ? (bool)!getenv('oxSKIPSHOPRESTORE') : $blRestoreShopAfterTest);
 
-if (!$sShopSetupPath) {
-    $sShopSetupPath = oxPATH . 'setup/';
-}
 define('SHOP_SETUP_PATH', getenv('SHOP_SETUP_PATH') ? getenv('SHOP_SETUP_PATH') : $sShopSetupPath);
 define('MODULES_PATH', getenv('MODULES_PATH') ? getenv('MODULES_PATH') : $sModulesPath);
 

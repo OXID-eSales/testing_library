@@ -3,9 +3,29 @@
  * #PHPHEADER_OXID_LICENSE_INFORMATION#
  */
 
+if (INSTALLSHOP) {
+    $oCurl = new oxTestCurl();
+    $oCurl->setUrl(shopURL . '/Services/_db.php');
+    $oCurl->setParameters(array(
+        'serial' => TEST_SHOP_SERIAL,
+        'addDemoData' => 1,
+        'turnOnVarnish' => OXID_VARNISH,
+        'setupPath' => SHOP_SETUP_PATH,
+    ));
+    $sResponse = $oCurl->execute();
+}
+
+$oServiceCaller = new oxServiceCaller();
+$oServiceCaller->setParameter('cl', 'oxConfig');
+$oServiceCaller->setParameter('fnc', 'getEdition');
+$edition = $oServiceCaller->callService('ShopObjectConstructor', 1);
+define("SHOP_EDITION", ($edition == 'EE') ? 'EE' : 'PE_CE');
+
 require_once TEST_LIBRARY_PATH . '/test_config.inc.php';
 
 require_once TEST_LIBRARY_PATH.'vendor/autoload.php';
+
+require_once TESTS_DIRECTORY . '/acceptance/oxTestCase.php';
 
 define('hostUrl', getenv('SELENIUM_SERVER')? getenv('SELENIUM_SERVER') : $sSeleniumServerIp );
 define('browserName', getenv('BROWSER_NAME')? getenv('BROWSER_NAME') : $sBrowserName );
@@ -23,18 +43,6 @@ if (getenv('OXID_LOCALE') == 'international') {
     define('oxTESTSUITEDIR', 'acceptanceInternational');
 } else {
     define('oxTESTSUITEDIR', 'acceptance');
-}
-
-if (INSTALLSHOP) {
-    $oCurl = new oxTestCurl();
-    $oCurl->setUrl(shopURL . '/Services/_db.php');
-    $oCurl->setParameters(array(
-            'serial' => TEST_SHOP_SERIAL,
-            'addDemoData' => 1,
-            'turnOnVarnish' => OXID_VARNISH,
-            'setupPath' => SHOP_SETUP_PATH,
-        ));
-    $sResponse = $oCurl->execute();
 }
 
 if (RESTORE_SHOP_AFTER_TEST_SUITE) {

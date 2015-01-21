@@ -43,5 +43,6 @@ if(defined(oxCCTempDir)) {
 
 if (COPY_SERVICES_TO_SHOP) {
     $oFileCopier = new oxFileCopier();
-    $oFileCopier->copyFiles(TEST_LIBRARY_PATH.'/Services', oxPATH.'/Services', true);
+    $sTarget = REMOTE_DIR ? REMOTE_DIR.'/Services' : oxPATH.'/Services';
+    $oFileCopier->copyFiles(TEST_LIBRARY_PATH.'/Services', $sTarget, true);
 }

@@ -12,70 +12,46 @@ require_once 'library/oxTranslator.php';
  */
 class oxTestCase extends oxMinkWrapper
 {
-
-    /**
-     * Whether to skip restoring of database on test tear down
-     *
-     * @var bool
-     */
-    protected $_blSkipDbRestore = false;
-
-    /**
-     * Whether to skip restoring of database on test tear down
-     *
-     * @var bool
-     */
-    protected $_sSelectedFrame = 'relative=top';
-
-    /**
-     * Whether to skip restoring of database on test tear down
-     *
-     * @var bool
-     */
-    protected $_sSelectedWindow = null;
-
-    /**
-     * Is logging of function calls length enabled
-     */
-    protected $_blEnableLog = true;
-
-    /**
-     * How much more time wait for these tests.
-     */
+    /** @var int How much time to wait for pages to load. Wait time is multiplied by this value. */
     protected $_iWaitTimeMultiplier = 1;
 
-    /**
-     * @var $_oTranslator object variable
-     */
-    protected static $_oTranslator = null;
+    /** @var int How many times to retry after server error. */
+    private $_iRetryTimesLeft = 3;
 
-    /**
-     * Object validator object
-     *
-     * @var oxObjectValidator
-     */
-    protected $_oValidator = null;
-
-    /**
-     * @var bool
-     */
+    /** @var bool Whether to start mink session before test run. New tests can start session in runtime. */
     protected $_blStartMinkSession = true;
 
-    /**
-     * @var \Selenium\Client
-     */
+    /** @var string Default Mink driver. */
+    protected $_blDefaultMinkDriver = 'selenium';
+
+    /** @var bool Tracks the start of tests run. */
+    protected static $_blStarted = false;
+
+    /** @var bool Tracks start of tests suite. Every suite should have extended class where this value is reset. */
+    protected static $_testSuiteStarted = false;
+
+    /** @var string Used to follow which frame is currently selected by driver. */
+    protected $_sSelectedFrame = 'relative=top';
+
+    /** @var string Used to follow which window is currently selected by driver. */
+    protected $_sSelectedWindow = null;
+
+    /** @var bool Is logging of function calls length enabled */
+    protected $_blEnableLog = false;
+
+    /** @var oxTranslator Translator object */
+    protected static $_oTranslator = null;
+
+    /** @var oxObjectValidator Object validator object */
+    protected $_oValidator = null;
+
+    /** @var \Selenium\Client Selenium client. Used only with selenium driver. */
     protected $_oClient = null;
 
-    /**
-     * Is logging of function calls length enabled
-     * @var \Behat\Mink\Session
-     */
+    /** @var \Behat\Mink\Session Mink session*/
     protected $_oMinkSession = null;
 
-    /**
-     * List of frames.
-     * @var array
-     */
+    /** @var array List of frames. Used to go to correct frame from the top frame. */
     protected $_aFramePaths = array(
         "basefrm" => "basefrm",
         "header" => "header",
@@ -88,90 +64,15 @@ class oxTestCase extends oxMinkWrapper
     );
 
     /**
-     * How many times to retry after server error.
-     *
-     * @var int
-     */
-    private $_iRetryTimesLeft = 3;
-
-    /**
-     * Sets true on the first initialization.
-     *
-     * @var bool
-     */
-    protected static $_blStarted = false;
-
-    /**
-     * Sets true when tests data is added.
-     *
-     * @var bool
-     */
-    protected static $_demoDataAdded = false;
-
-    /**
-     * Sets up shop before running test case.
-     */
-    public static function setUpBeforeClass()
-    {
-        if (!static::$_demoDataAdded) {
-            static::$_demoDataAdded = true;
-
-            if (!static::$_blStarted) {
-                self::$_blStarted = true;
-                static::dumpDb('reset_suite_db_dump');
-            } else {
-                static::restoreDb('reset_suite_db_dump');
-            }
-
-            $sTestsPath = str_replace('_', '/', get_called_class());
-            $sTestsPath = substr($sTestsPath, 0, strrpos($sTestsPath, '/'));
-            $sTestsPath = __DIR__.'/'.$sTestsPath;
-
-            $sTestDataPath = realpath($sTestsPath.'/testData/');
-            if (ADD_TEST_DATA && $sTestDataPath) {
-                $oFileCopier = new oxFileCopier();
-                $oFileCopier->copyFiles($sTestDataPath, oxPATH);
-            }
-
-            $sTestSqlPath = realpath($sTestsPath.'/testSql/');
-            if (ADD_TEST_DATA && $sTestSqlPath) {
-                static::addTestsql($sTestSqlPath);
-            }
-
-            static::dumpDb('reset_test_db_dump');
-        }
-    }
-
-    /**
-     * Adds tests sql data to database.
-     *
-     * @param string $sTestSqlPath
-     */
-    public static function addTestSql($sTestSqlPath)
-    {
-        $sFileName = $sTestSqlPath . "/demodata_PE.sql";
-        if (OXID_VERSION_EE) :
-            $sFileName = $sTestSqlPath . "/demodata_EE.sql";
-        endif;
-
-        if (file_exists($sFileName)) {
-            self::importSql($sFileName);
-        }
-
-        if (OXID_VERSION_EE) :
-            if (oxSHOPID > 1 && file_exists($sTestSqlPath . '/demodata_EE_mall.sql')) {
-                self::importSql($sTestSqlPath . '/demodata_EE_mall.sql');
-            }
-        endif;
-    }
-
-    /**
      * Sets up default environment for tests.
-     *
-     * @return null
      */
     protected function setUp()
     {
+        if (!static::$_testSuiteStarted) {
+            static::$_testSuiteStarted = true;
+            $this->setUpTestsSuite();
+        }
+
         $this->setTranslator(new oxTranslator());
 
         $this->_sSelectedFrame = 'relative=top';
@@ -181,13 +82,61 @@ class oxTestCase extends oxMinkWrapper
     }
 
     /**
+     * Sets up shop before running test case.
+     * Does not use setUpBeforeClass to keep this method non-static.
+     */
+    public function setUpTestsSuite()
+    {
+        if (!static::$_blStarted) {
+            self::$_blStarted = true;
+            $this->dumpDb('reset_suite_db_dump');
+        } else {
+            $this->restoreDb('reset_suite_db_dump');
+        }
+
+        if (ADD_TEST_DATA) {
+            $sTestSuitePath = str_replace('_', '/', get_called_class());
+            $sTestSuitePath = substr($sTestSuitePath, 0, strrpos($sTestSuitePath, '/'));
+            $sTestSuitePath = __DIR__.'/'.$sTestSuitePath;
+
+            $this->addTestData($sTestSuitePath);
+        }
+
+        $this->dumpDb('reset_test_db_dump');
+    }
+
+    /**
+     * Adds tests sql data to database.
+     *
+     * @param string $sTestSuitePath
+     */
+    public function addTestData($sTestSuitePath)
+    {
+        $testDataPath = realpath($sTestSuitePath.'/testData/');
+        if ($testDataPath) {
+            $oFileCopier = new oxFileCopier();
+            $oFileCopier->copyFiles($testDataPath, oxPATH);
+        }
+
+        $sTestSuitePath = realpath($sTestSuitePath.'/testSql/');
+        $sFileName = $sTestSuitePath . '/demodata_'. SHOP_EDITION .'.sql';
+        if (file_exists($sFileName)) {
+            $this->importSql($sFileName);
+        }
+
+        if (SHOP_EDITION == 'EE' && isSUBSHOP && file_exists($sTestSuitePath . '/demodata_EE_mall.sql')) {
+            $this->importSql($sTestSuitePath . '/demodata_EE_mall.sql');
+        }
+    }
+
+    /**
      * Restores database after every test.
      *
      * @return null
      */
     protected function tearDown()
     {
-        if (RESTORE_SHOP_AFTER_TEST && !$this->_blSkipDbRestore) {
+        if (RESTORE_SHOP_AFTER_TEST) {
             $this->restoreDB('reset_test_db_dump');
         }
 
@@ -1427,7 +1376,7 @@ class oxTestCase extends oxMinkWrapper
     public function assertTextNotPresent($sText, $sMessage = '')
     {
         $sText = $this->translate($sText);
-        $sFailMessage = "Text '$sText' was not found! " . $sMessage;
+        $sFailMessage = "Text '$sText' should not be found! " . $sMessage;
         $this->assertFalse($this->isTextPresent($sText), $sFailMessage);
     }
 
@@ -1529,6 +1478,8 @@ class oxTestCase extends oxMinkWrapper
      */
     public function startMinkSession($sDriver = '')
     {
+        $sDriver = $sDriver ? $sDriver : $this->_blDefaultMinkDriver;
+
         $driverInterface = $this->_getMinkDriver($sDriver);
         $this->_oMinkSession = new \Behat\Mink\Session($driverInterface);
         $this->_oMinkSession->start();
@@ -1555,11 +1506,13 @@ class oxTestCase extends oxMinkWrapper
     }
 
     /**
-     * @param string $sDriver driver name
+     * @param string $sDriver Driver name
+     *
+     * @throws Exception
      *
      * @return \Behat\Mink\Driver\DriverInterface
      */
-    protected function _getMinkDriver($sDriver = '')
+    protected function _getMinkDriver($sDriver)
     {
         switch ($sDriver) {
             case 'selenium2':
@@ -1578,9 +1531,11 @@ class oxTestCase extends oxMinkWrapper
                 $oDriver = new \Behat\Mink\Driver\ZombieDriver();
                 break;
             case 'selenium':
-            default:
                 $client = $this->_getClient();
                 $oDriver = new \Behat\Mink\Driver\SeleniumDriver(browserName, shopURL, $client);
+                break;
+            default:
+                throw new Exception('Driver '. $sDriver .' was not found!');
                 break;
         }
 
@@ -1609,7 +1564,7 @@ class oxTestCase extends oxMinkWrapper
      * @throws Exception on error while dumping.
      * @return null
      */
-    public static function dumpDB($sTmpPrefix = null)
+    public function dumpDB($sTmpPrefix = null)
     {
         $oServiceCaller = new oxServiceCaller();
         $oServiceCaller->setParameter('dumpDB', true);
@@ -1626,7 +1581,7 @@ class oxTestCase extends oxMinkWrapper
      * @throws Exception on error while restoring db
      * @return null
      */
-    public static function restoreDB($sTmpPrefix = null)
+    public function restoreDB($sTmpPrefix = null)
     {
         $oServiceCaller = new oxServiceCaller();
         $oServiceCaller->setParameter('restoreDB', true);
@@ -1641,7 +1596,7 @@ class oxTestCase extends oxMinkWrapper
      *
      * @return null
      */
-    public static function importSql($sFilePath)
+    public function importSql($sFilePath)
     {
         if (filesize($sFilePath)) {
             $oServiceCaller = new oxServiceCaller();
