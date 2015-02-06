@@ -19,7 +19,7 @@ if (INSTALLSHOP) {
 require_once TEST_LIBRARY_PATH . '/test_config.inc.php';
 require_once TEST_LIBRARY_PATH . 'vendor/autoload.php';
 require_once "unit/OxidTestCase.php";
-require_once TEST_LIBRARY_PATH . '/additional.inc.php';
+require_once TESTS_DIRECTORY . '/additional.inc.php';
 require_once TEST_LIBRARY_PATH . "/oxTestModuleLoader.php";
 
 if (defined('SHOPRESTORATIONCLASS') && file_exists(TEST_LIBRARY_PATH . SHOPRESTORATIONCLASS . ".php")) {
