@@ -9,12 +9,16 @@
     "license": "GPL-3.0",
     "require": {
         "phpunit/phpunit": "~3.7",
+        "pdepend/pdepend": "1.1.*",
+        "mikey179/vfsStream": "1.4.0",
         "behat/mink": "~1.5.0",
         "behat/mink-goutte-driver": "*",
         "behat/mink-selenium-driver": "*",
         "behat/mink-selenium2-driver": "*",
         "behat/mink-sahi-driver": "*",
-        "behat/mink-zombie-driver": "*",
-        "mikey179/vfsStream": "1.4.0"
+        "behat/mink-zombie-driver": "*"
+    },
+    "config": {
+        "vendor-dir": "Library/vendor"
     }
 }
