@@ -17,8 +17,8 @@ if (!defined('oxPATH') || oxPATH == '') {
 require_once TEST_LIBRARY_PATH.'oxServiceCaller.php';
 require_once TEST_LIBRARY_PATH.'oxFileCopier.php';
 
-if (file_exists(TEST_LIBRARY_PATH.'vendor/autoload.php')) {
-    require_once TEST_LIBRARY_PATH.'vendor/autoload.php';
+if (file_exists(TESTS_DIRECTORY.'vendor/autoload.php')) {
+    require_once TESTS_DIRECTORY.'vendor/autoload.php';
 } else {
     require_once TESTS_DIRECTORY.'../../../autoload.php';
 }
@@ -49,7 +49,7 @@ OxRegistry::set('oxDb', $oLegacyDb);
 
 oxRegistry::getConfig();
 
-require_once TEST_LIBRARY_PATH .'/modOxUtilsDate.php';
+require_once TEST_LIBRARY_PATH .'modOxUtilsDate.php';
 require_once oxPATH .'/core/oxutils.php';
 require_once oxPATH .'/core/adodblite/adodb.inc.php';
 require_once oxPATH .'/core/oxsession.php';
@@ -58,5 +58,5 @@ require_once oxPATH .'/core/oxconfig.php';
 if (COPY_SERVICES_TO_SHOP) {
     $oFileCopier = new oxFileCopier();
     $sTarget = REMOTE_DIR ? REMOTE_DIR.'/Services' : oxPATH.'/Services';
-    $oFileCopier->copyFiles(TEST_LIBRARY_PATH.'/Services', $sTarget, true);
+    $oFileCopier->copyFiles(TEST_LIBRARY_PATH .'Services', $sTarget, true);
 }

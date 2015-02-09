@@ -1,7 +1,7 @@
 {
-    "name": "OXID-eSales/testing_library",
+    "name": "oxid-esales/testing_library",
     "description": "OXID eShop testing library",
-    "version": "2.0.0",
+    "version": "0.0.1",
     "type": "library",
     "keywords": ["oxid", "testing", "library", "modules", "eShop"],
     "homepage": "https://www.oxid-esales.com/en/home.html",
@@ -17,8 +17,5 @@
         "behat/mink-selenium2-driver": "*",
         "behat/mink-sahi-driver": "*",
         "behat/mink-zombie-driver": "*"
-    },
-    "config": {
-        "vendor-dir": "Library/vendor"
     }
 }
