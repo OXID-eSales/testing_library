@@ -9,15 +9,6 @@ function getRandLTAmnt()
     return rand(1, MAX_LOOP_AMOUNT - 1);
 }
 
-//returns the base path, no the unit path
-function getTestBasePath()
-{
-    $sPath = dirname(realpath(__FILE__));
-    $sPath = substr($sPath, 0, strrpos($sPath, "\\"));
-
-    return $sPath;
-}
-
 /**
  * adds new module to specified class
  * Usable if you want to check how many calls of class AA method BB
@@ -62,8 +53,6 @@ function oxClassCacheKey($reset = false, $sProvide = null)
 
 function oxAddClassModule($sModuleClass, $sClass)
 {
-    //$myConfig = modConfig::getInstance();
-    //$aModules = $myConfig->getConfigParam( 'aModules' );
     $oFactory = new oxUtilsObject();
     $aModules = $oFactory->getModuleVar("aModules");
 
@@ -83,9 +72,6 @@ function oxAddClassModule($sModuleClass, $sClass)
 
 function oxRemClassModule($sModuleClass, $sClass = '')
 {
-    //$myConfig = modConfig::getInstance();
-    //$aModules = $myConfig->getConfigParam( 'aModules' );
-
     //unsetting _possible_ registry instance
     oxRegistry::set($sClass, null);
 
@@ -97,14 +83,12 @@ function oxRemClassModule($sModuleClass, $sClass = '')
     }
 
     if ($sClass) {
-// force for now        if ($aModules[$sClass] == $sModuleClass)
         unset($aModules[$sClass]);
     } else {
         while (($sKey = array_search($sModuleClass, $aModules)) !== false) {
             unset($aModules[$sKey]);
         }
     }
-    //$myConfig->setConfigParam( 'aModules', $aModules );
     $oFactory->setModuleVar("aModules", $aModules);
 
     oxClassCacheKey(true);
@@ -274,34 +258,7 @@ class oxTestModules
     {
         oxRegistry::set($sClassName, null);
         oxUtilsObject::setClassInstance($sClassName, $oObject);
-        /*
-        $sClassName = strtolower($sClassName);
-        if (!self::$_oOrigOxUtilsObj) {
-            self::$_oOrigOxUtilsObj = oxUtilsObject::getInstance();
-            self::addFunction('oxUtilsObject', 'oxNew($class)', '{return oxTestModules::getModuleObject($class);}');
-        }
-        self::$_aModuleMap[$sClassName] = $oObject;
-        */
     }
-
-    /**
-     * rewrittern oxNew logic to return object from the map
-     *
-     * @param string $sClassName
-     *
-     * @return object
-     */
-    /*public static function getModuleObject($sClassName)
-    {
-        $sClassName = strtolower($sClassName);
-        if (isset(self::$_aModuleMap[$sClassName])) {
-            return self::$_aModuleMap[$sClassName];
-        }
-        if (!self::$_oOrigOxUtilsObj) {
-            throw new Exception("TEST ERROR: original oxUtilsObject is badly initialized");
-        }
-        return self::$_oOrigOxUtilsObj->oxNew($sClassName);
-    }*/
 
     /**
      * publicize method = creates a wrapper for it named p_XXX instead of _XXX
@@ -330,9 +287,7 @@ class oxTestModules
         self::$_aModuleMap = array();
         self::$_oOrigOxUtilsObj = null;
         foreach (self::$_addedmods as $class => $arr) {
-//            foreach ($arr as $mod) {
             oxRemClassModule('allmods', $class);
-            //          }
         }
         self::$_addedmods = array();
     }
@@ -413,11 +368,8 @@ class oxTestsStaticCleaner
  * NOTE: after cleanup, all oxConfig variable changes while modConfig was active are LOST.
  *
  */
-
-
 abstract class modOXID
 {
-
     protected $_takeover = array();
     protected $_checkover = array();
     protected $_vars = array();
@@ -516,17 +468,16 @@ abstract class modOXID
         return $this->_oRealInstance->getConfigParam($nm);
     }
 
+    /**
+     * All tests are INDEPENDENT, so no real changes should be made to the real instance.
+     * NOTE: after cleanup, all changes to oxConfig while modConfig was active are LOST.
+     *
+     * @param $nm
+     * @param $val
+     */
     public function __set($nm, $val)
     {
-        // this is commented out for the reason:
-        // all tests are INDEPENDANT, so no real changes should be made to the real
-        // instance.
-        // NOTE: after cleanup, all changes to oxConfig while modConfig was active are LOST.
-        //        if (array_key_exists($nm, $this->_vars)) {
         $this->_vars[$nm] = $val;
-        //            return;
-        //        }
-        //        $this->_oRealInstance->$nm = &$val;
     }
 
     public function __isset($nm)
@@ -549,7 +500,6 @@ abstract class modOXID
     }
 }
 
-//-----------------
 /**
  * config class for test
  *
@@ -720,7 +670,6 @@ class modConfig extends modOXID
     }
 }
 
-//-----------------
 /**
  * Class modSession
  *
@@ -728,7 +677,6 @@ class modConfig extends modOXID
  */
 class modSession extends modOXID
 {
-
     public static $unitMOD = null;
     public static $unitCustMOD = null;
     protected static $_inst = null;
@@ -821,7 +769,6 @@ class modSession extends modOXID
     }
 }
 
-//-----------------
 /**
  * Class modDB
  *
@@ -829,7 +776,6 @@ class modSession extends modOXID
  */
 class modDB extends modOXID
 {
-
     // needed 4 modOXID
     public static $unitMOD = null;
     protected static $_inst = null;
@@ -865,12 +811,9 @@ class modDB extends modOXID
     }
 }
 
-//-----------------
-
 // useful for extending getDB()->Execute method
 class modResource
 {
-
     public $recordCount = 0;
     public $eof = true;
     public $fields = array();
@@ -920,92 +863,6 @@ class modInstances
     public static function cleanup()
     {
         self::$_aInst = array();
-    }
-}
-
-
-// ########################################################################
-// ###############  CodeCoverage Executible Lines Generator ###############
-// ########################################################################
-
-if (!function_exists('getFileArr')) {
-    function getFileArr()
-    {
-        $sBasePath = oxPATH;
-        $sCCarrayDir = oxCCTempDir;
-
-        $aDirBlackList = array(
-            '/admin/dtaus',
-            '/admin/reports/jpgraph',
-            '/admin/wysiwigpro',
-            '/core/adodb',
-            '/core/openid',
-            '/core/adodblite',
-            '/core/emailvalidation',
-            '/core/ERP',
-            '/core/tcpdf',
-            '/core/nusoap',
-            '/core/phpmailer',
-            '/core/smarty',
-            '/force_version',
-            '/out',
-            '/out_ee',
-            '/out_pe',
-            '/tmp',
-            '/core/objects', // TODO: remove after gen import was refactored
-        );
-        $aFileBlackList = array(
-            '/_cc.php',
-            '/_version_define.php',
-            '/core/oxerpbase.php', // TODO: remove after gen import was refactored
-            '/core/oxerpcsv.php', // TODO: remove after gen import was refactored
-            '/core/oxerpinterface.php', // TODO: remove after gen import was refactored
-            '/core/oxopenidhttpfetcher.php', //third party lib
-            '/core/oxopenidgenericconsumer.php', //third party lib
-        );
-        $aFileWhiteList = array(
-            '/core/smarty/plugins/emos.php',
-            '/core/smarty/plugins/oxemosadapter.php',
-            '/core/smarty/plugins/modifier.oxmultilangassign.php',
-            '/core/smarty/plugins/modifier.oxnumberformat.php',
-            '/core/smarty/plugins/modifier.oxformdate.php',
-            '/core/smarty/plugins/insert.oxid_cmplogin.php',
-            '/core/smarty/plugins/insert.oxid_cssmanager.php',
-            '/core/smarty/plugins/insert.oxid_newbasketitem.php',
-            '/core/smarty/plugins/insert.oxid_nocache.php',
-            '/core/smarty/plugins/insert.oxid_tracker.php',
-            '/core/smarty/plugins/function.oxmultilang.php',
-            '/core/smarty/plugins/function.oxid_include_dynamic.php',
-            '/core/smarty/plugins/function.oxcontent.php',
-            '/core/smarty/plugins/block.oxhasrights.php',
-        );
-        $arr = findphp($sBasePath, $aDirBlackList, $aFileBlackList, $aFileWhiteList);
-
-        if ($_ENV['PHP_FILE']) {
-            $sTestOnlyFile = basename($_ENV['PHP_FILE']);
-            $sTestOnlyFile = preg_replace('/Test.php$/i', '', $sTestOnlyFile);
-            $sTestOnlyFile = preg_replace('/.php$/i', '', $sTestOnlyFile);
-            foreach ($arr as &$sSerchFile) {
-                if (stristr($sSerchFile, $sTestOnlyFile)) {
-                    $sTestOnlyFile = $sSerchFile;
-                    break;
-                }
-            }
-
-            return array($sTestOnlyFile => stripCodeLines($arr[array_search($sTestOnlyFile, $arr)], $sCCarrayDir));
-        }
-
-        $ret = array();
-        foreach ($arr as $file) {
-            try {
-                $ret[$file] = stripCodeLines($file, $sCCarrayDir);
-            } catch (Exception $e) {
-                // do not add file here;
-                echo '', $e->getMessage(), "\n";
-            }
-        }
-
-        return $ret;
     }
 }
 
