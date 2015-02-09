@@ -7,6 +7,9 @@ require_once 'library/oxMinkWrapper.php';
 require_once 'library/oxObjectValidator.php';
 require_once 'library/oxTranslator.php';
 
+/** Backward compatibility, do not use it for new tests. */
+class oxTestCase extends oxAcceptanceTestCase {}
+
 /**
  * Base class for Selenium tests.
  */

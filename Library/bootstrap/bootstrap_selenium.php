@@ -44,7 +44,7 @@ if (SELENIUM_SCREENSHOTS_PATH && !is_dir(SELENIUM_SCREENSHOTS_PATH)) {
     mkdir(SELENIUM_SCREENSHOTS_PATH, 0777, true);
 }
 
-require_once TESTS_DIRECTORY . '/acceptance/oxTestCase.php';
+require_once TEST_LIBRARY_PATH .'/oxAcceptanceTestCase.php';
 
 register_shutdown_function(function () {
     if (RESTORE_SHOP_AFTER_TEST_SUITE && !defined('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR')) {
