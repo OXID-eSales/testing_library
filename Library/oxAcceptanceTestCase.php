@@ -3,11 +3,14 @@
  * #PHPHEADER_OXID_LICENSE_INFORMATION#
  */
 
-require_once 'library/oxMinkWrapper.php';
-require_once 'library/oxObjectValidator.php';
-require_once 'library/oxTranslator.php';
+require_once TEST_LIBRARY_PATH .'oxMinkWrapper.php';
+require_once TEST_LIBRARY_PATH .'oxObjectValidator.php';
+require_once TEST_LIBRARY_PATH .'oxTranslator.php';
 
-/** Backward compatibility, do not use it for new tests. */
+/**
+ * Backward compatibility, do not use it for new tests.
+ * @deprecated use oxAcceptanceTestCase instead
+ */
 class oxTestCase extends oxAcceptanceTestCase {}
 
 /**

@@ -7,7 +7,10 @@ require_once TEST_LIBRARY_PATH . 'test_config.inc.php';
 require_once TEST_LIBRARY_PATH . 'Services/ShopPreparation/DbHandler.php';
 require_once TEST_LIBRARY_PATH . 'oxMockStubFunc.php';
 
-/** Backward compatibility, do not use it for new tests. */
+/**
+ * Backward compatibility, do not use it for new tests.
+ * @deprecated use oxAcceptanceTestCase instead
+ */
 class OxidTestCase extends OxUnitTestCase {}
 
 /**
