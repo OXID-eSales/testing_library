@@ -16,7 +16,12 @@ if (!defined('oxPATH') || oxPATH == '') {
 
 require_once TEST_LIBRARY_PATH.'oxServiceCaller.php';
 require_once TEST_LIBRARY_PATH.'oxFileCopier.php';
-require_once TEST_LIBRARY_PATH.'vendor/autoload.php';
+
+if (file_exists(TEST_LIBRARY_PATH.'vendor/autoload.php')) {
+    require_once TEST_LIBRARY_PATH.'vendor/autoload.php';
+} else {
+    require_once TESTS_DIRECTORY.'../../../autoload.php';
+}
 
 if(defined(oxCCTempDir)) {
     $oFileCopier = new oxFileCopier();
