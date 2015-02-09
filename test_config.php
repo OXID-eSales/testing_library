@@ -52,9 +52,11 @@ $sSeleniumScreenShotsUrl = null; //$sShopUrl . '/selenium_screenshots/';
 // make sure that path to browser executable is known for the system
 $sBrowserName = 'firefox';
 
-// Currently exists dbRestore and dbRestore_largeDb. dbRestore_largeDb tends to be faster, but it is not able to work with
-// external databases - this is why dbRestore is currently a default one.
+// Currently exists dbRestore and dbRestore_largeDb.
+// dbRestore_largeDb - used with local database;
+// dbRestore - used with external database.
 $sDataBaseRestore = "dbRestore_largeDb";
 
 // Whether to create special directory for storing database dump during tests run.
+// Set this to true if php has no write access to /tmp folder.
 $blSpecialDbDumpFolder = false;

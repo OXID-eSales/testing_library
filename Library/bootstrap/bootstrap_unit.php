@@ -30,10 +30,3 @@ if (defined('SHOPRESTORATIONCLASS') && file_exists(TEST_LIBRARY_PATH . SHOPRESTO
 
 define('oxADMIN_LOGIN', oxDb::getDb()->getOne("select OXUSERNAME from oxuser where oxid='oxdefaultadmin'"));
 define('oxADMIN_PASSWD', getenv('oxADMIN_PASSWD') ? getenv('oxADMIN_PASSWD') : 'admin');
-
-
-register_shutdown_function(function () {
-    $oDbRestore = new DbRestore();
-    $oDbRestore->restoreDB();
-});
-
