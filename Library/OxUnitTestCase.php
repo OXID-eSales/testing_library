@@ -57,10 +57,13 @@ class OxidMockStubFunc implements PHPUnit_Framework_MockObject_Stub
     }
 }
 
+/** Backward compatibility, do not use it for new tests. */
+class OxidTestCase extends OxUnitTestCase {}
+
 /**
  * Base tests class. Most tests should extend this class.
  */
-class OxidTestCase extends PHPUnit_Framework_TestCase
+class OxUnitTestCase extends PHPUnit_Framework_TestCase
 {
     /** @var array Request parameters backup. */
     protected $_aBackup = array();

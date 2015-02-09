@@ -10,7 +10,7 @@ require_once 'library/oxTranslator.php';
 /**
  * Base class for Selenium tests.
  */
-class oxTestCase extends oxMinkWrapper
+class oxAcceptanceTestCase extends oxMinkWrapper
 {
     /** @var int How much time to wait for pages to load. Wait time is multiplied by this value. */
     protected $_iWaitTimeMultiplier = 1;
