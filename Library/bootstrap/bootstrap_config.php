@@ -17,6 +17,7 @@ define('OXID_PHP_UNIT', true);
 
 $sShopPath = getenv('oxPATH') ? getenv('oxPATH') : $sShopPath;
 define('oxPATH', rtrim($sShopPath, '/') . '/');
+define('OX_BASE_PATH', oxPATH);
 define('REMOTE_DIR', getenv('REMOTE_DIR')? getenv('REMOTE_DIR') : $sRemoteDir);
 
 define('INSTALLSHOP', getenv('oxINSTALLSHOP') !== false ? (bool)getenv('oxINSTALLSHOP') : $blInstallShop);

@@ -8,38 +8,47 @@
  * @version   SVN: $Id: $
  */
 
+require_once TEST_LIBRARY_PATH."/bootstrap/bootstrap_config.php";
+
 if (!defined('oxPATH') || oxPATH == '') {
     die('Path to tested shop (oxPATH) is not defined');
 }
 
 require_once TEST_LIBRARY_PATH.'oxServiceCaller.php';
 require_once TEST_LIBRARY_PATH.'oxFileCopier.php';
+require_once TEST_LIBRARY_PATH.'vendor/autoload.php';
 
 if(defined(oxCCTempDir)) {
-
-    if (!is_dir(oxCCTempDir)) {
-        mkdir(oxCCTempDir, 0777, 1);
-    } else {
-        /**
-         * Deletes given directory content
-         *
-         * @param string $dir Path to directory.
-         * @param bool $rmBaseDir Whether to delete base directory.
-         */
-        function delTree($dir, $rmBaseDir = false)
-        {
-            $files = array_diff(scandir($dir), array('.', '..'));
-            foreach ($files as $file) {
-                (is_dir("$dir/$file")) ? delTree("$dir/$file", true) : @unlink("$dir/$file");
-            }
-            if ($rmBaseDir) {
-                @rmdir($dir);
-            }
-        }
-
-        delTree(oxCCTempDir);
-    }
+    $oFileCopier = new oxFileCopier();
+    $oFileCopier->createEmptyDirectory(oxCCTempDir);
 }
+
+function getTestsBasePath()
+{
+    return TESTS_DIRECTORY;
+}
+
+require_once oxPATH .'core/oxfunctions.php';
+
+$oConfigFile = new oxConfigFile(oxPATH . "config.inc.php");
+OxRegistry::set("OxConfigFile", $oConfigFile);
+oxRegistry::set("oxConfig", new oxConfig());
+if ($sTestType == 'acceptance') {
+    oxRegistry::set("oxConfig", oxNew('oxConfig'));
+}
+
+$oDb = new oxDb();
+$oDb->setConfig($oConfigFile);
+$oLegacyDb = $oDb->getDb();
+OxRegistry::set('oxDb', $oLegacyDb);
+
+oxRegistry::getConfig();
+
+require_once TEST_LIBRARY_PATH .'/modOxUtilsDate.php';
+require_once oxPATH .'/core/oxutils.php';
+require_once oxPATH .'/core/adodblite/adodb.inc.php';
+require_once oxPATH .'/core/oxsession.php';
+require_once oxPATH .'/core/oxconfig.php';
 
 if (COPY_SERVICES_TO_SHOP) {
     $oFileCopier = new oxFileCopier();

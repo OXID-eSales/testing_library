@@ -36,6 +36,38 @@ class oxFileCopier
     }
 
     /**
+     * Creates new directory if it does not exists, if exists - clears its content.
+     *
+     * @param string $sDirectory
+     */
+    public function createEmptyDirectory($sDirectory)
+    {
+        if (!is_dir($sDirectory)) {
+            mkdir($sDirectory, 0777, true);
+        } else {
+            $this->deleteTree($sDirectory, false);
+        }
+    }
+
+    /**
+     * Deletes given directory content
+     *
+     * @param string $dir Path to directory.
+     * @param bool $rmBaseDir Whether to delete base directory.
+     */
+    private function deleteTree($dir, $rmBaseDir = false)
+    {
+        $files = array_diff(scandir($dir), array('.', '..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? $this->deleteTree("$dir/$file", true) : @unlink("$dir/$file");
+        }
+
+        if ($rmBaseDir) {
+            @rmdir($dir);
+        }
+    }
+
+    /**
      * Executes shell command.
      *
      * @param string $sCommand

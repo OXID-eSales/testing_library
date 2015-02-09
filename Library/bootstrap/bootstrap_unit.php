@@ -16,9 +16,6 @@ if (INSTALLSHOP) {
     $sResponse = $oCurl->execute();
 }
 
-require_once TEST_LIBRARY_PATH . '/test_config.inc.php';
-require_once TEST_LIBRARY_PATH . 'vendor/autoload.php';
-require_once "unit/OxidTestCase.php";
 require_once TESTS_DIRECTORY . '/additional.inc.php';
 require_once TEST_LIBRARY_PATH . "/oxTestModuleLoader.php";
 
@@ -30,3 +27,5 @@ if (defined('SHOPRESTORATIONCLASS') && file_exists(TEST_LIBRARY_PATH . SHOPRESTO
 
 define('oxADMIN_LOGIN', oxDb::getDb()->getOne("select OXUSERNAME from oxuser where oxid='oxdefaultadmin'"));
 define('oxADMIN_PASSWD', getenv('oxADMIN_PASSWD') ? getenv('oxADMIN_PASSWD') : 'admin');
+
+require_once "unit/OxidTestCase.php";

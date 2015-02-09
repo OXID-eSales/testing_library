@@ -30,7 +30,6 @@ if (empty($sTestType)) {
     reset($_SERVER['argv']);
 }
 
-require_once TEST_LIBRARY_PATH."bootstrap/bootstrap_config.php";
 require_once TEST_LIBRARY_PATH."bootstrap/bootstrap_base.php";
 
 switch($sTestType) {
