@@ -63,12 +63,16 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
      */
     public static function _addPriorityTests($oSuite, $aPriorityTests, $aTestDirectories)
     {
-        if (!empty(static::$_aPriorityTests)) {
+        if (!empty($aPriorityTests)) {
             $aTestsToInclude = array();
             foreach ($aPriorityTests as $sTestFile) {
                 $sFolder = dirname($sTestFile);
-                if (array_search($sFolder, $aTestDirectories) !== false) {
-                    $aTestsToInclude[] = $sTestFile;
+                $aDirectories = array_filter($aTestDirectories, function($sTestDirectory) use ($sFolder){
+                    return (substr($sTestDirectory, -strlen($sFolder)) === $sFolder);
+                });
+                if (!empty($aDirectories)) {
+                    $fullPath = array_shift($aDirectories);
+                    $aTestsToInclude[] = $fullPath.'/'.basename($sTestFile);
                 }
             }
             static::_addFilesToSuite($oSuite, $aTestsToInclude);
@@ -82,14 +86,11 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
      */
     protected static function _getTestDirectories()
     {
-        $aTestDirectories = static::$_aTestSuites;
+        $aTestDirectories = array();
+        $aTestSuites = getenv('TEST_DIRS')? explode(',', getenv('TEST_DIRS')) : static::$_aTestSuites;
 
-        $sTestDirs = getenv('TEST_DIRS');
-        if ($sTestDirs) {
-            $aTestDirectories = array();
-            foreach (explode(',', $sTestDirs) as $sTestSuiteParts) {
-                $aTestDirectories = array_merge($aTestDirectories, static::_getSuiteDirectories($sTestSuiteParts));
-            }
+        foreach ($aTestSuites as $sSuite) {
+            $aTestDirectories = array_merge($aTestDirectories, static::_getSuiteDirectories($sSuite));
         }
 
         return array_merge($aTestDirectories, static::_getDirectoryTree($aTestDirectories));
@@ -98,22 +99,22 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     /**
      * Returns test suite directories
      *
-     * @param string $sTestSuiteParts
+     * @param array $sTestSuite
      *
      * @return array
      */
-    protected static function _getSuiteDirectories($sTestSuiteParts)
+    protected static function _getSuiteDirectories($sTestSuite)
     {
         $aDirectories = array();
 
-        list($sSuiteKey, $sSuiteTests) = explode(':', $sTestSuiteParts);
-        if (!empty($sSuiteTests)) {
-            foreach (explode('%', $sSuiteTests) as $sSubDirectory) {
-                $sSubDirectory = ($sSubDirectory == "_root_") ? "" : '/' . $sSubDirectory;
-                $aDirectories[] = "${sSuiteKey}${sSubDirectory}";
+        if (SHOP_TESTS_PATH) {
+            $aDirectories[] = SHOP_TESTS_PATH .$sTestSuite;
+        }
+
+        if (MODULES_PATH) {
+            foreach (explode(',', MODULES_PATH) as $sModulePath) {
+                $aDirectories[] = oxPATH .'/modules/'.$sModulePath .'/tests/' .$sTestSuite;
             }
-        } else {
-            $aDirectories[] = $sSuiteKey;
         }
 
         return $aDirectories;
@@ -170,20 +171,7 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
 
             $sFilter = getenv('PREG_FILTER');
             if (!$sFilter || preg_match("&$sFilter&i", $sFilename)) {
-
-                include_once $sFilename;
-                $sClassName = static::_formClassNameFromFileName($sFilename);
-                if (class_exists($sClassName)) {
-                    $oSuite->addTestSuite($sClassName);
-                } else {
-                    /** DEPLOY_REMOVE_BEGIN **/
-                    $blThrowException = false;
-                    /** DEPLOY_REMOVE_END **/
-                    if (!isset($blThrowException) || $blThrowException) {
-                        echo "\n\nFile with wrong class name found!: $sClassName in $sFilename";
-                        exit();
-                    }
-                }
+                $oSuite->addTestFile($sFilename);
             }
         }
 

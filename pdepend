@@ -1,4 +1,0 @@
-#!/bin/bash
-echo "$@"
-
-Library/vendor/pdepend/pdepend/src/bin/pdepend "$@"

@@ -8,12 +8,6 @@ require_once TEST_LIBRARY_PATH .'oxObjectValidator.php';
 require_once TEST_LIBRARY_PATH .'oxTranslator.php';
 
 /**
- * Backward compatibility, do not use it for new tests.
- * @deprecated use oxAcceptanceTestCase instead
- */
-class oxTestCase extends oxAcceptanceTestCase {}
-
-/**
  * Base class for Selenium tests.
  */
 class oxAcceptanceTestCase extends oxMinkWrapper
@@ -2032,3 +2026,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         }
     }
 }
+
+/**
+ * Backward compatibility, do not use it for new tests.
+ * @deprecated use oxAcceptanceTestCase instead
+ */
+class oxTestCase extends oxAcceptanceTestCase {}

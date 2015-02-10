@@ -1,3 +1,5 @@
 #!/bin/bash
-./pdepend --summary-xml=pdepend.xml --ignore=tests ../
+
+BINDIR="$( cd "$( dirname "$0" )" && pwd )"
+${BINDIR}/pdepend --summary-xml=${BINDIR}/../../pdepend.xml ${BINDIR}/../../
 php Library/MC_Metrics.php pdepend.xml > metrics.txt

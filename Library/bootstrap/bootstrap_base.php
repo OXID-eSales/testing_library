@@ -20,7 +20,7 @@ require_once TEST_LIBRARY_PATH.'oxFileCopier.php';
 if (file_exists(TESTS_DIRECTORY.'vendor/autoload.php')) {
     require_once TESTS_DIRECTORY.'vendor/autoload.php';
 } else {
-    require_once TESTS_DIRECTORY.'../../../autoload.php';
+    require_once TESTS_DIRECTORY.'../../autoload.php';
 }
 
 if(defined(oxCCTempDir)) {
@@ -33,6 +33,7 @@ function getTestsBasePath()
     return TESTS_DIRECTORY;
 }
 
+require_once TEST_LIBRARY_PATH .'test_utils.php';
 require_once oxPATH .'core/oxfunctions.php';
 
 $oConfigFile = new oxConfigFile(oxPATH . "config.inc.php");

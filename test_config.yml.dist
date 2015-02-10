@@ -1,0 +1,62 @@
+# parameters for testing library
+parameters:
+    # Path to eShop tests
+    shop_tests_path: '../tests'
+
+    # When testing not activated module, specify module path in shop.
+    # Module path in shop, e.g. if module is in 'shop/modules/oe/mymodule' directory, value here should be 'oe/mymodule'.
+    # Multiple modules can be specified separated by comma: 'oe/module1,module2,tt/module3'.
+    modules_path:
+
+    # eShop base url (if not set, takes it from shop's config.inc.php file)
+    shop_url:
+
+    # For PE and EE editions shop serial has to be specified for shop installer to work.
+    shop_serial: ''
+
+    # Run tests with varnish on
+    enable_varnish: false
+
+    # Whether to run subshop tests. Currently only used when running selenium tests.
+    is_subshop: false
+
+    # Whether to copy services to shop. If services are already in shop directory, this can be set to false.
+    copy_services_to_shop: true
+
+    # Whether to prepare shop database for testing. Shop config.ing.php file must be correct.
+    install_shop: false
+
+    # eShop setup directory. After setting up the shop, setup directory will be deleted.
+    # For shop installation to work during tests run, path to this directory must be specified.
+    # Uses shop/directory/setup/ if not set.
+    shop_setup_path:
+
+    # Whether to add tests data to shop. Can be used when $blInstallShop is set to false and test data is already added.
+    add_test_data: false
+
+    # Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it.
+    restore_shop_after_test_suite: true
+    # Whether to restore shop data after test. If this is set to false, shop will be left
+    # at a state, at which test was completed (either failed or passed).
+    restore_shop_after_test: false
+
+    # Selenium server IP address
+    selenium_server_ip: "127.0.0.1"
+    # Folder where to save selenium screen shots. If not specified, screenshots will not be taken.
+    selenium_screen_shots_path: null #ShopPath . '/selenium_screenshots/'
+    # Url, where selenium screen shots should be available.
+    selenium_screen_shots_url: null #ShopUrl . '/selenium_screenshots/'
+
+    # Browser name which will be used for testing.
+    # Possible values: *iexplore, *iehta, *firefox, *chrome, *piiexplore, *pifirefox, *safari, *opera
+    # make sure that path to browser executable is known for the system
+    browser_name: 'firefox'
+
+    # Currently exists dbRestore and dbRestore_largeDb.
+    # dbRestore_largeDb - used with local database
+    # dbRestore - used with external database.
+    data_base_restore: "dbRestore_largeDb"
+
+    # Whether to create special directory for storing database dump during tests run.
+    # Set this to true if php has no write access to /tmp folder.
+    special_db_dump_folder: false

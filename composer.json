@@ -16,6 +16,30 @@
         "behat/mink-selenium-driver": "*",
         "behat/mink-selenium2-driver": "*",
         "behat/mink-sahi-driver": "*",
-        "behat/mink-zombie-driver": "*"
+        "behat/mink-zombie-driver": "*",
+        "symfony/yaml": "~2.0",
+        "incenteev/composer-parameter-handler": "~2.0"
+    },
+    "bin": [
+        "runmetrics",
+        "runtests",
+        "runtests-coverage",
+        "runtests-selenium"
+    ],
+    "include-path": [
+        "../../symfony/yaml/"
+    ],
+    "scripts": {
+        "post-install-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+        ],
+        "post-update-cmd": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+        ]
+    },
+    "extra": {
+        "incenteev-parameters": {
+            "file": "test_config.yml"
+        }
     }
 }

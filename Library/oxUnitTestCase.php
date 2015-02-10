@@ -3,15 +3,8 @@
  * #PHPHEADER_OXID_LICENSE_INFORMATION#
  */
 
-require_once TEST_LIBRARY_PATH . 'test_config.inc.php';
 require_once TEST_LIBRARY_PATH . 'Services/ShopPreparation/DbHandler.php';
 require_once TEST_LIBRARY_PATH . 'oxMockStubFunc.php';
-
-/**
- * Backward compatibility, do not use it for new tests.
- * @deprecated use oxAcceptanceTestCase instead
- */
-class OxidTestCase extends OxUnitTestCase {}
 
 /**
  * Base tests class. Most tests should extend this class.
@@ -763,11 +756,11 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
      *
      * @access protected
      *
-     * @return OxidMockStubFunc
+     * @return OxMockStubFunc
      */
     protected function evalFunction($value)
     {
-        return new OxidMockStubFunc($value);
+        return new OxMockStubFunc($value);
     }
 
     /**
@@ -858,3 +851,9 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
         }
     }
 }
+
+/**
+ * Backward compatibility, do not use it for new tests.
+ * @deprecated use oxAcceptanceTestCase instead
+ */
+class OxidTestCase extends OxUnitTestCase {}
