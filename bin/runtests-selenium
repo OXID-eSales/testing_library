@@ -6,4 +6,4 @@ if test -z "$TARGET" ; then
 fi
 
 BINDIR="$( cd "$( dirname "$0" )" && pwd )"
-./phpunit --bootstrap ${BINDIR}/../oxid-esales/testing_library/bootstrap.php $2 $3 $4 $5 $6 $7 $8 $9 ${TARGET//\//_}
+${BINDIR}/phpunit --bootstrap ${BINDIR}/../oxid-esales/testing_library/bootstrap.php $2 $3 $4 $5 $6 $7 $8 $9 ${TARGET//\//_}

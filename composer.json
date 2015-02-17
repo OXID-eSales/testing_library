@@ -21,10 +21,10 @@
         "incenteev/composer-parameter-handler": "~2.0"
     },
     "bin": [
-        "runmetrics",
-        "runtests",
-        "runtests-coverage",
-        "runtests-selenium"
+        "bin/runmetrics",
+        "bin/runtests",
+        "bin/runtests-coverage",
+        "bin/runtests-selenium"
     ],
     "include-path": [
         "../../symfony/yaml/"
