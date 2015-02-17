@@ -3,18 +3,6 @@
  * #PHPHEADER_OXID_LICENSE_INFORMATION#
  */
 
-if (RESTORE_SHOP_AFTER_TEST_SUITE) {
-    // dumping original database
-    $oServiceCaller = new oxServiceCaller();
-    $oServiceCaller->setParameter('dumpDB', true);
-    $oServiceCaller->setParameter('dump-prefix', 'orig_db_dump');
-    try {
-        $oServiceCaller->callService('ShopPreparation', 1);
-    } catch (Exception $e) {
-        define('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR', true);
-    }
-}
-
 if (INSTALLSHOP) {
     $oCurl = new oxTestCurl();
     $oCurl->setUrl(shopURL . '/Services/_db.php');
@@ -32,25 +20,11 @@ $oServiceCaller->setParameter('cl', 'oxConfig');
 $oServiceCaller->setParameter('fnc', 'getEdition');
 $edition = $oServiceCaller->callService('ShopObjectConstructor', 1);
 define("SHOP_EDITION", ($edition == 'EE') ? 'EE' : 'PE_CE');
-define('hostUrl', getenv('SELENIUM_SERVER')? getenv('SELENIUM_SERVER') : $sSeleniumServerIp );
-define('browserName', getenv('BROWSER_NAME')? getenv('BROWSER_NAME') : $sBrowserName );
 
-$sShopUrl = getenv('SELENIUM_TARGET')? getenv('SELENIUM_TARGET') : $sShopUrl;
-
-define ('SELENIUM_SCREENSHOTS_PATH', getenv('SELENIUM_SCREENSHOTS_PATH')? getenv('SELENIUM_SCREENSHOTS_PATH') : $sSeleniumScreenShotsPath);
-define ('SELENIUM_SCREENSHOTS_URL', getenv('SELENIUM_SCREENSHOTS_URL')? getenv('SELENIUM_SCREENSHOTS_URL') : $sSeleniumScreenShotsUrl);
+require_once TEST_LIBRARY_PATH . '/bootstrap/prepareDbForUsage.php';
 
 if (SELENIUM_SCREENSHOTS_PATH && !is_dir(SELENIUM_SCREENSHOTS_PATH)) {
     mkdir(SELENIUM_SCREENSHOTS_PATH, 0777, true);
 }
 
 require_once TEST_LIBRARY_PATH .'/oxAcceptanceTestCase.php';
-
-register_shutdown_function(function () {
-    if (RESTORE_SHOP_AFTER_TEST_SUITE && !defined('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR')) {
-        $oServiceCaller = new oxServiceCaller();
-        $oServiceCaller->setParameter('restoreDB', true);
-        $oServiceCaller->setParameter('dump-prefix', 'orig_db_dump');
-        $oServiceCaller->callService('ShopPreparation', 1);
-    }
-});

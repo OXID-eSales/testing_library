@@ -23,7 +23,25 @@ if (file_exists(TESTS_DIRECTORY.'vendor/autoload.php')) {
     require_once TESTS_DIRECTORY.'../../autoload.php';
 }
 
-if(defined(oxCCTempDir)) {
+if (COPY_SERVICES_TO_SHOP) {
+    $oFileCopier = new oxFileCopier();
+    $sTarget = REMOTE_DIR ? REMOTE_DIR.'/Services' : oxPATH.'/Services';
+    $oFileCopier->copyFiles(TEST_LIBRARY_PATH .'Services', $sTarget, true);
+}
+
+if (RESTORE_SHOP_AFTER_TEST_SUITE) {
+    // dumping original database
+    $oServiceCaller = new oxServiceCaller();
+    $oServiceCaller->setParameter('dumpDB', true);
+    $oServiceCaller->setParameter('dump-prefix', 'orig_db_dump');
+    try {
+        $oServiceCaller->callService('ShopPreparation', 1);
+    } catch (Exception $e) {
+        define('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR', true);
+    }
+}
+
+if (defined('oxCCTempDir')) {
     $oFileCopier = new oxFileCopier();
     $oFileCopier->createEmptyDirectory(oxCCTempDir);
 }
@@ -33,31 +51,11 @@ function getTestsBasePath()
     return TESTS_DIRECTORY;
 }
 
-require_once TEST_LIBRARY_PATH .'test_utils.php';
-require_once oxPATH .'core/oxfunctions.php';
-
-$oConfigFile = new oxConfigFile(oxPATH . "config.inc.php");
-OxRegistry::set("OxConfigFile", $oConfigFile);
-oxRegistry::set("oxConfig", new oxConfig());
-if ($sTestType == 'acceptance') {
-    oxRegistry::set("oxConfig", oxNew('oxConfig'));
-}
-
-$oDb = new oxDb();
-$oDb->setConfig($oConfigFile);
-$oLegacyDb = $oDb->getDb();
-OxRegistry::set('oxDb', $oLegacyDb);
-
-oxRegistry::getConfig();
-
-require_once TEST_LIBRARY_PATH .'modOxUtilsDate.php';
-require_once oxPATH .'/core/oxutils.php';
-require_once oxPATH .'/core/adodblite/adodb.inc.php';
-require_once oxPATH .'/core/oxsession.php';
-require_once oxPATH .'/core/oxconfig.php';
-
-if (COPY_SERVICES_TO_SHOP) {
-    $oFileCopier = new oxFileCopier();
-    $sTarget = REMOTE_DIR ? REMOTE_DIR.'/Services' : oxPATH.'/Services';
-    $oFileCopier->copyFiles(TEST_LIBRARY_PATH .'Services', $sTarget, true);
-}
+register_shutdown_function(function () {
+    if (RESTORE_SHOP_AFTER_TEST_SUITE && !defined('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR')) {
+        $oServiceCaller = new oxServiceCaller();
+        $oServiceCaller->setParameter('restoreDB', true);
+        $oServiceCaller->setParameter('dump-prefix', 'orig_db_dump');
+        $oServiceCaller->callService('ShopPreparation', 1);
+    }
+});

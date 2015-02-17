@@ -20,11 +20,8 @@ parameters:
     # Whether to run subshop tests. Currently only used when running selenium tests.
     is_subshop: false
 
-    # Whether to copy services to shop. If services are already in shop directory, this can be set to false.
-    copy_services_to_shop: true
-
     # Whether to prepare shop database for testing. Shop config.ing.php file must be correct.
-    install_shop: false
+    install_shop: true
 
     # eShop setup directory. After setting up the shop, setup directory will be deleted.
     # For shop installation to work during tests run, path to this directory must be specified.
@@ -32,7 +29,7 @@ parameters:
     shop_setup_path:
 
     # Whether to add tests data to shop. Can be used when $blInstallShop is set to false and test data is already added.
-    add_test_data: false
+    add_test_data: true
 
     # Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it.
     restore_shop_after_test_suite: true
@@ -55,8 +52,8 @@ parameters:
     # Currently exists dbRestore and dbRestore_largeDb.
     # dbRestore_largeDb - used with local database
     # dbRestore - used with external database.
-    data_base_restore: "dbRestore_largeDb"
+    data_base_restore: "dbRestore"
 
     # Whether to create special directory for storing database dump during tests run.
     # Set this to true if php has no write access to /tmp folder.
-    special_db_dump_folder: false
+    special_db_dump_folder: true
