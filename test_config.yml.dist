@@ -1,5 +1,5 @@
 # parameters for testing library
-parameters:
+mandatory_parameters:
     # Path to eShop source. Defaults to the same directory as to where vendor is located.
     shop_path: ''
 
@@ -11,6 +11,7 @@ parameters:
     # Multiple modules can be specified separated by comma: 'oe/module1,module2,tt/module3'.
     modules_path:
 
+optional_parameters:
     # eShop base url (if not set, takes it from shop's config.inc.php file)
     shop_url:
 
@@ -35,11 +36,7 @@ parameters:
     restore_shop_after_test_suite: true
 
     # Selenium server IP address
-    selenium_server_ip: "127.0.0.1"
-    # Folder where to save selenium screen shots. If not specified, screenshots will not be taken.
-    selenium_screen_shots_path: null #ShopPath . '/selenium_screenshots/'
-    # Url, where selenium screen shots should be available.
-    selenium_screen_shots_url: null #ShopUrl . '/selenium_screenshots/'
+    selenium_server_ip: '127.0.0.1'
 
     # Browser name which will be used for testing.
     # Possible values: *iexplore, *iehta, *firefox, *chrome, *piiexplore, *pifirefox, *safari, *opera
@@ -49,8 +46,14 @@ parameters:
     # Currently exists dbRestore and dbRestore_largeDb.
     # dbRestore_largeDb - used with local database
     # dbRestore - used with external database.
-    data_base_restore: "dbRestore"
+    database_restoration_class: 'dbRestore'
 
     # Whether to create special directory for storing database dump during tests run.
     # Set this to true if php has no write access to /tmp folder.
     special_db_dump_folder: true
+
+    # Folder where to save selenium screen shots. If not specified, screenshots will not be taken.
+    selenium_screen_shots_path: null
+
+    # Url, where selenium screen shots should be available.
+    selenium_screen_shots_url: null

@@ -19,7 +19,7 @@ class Test_Config
     public function __construct()
     {
         $yaml = Yaml::parse(file_get_contents($this->getConfigFileName()));
-        $this->configuration = $yaml['parameters'];
+        $this->configuration = array_merge($yaml['mandatory_parameters'], $yaml['optional_parameters']);
     }
 
 
@@ -31,7 +31,7 @@ class Test_Config
     public function getShopPath()
     {
         if (!$this->shopPath) {
-            $this->shopPath = $this->getValue('shop_path', 'oxPATH');
+            $this->shopPath = $this->getValue('shop_path', 'SHOP_PATH');
             if (strpos($this->shopPath, '/') !== 0) {
                 $this->shopPath = $this->findShopPath($this->shopPath);
             }
@@ -135,7 +135,7 @@ class Test_Config
      */
     public function getDatabaseRestorationClass()
     {
-        return $this->getValue('data_base_restore', 'SHOPRESTORATIONCLASS');
+        return $this->getValue('database_restoration_class', 'DATABASE_RESTORATION_CLASS');
     }
 
     /**
@@ -155,7 +155,7 @@ class Test_Config
      */
     public function shouldInstallShop()
     {
-        return (bool) $this->getValue('install_shop', 'oxINSTALLSHOP');
+        return (bool) $this->getValue('install_shop', 'INSTALL_SHOP');
     }
 
     /**
@@ -185,7 +185,7 @@ class Test_Config
      */
     public function shouldEnableVarnish()
     {
-        return $this->getValue('enable_varnish', 'OXID_VARNISH');
+        return $this->getValue('enable_varnish', 'ENABLE_VARNISH');
     }
 
     /**
@@ -195,7 +195,7 @@ class Test_Config
      */
     public function getSeleniumServerIp()
     {
-        return $this->getValue('selenium_server_ip', 'SELENIUM_SERVER');
+        return $this->getValue('selenium_server_ip', 'SELENIUM_SERVER_IP');
     }
 
     /**
