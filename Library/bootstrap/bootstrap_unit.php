@@ -3,7 +3,7 @@
  * #PHPHEADER_OXID_LICENSE_INFORMATION#
  */
 
-if (INSTALLSHOP) {
+if (INSTALL_SHOP) {
     $oCurl = new oxTestCurl();
     $oCurl->setUrl(shopURL . '/Services/_db.php');
     $oCurl->setParameters(array(
@@ -21,8 +21,8 @@ require_once TEST_LIBRARY_PATH . '/bootstrap/prepareDbForUsage.php';
 require_once TESTS_DIRECTORY . '/additional.inc.php';
 require_once TEST_LIBRARY_PATH . "/oxTestModuleLoader.php";
 
-if (defined('SHOPRESTORATIONCLASS') && file_exists(TEST_LIBRARY_PATH .'dbRestore/'.SHOPRESTORATIONCLASS . ".php")) {
-    include_once TEST_LIBRARY_PATH .'dbRestore/'. SHOPRESTORATIONCLASS . ".php";
+if (defined('SHOP_RESTORATION_CLASS') && file_exists(TEST_LIBRARY_PATH .'dbRestore/'.SHOP_RESTORATION_CLASS . ".php")) {
+    include_once TEST_LIBRARY_PATH .'dbRestore/'. SHOP_RESTORATION_CLASS . ".php";
 } else {
     include_once TEST_LIBRARY_PATH .'dbRestore/'. "dbRestore.php";
 }

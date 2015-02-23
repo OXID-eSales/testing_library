@@ -3,7 +3,7 @@
  * #PHPHEADER_OXID_LICENSE_INFORMATION#
  */
 
-if (INSTALLSHOP) {
+if (INSTALL_SHOP) {
     $oCurl = new oxTestCurl();
     $oCurl->setUrl(shopURL . '/Services/_db.php');
     $oCurl->setParameters(array(

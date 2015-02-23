@@ -23,11 +23,9 @@ if (file_exists(TESTS_DIRECTORY.'vendor/autoload.php')) {
     require_once TESTS_DIRECTORY.'../../autoload.php';
 }
 
-if (COPY_SERVICES_TO_SHOP) {
-    $oFileCopier = new oxFileCopier();
-    $sTarget = REMOTE_DIR ? REMOTE_DIR.'/Services' : oxPATH.'/Services';
-    $oFileCopier->copyFiles(TEST_LIBRARY_PATH .'Services', $sTarget, true);
-}
+$oFileCopier = new oxFileCopier();
+$sTarget = REMOTE_DIR ? REMOTE_DIR.'/Services' : oxPATH.'/Services';
+$oFileCopier->copyFiles(TEST_LIBRARY_PATH .'Services', $sTarget, true);
 
 if (RESTORE_SHOP_AFTER_TEST_SUITE) {
     // dumping original database
