@@ -1,9 +1,25 @@
-#!/bin/bash
+#!/usr/bin/env php
+<?php
 
-TARGET="${1/%.php/}"
-if test -z "$TARGET" ; then
-    TARGET="AllTestsSelenium"
-fi
+$scriptPath = array_shift($argv);
+$binDir = dirname($scriptPath);
 
-BINDIR="$( cd "$( dirname "$0" )" && pwd )"
-${BINDIR}/phpunit --bootstrap ${BINDIR}/../oxid-esales/testing_library/bootstrap.php $2 $3 $4 $5 $6 $7 $8 $9 ${TARGET//\//_}
+$target = empty($argv) ? 'AllTestsSelenium' : '';
+$arguments = array();
+foreach ($argv as $argument) {
+    $arguments[] = (strpos($argument, '-') === 0) ? $argument : escapeshellarg($argument);
+}
+$arguments = implode(' ', $arguments);
+
+$phpUnit = "$binDir/phpunit";
+if (!file_exists($phpUnit)) {
+    $phpUnit = "$binDir/../vendor/bin/phpunit";
+    if (!file_exists($phpUnit)) {
+        $phpUnit = "phpunit";
+    }
+}
+
+$bootstrap = __DIR__ ."/../bootstrap.php";
+
+$php = getenv('PHPBIN') ? getenv('PHPBIN') : 'php';
+passthru("$php $phpUnit --bootstrap $bootstrap $arguments $target");

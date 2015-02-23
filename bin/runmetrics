@@ -1,5 +1,45 @@
-#!/bin/bash
+#!/usr/bin/env php
+<?php
 
-BINDIR="$( cd "$( dirname "$0" )" && pwd )"
-${BINDIR}/pdepend --summary-xml=${BINDIR}/../../pdepend.xml ${BINDIR}/../../
-php Library/MC_Metrics.php pdepend.xml > metrics.txt
+$scriptPath = array_shift($argv);
+$binDir = dirname($scriptPath);
+
+$autoloader = $binDir.'/../autoload.php';
+if (!file_exists($autoloader)) {
+    $autoloader = $binDir.'/../vendor/autoload.php';
+}
+require_once $autoloader;
+require_once __DIR__.'/../Library/Test_Config.php';
+require_once __DIR__.'/../Library/oxFileCopier.php';
+
+$fileCopier = new oxFileCopier();
+$config = new Test_Config();
+
+$targetPath = $config->getShopPath();
+if ($config->getModulePaths()) {
+    $modulePaths = explode(',', $config->getModulePaths());
+    $targetPath = $targetPath .'/modules/'. array_shift($modulePaths);
+}
+
+$reportsDir = $targetPath .'/reports';
+$fileCopier->createEmptyDirectory($reportsDir);
+
+$arguments = array();
+foreach ($argv as $argument) {
+    $arguments[] = (strpos($argument, '-') === 0) ? $argument : escapeshellarg($argument);
+}
+$arguments = implode(' ', $arguments);
+
+$pDepend = "$binDir/pdepend";
+if (!file_exists($pDepend)) {
+    $pDepend = "$binDir/../vendor/bin/pdepend";
+    if (!file_exists($pDepend)) {
+        $pDepend = "pdepend";
+    }
+}
+
+$mcMetrics = __DIR__ ."/../Library/MC_Metrics.php";
+
+$php = getenv('PHPBIN') ? getenv('PHPBIN') : 'php';
+passthru("$pDepend --summary-xml=$reportsDir/pdepend.xml --ignore=vendor,tests,out $targetPath $arguments");
+passthru("$php $mcMetrics $reportsDir/pdepend.xml > $reportsDir/metrics.txt");
