@@ -97,13 +97,11 @@ class oxAcceptanceTestCase extends oxMinkWrapper
             $this->restoreDb('reset_suite_db_dump');
         }
 
-        if (ADD_TEST_DATA) {
-            $sTestSuitePath = str_replace('_', '/', get_called_class());
-            $sTestSuitePath = substr($sTestSuitePath, 0, strrpos($sTestSuitePath, '/'));
-            $sTestSuitePath = $this->_testsDir.'/'.$sTestSuitePath;
+        $sTestSuitePath = str_replace('_', '/', get_called_class());
+        $sTestSuitePath = substr($sTestSuitePath, 0, strrpos($sTestSuitePath, '/'));
+        $sTestSuitePath = $this->_testsDir.'/'.$sTestSuitePath;
 
-            $this->addTestData($sTestSuitePath);
-        }
+        $this->addTestData($sTestSuitePath);
 
         $this->dumpDb('reset_test_db_dump');
     }
@@ -139,9 +137,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     protected function tearDown()
     {
-        if (RESTORE_SHOP_AFTER_TEST) {
-            $this->restoreDB('reset_test_db_dump');
-        }
+        $this->restoreDB('reset_test_db_dump');
 
         parent::tearDown();
     }
@@ -1551,7 +1547,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     protected function _getClient()
     {
         if (is_null($this->_oClient)) {
-            $this->_oClient = new \Selenium\Client(hostUrl, '4444');
+            $this->_oClient = new \Selenium\Client(SELENIUM_SERVER_IP, '4444');
         }
 
         return $this->_oClient;

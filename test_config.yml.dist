@@ -1,5 +1,8 @@
 # parameters for testing library
 parameters:
+    # Path to eShop source. Defaults to the same directory as to where vendor is located.
+    shop_path: ''
+
     # Path to eShop tests
     shop_tests_path: '../tests'
 
@@ -28,14 +31,8 @@ parameters:
     # Uses shop/directory/setup/ if not set.
     shop_setup_path:
 
-    # Whether to add tests data to shop. Can be used when $blInstallShop is set to false and test data is already added.
-    add_test_data: true
-
     # Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it.
     restore_shop_after_test_suite: true
-    # Whether to restore shop data after test. If this is set to false, shop will be left
-    # at a state, at which test was completed (either failed or passed).
-    restore_shop_after_test: false
 
     # Selenium server IP address
     selenium_server_ip: "127.0.0.1"
