@@ -46,7 +46,7 @@ if (defined('oxCCTempDir')) {
 
 function getTestsBasePath()
 {
-    return TESTS_DIRECTORY;
+    return SHOP_TESTS_PATH;
 }
 
 register_shutdown_function(function () {
