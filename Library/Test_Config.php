@@ -51,18 +51,46 @@ class Test_Config
     }
 
     /**
+     * Returns shop edition
+     *
+     * @return array|null|string
+     */
+    public function getShopEdition()
+    {
+        $shopEdition = $this->getValue('shop_edition', 'SHOP_EDITION');
+
+        if (!$shopEdition) {
+            if (defined('OXID_VERSION_EE')) {
+                $shopEdition = OXID_VERSION_EE ? 'EE' : '';
+                $shopEdition = OXID_VERSION_PE_PE ? 'PE' : $shopEdition;
+                $shopEdition = OXID_VERSION_PE_CE ? 'CE' : $shopEdition;
+            }
+            if (!$shopEdition) {
+                $shopPath = $this->getShopPath();
+                include_once $shopPath . 'core/oxsupercfg.php';
+                include_once $shopPath . 'core/oxconfig.php';
+                $config = new oxConfig();
+                $shopEdition = $config->getEdition();
+            }
+        }
+
+        return strtoupper($shopEdition);
+    }
+
+    /**
      * Returns shop id
      *
      * @return int|string
      */
     public function getShopId()
     {
-        $sShopId = "oxbaseshop";
-        if (OXID_VERSION_EE) :
-            $sShopId = getenv('oxSHOPID') ? (int)getenv('oxSHOPID') : ($this->getValue('shop_id') ? 2 : 1);
-        endif;
+        $shopId = 'oxbaseshop';
+        if ($this->getShopEdition() == 'EE') {
+            $isSubShop = (bool) $this->getValue('is_subshop', 'IS_SUBSHOP');
+            $shopId = $isSubShop ? 2 : 1;
+        }
 
-        return $sShopId;
+        return $shopId;
     }
 
     /**
@@ -85,8 +113,9 @@ class Test_Config
     {
         $sShopUrl = $this->getValue('shop_url', 'SHOP_URL');
         if (!$sShopUrl) {
-            include_once oxPATH . 'core/oxconfigfile.php';
-            $oConfigFile = new oxConfigFile(oxPATH . "config.inc.php");
+            $shopPath = $this->getShopPath();
+            include_once $shopPath . 'core/oxconfigfile.php';
+            $oConfigFile = new oxConfigFile($shopPath . "config.inc.php");
             $sShopUrl = $sShopUrl ? $sShopUrl : $oConfigFile->sShopURL;
         }
 

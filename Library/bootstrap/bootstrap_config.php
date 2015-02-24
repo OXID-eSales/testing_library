@@ -15,13 +15,19 @@ $config = new Test_Config();
 define('OXID_PHP_UNIT', true);
 
 $shopPath = $config->getShopPath();
+define('oxPATH', $shopPath);
+
 if (file_exists($shopPath . "/_version_define.php")) {
     include_once $shopPath . "/_version_define.php";
 } else {
-    define('OXID_VERSION_SUFIX', '');
+    $edition = $config->getShopEdition();
+    define('OXID_VERSION_EE', (int) ($edition == 'EE'));
+    define('OXID_VERSION_PE_PE', (int) ($edition == 'PE'));
+    define('OXID_VERSION_PE_CE', (int) ($edition == 'CE'));
+    define('OXID_VERSION_PE', (int) ($edition != 'EE'));
+    define('OXID_VERSION_SUFIX', '_ce');
 }
 
-define('oxPATH', $shopPath);
 define('OX_BASE_PATH', oxPATH);
 define('REMOTE_DIR', $config->getRemoteDirectory());
 define('shopURL', $config->getShopUrl());
