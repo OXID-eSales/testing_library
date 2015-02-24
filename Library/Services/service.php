@@ -6,13 +6,14 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
-require_once dirname(__FILE__) . "/../bootstrap.php";
-require_once 'ServiceCaller.php';
-require_once 'ShopServiceInterface.php';
-
 define('LIBRARY_PATH', dirname(__FILE__).'/Library/');
 define('TEMP_PATH', dirname(__FILE__).'/temp/');
 define('SHOP_PATH', dirname(__FILE__) . '/../');
+
+require_once dirname(__FILE__) . "/../bootstrap.php";
+require_once 'ServiceCaller.php';
+require_once LIBRARY_PATH . 'Request.php';
+require_once 'ShopServiceInterface.php';
 
 if (!file_exists(TEMP_PATH)) {
     mkdir(TEMP_PATH, 0777);
@@ -20,13 +21,18 @@ if (!file_exists(TEMP_PATH)) {
 }
 
 try {
-    $oxConfig = oxRegistry::getConfig();
+    $request = new Request();
 
     $oServiceCaller = new ServiceCaller();
 
-    $oServiceCaller->setActiveShop($oxConfig->getRequestParameter('shp'));
-    $oServiceCaller->setActiveLanguage($oxConfig->getRequestParameter('lang'));
-    $mResponse = $oServiceCaller->callService($oxConfig->getRequestParameter('service'));
+    try {
+        $oServiceCaller->setActiveShop($request->getParameter('shp'));
+        $oServiceCaller->setActiveLanguage($request->getParameter('lang'));
+    } catch (Exception $e) {
+        // do nothing even if exception was caught during setting of language or shop
+    }
+
+    $mResponse = $oServiceCaller->callService($request->getParameter('service'));
 
     echo serialize($mResponse);
 } catch (Exception $e) {

@@ -13,6 +13,17 @@ class DbHandler
      */
     private $_sTemporaryFolder = '';
 
+    /** @var oxConfigFile */
+    private $_configFile;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->_configFile = new oxConfigFile(SHOP_PATH . "config.inc.php");
+    }
+
     /**
      * Set temporary folder
      *
@@ -148,7 +159,7 @@ class DbHandler
      */
     protected function _getDbName()
     {
-        return oxRegistry::getConfig()->getConfigParam( 'dbName' );
+        return $this->_configFile->dbName;
     }
 
     /**
@@ -156,7 +167,7 @@ class DbHandler
      */
     protected function _getDbUser()
     {
-        return oxRegistry::getConfig()->getConfigParam( 'dbUser' );
+        return $this->_configFile->dbUser;
     }
 
     /**
@@ -164,13 +175,13 @@ class DbHandler
      */
     protected function _getDbPwd()
     {
-        return oxRegistry::getConfig()->getConfigParam( 'dbPwd' );
+        return $this->_configFile->dbPwd;
     }
     /**
      * @return string
      */
     protected function _getDbHost()
     {
-        return oxRegistry::getConfig()->getConfigParam( 'dbHost' );
+        return $this->_configFile->dbHost;
     }
 }

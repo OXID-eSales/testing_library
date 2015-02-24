@@ -20,20 +20,20 @@ class ShopPreparation implements ShopServiceInterface
      */
     public function init()
     {
-        $oConfig = oxRegistry::getConfig();
+        $request = new Request();
 
-        if ($oConfig->getUploadedFile('importSql')) {
+        if ($request->getUploadedFile('importSql')) {
             $this->_importSqlFromUploadedFile();
         }
 
-        if ($oConfig->getRequestParameter('dumpDB')) {
+        if ($request->getParameter('dumpDB')) {
             $oDbHandler = $this->_getDbHandler();
-            $oDbHandler->dumpDB($oConfig->getRequestParameter('dump-prefix'));
+            $oDbHandler->dumpDB($request->getParameter('dump-prefix'));
         }
 
-        if ($oConfig->getRequestParameter('restoreDB')) {
+        if ($request->getParameter('restoreDB')) {
             $oDbHandler = $this->_getDbHandler();
-            $oDbHandler->restoreDB($oConfig->getRequestParameter('dump-prefix'));
+            $oDbHandler->restoreDB($request->getParameter('dump-prefix'));
         }
     }
 
