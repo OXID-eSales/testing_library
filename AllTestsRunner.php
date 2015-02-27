@@ -107,11 +107,11 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     {
         $aDirectories = array();
 
-        if (SHOP_TESTS_PATH) {
+        if (RUN_SHOP_TESTS && SHOP_TESTS_PATH) {
             $aDirectories[] = SHOP_TESTS_PATH .$sTestSuite;
         }
 
-        if (MODULES_PATH) {
+        if (RUN_MODULE_TESTS && MODULES_PATH) {
             foreach (explode(',', MODULES_PATH) as $sModulePath) {
                 $aDirectories[] = oxPATH .'/modules/'.$sModulePath .'/tests/' .$sTestSuite;
             }

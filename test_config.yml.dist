@@ -57,3 +57,10 @@ optional_parameters:
 
     # Url, where selenium screen shots should be available.
     selenium_screen_shots_url: null
+
+    # Whether to run shop unit tests. This applies only when correct shop_tests_path are set.
+    run_shop_tests: true
+
+    # Whether to run modules unit tests. All modules provided in modules_path will be tested.
+    # If shop_tests_path and run_shop_tests are set, shop tests will be run with module tests.
+    run_module_tests: true

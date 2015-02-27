@@ -258,6 +258,26 @@ class Test_Config
     }
 
     /**
+     * Whether to run shop tests.
+     *
+     * @return string|null
+     */
+    public function shouldRunShopTests()
+    {
+        return $this->getValue('run_shop_tests');
+    }
+
+    /**
+     * Whether to run module tests.
+     *
+     * @return string|null
+     */
+    public function shouldRunModuleTests()
+    {
+        return $this->getValue('run_module_tests');
+    }
+
+    /**
      * Returns value for config parameter.
      *
      * @param string $param

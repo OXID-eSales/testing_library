@@ -36,6 +36,9 @@ define('oxSHOPID', $config->getShopId());
 define('SHOP_TESTS_PATH', $config->getShopTestsPath());
 define('MODULES_PATH', $config->getModulePaths());
 
+define('RUN_SHOP_TESTS', $config->shouldRunShopTests());
+define('RUN_MODULE_TESTS', $config->shouldRunModuleTests());
+
 define('INSTALL_SHOP', $config->shouldInstallShop());
 define('RESTORE_SHOP_AFTER_TEST_SUITE', $config->shouldRestoreShopAfterTestsSuite());
 
