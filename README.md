@@ -83,7 +83,7 @@ To install testing library to any directory except shop (for shop installation, 
 After you selected where you want to install the testing library, follow these steps to install testing library:
 
 1. Navigate to the directory that you picked for installation during the directory selection.
-1. Use composer to setup testing library components (`composer install`). Insure you do this from within the directory where `composer.json` is located.  
+1. Use composer to setup testing library components (`composer install`). Ensure you do this from within the directory where `composer.json` is located.  
 During setup you will be asked several questions regarding testing library configuration. These options will be explained in more detail here: [Parameter explanation](README.md#configuration)
 
 
@@ -92,7 +92,7 @@ Several test runners are available for use once testing library is prepared. The
 `./runtests` - run shop/module unit and integration tests.  
 `./runtests-selenium` - run shop/module selenium tests.  
 `./runtests-coverage` - run shop tests with code coverage.  
-`./runmetrics` - execute code metrics test for shop.  
+`./runmetrics` - execute code metrics test for shop/module.  
 Additionally you can pass parameters to these scripts. `runmetrics` uses `pdepend`, and all `runtests` uses `phpunit`.
 You can add `phpunit` parameters to `runtests`, `runtests-selenium`, `runtests-coverage`.
 You can add `pdepend` parameters to `runmetrics`. To see which additional options can be passed to test runner, add `--help` option to the command (i.e. `./runtests --help`, `./runmetrics --help`). This will show available options for desired tool.
@@ -102,7 +102,7 @@ Some usage examples:
 1. Running only a single file tests - `./runtests path/to/test/fileTest.php`
 1. Running only specific pattern matching tests from specified file - `./runtests --filter match_pattern path/to/test/fileTest.php`
 
-One thing to note when adding parameters to these tools - always provide file/folder at the end as it will no longer be picked automatically.
+One thing to note when adding parameters to these tools - always provide file/folder at the end as it will no longer be picked automatically. Use AllTestsUnit or AllTestsSelenium respectively to run all tests.
 
 
 ### Test running tips
