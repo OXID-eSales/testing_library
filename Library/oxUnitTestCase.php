@@ -372,23 +372,13 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Set sqls to be executed on tearDown
-     *
-     * @param array $aRevertSqls
-     */
-    public function setTeardownSqls($aRevertSqls)
-    {
-        $this->_aTeardownSqls = $aRevertSqls;
-    }
-
-    /**
      * Get teardown sqls containing delete information
      *
      * @return array
      */
     public function getTeardownSqls()
     {
-        return $this->_aTeardownSqls;
+        return (array) $this->_aTeardownSqls;
     }
 
     /**
@@ -445,34 +435,24 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
      * Executes SQL and adds table to clean up after test.
      * For EE version elements are added to map table for specified shops.
      *
-     * @param string $sSql     Sql to be executed.
-     * @param string $sTable   Table name.
-     * @param array  $aShopIds List of shop IDs.
-     * @param null   $sMapId   Map ID.
+     * @param string    $sSql     Sql to be executed.
+     * @param string    $sTable   Table name.
+     * @param array|int $aShopIds List of shop IDs.
+     * @param null      $sMapId   Map ID.
      */
-    public function addToDatabase($sSql, $sTable, $aShopIds = null, $sMapId = null)
+    public function addToDatabase($sSql, $sTable, $aShopIds = 1, $sMapId = null)
     {
         oxDb::getDb()->execute($sSql);
-        $this->addTableForCleanup($sTable);
 
         if (OXID_VERSION_EE) :
             if (in_array($sTable, $this->getMultiShopTables())) {
-                if (is_null($sMapId)) {
-                    $sMapId = oxDb::getDb()->Insert_ID();
-                }
-
-                if (is_null($aShopIds)) {
-                    $aShopIds = array(1);
-                } elseif (!is_array($aShopIds)) {
-                    $aShopIds = array($aShopIds);
-                }
+                $sMapId = !is_null($sMapId) ? $sMapId : oxDb::getDb()->Insert_ID();
+                $aShopIds = (array) $aShopIds;
 
                 foreach ($aShopIds as $iShopId) {
                     $sSql = "REPLACE INTO `{$sTable}2shop` SET `oxmapobjectid` = ?, `oxshopid` = ?";
                     oxDb::getDb()->execute($sSql, array($sMapId, $iShopId));
                 }
-
-                $this->addTableForCleanup("{$sTable}2shop");
             }
         endif;
     }
@@ -483,19 +463,14 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
      */
     public function cleanUpDatabase()
     {
-        if ($aSqls = $this->getTeardownSqls()) {
-            if (!is_array($aSqls)) {
-                $aSqls = array($aSqls);
-            }
-            foreach ($aSqls as $sSql) {
-                oxDb::getDb()->execute($sSql);
+        if ($tearDownQueries = $this->getTeardownSqls()) {
+            foreach ($tearDownQueries as $query) {
+                oxDb::getDb()->execute($query);
             }
         }
+
         if ($aTablesForCleanup = $this->getTablesForCleanup()) {
-            $oDbRestore = self::_getDbRestore();
-            if (!is_array($aTablesForCleanup)) {
-                $aTablesForCleanup = array($aTablesForCleanup);
-            }
+            $oDbRestore = $this->_getDbRestore();
             foreach ($aTablesForCleanup as $sTable) {
                 $oDbRestore->restoreTable($sTable);
             }
@@ -519,7 +494,7 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
      */
     public function getTablesForCleanup()
     {
-        return $this->_aTableForCleanups;
+        return (array) $this->_aTableForCleanups;
     }
 
     /**
@@ -531,14 +506,10 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
     {
         if (!in_array($sTable, $this->_aTableForCleanups)) {
             $this->_aTableForCleanups[] = $sTable;
-        }
-
-        if (OXID_VERSION_EE) :
-            // also add shop relations table for cleanup
-            if (in_array($sTable, $this->getMultiShopTables())) {
-                $this->addTableForCleanup("{$sTable}2shop");
+            if (OXID_VERSION_EE && in_array($sTable, $this->getMultiShopTables())) {
+                $this->_aTableForCleanups[] = "{$sTable}2shop";
             }
-        endif;
+        }
     }
 
     /**
@@ -551,18 +522,16 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
     {
         $sCol = (!empty($sColName)) ? $sColName : 'oxid';
 
-        if (OXID_VERSION_EE) :
-            if (in_array($sTable, $this->getMultiShopTables())) {
-                // deletes all records from shop relations table
-                $sSql = "delete from `{$sTable}2shop`
-                    where oxmapobjectid in (select oxmapid from `$sTable` where `$sCol` like '\_%')";
-                $this->getDb()->Execute($sSql);
-            }
-        endif;
+        if (OXID_VERSION_EE && in_array($sTable, $this->getMultiShopTables())) {
+            // deletes all records from shop relations table
+            $sSql = "delete from `{$sTable}2shop`
+                where oxmapobjectid in (select oxmapid from `$sTable` where `$sCol` like '\_%')";
+            $this->getDb()->execute($sSql);
+        }
 
         //deletes allrecords where oxid or specified column name values starts with underscore(_)
         $sQ = "delete from `$sTable` where `$sCol` like '\_%' ";
-        $this->getDb()->Execute($sQ);
+        $this->getDb()->execute($sQ);
     }
 
     /**
@@ -745,7 +714,7 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
      */
     protected function evalFunction($value)
     {
-        return new OxMockStubFunc($value);
+        return new oxMockStubFunc($value);
     }
 
     /**
