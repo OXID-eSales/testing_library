@@ -44,7 +44,7 @@ optional_parameters:
     browser_name: 'firefox'
 
     # Currently exists dbRestore and dbRestore_largeDb.
-    # dbRestore_largeDb - used with local database
+    # dbRestore_localDb - used with local database
     # dbRestore - used with external database.
     database_restoration_class: 'dbRestore'
 
