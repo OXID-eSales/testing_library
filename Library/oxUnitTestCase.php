@@ -4,6 +4,12 @@
  */
 
 require_once TEST_LIBRARY_PATH . 'Services/ShopPreparation/DbHandler.php';
+require_once TESTING_LIBRARY_HELPERS_PATH . 'oxArticleHelper.php';
+require_once TESTING_LIBRARY_HELPERS_PATH . 'oxSeoEncoderHelper.php';
+require_once TESTING_LIBRARY_HELPERS_PATH . 'oxDeliveryHelper.php';
+require_once TESTING_LIBRARY_HELPERS_PATH . 'oxManufacturerHelper.php';
+require_once TESTING_LIBRARY_HELPERS_PATH . 'oxVendorHelper.php';
+require_once TESTING_LIBRARY_HELPERS_PATH . 'oxAdminViewHelper.php';
 require_once TEST_LIBRARY_PATH . 'oxMockStubFunc.php';
 
 /**
@@ -158,6 +164,13 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
+        oxArticleHelper::cleanup();
+        oxSeoEncoderHelper::cleanup();
+        oxDeliveryHelper::cleanup();
+        oxManufacturerHelper::cleanup();
+        oxAdminViewHelper::cleanup();
+        oxVendorHelper::cleanup();
+
         $oDbRestore = self::_getDbRestore();
         $oDbRestore->restoreDB();
     }
