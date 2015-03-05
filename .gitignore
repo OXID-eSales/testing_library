@@ -1,0 +1,6 @@
+# Composer
+composer.lock
+vendor/
+
+# Testing library
+test_config.yml
