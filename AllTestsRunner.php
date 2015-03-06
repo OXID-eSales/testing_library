@@ -158,9 +158,9 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
      */
     protected static function _getTestFileFilter()
     {
-        $sTestFileNameEnd = '*[^8]Test.php';
+        $sTestFileNameEnd = '*[^8]Test\.php';
         if (getenv('OXID_TEST_UTF8')) {
-            $sTestFileNameEnd = '*utf8Test.php';
+            $sTestFileNameEnd = '*utf8Test\.php';
         }
 
         return $sTestFileNameEnd;

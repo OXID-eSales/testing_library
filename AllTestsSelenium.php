@@ -40,7 +40,7 @@ class AllTestsSelenium extends AllTestsRunner
      */
     protected static function _getTestFileFilter()
     {
-        return '*Test.php';
+        return '*Test\.php';
     }
 
     /**
