@@ -216,7 +216,7 @@ class oxTranslator
         if ( is_array( $sString ) ) {
             $sString = implode( '_DELIMITER_', $sString );
         }
-        preg_match_all( "�{$sPattern}�", $sString, $aMatches );
+        preg_match_all( "|{$sPattern}|", $sString, $aMatches );
 
         if ( $aMatches['key'] > 0 ) {
             $this->_setKeys( $aMatches['key'] );
