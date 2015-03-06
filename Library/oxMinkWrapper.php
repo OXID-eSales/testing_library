@@ -391,9 +391,15 @@ class oxMinkWrapper extends PHPUnit_Framework_TestCase
         }
 
         $aOptions = $oSelect->findAll('xpath', '//option[@selected]');
+
+        if (empty($oOptions)) {
+            $value = $this->_getValue($oSelect->getXpath());
+            $value = $this->getMinkSession()->getSelectorsHandler()->xpathLiteral($value);
+            $aOptions = $oSelect->findAll('xpath', '//option[@value='.$value.']');
+        }
         $oOption = array_pop( $aOptions );
 
-        if ( is_null($oOption) ) {
+        if (is_null($oOption)) {
             return $oSelect->find('xpath', 'option')->getText();
         }
         return $oOption->getText();
