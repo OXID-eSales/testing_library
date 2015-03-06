@@ -35,13 +35,13 @@ class oxFileCopier
     public function copyFiles($sSource, $sTarget, $blSetPermissions = false)
     {
         if (strpos($sTarget, ':') !== false && strpos($sTarget, '@') !== false) {
-            $this->_executeCommand("scp -rp ".escapeshellarg($sSource."/.")." ".escapeshellarg($sTarget));
+            $this->_executeCommand("scp -rp " . escapeshellarg($sSource . "/.") . " " . escapeshellarg($sTarget));
             if ($blSetPermissions) {
                 list($sServer, $sDirectory) = explode(":", $sTarget, 2);
-                $this->_executeCommand("ssh ".escapeshellarg($sServer)." chmod 777 ".escapeshellarg('/'.$sDirectory));
+                $this->_executeCommand("ssh " . escapeshellarg($sServer) . " chmod 777 " . escapeshellarg('/' . $sDirectory));
             }
         } else {
-            $this->_executeCommand("cp -frT ".escapeshellarg($sSource)." ".escapeshellarg($sTarget));
+            $this->_executeCommand("cp -frT " . escapeshellarg($sSource) . " " . escapeshellarg($sTarget));
             if ($blSetPermissions) {
                 $this->_executeCommand("chmod 777 " . escapeshellarg($sTarget));
             }
@@ -65,8 +65,8 @@ class oxFileCopier
     /**
      * Deletes given directory content
      *
-     * @param string $dir Path to directory.
-     * @param bool $rmBaseDir Whether to delete base directory.
+     * @param string $dir       Path to directory.
+     * @param bool   $rmBaseDir Whether to delete base directory.
      */
     private function deleteTree($dir, $rmBaseDir = false)
     {

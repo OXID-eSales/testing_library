@@ -42,7 +42,7 @@ class oxTranslator
      *
      * @param array $aUntranslated
      */
-    public function setUntranslated( $aUntranslated )
+    public function setUntranslated($aUntranslated)
     {
         $this->_aUntranslated = $aUntranslated;
     }
@@ -72,7 +72,7 @@ class oxTranslator
      *
      * @param string $sTranslationPattern
      */
-    public function setTranslationPattern( $sTranslationPattern )
+    public function setTranslationPattern($sTranslationPattern)
     {
         $this->_sTranslationPattern = $sTranslationPattern;
     }
@@ -92,7 +92,7 @@ class oxTranslator
      *
      * @param array $aKeys
      */
-    protected function _setKeys( $aKeys )
+    protected function _setKeys($aKeys)
     {
         $this->_aKeys = $aKeys;
     }
@@ -115,7 +115,7 @@ class oxTranslator
      *
      * @return null
      */
-    public function setAdmin( $blAdmin )
+    public function setAdmin($blAdmin)
     {
         $this->_blAdmin = $blAdmin;
     }
@@ -135,7 +135,7 @@ class oxTranslator
      *
      * @param integer $iLanguage
      */
-    public function setLanguage( $iLanguage )
+    public function setLanguage($iLanguage)
     {
         $this->_iLanguage = $iLanguage;
     }
@@ -145,9 +145,9 @@ class oxTranslator
      *
      * @param string $sName
      */
-    public function setLanguageByName( $sName )
+    public function setLanguageByName($sName)
     {
-        $this->_iLanguage = $this->getLanguageIdByName( $sName );
+        $this->_iLanguage = $this->getLanguageIdByName($sName);
     }
 
     /**
@@ -164,17 +164,17 @@ class oxTranslator
      * @param int  $iLanguage
      * @param bool $blAdmin
      */
-    public function __construct( $iLanguage = 1, $blAdmin = false )
+    public function __construct($iLanguage = 1, $blAdmin = false)
     {
-        $this->setLanguage( $iLanguage );
-        $this->setAdmin( $blAdmin );
+        $this->setLanguage($iLanguage);
+        $this->setAdmin($blAdmin);
     }
 
 
-    public function translate( $sString  )
+    public function translate($sString)
     {
         $aUntranslated = array();
-        if ( !$this->_isTranslateAble( $sString ) ) {
+        if (!$this->_isTranslateAble($sString)) {
             return $sString;
         }
 
@@ -182,23 +182,24 @@ class oxTranslator
         $blAdmin = $this->getAdmin();
         $aTranslations = array();
         $aKeys = $this->_getKeys();
-        foreach ( $aKeys as $sKey ) {
-            $aTranslations[$sKey] = oxRegistry::getLang()->translateString( $sKey, $iLang, $blAdmin );
+        foreach ($aKeys as $sKey) {
+            $aTranslations[$sKey] = oxRegistry::getLang()->translateString($sKey, $iLang, $blAdmin);
 
-            if ( $aTranslations[$sKey] == $sKey ) {
+            if ($aTranslations[$sKey] == $sKey) {
                 $aUntranslated[] = $sKey;
             }
         }
-        $this->setUntranslated( $aUntranslated );
+        $this->setUntranslated($aUntranslated);
 
-        foreach ( $aKeys as $sKey => $sValue ) {
-            if ( in_array( $sValue, $aUntranslated ) ) {
+        $aNewKeys = array();
+        foreach ($aKeys as $sKey => $sValue) {
+            if (in_array($sValue, $aUntranslated)) {
                 $aNewKeys[$sKey] = $sValue;
             } else {
                 $aNewKeys[$sKey] = "%$sValue%";
             }
         }
-        return str_replace( $aNewKeys, $aTranslations, $sString );
+        return str_replace($aNewKeys, $aTranslations, $sString);
     }
 
 
@@ -209,17 +210,17 @@ class oxTranslator
      *
      * @return oxTranslator
      */
-    protected function _isTranslateAble( $sString )
+    protected function _isTranslateAble($sString)
     {
         $sPattern = $this->getTranslationPattern();
         $aMatches = array();
-        if ( is_array( $sString ) ) {
-            $sString = implode( '_DELIMITER_', $sString );
+        if (is_array($sString)) {
+            $sString = implode('_DELIMITER_', $sString);
         }
-        preg_match_all( "|{$sPattern}|", $sString, $aMatches );
+        preg_match_all("|{$sPattern}|", $sString, $aMatches);
 
-        if ( $aMatches['key'] > 0 ) {
-            $this->_setKeys( $aMatches['key'] );
+        if ($aMatches['key'] > 0) {
+            $this->_setKeys($aMatches['key']);
             return true;
         }
         return false;
@@ -230,8 +231,8 @@ class oxTranslator
      *
      * @return int
      */
-    public function getLanguageIdByName( $sName )
+    public function getLanguageIdByName($sName)
     {
-        return array_search( $sName, oxRegistry::getLang()->getLanguageNames() );
+        return array_search($sName, oxRegistry::getLang()->getLanguageNames());
     }
 }

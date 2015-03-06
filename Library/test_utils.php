@@ -19,7 +19,7 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-define ('MAX_LOOP_AMOUNT', 4);
+define('MAX_LOOP_AMOUNT', 4);
 function getRandLTAmnt()
 {
     return rand(1, MAX_LOOP_AMOUNT - 1);

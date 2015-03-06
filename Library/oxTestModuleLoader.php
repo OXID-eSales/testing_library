@@ -24,10 +24,10 @@
  */
 class oxTestModuleLoader
 {
-    /** @var array  */
+    /** @var array */
     protected static $_aModuleData = array('chains' => array(), 'paths' => array());
 
-    /** @var bool  */
+    /** @var bool */
     protected static $_blOriginal = false;
 
     /**

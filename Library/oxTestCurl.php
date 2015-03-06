@@ -25,7 +25,6 @@
  *
  * @package model
  */
-
 class oxTestCurl
 {
     /**
@@ -104,7 +103,7 @@ class oxTestCurl
      *
      * @return null
      */
-    public function setUrl( $sUrl )
+    public function setUrl($sUrl)
     {
         $this->_sUrl = $sUrl;
     }
@@ -126,13 +125,13 @@ class oxTestCurl
     /**
      * Set query like "param1=value1&param2=values2.."
      */
-    public function setQuery( $sQuery = null )
+    public function setQuery($sQuery = null)
     {
-        if ( is_null($sQuery) ) {
+        if (is_null($sQuery)) {
             $sQuery = "";
-            if ( $aParams = $this->getParameters() ) {
-                $aParams = $this->_prepareQueryParameters( $aParams );
-                $sQuery = http_build_query( $aParams, "", "&" );
+            if ($aParams = $this->getParameters()) {
+                $aParams = $this->_prepareQueryParameters($aParams);
+                $sQuery = http_build_query($aParams, "", "&");
             }
         }
 
@@ -146,7 +145,7 @@ class oxTestCurl
      */
     public function getQuery()
     {
-        if ( is_null( $this->_sQuery ) ) {
+        if (is_null($this->_sQuery)) {
             $this->setQuery();
         }
 
@@ -158,7 +157,7 @@ class oxTestCurl
      *
      * @param array $aParameters parameters
      */
-    public function setParameters( $aParameters )
+    public function setParameters($aParameters)
     {
         $this->_aParameters = $aParameters;
     }
@@ -180,7 +179,7 @@ class oxTestCurl
      *
      * @return null
      */
-    public function setHost( $sHost )
+    public function setHost($sHost)
     {
         $this->_sHost = $sHost;
     }
@@ -202,16 +201,16 @@ class oxTestCurl
      *
      * @return null
      */
-    public function setHeader( $aHeader = null )
+    public function setHeader($aHeader = null)
     {
-        if ( is_null( $aHeader ) && $this->getMethod() == "POST") {
+        if (is_null($aHeader) && $this->getMethod() == "POST") {
             $sHost = $this->getHost();
 
             $aHeader = array();
             $aHeader[] = 'POST /cgi-bin/webscr HTTP/1.1';
             $aHeader[] = 'Content-Type: multipart/form-data';
-            if ( isset( $sHost ) ) {
-                $aHeader[] = 'Host: '. $sHost;
+            if (isset($sHost)) {
+                $aHeader[] = 'Host: ' . $sHost;
             }
             $aHeader[] = 'Connection: close';
         }
@@ -225,7 +224,7 @@ class oxTestCurl
      */
     public function getHeader()
     {
-        if ( is_null( $this->_aHeader ) ) {
+        if (is_null($this->_aHeader)) {
             $this->setHeader();
         }
         return $this->_aHeader;
@@ -263,9 +262,9 @@ class oxTestCurl
      *
      * @return null
      */
-    public function setOption( $sName, $sValue )
+    public function setOption($sName, $sValue)
     {
-        if (strpos( $sName, 'CURLOPT_' ) !== 0 || !defined($sConstant = strtoupper($sName))) {
+        if (strpos($sName, 'CURLOPT_') !== 0 || !defined($sConstant = strtoupper($sName))) {
             throw new Exception("Failed to set CURL option '$sName' with value '$sValue'");
         }
 
@@ -300,7 +299,7 @@ class oxTestCurl
 
         $this->_close();
 
-        if ( $iCurlErrorNumber ) {
+        if ($iCurlErrorNumber) {
             throw new Exception("Failed to execute CURL call with message: $sResponse ($iCurlErrorNumber)");
         }
 
@@ -312,7 +311,7 @@ class oxTestCurl
      *
      * @param string $sCharset charset
      */
-    public function setConnectionCharset( $sCharset )
+    public function setConnectionCharset($sCharset)
     {
         $this->_sConnectionCharset = $sCharset;
     }
@@ -342,7 +341,7 @@ class oxTestCurl
      *
      * @param resource $rCurl curl.
      */
-    protected function _setResource( $rCurl )
+    protected function _setResource($rCurl)
     {
         $this->_rCurl = $rCurl;
     }
@@ -354,8 +353,8 @@ class oxTestCurl
      */
     protected function _getResource()
     {
-        if ( is_null( $this->_rCurl ) ) {
-            $this->_setResource( curl_init() );
+        if (is_null($this->_rCurl)) {
+            $this->_setResource(curl_init());
         }
         return $this->_rCurl;
     }
@@ -366,19 +365,19 @@ class oxTestCurl
     protected function _setOptions()
     {
         if (!is_null($this->getHeader())) {
-            $this->_setOpt( CURLOPT_HTTPHEADER, $this->getHeader() );
+            $this->_setOpt(CURLOPT_HTTPHEADER, $this->getHeader());
         }
-        $this->_setOpt( CURLOPT_URL, $this->getUrl() );
+        $this->_setOpt(CURLOPT_URL, $this->getUrl());
 
-        if ( $this->getMethod() == "POST" ) {
-            $this->_setOpt( CURLOPT_POST, 1 );
-            $this->_setOpt( CURLOPT_POSTFIELDS, $this->_formParamsForPost($this->getParameters()) );
+        if ($this->getMethod() == "POST") {
+            $this->_setOpt(CURLOPT_POST, 1);
+            $this->_setOpt(CURLOPT_POSTFIELDS, $this->_formParamsForPost($this->getParameters()));
         }
 
         $aOptions = $this->getOptions();
-        if ( count($aOptions) ) {
-            foreach( $aOptions as $sName => $mValue  ) {
-                $this->_setOpt( constant( $sName ), $mValue );
+        if (count($aOptions)) {
+            foreach ($aOptions as $sName => $mValue) {
+                $this->_setOpt(constant($sName), $mValue);
             }
         }
     }
@@ -396,14 +395,14 @@ class oxTestCurl
         $aResult = array();
         foreach ($aParameters as $sKey => $mParam) {
             if (is_array($mParam)) {
-                $sKey = $sParentKey? "[$sKey]" : $sKey;
+                $sKey = $sParentKey ? "[$sKey]" : $sKey;
                 $aPartResult = $this->_formParamsForPost($mParam, $sKey);
                 foreach ($aPartResult as $sKey2 => $mVal2) {
-                    $sKey2 = $sParentKey? $sParentKey."$sKey2" : $sKey2;
+                    $sKey2 = $sParentKey ? $sParentKey . "$sKey2" : $sKey2;
                     $aResult[$sKey2] = $this->_getPostParamValue($mVal2);
                 }
             } else {
-                $sKey = $sParentKey? $sParentKey."[$sKey]" : $sKey;
+                $sKey = $sParentKey ? $sParentKey . "[$sKey]" : $sKey;
                 $aResult[$sKey] = $this->_getPostParamValue($mParam);
             }
         }
@@ -434,7 +433,7 @@ class oxTestCurl
      */
     protected function _execute()
     {
-        return curl_exec( $this->_getResource() );
+        return curl_exec($this->_getResource());
     }
 
     /**
@@ -444,8 +443,8 @@ class oxTestCurl
      */
     protected function _close()
     {
-        curl_close( $this->_getResource() );
-        $this->_setResource( null );
+        curl_close($this->_getResource());
+        $this->_setResource(null);
     }
 
     /**
@@ -454,9 +453,9 @@ class oxTestCurl
      * @param string $sName  curl option name to set value to.
      * @param string $sValue curl option value to set.
      */
-    protected function _setOpt( $sName, $sValue )
+    protected function _setOpt($sName, $sValue)
     {
-        curl_setopt( $this->_getResource(), $sName, $sValue );
+        curl_setopt($this->_getResource(), $sName, $sValue);
     }
 
     /**
@@ -466,7 +465,7 @@ class oxTestCurl
      */
     protected function _getErrorNumber()
     {
-        return curl_errno( $this->_getResource() );
+        return curl_errno($this->_getResource());
     }
 
     /**
@@ -483,9 +482,9 @@ class oxTestCurl
      * @param $aParams
      * @return array
      */
-    protected function _prepareQueryParameters( $aParams )
+    protected function _prepareQueryParameters($aParams)
     {
-        $aParams = array_map( array( $this, '_htmlDecode' ), $aParams );
+        $aParams = array_map(array($this, '_htmlDecode'), $aParams);
 
         return $aParams;
     }
@@ -497,12 +496,12 @@ class oxTestCurl
      *
      * @return string
      */
-    protected function _htmlDecode( $mParam )
+    protected function _htmlDecode($mParam)
     {
-        if ( is_array( $mParam ) ) {
-            $mParam = $this->_prepareQueryParameters( $mParam );
+        if (is_array($mParam)) {
+            $mParam = $this->_prepareQueryParameters($mParam);
         } else {
-            $mParam = html_entity_decode( stripslashes( $mParam ), ENT_QUOTES, $this->getConnectionCharset() );
+            $mParam = html_entity_decode(stripslashes($mParam), ENT_QUOTES, $this->getConnectionCharset());
         }
 
         return $mParam;

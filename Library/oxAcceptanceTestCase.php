@@ -19,9 +19,9 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-require_once TEST_LIBRARY_PATH .'oxMinkWrapper.php';
-require_once TEST_LIBRARY_PATH .'oxObjectValidator.php';
-require_once TEST_LIBRARY_PATH .'oxTranslator.php';
+require_once TEST_LIBRARY_PATH . 'oxMinkWrapper.php';
+require_once TEST_LIBRARY_PATH . 'oxObjectValidator.php';
+require_once TEST_LIBRARY_PATH . 'oxTranslator.php';
 
 /**
  * Base class for Selenium tests.
@@ -64,7 +64,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /** @var \Selenium\Client Selenium client. Used only with selenium driver. */
     protected $_oClient = null;
 
-    /** @var \Behat\Mink\Session Mink session*/
+    /** @var \Behat\Mink\Session Mink session */
     protected $_oMinkSession = null;
 
     /** @var string Overwrite this with __DIR__ to know in which directory test data is located. */
@@ -115,7 +115,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
 
         $sTestSuitePath = str_replace('_', '/', get_called_class());
         $sTestSuitePath = substr($sTestSuitePath, 0, strrpos($sTestSuitePath, '/'));
-        $sTestSuitePath = $this->_testsDir.'/'.$sTestSuitePath;
+        $sTestSuitePath = $this->_testsDir . '/' . $sTestSuitePath;
 
         $this->addTestData($sTestSuitePath);
 
@@ -129,14 +129,14 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function addTestData($sTestSuitePath)
     {
-        $testDataPath = realpath($sTestSuitePath.'/testData/');
+        $testDataPath = realpath($sTestSuitePath . '/testData/');
         if ($testDataPath) {
             $oFileCopier = new oxFileCopier();
             $oFileCopier->copyFiles($testDataPath, oxPATH);
         }
 
-        $sTestSuitePath = realpath($sTestSuitePath.'/testSql/');
-        $sFileName = $sTestSuitePath . '/demodata_'. SHOP_EDITION .'.sql';
+        $sTestSuitePath = realpath($sTestSuitePath . '/testSql/');
+        $sFileName = $sTestSuitePath . '/demodata_' . SHOP_EDITION . '.sql';
         if (file_exists($sFileName)) {
             $this->importSql($sFileName);
         }
@@ -278,8 +278,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * opens shop frontend and runs checkForErrors().
      *
-     * @param bool $blForceMainShop Opens main shop even if SubShop is being tested.
-     * @param bool $blClearCache    Whether to clear cache.
+     * @param bool        $blForceMainShop Opens main shop even if SubShop is being tested.
+     * @param bool        $blClearCache    Whether to clear cache.
      * @param bool|string $blForceSubShop  Opens sub shop even if man shop is being tested.
      *
      * @return null
@@ -1032,7 +1032,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      * selects element and waits till needed frame will be loaded. same frame as before will be selected.
      *
      * @param string $locator select list locator.
-     * @param string $frame frame which should be also loaded (this frame will be loaded after current frame is loaded).
+     * @param string $frame   frame which should be also loaded (this frame will be loaded after current frame is loaded).
      * @return null
      */
     public function clickAndWaitFrame($locator, $frame = '')
@@ -1045,9 +1045,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * selects element and waits till needed frame will be loaded. same frame as before will be selected.
      *
-     * @param string $locator select list locator.
+     * @param string $locator   select list locator.
      * @param string $selection option to select.
-     * @param string $frame frame which should be also loaded (this frame will be loaded after current frame is loaded).
+     * @param string $frame     frame which should be also loaded (this frame will be loaded after current frame is loaded).
      * @return null
      */
     public function selectAndWaitFrame($locator, $selection, $frame = '')
@@ -1066,7 +1066,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      * If an confirmation is generated but you do not get/verify it, the next Selenium action will fail.
      *
      * @param string $locator locator for delete button.
-     * @param string $frame frame which should be also loaded (this frame will be loaded after current frame is loaded).
+     * @param string $frame   frame which should be also loaded (this frame will be loaded after current frame is loaded).
      * @return null
      */
     public function clickAndConfirm($locator, $frame = "")
@@ -1099,9 +1099,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * Waits till element will appear in page (only IF such element DID NOT EXIST BEFORE).
      *
-     * @param string $sLocator element locator.
-     * @param int $iSeconds How much time to wait for element.
-     * @param bool $blIgnoreResult whether not to fail if element will not appear in given time.
+     * @param string $sLocator       element locator.
+     * @param int    $iSeconds       How much time to wait for element.
+     * @param bool   $blIgnoreResult whether not to fail if element will not appear in given time.
      * @return null
      */
     public function waitForElement($sLocator, $iSeconds = 10, $blIgnoreResult = false)
@@ -1112,9 +1112,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * Waits till element will appear in page (only IF such element DID NOT EXIST BEFORE).
      *
-     * @param string $sLocator element locator.
-     * @param int $iTimeToWait How much time to wait for element.
-     * @param bool $blIgnoreResult whether not to fail if element will not appear in given time.
+     * @param string $sLocator       element locator.
+     * @param int    $iTimeToWait    How much time to wait for element.
+     * @param bool   $blIgnoreResult whether not to fail if element will not appear in given time.
      * @return null
      */
     public function waitForEditable($sLocator, $iTimeToWait = 10, $blIgnoreResult = false)
@@ -1125,9 +1125,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * Waits for element to show up (only IF such element ALREADY EXIST AS HIDDEN AND WILL BE SHOWN AS VISIBLE).
      *
-     * @param string $sLocator element locator.
-     * @param int $iTimeToWait time to wait for element.
-     * @param bool $blIgnoreResult whether not to fail if element will not appear in given time.
+     * @param string $sLocator       element locator.
+     * @param int    $iTimeToWait    time to wait for element.
+     * @param bool   $blIgnoreResult whether not to fail if element will not appear in given time.
      * @return null
      */
     public function waitForItemAppear($sLocator, $iTimeToWait = 10, $blIgnoreResult = false)
@@ -1140,8 +1140,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * Waits for element to disappear (only IF such element WILL BE MARKED AS NOT VISIBLE).
      *
-     * @param string $sLocator element locator.
-     * @param int $iTimeToWait time to wait for element
+     * @param string $sLocator    element locator.
+     * @param int    $iTimeToWait time to wait for element
      * @return null
      */
     public function waitForItemDisappear($sLocator, $iTimeToWait = 10)
@@ -1153,9 +1153,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * Waits till text will appear in page. If array is passed, waits for any of texts in array to appear.
      *
-     * @param string|array $mTextMsg If Array of Messages is passed, returns when either of given texts if found
-     * @param bool $printSource print source (default false).
-     * @param int $iTimeToWait timeout (default 10).
+     * @param string|array $mTextMsg    If Array of Messages is passed, returns when either of given texts if found
+     * @param bool         $printSource print source (default false).
+     * @param int          $iTimeToWait timeout (default 10).
      * @return null
      */
     public function waitForText($mTextMsg, $printSource = false, $iTimeToWait = 10)
@@ -1167,8 +1167,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * Waits till text will disappear from page.
      *
-     * @param string $textLine text.
-     * @param int $iTimeToWait timeout (default 10).
+     * @param string $textLine    text.
+     * @param int    $iTimeToWait timeout (default 10).
      * @return null
      */
     public function waitForTextDisappear($textLine, $iTimeToWait = 10)
@@ -1181,10 +1181,10 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      * Waits for specified method with given parameter to return true.
      * If multiple parameters is passed, waits till true is returned on any of them.
      *
-     * @param string $sMethod
+     * @param string       $sMethod
      * @param string|array $mParams
-     * @param int $sTimeToWait
-     * @param bool $blIgnoreResult
+     * @param int          $sTimeToWait
+     * @param bool         $blIgnoreResult
      */
     protected function _waitForAppear($sMethod, $mParams, $sTimeToWait = 10, $blIgnoreResult = false)
     {
@@ -1217,7 +1217,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
 
     /**
      * @param string $sMethod
-     * @param array $aParams
+     * @param array  $aParams
      * @return bool
      */
     protected function _isElementAppeared($sMethod, $aParams)
@@ -1238,7 +1238,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      *
      * @param string $sMethod
      * @param string $sMessage
-     * @param int $sTimeToWait
+     * @param int    $sTimeToWait
      */
     protected function _waitForDisappear($sMethod, $sMessage, $sTimeToWait = 30)
     {
@@ -1327,7 +1327,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      * Mark the test as skipped until given date.
      * Wrapper function for PHPUnit_Framework_Assert::markTestSkipped.
      *
-     * @param string $sDate Date string in format 'Y-m-d'.
+     * @param string $sDate    Date string in format 'Y-m-d'.
      * @param string $sMessage Message.
      *
      * @throws PHPUnit_Framework_SkippedTestError
@@ -1370,7 +1370,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * Asserts that text is present.
      *
-     * @param string $sText text to search
+     * @param string $sText    text to search
      * @param string $sMessage fail message
      * @return void
      */
@@ -1384,7 +1384,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * Asserts that text is not present.
      *
-     * @param string $sText text to search
+     * @param string $sText    text to search
      * @param string $sMessage fail message
      * @return void
      */
@@ -1550,7 +1550,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
                 $oDriver = new \Behat\Mink\Driver\SeleniumDriver(browserName, shopURL, $client);
                 break;
             default:
-                throw new Exception('Driver '. $sDriver .' was not found!');
+                throw new Exception('Driver ' . $sDriver . ' was not found!');
                 break;
         }
 
@@ -1636,13 +1636,13 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      * Call shop seleniums connector to execute code in shop.
      * @example call to update information to database.
      *
-     * @param string $sClass class name.
-     * @param string $sFnc function name.
-     * @param string $sId id of object.
-     * @param array $aClassParams params to set to object.
-     * @param array $aFunctionParams params to set to object.
-     * @param string $sShopId object shop id.
-     * @param string $sLang object shop id.
+     * @param string $sClass          class name.
+     * @param string $sFnc            function name.
+     * @param string $sId             id of object.
+     * @param array  $aClassParams    params to set to object.
+     * @param array  $aFunctionParams params to set to object.
+     * @param string $sShopId         object shop id.
+     * @param string $sLang           object shop id.
      *
      * @return mixed
      */
@@ -1677,10 +1677,10 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      * Call shop seleniums connector to execute code in shop.
      * @example call to update information to database.
      *
-     * @param string $sElementTable Name of element table
-     * @param integer $sShopId Subshop id
+     * @param string  $sElementTable Name of element table
+     * @param integer $sShopId       Subshop id
      * @param integer $sParentShopId Parent subshop id
-     * @param integer $sElementId Element id
+     * @param integer $sElementId    Element id
      *
      * @return mixed
      */
@@ -1837,7 +1837,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      * Logs method loading times
      *
      * @param string $sMethod
-     * @param int $iTime
+     * @param int    $iTime
      */
     public function addToLog($sMethod, $iTime)
     {
@@ -1897,8 +1897,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
             $aFilteredTrace = PHPUnit_Util_Filter::getFilteredStacktrace($e, false);
             $sErrorMessage = $this->_getScreenShot();
             $sErrorMessage .= $oParentException->getMessage();
-            $sErrorMessage .= "\nSelected Frame: '" . $this->getSelectedFrame(
-                ) . "' in window '" . $this->getSelectedWindow() . "' ";
+            $sErrorMessage .= "\nSelected Frame: '" . $this->getSelectedFrame() . "' in window '" . $this->getSelectedWindow() . "' ";
             $sErrorMessage .= "\n\n" . $this->_formTrace($aFilteredTrace);
 
             $oTrace = $oParentException;
@@ -2014,7 +2013,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      * Forms shop url with given parameters
      *
      * @param array $aParams
-     * @param null $sShopId
+     * @param null  $sShopId
      * @return string
      */
     protected function _getShopUrl($aParams = array(), $sShopId = null)
@@ -2046,4 +2045,6 @@ class oxAcceptanceTestCase extends oxMinkWrapper
  * Backward compatibility, do not use it for new tests.
  * @deprecated use oxAcceptanceTestCase instead
  */
-class oxTestCase extends oxAcceptanceTestCase {}
+class oxTestCase extends oxAcceptanceTestCase
+{
+}

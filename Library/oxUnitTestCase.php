@@ -50,9 +50,17 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
 
     /** @var array multishop tables used in shop */
     protected $_aMultiShopTables = array(
-        'oxarticles', 'oxcategories', 'oxattribute', 'oxdelivery',
-        'oxdeliveryset', 'oxdiscount', 'oxmanufacturers', 'oxselectlist',
-        'oxvendor', 'oxvoucherseries', 'oxwrapping'
+        'oxarticles',
+        'oxcategories',
+        'oxattribute',
+        'oxdelivery',
+        'oxdeliveryset',
+        'oxdiscount',
+        'oxmanufacturers',
+        'oxselectlist',
+        'oxvendor',
+        'oxvoucherseries',
+        'oxwrapping'
     );
 
     /** @var array variable */
@@ -407,7 +415,7 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
      */
     public function getTeardownSqls()
     {
-        return (array) $this->_aTeardownSqls;
+        return (array)$this->_aTeardownSqls;
     }
 
     /**
@@ -455,7 +463,7 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
     {
         $oDate = DateTime::createFromFormat('Y-m-d', $sDate);
 
-        if (time() < ((int) $oDate->format('U'))) {
+        if (time() < ((int)$oDate->format('U'))) {
             $this->markTestSkipped($sMessage);
         }
     }
@@ -476,7 +484,7 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
         if (OXID_VERSION_EE) :
             if (in_array($sTable, $this->getMultiShopTables())) {
                 $sMapId = !is_null($sMapId) ? $sMapId : oxDb::getDb()->Insert_ID();
-                $aShopIds = (array) $aShopIds;
+                $aShopIds = (array)$aShopIds;
 
                 foreach ($aShopIds as $iShopId) {
                     $sSql = "REPLACE INTO `{$sTable}2shop` SET `oxmapobjectid` = ?, `oxshopid` = ?";
@@ -523,7 +531,7 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
      */
     public function getTablesForCleanup()
     {
-        return (array) $this->_aTableForCleanups;
+        return (array)$this->_aTableForCleanups;
     }
 
     /**
@@ -839,4 +847,6 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
  * Backward compatibility, do not use it for new tests.
  * @deprecated use oxAcceptanceTestCase instead
  */
-class OxidTestCase extends OxUnitTestCase {}
+class OxidTestCase extends OxUnitTestCase
+{
+}

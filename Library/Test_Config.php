@@ -20,6 +20,7 @@
  */
 
 use Symfony\Component\Yaml\Yaml;
+
 if (!defined('TESTS_DIRECTORY')) {
     define('TESTS_DIRECTORY', __DIR__ . '/../');
 }
@@ -56,7 +57,7 @@ class Test_Config
             }
         }
 
-        return realpath($this->shopPath) .'/';
+        return realpath($this->shopPath) . '/';
     }
 
     /**
@@ -105,7 +106,7 @@ class Test_Config
     {
         $shopId = 'oxbaseshop';
         if ($this->getShopEdition() == 'EE') {
-            $isSubShop = (bool) $this->getValue('is_subshop', 'IS_SUBSHOP');
+            $isSubShop = (bool)$this->getValue('is_subshop', 'IS_SUBSHOP');
             $shopId = $isSubShop ? 2 : 1;
         }
 
@@ -153,7 +154,7 @@ class Test_Config
             $sTestsPath = $this->getShopPath() . $sTestsPath;
         }
 
-        return rtrim($sTestsPath, '/') .'/';
+        return rtrim($sTestsPath, '/') . '/';
     }
 
     /**
@@ -203,7 +204,7 @@ class Test_Config
      */
     public function shouldInstallShop()
     {
-        return (bool) $this->getValue('install_shop', 'INSTALL_SHOP');
+        return (bool)$this->getValue('install_shop', 'INSTALL_SHOP');
     }
 
     /**
@@ -213,7 +214,7 @@ class Test_Config
      */
     public function shouldRestoreShopAfterTestsSuite()
     {
-        return (bool) $this->getValue('restore_shop_after_tests_suite');
+        return (bool)$this->getValue('restore_shop_after_tests_suite');
     }
 
     /**
@@ -223,7 +224,7 @@ class Test_Config
      */
     public function shouldUseSeparateDbDumpDirectory()
     {
-        return (bool) $this->getValue('special_db_dump_folder');
+        return (bool)$this->getValue('special_db_dump_folder');
     }
 
     /**
@@ -323,13 +324,13 @@ class Test_Config
         $vendorBaseDir = $this->getVendorBasePath();
         $availablePaths = array(
             $vendorBaseDir,
-            $vendorBaseDir .'../../',
-            $vendorBaseDir .'../../../',
+            $vendorBaseDir . '../../',
+            $vendorBaseDir . '../../../',
         );
 
         $shopPath = '';
         foreach ($availablePaths as $path) {
-            if (file_exists($path .'/config.inc.php')) {
+            if (file_exists($path . '/config.inc.php')) {
                 $shopPath = $path;
                 break;
             }
@@ -343,8 +344,8 @@ class Test_Config
      */
     private function getVendorBasePath()
     {
-        $vendorBasePath = TESTS_DIRECTORY ."../../../";
-        if (!file_exists($vendorBasePath.'vendor')) {
+        $vendorBasePath = TESTS_DIRECTORY . "../../../";
+        if (!file_exists($vendorBasePath . 'vendor')) {
             $vendorBasePath = TESTS_DIRECTORY;
         }
         return $vendorBasePath;
@@ -357,6 +358,6 @@ class Test_Config
      */
     private function getConfigFileName()
     {
-        return $this->getVendorBasePath() ."test_config.yml";
+        return $this->getVendorBasePath() . "test_config.yml";
     }
 }

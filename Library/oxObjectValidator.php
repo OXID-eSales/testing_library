@@ -28,8 +28,8 @@ class oxObjectValidator
     private $_aErrors = array();
 
     /**
-     * @param $sClass
-     * @param $aExpectedParams
+     * @param      $sClass
+     * @param      $aExpectedParams
      * @param null $sOxId
      * @return bool
      */
@@ -89,8 +89,8 @@ class oxObjectValidator
     /**
      * Returns object parameters
      *
-     * @param $sClass
-     * @param array $aObjectParams
+     * @param        $sClass
+     * @param array  $aObjectParams
      * @param string $sOxId
      * @param string $sShopId
      * @return array
