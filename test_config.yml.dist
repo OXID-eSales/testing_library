@@ -33,7 +33,7 @@ optional_parameters:
     shop_setup_path:
 
     # Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it.
-    restore_shop_after_tests_suite: true
+    restore_shop_after_tests_suite: false
 
     # Selenium server IP address
     selenium_server_ip: '127.0.0.1'
