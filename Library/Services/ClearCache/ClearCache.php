@@ -29,11 +29,6 @@ class ClearCache implements ShopServiceInterface
      */
     public function init()
     {
-        // Clean tmp
-        if ($sCompileDir = oxRegistry::get('oxConfigFile')->getVar('sCompileDir')) {
-            $this->removeDirectory($sCompileDir, true);
-        }
-
         if (OXID_VERSION_EE) :
             if (class_exists('oxReverseProxyBackEnd')) {
                 // Clean cache
@@ -51,6 +46,11 @@ class ClearCache implements ShopServiceInterface
                 $oReverseProxy->execute();
             }
         endif;
+
+        // Clean tmp
+        if ($sCompileDir = oxRegistry::get('oxConfigFile')->getVar('sCompileDir')) {
+            $this->removeDirectory($sCompileDir, true);
+        }
     }
 
     /**
