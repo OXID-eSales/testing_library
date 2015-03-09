@@ -72,7 +72,14 @@ class ObjectConstructor
         if ($sOxId == 'lastInsertedId') {
             $sOxId = $this->_getLastInsertedId();
         }
-        return $this->getObject()->load($sOxId);
+        $object = $this->getObject();
+        $result = $object->load($sOxId);
+
+        if ($result && $object->getId() != $sOxId) {
+            $result = $object->load($sOxId);
+        }
+
+        return $result;
     }
 
     /**
