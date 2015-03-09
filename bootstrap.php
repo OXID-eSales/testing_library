@@ -19,7 +19,11 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-error_reporting((E_ALL ^ E_NOTICE) | E_STRICT);
+if (getenv('TRAVIS_ERROR_LEVEL')) {
+    error_reporting((int)getenv('TRAVIS_ERROR_LEVEL'));
+} else {
+    error_reporting((E_ALL ^ E_NOTICE) | E_STRICT);
+}
 ini_set('display_errors', true);
 
 define('TESTS_DIRECTORY', __DIR__ .'/');
