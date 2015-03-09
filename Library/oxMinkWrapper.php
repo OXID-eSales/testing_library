@@ -538,7 +538,7 @@ class oxMinkWrapper extends PHPUnit_Framework_TestCase
      */
     public function waitForPageToLoad($iTimeout = 10000, $blCheckIfLoading = false)
     {
-        $readyState = $blCheckIfLoading ? $this->getMinkSession()->evaluateScript('window.document.readyState') : 'loading';
+        $readyState = $blCheckIfLoading ? $this->getMinkSession()->getDriver()->getBrowser()->getEval('window.document.readyState') : 'loading';
 
         if ($readyState == 'loading' || $readyState == 'interactive') {
             $this->getMinkSession()->getDriver()->getBrowser()->waitForPageToLoad($iTimeout * $this->_iWaitTimeMultiplier);
