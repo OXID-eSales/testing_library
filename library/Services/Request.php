@@ -24,17 +24,33 @@
  */
 class Request
 {
+    /** @var array Request parameters */
+    private $parameters = array();
+
+    /**
+     * Sets parameters to request
+     *
+     * @param array $parameters
+     */
+    public function __construct($parameters = null)
+    {
+        $this->parameters = $_REQUEST;
+        if (!empty($parameters)) {
+            $this->parameters = array_merge($this->parameters, $parameters);
+        }
+    }
+
     /**
      * Returns request parameter
      *
      * @param string $name
      * @param null   $default
      *
-     * @return null
+     * @return mixed
      */
     public function getParameter($name, $default = null)
     {
-        return array_key_exists($name, $_REQUEST) ? $_REQUEST[$name] : $default;
+        return array_key_exists($name, $this->parameters) ? $this->parameters[$name] : $default;
     }
 
     /**
@@ -42,10 +58,17 @@ class Request
      *
      * @param string $name param name
      *
-     * @return null
+     * @return mixed
      */
     public function getUploadedFile($name)
     {
-        return array_key_exists($name, $_FILES) ? $_FILES[$name] : null;
+        $sFilePath = '';
+        if (array_key_exists($name, $_FILES)) {
+            $sFilePath = $_FILES[$name]['tmp_name'];
+        } else if (array_key_exists($name, $this->parameters)) {
+            $sFilePath = substr($this->parameters[$name], 1);
+        }
+
+        return $sFilePath;
     }
 }

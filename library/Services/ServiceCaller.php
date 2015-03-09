@@ -19,14 +19,18 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-define('LIBRARY_PATH', dirname(__FILE__).'/Library/');
+define('LIBRARY_PATH', __DIR__.'/Library/');
+
+if (!defined('TEST_SERVICES_PATH')) {
+    define('TEST_SERVICES_PATH', __DIR__);
+}
 
 if (!defined('TESTS_TEMP_DIR')) {
-    define('TESTS_TEMP_DIR', dirname(__FILE__).'/temp/');
+    define('TESTS_TEMP_DIR', TEST_SERVICES_PATH.'/temp/');
 }
 
 if (!defined('oxPATH')) {
-    define('oxPATH', dirname(__FILE__) . '/../');
+    define('oxPATH', __DIR__ . '/../');
 }
 
 require_once oxPATH ."/bootstrap.php";
@@ -65,7 +69,7 @@ class ServiceCaller
 
         $service = $this->createService($serviceClass);
 
-        return $service->init();
+        return $service->init($request);
     }
 
     /**
@@ -128,7 +132,7 @@ class ServiceCaller
      */
     protected function includeServiceFile($serviceClass)
     {
-        $file = realpath($serviceClass . '/' . $serviceClass . '.php');
+        $file = realpath(TEST_SERVICES_PATH . '/' . $serviceClass . '/' . $serviceClass . '.php');
 
         if (!file_exists($file)) {
             throw new Exception("Service $serviceClass not found in path $file!");
