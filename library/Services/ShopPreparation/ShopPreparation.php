@@ -33,13 +33,16 @@ class ShopPreparation implements ShopServiceInterface
 
     /**
      * Handles request parameters.
+     *
+     * @param Request $request
+     *
+     * @return null
      */
-    public function init()
+    public function init($request)
     {
-        $request = new Request();
-
-        if ($request->getUploadedFile('importSql')) {
-            $this->_importSqlFromUploadedFile();
+        if ($file = $request->getUploadedFile('importSql')) {
+            $oDbHandler = $this->_getDbHandler();
+            $oDbHandler->import($file);
         }
 
         if ($request->getParameter('dumpDB')) {
@@ -51,19 +54,6 @@ class ShopPreparation implements ShopServiceInterface
             $oDbHandler = $this->_getDbHandler();
             $oDbHandler->restoreDB($request->getParameter('dump-prefix'));
         }
-    }
-
-    /**
-     * Imports uploaded file with containing sql to shop.
-     */
-    private function _importSqlFromUploadedFile()
-    {
-        $oFileUploader = new FileUploader();
-        $sFilePath = TMP_PATH.'/import.sql';
-        $oFileUploader->uploadFile('importSql', $sFilePath);
-
-        $oDbHandler = $this->_getDbHandler();
-        $oDbHandler->import($sFilePath);
     }
 
     /**

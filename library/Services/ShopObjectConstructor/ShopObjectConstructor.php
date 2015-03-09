@@ -33,23 +33,24 @@ class ShopObjectConstructor implements ShopServiceInterface
      * if array('param', 'param') is passed, values of these params are returned.
      * classParams are only returned if no function is called. Otherwise function return value is returned.
      *
+     * @param Request $request
+     *
      * @return mixed
      */
-    public function init()
+    public function init($request)
     {
-        $oxConfig = oxRegistry::getConfig();
-
         $oConstructorFactory = new ConstructorFactory();
-        $oConstructor = $oConstructorFactory->getConstructor($oxConfig->getRequestParameter("cl"));
+        $oConstructor = $oConstructorFactory->getConstructor($request->getParameter("cl"));
 
-        $oConstructor->load($oxConfig->getRequestParameter("oxid"));
+        $oConstructor->load($request->getParameter("oxid"));
 
-        if ($oxConfig->getRequestParameter('classparams')) {
-            $mResult = $oConstructor->setClassParameters( $oxConfig->getRequestParameter('classparams') );
+        $mResult = '';
+        if ($request->getParameter('classparams')) {
+            $mResult = $oConstructor->setClassParameters($request->getParameter('classparams') );
         }
 
-        if ($oxConfig->getRequestParameter('fnc')) {
-            $mResult = $oConstructor->callFunction($oxConfig->getRequestParameter('fnc'), $oxConfig->getRequestParameter('functionparams'));
+        if ($request->getParameter('fnc')) {
+            $mResult = $oConstructor->callFunction($request->getParameter('fnc'), $request->getParameter('functionparams'));
         }
 
         return $mResult;

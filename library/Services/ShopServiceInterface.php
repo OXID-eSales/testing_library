@@ -25,9 +25,11 @@
 interface ShopServiceInterface
 {
     /**
-     * Initiates service
+     * Initiates service.
+     *
+     * @param Request $request
      *
      * @return mixed
      */
-    public function init();
+    public function init($request);
 }

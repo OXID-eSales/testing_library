@@ -26,8 +26,12 @@ class ViewsGenerator implements ShopServiceInterface
 {
     /**
      * Clears shop cache
+     *
+     * @param Request $request
+     *
+     * @return null
      */
-    public function init()
+    public function init($request)
     {
         $oGenerator = oxNew('oxDbMetaDataHandler');
         $oGenerator->updateViews();

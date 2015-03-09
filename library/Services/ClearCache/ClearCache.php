@@ -26,8 +26,12 @@ class ClearCache implements ShopServiceInterface
 {
     /**
      * Clears shop cache
+     *
+     * @param Request $request
+     *
+     * @return null
      */
-    public function init()
+    public function init($request)
     {
         if (class_exists('oxReverseProxyBackEnd')) {
             // Clean cache

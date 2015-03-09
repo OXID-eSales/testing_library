@@ -26,15 +26,18 @@ class SubShopHandler implements ShopServiceInterface
 {
     /**
      * Assigns element to subshop
+     *
+     * @param Request $request
+     *
+     * @return null
      */
-    public function init()
+    public function init($request)
     {
-        $oxConfig = oxRegistry::getConfig();
-        $sElementTable = $oxConfig->getRequestParameter("elementtable");
-        $sShopId = $oxConfig->getRequestParameter("shopid");
-        $sParentShopId = $oxConfig->getRequestParameter("parentshopid");
-        $sElementId = $oxConfig->getRequestParameter("elementid");
-        if ( $sElementId ) {
+        $sElementTable = $request->getParameter("elementtable");
+        $sShopId = $request->getParameter("shopid");
+        $sParentShopId = $request->getParameter("parentshopid");
+        $sElementId = $request->getParameter("elementid");
+        if ($sElementId) {
             $this->assignElementToSubShop($sElementTable, $sShopId, $sElementId);
         } else {
             $this->assignAllElementsToSubShop($sElementTable, $sShopId, $sParentShopId);
@@ -52,10 +55,10 @@ class SubShopHandler implements ShopServiceInterface
      */
     public function assignElementToSubShop($sElementTable, $sShopId, $sElementId)
     {
-        $oBase = new oxBase();
+        $oBase = oxNew('oxBase');
         $oBase->init($sElementTable);
         if ( $oBase->load($sElementId) ) {
-            $oElement2ShopRelations = new oxElement2ShopRelations($sElementTable);
+            $oElement2ShopRelations = oxNew('oxElement2ShopRelations', $sElementTable);
             $oElement2ShopRelations->setShopIds($sShopId);
             $oElement2ShopRelations->addToShop($oBase->getId());
         }
@@ -72,7 +75,7 @@ class SubShopHandler implements ShopServiceInterface
      */
     public function assignAllElementsToSubShop($sElementTable, $sShopId, $sParentShopId = 1)
     {
-        $oElement2ShopRelations = new oxElement2ShopRelations($sElementTable);
+        $oElement2ShopRelations = oxNew('oxElement2ShopRelations', $sElementTable);
         $oElement2ShopRelations->setShopIds($sShopId);
         $oElement2ShopRelations->inheritFromShop($sParentShopId);
     }
