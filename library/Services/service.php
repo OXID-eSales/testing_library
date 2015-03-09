@@ -22,37 +22,14 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
-define('LIBRARY_PATH', dirname(__FILE__).'/Library/');
-define('TMP_PATH', dirname(__FILE__).'/temp/');
-define('SHOP_PATH', dirname(__FILE__) . '/../');
-
-require_once dirname(__FILE__) . "/../bootstrap.php";
+require_once 'Request.php';
 require_once 'ServiceCaller.php';
-require_once LIBRARY_PATH . 'Request.php';
-require_once 'ShopServiceInterface.php';
-
-if (!file_exists(TMP_PATH)) {
-    mkdir(TMP_PATH, 0777);
-    chmod(TMP_PATH, 0777);
-}
 
 try {
     $request = new Request();
-
     $oServiceCaller = new ServiceCaller();
 
-    try {
-        if ($request->getParameter('shp')) {
-            $oServiceCaller->setActiveShop($request->getParameter('shp'));
-        }
-        if ($request->getParameter('lang')) {
-            $oServiceCaller->setActiveLanguage($request->getParameter('lang'));
-        }
-    } catch (Exception $e) {
-        // do nothing even if exception was caught during setting of language or shop
-    }
-
-    $mResponse = $oServiceCaller->callService($request->getParameter('service'));
+    $mResponse = $oServiceCaller->callService($request->getParameter('service'), $request);
 
     echo serialize($mResponse);
 } catch (Exception $e) {

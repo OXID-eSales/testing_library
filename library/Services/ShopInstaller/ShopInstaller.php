@@ -19,8 +19,8 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-if (!defined('SHOP_PATH')) {
-    define('SHOP_PATH', __DIR__ . '/../../');
+if (!defined('oxPATH')) {
+    define('oxPATH', __DIR__ . '/../../');
 }
 
 include_once LIBRARY_PATH . '/DbHandler.php';
@@ -355,8 +355,8 @@ class ShopInstaller implements ShopServiceInterface
             $shopEdition = OXID_VERSION_PE_PE ? 'PE' : $shopEdition;
             $shopEdition = OXID_VERSION_PE_CE ? 'CE' : $shopEdition;
         } else {
-            include_once SHOP_PATH . 'core/oxsupercfg.php';
-            include_once SHOP_PATH . 'core/oxconfig.php';
+            include_once oxPATH . 'core/oxsupercfg.php';
+            include_once oxPATH . 'core/oxconfig.php';
             $config = new oxConfig();
             $shopEdition = $config->getEdition();
         }

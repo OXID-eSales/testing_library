@@ -19,96 +19,121 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+define('LIBRARY_PATH', dirname(__FILE__).'/Library/');
+
+if (!defined('TESTS_TEMP_DIR')) {
+    define('TESTS_TEMP_DIR', dirname(__FILE__).'/temp/');
+}
+
+if (!defined('oxPATH')) {
+    define('oxPATH', dirname(__FILE__) . '/../');
+}
+
+require_once oxPATH ."/bootstrap.php";
+
+require_once 'Request.php';
+require_once 'ShopServiceInterface.php';
+
+if (!file_exists(TESTS_TEMP_DIR)) {
+    mkdir(TESTS_TEMP_DIR, 0777);
+    chmod(TESTS_TEMP_DIR, 0777);
+}
+
 /**
  * Class ServiceCaller
  */
 class ServiceCaller
 {
     /**
+     * Calls service
+     *
+     * @param string $serviceClass
+     * @param Request $request
+     *
+     * @throws Exception
+     *
+     * @return mixed
+     */
+    public function callService($serviceClass, $request)
+    {
+        if (!is_null($request->getParameter('shp'))) {
+            $this->setActiveShop($request->getParameter('shp'));
+        }
+        if (!is_null($request->getParameter('lang'))) {
+            $this->setActiveShop($request->getParameter('lang'));
+        }
+
+        $service = $this->createService($serviceClass);
+
+        return $service->init();
+    }
+
+    /**
      * Switches active shop
      *
-     * @param string $sShopId
+     * @param string $shopId
      */
-    public function setActiveShop($sShopId)
+    public function setActiveShop($shopId)
     {
-        $oConfig = oxRegistry::getConfig();
-        if ($sShopId && $oConfig->getEdition() == 'EE') {
-            $oConfig->setShopId($sShopId);
+        $config = oxRegistry::getConfig();
+        if ($shopId && $config->getEdition() == 'EE') {
+            $config->setShopId($shopId);
         }
     }
 
     /**
      * Switches active language
      *
-     * @param string $sLang
+     * @param string $language
      *
      * @throws Exception
      */
-    public function setActiveLanguage($sLang)
+    public function setActiveLanguage($language)
     {
-        if ($sLang) {
-            $oLang = oxRegistry::getLang();
-            $aLanguages = $oLang->getLanguageIds();
-            $iLanguageId = array_search($sLang, $aLanguages);
-            if ($iLanguageId === false) {
-                throw new Exception("Language $sLang was not found or is not active in shop");
-            }
-            oxRegistry::getLang()->setBaseLanguage($iLanguageId);
+        $languages = oxRegistry::getLang()->getLanguageIds();
+        $languageId = array_search($language, $languages);
+        if ($languageId === false) {
+            throw new Exception("Language $language was not found or is not active in shop");
         }
-    }
-
-    /**
-     * Calls service
-     *
-     * @param string $sServiceClass
-     *
-     * @throws Exception
-     *
-     * @return mixed
-     */
-    public function callService($sServiceClass)
-    {
-        $oService = $this->_createService($sServiceClass);
-
-        return $oService->init();
+        oxRegistry::getLang()->setBaseLanguage($languageId);
     }
 
     /**
      * Creates Service object. All services must implement ShopService interface
      *
-     * @param string $sServiceClass
+     * @param string $serviceClass
      *
      * @throws Exception
      *
      * @return ShopServiceInterface
      */
-    protected function _createService($sServiceClass)
+    protected function createService($serviceClass)
     {
-        $this->_includeServiceFile($sServiceClass);
-        $oService = new $sServiceClass();
+        $this->includeServiceFile($serviceClass);
+        $service = new $serviceClass();
 
-        if (!($oService instanceof ShopServiceInterface)) {
-            throw new Exception("Service $sServiceClass does not implement ShopServiceInterface interface!");
+        if (!($service instanceof ShopServiceInterface)) {
+            throw new Exception("Service $serviceClass does not implement ShopServiceInterface interface!");
         }
 
-        return $oService;
+        return $service;
     }
 
     /**
      * Includes service main class file
      *
-     * @param string $sServiceClass
+     * @param string $serviceClass
      *
      * @throws Exception
      */
-    protected function _includeServiceFile($sServiceClass)
+    protected function includeServiceFile($serviceClass)
     {
-        $sFile = realpath($sServiceClass . '/' . $sServiceClass . '.php');
+        $file = realpath($serviceClass . '/' . $serviceClass . '.php');
 
-        if (!file_exists($sFile)) {
-            throw new Exception("Service $sServiceClass not found in path $sFile!");
+        if (!file_exists($file)) {
+            throw new Exception("Service $serviceClass not found in path $file!");
         }
 
-        include_once $sFile;
+        include_once $file;
     }
 }
