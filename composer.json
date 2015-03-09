@@ -6,6 +6,12 @@
     "keywords": ["oxid", "testing", "library", "modules", "eShop"],
     "homepage": "https://www.oxid-esales.com/en/home.html",
     "license": "GPL-3.0",
+    "repositories": {
+        "alexandresalome/php-selenium": {
+            "type": "vcs",
+            "url": "https://github.com/OXID-eSales/PHP-Selenium.git"
+        }
+    },
     "require": {
         "phpunit/phpunit": "~3.7",
         "pdepend/pdepend": "~1.1.3",
