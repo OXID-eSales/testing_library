@@ -26,12 +26,14 @@ require_once 'oxTestCurl.php';
  */
 class oxServiceCaller
 {
-
     /** @var array */
     private $_aParameters = array();
 
     /** @var oxTestConfig */
     private $config;
+
+    /** @var bool Where services copied to the shop. */
+    private static $servicesCopied = false;
 
     /**
      * If remote shop directory is provided, copies services to it.
@@ -44,6 +46,11 @@ class oxServiceCaller
             $config = new oxTestConfig();
         }
         $this->config = $config;
+
+        if ($config->getRemoteDirectory() && !self::$servicesCopied) {
+            self::$servicesCopied = true;
+            $this->copyServicesToShop();
+        }
     }
 
     /**
@@ -70,7 +77,7 @@ class oxServiceCaller
     /**
      * Call shop service to execute code in shop.
      *
-     * @param string $sServiceName
+     * @param string $serviceName
      * @param string $shopId
      *
      * @example call to update information to database.
@@ -79,7 +86,7 @@ class oxServiceCaller
      *
      * @return string $sResult
      */
-    public function callService($sServiceName, $shopId = null)
+    public function callService($serviceName, $shopId = null)
     {
         $testConfig = $this->getTestConfig();
         if (!is_null($shopId) && $testConfig->getShopEdition() == 'EE') {
@@ -88,6 +95,26 @@ class oxServiceCaller
             $this->setParameter('shp', $testConfig->getShopId());
         }
 
+        if ($testConfig->getRemoteDirectory()) {
+            $sResponse = $this->callRemoteService($serviceName);
+        } else {
+            $sResponse = $this->callLocalService($serviceName);
+        }
+
+        $this->_aParameters = array();
+        return $sResponse;
+    }
+
+    /**
+     * Calls service on remote server.
+     *
+     * @param $sServiceName
+     * @return string
+     * @throws Exception
+     */
+    protected function callRemoteService($sServiceName)
+    {
+        $testConfig = $this->getTestConfig();
         $oCurl = new oxTestCurl();
 
         $this->setParameter('service', $sServiceName);
@@ -101,11 +128,26 @@ class oxServiceCaller
             $sResponse = $oCurl->execute();
         }
 
-        $this->_aParameters = array();
-
-        return $this->_unserializeString($sResponse);
+        return $this->unserializeString($sResponse);
     }
 
+    /**
+     * Calls service on local server.
+     *
+     * @param $serviceName
+     * @return string
+     */
+    protected function callLocalService($serviceName)
+    {
+        require_once TEST_LIBRARY_PATH .'/Services/ServiceCaller.php';
+        require_once TEST_LIBRARY_PATH . '/Services/Request.php';
+
+        $serviceCaller = new ServiceCaller();
+
+        $request = new Request($this->getParameters());
+        return $serviceCaller->callService($serviceName, $request);
+    }
+    
     /**
      * Returns tests config object.
      *
@@ -117,6 +159,16 @@ class oxServiceCaller
     }
 
     /**
+     * Copies services directory to shop.
+     */
+    protected function copyServicesToShop()
+    {
+        $oFileCopier = new oxFileCopier();
+        $sTarget = $this->getTestConfig()->getRemoteDirectory().'/Services';
+        $oFileCopier->copyFiles(TEST_LIBRARY_PATH.'/Services', $sTarget, true);
+    }
+
+    /**
      * Unserializes given string. Throws exception if incorrect string is passed
      *
      * @param string $sString
@@ -125,7 +177,7 @@ class oxServiceCaller
      *
      * @return mixed
      */
-    private function _unserializeString($sString)
+    private function unserializeString($sString)
     {
         $mResult = unserialize($sString);
         if ($sString !== 'b:0;' && $mResult === false) {
