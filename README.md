@@ -31,25 +31,31 @@ Testing library can be installed directly within shop or to any other directory.
 To install testing library within shop directory, update/create `composer.json` with following values:
 ```
 {
+    "name": "oxid-esales/eshop",
+    "description": "OXID eShop",
+    "type": "project",
+    "keywords": ["oxid", "modules", "eShop"],
+    "homepage": "https://www.oxid-esales.com/en/home.html",
+    "license": [
+        "GPL-3.0",
+        "proprietary"
+    ],
     "repositories": {
-        "oxid-esales/testing_library": {
+        "oxid-esales/testing-library": {
             "type": "vcs",
             "url": "https://github.com/OXID-eSales/testing_library.git"
         },
-        "behat/mink-selenium-driver": {
-            "type": "vcs",
-            "url": "https://github.com/OXID-eSales/MinkSeleniumDriver.git"
-        },
         "alexandresalome/php-selenium": {
-          "type": "vcs",
-          "url": "https://github.com/OXID-eSales/PHP-Selenium.git"
+            "type": "vcs",
+            "url": "https://github.com/OXID-eSales/PHP-Selenium.git"
         }
     },
     "require-dev": {
-        "oxid-esales/testing_library": "master",
+        "oxid-esales/testing-library": "^0.0.1",
         "incenteev/composer-parameter-handler": "~2.0"
     },
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "scripts": {
         "post-install-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
@@ -61,12 +67,12 @@ To install testing library within shop directory, update/create `composer.json` 
     "extra": {
         "incenteev-parameters": {
             "file": "test_config.yml",
-            "dist-file": "vendor/oxid-esales/testing_library/test_config.yml.dist",
+            "dist-file": "vendor/oxid-esales/testing-library/test_config.yml.dist",
             "parameter-key": "mandatory_parameters",
             "env-map": {
-              "shop_path": "SHOP_PATH",
-              "shop_tests_path": "SHOP_TESTS_PATH",
-              "modules_path": "MODULES_PATH"
+                "shop_path": "SHOP_PATH",
+                "shop_tests_path": "SHOP_TESTS_PATH",
+                "modules_path": "MODULES_PATH"
             }
         }
     }
@@ -123,7 +129,7 @@ These parameters are required for testing library to work properly.
 
 | Parameter name | Description |
 |----------------|-------------|
-|<b>shop_path</b> | Path to eShop source. Defaults to the same directory as to where vendor is located. Supports relative and absolute paths |
+|<b>shop_path</b> | Path to eShop source. Defaults to the same directory as to where vendor is located. Supports relative and absolute paths. Can be left empty when installed from shop or module directory. |
 |<b>shop_tests_path</b> | Path to eShop tests. If shop resides in `/var/www/shop/source` and tests are in `/var/www/shop/tests`, this should be set to `../tests`. Supports relative and absolute paths. |
 |<b>modules_path</b> | When testing not activated module, specify module path in shop. Module path in shop, e.g. if module is in `shop/modules/oe/mymodule` directory, value here should be `oe/mymodule`. Multiple modules can be specified separated by comma: `oe/module1,module2,tt/module3`. |
 
@@ -137,13 +143,15 @@ These parameters are not required in order to work, but they provide additional 
 |<b>enable_varnish</b>| Run tests with varnish on or off. Default `false`  |
 |<b>is_subshop</b>| Whether to run subshop tests. Currently only used when running selenium tests. Default `false`.| |<b>install_shop</b>| Whether to prepare shop database for testing. Shop `config.ing.php` file must be correct. Default `true`.|  
 |<b>shop_setup_path</b>| eShop setup directory. After setting up the shop, setup directory will be deleted. For shop installation to work during tests run, path to this directory must be specified. If not set, uses default (i.e. shop dir `/var/www/eshop/source/`, default setup dir `/var/www/eshop/source/setup` ). |
-|<b>restore_shop_after_test_suite</b>| Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it. Default `true`.  |
+|<b>restore_shop_after_tests_suite</b>| Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it. Default `false`.  |
 |<b>selenium_server_ip</b>| Selenium server IP address. Default `127.0.0.1`.  |
 |<b>selenium_screen_shots_path</b>| Folder where to save selenium screen shots. If not specified, screenshots will not be taken. Default `null`.|  
 |<b>selenium_screen_shots_url</b>| Url, where selenium screen shots should be available. Default `null`.  |
 |<b>browser_name</b>| Browser name which will be used for testing. Possible values: `*iexplore, *iehta, *firefox, *chrome, *piiexplore, *pifirefox, *safari, *opera`. make sure that path to browser executable is known for the system. Default `firefox`.  |
-|<b>data_base_restore</b>| Currently exists `dbRestore` and `dbRestore_largeDb`. `dbRestore_largeDb` - used with local database, `dbRestore` - used with external database. Default `dbRestore`.  |
+|<b>database_restoration_class</b>| Currently exists `dbRestore` and `dbRestore_largeDb`. `dbRestore_largeDb` - used with local database, `dbRestore` - used with external database. Default `dbRestore`.  |
 |<b>special_db_dump_folder</b>| Whether to create special directory for storing database dump during tests run. Set this to true if php has no write access to /tmp folder. Default `true`. |
+|<b>run_shop_tests</b>| Whether to run shop unit tests. This applies only when correct shop_tests_path are set. |
+|<b>run_module_tests</b>| Whether to run modules unit tests. All modules provided in modules_path will be tested. If shop_tests_path and run_shop_tests are set, shop tests will be run with module tests. |
 
 ## Known issues
 
