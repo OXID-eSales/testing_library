@@ -36,7 +36,7 @@ if (file_exists($shopPath . "/_version_define.php")) {
     define('OXID_VERSION_PE_PE', (int) ($edition == 'PE'));
     define('OXID_VERSION_PE_CE', (int) ($edition == 'CE'));
     define('OXID_VERSION_PE', (int) ($edition != 'EE'));
-    define('OXID_VERSION_SUFIX', '_ce');
+    define('OXID_VERSION_SUFIX', '');
 }
 
 define('OX_BASE_PATH', oxPATH);
