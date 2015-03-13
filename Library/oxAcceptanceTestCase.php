@@ -67,9 +67,6 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /** @var \Behat\Mink\Session Mink session */
     protected $_oMinkSession = null;
 
-    /** @var string Overwrite this with __DIR__ to know in which directory test data is located. */
-    protected $_testsDir = '';
-
     /** @var array List of frames. Used to go to correct frame from the top frame. */
     protected $_aFramePaths = array(
         "basefrm" => "basefrm",
