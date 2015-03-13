@@ -29,23 +29,21 @@ class ClearCache implements ShopServiceInterface
      */
     public function init()
     {
-        if (OXID_VERSION_EE) :
-            if (class_exists('oxReverseProxyBackEnd')) {
-                // Clean cache
-                if ($sCacheDir = oxRegistry::get('oxConfigFile')->getVar('sCacheDir')) {
-                    $this->removeDirectory($sCacheDir, true);
-                }
-
-                // Flush cache
-                $oCache = oxNew('oxCacheBackend');
-                $oCache->flush();
-
-                // Invalidate reverse cache
-                $oReverseProxy = oxNew('oxReverseProxyBackEnd');
-                $oReverseProxy->setFlush();
-                $oReverseProxy->execute();
+        if (class_exists('oxReverseProxyBackEnd')) {
+            // Clean cache
+            if ($sCacheDir = oxRegistry::get('oxConfigFile')->getVar('sCacheDir')) {
+                $this->removeDirectory($sCacheDir, true);
             }
-        endif;
+
+            // Flush cache
+            $oCache = oxNew('oxCacheBackend');
+            $oCache->flush();
+
+            // Invalidate reverse cache
+            $oReverseProxy = oxNew('oxReverseProxyBackEnd');
+            $oReverseProxy->setFlush();
+            $oReverseProxy->execute();
+        }
 
         // Clean tmp
         if ($sCompileDir = oxRegistry::get('oxConfigFile')->getVar('sCompileDir')) {

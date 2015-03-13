@@ -20,7 +20,7 @@
  */
 
 if (!defined('SHOP_PATH')) {
-    define('SHOP_PATH', dirname(__FILE__) . '/../../');
+    define('SHOP_PATH', __DIR__ . '/../../');
 }
 
 /**
@@ -39,15 +39,14 @@ class ShopInstaller
      */
     public function __construct()
     {
-        if (file_exists(SHOP_PATH . "/_version_define.php")) {
-            include SHOP_PATH . "_version_define.php";
-        }
-        include SHOP_PATH . "config.inc.php";
-        include SHOP_PATH . "core/oxconfk.php";
-
-        if (!defined('OXID_VERSION_SUFIX')) {
+        if (file_exists(SHOP_PATH ."_version_define.php")) {
+            include SHOP_PATH ."_version_define.php";
+        } else if (!defined('OXID_VERSION_SUFIX')) {
             define('OXID_VERSION_SUFIX', '');
         }
+
+        include SHOP_PATH . "config.inc.php";
+        include SHOP_PATH . "core/oxconfk.php";
     }
 
     /**
@@ -158,7 +157,7 @@ class ShopInstaller
         include_once SHOP_PATH . "core/oxserial.php";
 
         $oSerial = new oxSerial();
-        $oSerial->setEd($this->getShopEdition());
+        $oSerial->setEd($this->getShopEdition() == 'EE' ? 2 : 1);
         $oSerial->isValidSerial($sSerial);
 
         $iMaxDays = $oSerial->getMaxDays($sSerial);
@@ -214,18 +213,14 @@ class ShopInstaller
         }
 
         // Change currencies value to same as after 4.6 setup because previous encoding break it.
-        if (OXID_VERSION_EE) :
-            $this->query(
-                "REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
-                ('3c4f033dfb8fd4fe692715dda19ecd28', 1, '', 'aCurrencies', 'arr', 0x4dbace2972e14bf2cbd3a9a45157004422e928891572b281961cdebd1e0bbafe8b2444b15f2c7b1cfcbe6e5982d87434c3b19629dacd7728776b54d7caeace68b4b05c6ddeff2df9ff89b467b14df4dcc966c504477a9eaeadd5bdfa5195a97f46768ba236d658379ae6d371bfd53acd9902de08a1fd1eeab18779b191f3e31c258a87b58b9778f5636de2fab154fc0a51a2ecc3a4867db070f85852217e9d5e9aa60507);"
-            );
-        endif;
-        if (!OXID_VERSION_EE) :
-            $this->query(
-                "REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
-                ('3c4f033dfb8fd4fe692715dda19ecd28', 'oxbaseshop', '', 'aCurrencies', 'arr', 0x4dbace2972e14bf2cbd3a9a45157004422e928891572b281961cdebd1e0bbafe8b2444b15f2c7b1cfcbe6e5982d87434c3b19629dacd7728776b54d7caeace68b4b05c6ddeff2df9ff89b467b14df4dcc966c504477a9eaeadd5bdfa5195a97f46768ba236d658379ae6d371bfd53acd9902de08a1fd1eeab18779b191f3e31c258a87b58b9778f5636de2fab154fc0a51a2ecc3a4867db070f85852217e9d5e9aa60507);"
-            );
-        endif;
+        if ($this->getShopEdition() == 'EE') {
+            $query = "REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
+                ('3c4f033dfb8fd4fe692715dda19ecd28', 1, '', 'aCurrencies', 'arr', 0x4dbace2972e14bf2cbd3a9a45157004422e928891572b281961cdebd1e0bbafe8b2444b15f2c7b1cfcbe6e5982d87434c3b19629dacd7728776b54d7caeace68b4b05c6ddeff2df9ff89b467b14df4dcc966c504477a9eaeadd5bdfa5195a97f46768ba236d658379ae6d371bfd53acd9902de08a1fd1eeab18779b191f3e31c258a87b58b9778f5636de2fab154fc0a51a2ecc3a4867db070f85852217e9d5e9aa60507);";
+        } else {
+            $query = "REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
+                ('3c4f033dfb8fd4fe692715dda19ecd28', 'oxbaseshop', '', 'aCurrencies', 'arr', 0x4dbace2972e14bf2cbd3a9a45157004422e928891572b281961cdebd1e0bbafe8b2444b15f2c7b1cfcbe6e5982d87434c3b19629dacd7728776b54d7caeace68b4b05c6ddeff2df9ff89b467b14df4dcc966c504477a9eaeadd5bdfa5195a97f46768ba236d658379ae6d371bfd53acd9902de08a1fd1eeab18779b191f3e31c258a87b58b9778f5636de2fab154fc0a51a2ecc3a4867db070f85852217e9d5e9aa60507);";
+        }
+        $this->query($query);
     }
 
     /**
@@ -268,12 +263,7 @@ class ShopInstaller
      */
     private function getShopId()
     {
-        if (OXID_VERSION_EE) :
-            return '1';
-        endif;
-        if (OXID_VERSION_PE) :
-            return 'oxbaseshop';
-        endif;
+        return $this->getShopEdition() == 'EE' ? '1' : 'oxbaseshop';
     }
 
     /**
@@ -283,12 +273,18 @@ class ShopInstaller
      */
     private function getShopEdition()
     {
-        if (OXID_VERSION_EE) :
-            return 2;
-        endif;
-        if (OXID_VERSION_PE_PE) :
-            return 1;
-        endif;
+        if (defined('OXID_VERSION_EE')) {
+            $shopEdition = OXID_VERSION_EE ? 'EE' : '';
+            $shopEdition = OXID_VERSION_PE_PE ? 'PE' : $shopEdition;
+            $shopEdition = OXID_VERSION_PE_CE ? 'CE' : $shopEdition;
+        } else {
+            include_once SHOP_PATH . 'core/oxsupercfg.php';
+            include_once SHOP_PATH . 'core/oxconfig.php';
+            $config = new oxConfig();
+            $shopEdition = $config->getEdition();
+        }
+
+        return $shopEdition;
     }
 
     /**

@@ -133,7 +133,7 @@ class ObjectConstructor
      */
     public function clearCache()
     {
-        if (OXID_VERSION_EE) :
+        if (class_exists('oxReverseProxyBackEnd')) {
             try {
                 $oCache = oxRegistry::get('oxReverseProxyBackend');
                 if ($oCache->isEnabled()) {
@@ -141,7 +141,7 @@ class ObjectConstructor
                 }
             } catch (Exception $oE) {
             }
-        endif;
+        }
     }
 
     /**
