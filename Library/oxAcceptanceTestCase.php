@@ -43,8 +43,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /** @var bool Tracks the start of tests run. */
     protected static $_blStarted = false;
 
-    /** @var bool Tracks start of tests suite. Every suite should have extended class where this value is reset. */
-    protected static $_testSuiteStarted = false;
+    /** @var string Tests suite path. */
+    protected static $_testsSuitePath = '';
 
     /** @var string Used to follow which frame is currently selected by driver. */
     protected $_sSelectedFrame = 'relative=top';
@@ -87,9 +87,11 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     protected function setUp()
     {
-        if (!static::$_testSuiteStarted) {
-            static::$_testSuiteStarted = true;
-            $this->setUpTestsSuite();
+        $testsSuitePath = $this->getSuitePath();
+
+        if (static::$_testsSuitePath !== $testsSuitePath) {
+            static::$_testsSuitePath = $testsSuitePath;
+            $this->setUpTestsSuite($testsSuitePath);
         }
 
         $this->setTranslator(new oxTranslator());
@@ -103,8 +105,10 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * Sets up shop before running test case.
      * Does not use setUpBeforeClass to keep this method non-static.
+     *
+     * @param string $testSuitePath
      */
-    public function setUpTestsSuite()
+    public function setUpTestsSuite($testSuitePath)
     {
         if (!static::$_blStarted) {
             self::$_blStarted = true;
@@ -113,11 +117,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
             $this->restoreDb('reset_suite_db_dump');
         }
 
-        $sTestSuitePath = str_replace('_', '/', get_called_class());
-        $sTestSuitePath = substr($sTestSuitePath, 0, strrpos($sTestSuitePath, '/'));
-        $sTestSuitePath = $this->_testsDir . '/' . $sTestSuitePath;
-
-        $this->addTestData($sTestSuitePath);
+        $this->addTestData($testSuitePath);
 
         $this->dumpDb('reset_test_db_dump');
     }
@@ -2038,6 +2038,17 @@ class oxAcceptanceTestCase extends oxMinkWrapper
                 $this->selectFrame($sFrame);
             }
         }
+    }
+
+    /**
+     * Returns path of currently running tests suite.
+     *
+     * @return string
+     */
+    protected function getSuitePath()
+    {
+        $class = new ReflectionClass(get_class($this));
+        return dirname($class->getFileName());
     }
 }
 
