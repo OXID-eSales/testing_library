@@ -668,13 +668,13 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
      * @param string $sFileName
      * @param string $sFileContent
      *
-     * @usage Create file from file name and file content to oxCCTempDir.
+     * @usage Create file from file name and file content to TESTS_TEMP_DIR.
      *
      * @return string path to file
      */
     public function createFile($sFileName, $sFileContent)
     {
-        $sPathToFile = oxCCTempDir . '/' . $sFileName;
+        $sPathToFile = TESTS_TEMP_DIR . '/' . $sFileName;
 
         file_put_contents($sPathToFile, $sFileContent);
 

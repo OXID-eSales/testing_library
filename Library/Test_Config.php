@@ -218,13 +218,13 @@ class Test_Config
     }
 
     /**
-     * Whether create separate directory in shop to store database dump.
+     * Returns temp directory for storing tests data.
      *
      * @return bool|null
      */
-    public function shouldUseSeparateDbDumpDirectory()
+    public function getTempDirectory()
     {
-        return (bool)$this->getValue('special_db_dump_folder');
+        return $this->getValue('temp_path', 'TEMP_PATH');
     }
 
     /**
@@ -264,7 +264,7 @@ class Test_Config
      */
     public function getSeleniumScreenshotsPath()
     {
-        return $this->getValue('selenium_screen_shots_path', 'SELENIUM_SCREENSHOTS_PATH');
+        return $this->getValue('screen_shots_path', 'SCREENSHOTS_PATH');
     }
 
     /**
@@ -274,7 +274,7 @@ class Test_Config
      */
     public function getSeleniumScreenshotsUrl()
     {
-        return $this->getValue('selenium_screen_shots_url', 'SELENIUM_SCREENSHOTS_URL');
+        return $this->getValue('screen_shots_url', 'SCREENSHOTS_URL');
     }
 
     /**
@@ -294,7 +294,7 @@ class Test_Config
      */
     public function shouldRunModuleTests()
     {
-        return $this->getValue('run_module_tests');
+        return $this->getValue('run_modules_tests');
     }
 
     /**

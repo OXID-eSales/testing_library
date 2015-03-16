@@ -39,8 +39,8 @@ define("SHOP_EDITION", ($edition == 'EE') ? 'EE' : 'PE_CE');
 
 require_once TEST_LIBRARY_PATH . '/bootstrap/prepareDbForUsage.php';
 
-if (SELENIUM_SCREENSHOTS_PATH && !is_dir(SELENIUM_SCREENSHOTS_PATH)) {
-    mkdir(SELENIUM_SCREENSHOTS_PATH, 0777, true);
+if (SCREENSHOTS_PATH && !is_dir(SCREENSHOTS_PATH)) {
+    mkdir(SCREENSHOTS_PATH, 0777, true);
 }
 
 require_once TEST_LIBRARY_PATH .'/oxAcceptanceTestCase.php';

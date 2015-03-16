@@ -63,11 +63,9 @@ define('OXID_VARNISH', $config->shouldEnableVarnish());
 define('SELENIUM_SERVER_IP', $config->getSeleniumServerIp());
 define('browserName', $config->getBrowserName());
 
-define ('SELENIUM_SCREENSHOTS_PATH', $config->getSeleniumScreenshotsPath());
-define ('SELENIUM_SCREENSHOTS_URL', $config->getSeleniumScreenshotsUrl());
+define ('SCREENSHOTS_PATH', $config->getSeleniumScreenshotsPath());
+define ('SCREENSHOTS_URL', $config->getSeleniumScreenshotsUrl());
 
 define('isSUBSHOP', $config->isSubShop());
 
-if ($config->shouldUseSeparateDbDumpDirectory()) {
-    define('oxCCTempDir', oxPATH . '/oxCCTempDir/');
-}
+define('TESTS_TEMP_DIR', $config->getTempDirectory());

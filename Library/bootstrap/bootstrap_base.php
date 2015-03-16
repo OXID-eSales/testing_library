@@ -50,9 +50,9 @@ if (RESTORE_SHOP_AFTER_TEST_SUITE) {
     }
 }
 
-if (defined('oxCCTempDir')) {
+if (defined('TESTS_TEMP_DIR') && TESTS_TEMP_DIR) {
     $oFileCopier = new oxFileCopier();
-    $oFileCopier->createEmptyDirectory(oxCCTempDir);
+    $oFileCopier->createEmptyDirectory(TESTS_TEMP_DIR);
 }
 
 function getTestsBasePath()

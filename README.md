@@ -141,17 +141,18 @@ These parameters are not required in order to work, but they provide additional 
 |<b>shop_url</b>| eShop base url (if not set, takes it from shop's config.inc.php file). Default `null`.|  
 |<b>shop_serial</b>| For PE and EE editions shop serial has to be specified for shop installer to work. Default `''`.|  
 |<b>enable_varnish</b>| Run tests with varnish on or off. Default `false`  |
-|<b>is_subshop</b>| Whether to run subshop tests. Currently only used when running selenium tests. Default `false`.| |<b>install_shop</b>| Whether to prepare shop database for testing. Shop `config.ing.php` file must be correct. Default `true`.|  
+|<b>is_subshop</b>| Whether to run subshop tests. Currently only used when running selenium tests. Default `false`.|
+|<b>install_shop</b>| Whether to prepare shop database for testing. Shop `config.ing.php` file must be correct. Default `true`.|
 |<b>shop_setup_path</b>| eShop setup directory. After setting up the shop, setup directory will be deleted. For shop installation to work during tests run, path to this directory must be specified. If not set, uses default (i.e. shop dir `/var/www/eshop/source/`, default setup dir `/var/www/eshop/source/setup` ). |
 |<b>restore_shop_after_tests_suite</b>| Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it. Default `false`.  |
-|<b>selenium_server_ip</b>| Selenium server IP address. Default `127.0.0.1`.  |
-|<b>selenium_screen_shots_path</b>| Folder where to save selenium screen shots. If not specified, screenshots will not be taken. Default `null`.|  
-|<b>selenium_screen_shots_url</b>| Url, where selenium screen shots should be available. Default `null`.  |
-|<b>browser_name</b>| Browser name which will be used for testing. Possible values: `*iexplore, *iehta, *firefox, *chrome, *piiexplore, *pifirefox, *safari, *opera`. make sure that path to browser executable is known for the system. Default `firefox`.  |
+|<b>temp_path</b>| If php has no write access to /tmp folder, provide alternative temp folder for tests. |
 |<b>database_restoration_class</b>| Currently exists `dbRestore` and `dbRestore_largeDb`. `dbRestore_largeDb` - used with local database, `dbRestore` - used with external database. Default `dbRestore`.  |
-|<b>special_db_dump_folder</b>| Whether to create special directory for storing database dump during tests run. Set this to true if php has no write access to /tmp folder. Default `true`. |
 |<b>run_shop_tests</b>| Whether to run shop unit tests. This applies only when correct shop_tests_path are set. |
-|<b>run_module_tests</b>| Whether to run modules unit tests. All modules provided in modules_path will be tested. If shop_tests_path and run_shop_tests are set, shop tests will be run with module tests. |
+|<b>run_modules_tests</b>| Whether to run modules unit tests. All modules provided in modules_path will be tested. If shop_tests_path and run_shop_tests are set, shop tests will be run with module tests. |
+|<b>screen_shots_path</b>| Folder where to save selenium screen shots. If not specified, screenshots will not be taken. Default `null`.|
+|<b>screen_shots_url</b>| Url, where selenium screen shots should be available. Default `null`.  |
+|<b>browser_name</b>| Browser name which will be used for acceptance testing. Possible values: `*iexplore, *iehta, *firefox, *chrome, *piiexplore, *pifirefox, *safari, *opera`. make sure that path to browser executable is known for the system. Default `firefox`.  |
+|<b>selenium_server_ip</b>| Selenium server IP address. Used to connect to selenium server when Mink selenium driver is used for acceptance tests. Default `127.0.0.1`.  |
 
 ## Known issues
 

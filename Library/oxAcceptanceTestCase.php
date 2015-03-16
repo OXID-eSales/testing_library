@@ -1928,7 +1928,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
 
             $this->getScreenShot($sPath . $sFileName);
 
-            return 'Screenshot: ' . SELENIUM_SCREENSHOTS_URL . '/' . $sFileName . "\n";
+            return 'Screenshot: ' . SCREENSHOTS_URL . '/' . $sFileName . "\n";
         } else {
             return '';
         }
@@ -1941,8 +1941,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     {
         $sPath = '';
 
-        if (SELENIUM_SCREENSHOTS_PATH != '') {
-            $sPath = SELENIUM_SCREENSHOTS_PATH;
+        if (SCREENSHOTS_PATH != '') {
+            $sPath = SCREENSHOTS_PATH;
 
             if (!in_array(substr($sPath, strlen($sPath) - 1, 1), array("/", "\\"))) {
                 $sPath .= DIRECTORY_SEPARATOR;

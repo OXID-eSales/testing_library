@@ -18,7 +18,7 @@ optional_parameters:
     # For PE and EE editions shop serial has to be specified for shop installer to work.
     shop_serial: ''
 
-    # Run tests with varnish on
+    # Run tests with varnish on.
     enable_varnish: false
 
     # Whether to run subshop tests. Currently only used when running selenium tests.
@@ -35,32 +35,31 @@ optional_parameters:
     # Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it.
     restore_shop_after_tests_suite: false
 
-    # Selenium server IP address
-    selenium_server_ip: '127.0.0.1'
-
-    # Browser name which will be used for testing.
-    # Possible values: *iexplore, *iehta, *firefox, *chrome, *piiexplore, *pifirefox, *safari, *opera
-    # make sure that path to browser executable is known for the system
-    browser_name: 'firefox'
+    # If php has no write access to /tmp folder, provide alternative temp folder for tests.
+    temp_path: /tmp/oxid_test_library/
 
     # Currently exists dbRestore and dbRestore_largeDb.
     # dbRestore_localDb - used with local database
     # dbRestore - used with external database.
     database_restoration_class: 'dbRestore'
 
-    # Whether to create special directory for storing database dump during tests run.
-    # Set this to true if php has no write access to /tmp folder.
-    special_db_dump_folder: true
-
-    # Folder where to save selenium screen shots. If not specified, screenshots will not be taken.
-    selenium_screen_shots_path: null
-
-    # Url, where selenium screen shots should be available.
-    selenium_screen_shots_url: null
-
     # Whether to run shop unit tests. This applies only when correct shop_tests_path are set.
     run_shop_tests: true
 
     # Whether to run modules unit tests. All modules provided in modules_path will be tested.
     # If shop_tests_path and run_shop_tests are set, shop tests will be run with module tests.
-    run_module_tests: true
+    run_modules_tests: true
+
+    # Folder where to save selenium screen shots. If not specified, screenshots will not be taken.
+    screen_shots_path: null
+
+    # Url, where selenium screen shots should be available.
+    screen_shots_url: null
+
+    # Browser name which will be used for acceptance testing.
+    # Possible values: *iexplore, *iehta, *firefox, *chrome, *piiexplore, *pifirefox, *safari, *opera.
+    # Make sure that path to browser executable is known for the system.
+    browser_name: 'firefox'
+
+    # Selenium server IP address. Used to connect to selenium server when Mink selenium driver is used for acceptance tests.
+    selenium_server_ip: '127.0.0.1'
