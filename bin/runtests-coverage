@@ -28,8 +28,8 @@ if (!file_exists($autoloader)) {
     $autoloader = __DIR__.'/../vendor/autoload.php';
 }
 require_once $autoloader;
-require_once __DIR__.'/../Library/Test_Config.php';
-require_once __DIR__.'/../Library/oxFileCopier.php';
+require_once __DIR__ . '/../library/Test_Config.php';
+require_once __DIR__ . '/../library/oxFileCopier.php';
 
 $config = new Test_Config();
 $fileCopier = new oxFileCopier();
