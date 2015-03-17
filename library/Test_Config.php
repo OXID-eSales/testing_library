@@ -21,8 +21,8 @@
 
 use Symfony\Component\Yaml\Yaml;
 
-if (!defined('TESTS_DIRECTORY')) {
-    define('TESTS_DIRECTORY', __DIR__ . '/../');
+if (!defined('TEST_LIBRARY_BASE_PATH')) {
+    define('TEST_LIBRARY_BASE_PATH', __DIR__ . '/../');
 }
 
 class Test_Config
@@ -344,9 +344,9 @@ class Test_Config
      */
     private function getVendorBasePath()
     {
-        $vendorBasePath = TESTS_DIRECTORY . "../../../";
+        $vendorBasePath = TEST_LIBRARY_BASE_PATH . "../../../";
         if (!file_exists($vendorBasePath . 'vendor')) {
-            $vendorBasePath = TESTS_DIRECTORY;
+            $vendorBasePath = TEST_LIBRARY_BASE_PATH;
         }
         return $vendorBasePath;
     }

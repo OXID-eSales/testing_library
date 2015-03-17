@@ -28,10 +28,10 @@ if (!defined('oxPATH') || oxPATH == '') {
 require_once TEST_LIBRARY_PATH.'oxServiceCaller.php';
 require_once TEST_LIBRARY_PATH.'oxFileCopier.php';
 
-if (file_exists(TESTS_DIRECTORY.'vendor/autoload.php')) {
-    require_once TESTS_DIRECTORY.'vendor/autoload.php';
+if (file_exists(TEST_LIBRARY_BASE_PATH.'vendor/autoload.php')) {
+    require_once TEST_LIBRARY_BASE_PATH.'vendor/autoload.php';
 } else {
-    require_once TESTS_DIRECTORY.'../../autoload.php';
+    require_once TEST_LIBRARY_BASE_PATH.'../../autoload.php';
 }
 
 $oFileCopier = new oxFileCopier();
