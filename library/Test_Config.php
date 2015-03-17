@@ -224,7 +224,7 @@ class Test_Config
      */
     public function getTempDirectory()
     {
-        return $this->getValue('temp_path', 'TEMP_PATH');
+        return $this->getValue('tmp_path', 'TMP_PATH');
     }
 
     /**
@@ -284,7 +284,7 @@ class Test_Config
      */
     public function shouldRunShopTests()
     {
-        return $this->getValue('run_shop_tests');
+        return $this->getValue('run_tests_for_shop');
     }
 
     /**
@@ -294,7 +294,7 @@ class Test_Config
      */
     public function shouldRunModuleTests()
     {
-        return $this->getValue('run_modules_tests');
+        return $this->getValue('run_tests_for_modules');
     }
 
     /**

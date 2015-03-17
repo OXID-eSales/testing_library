@@ -145,10 +145,10 @@ These parameters are not required in order to work, but they provide additional 
 |<b>install_shop</b>| Whether to prepare shop database for testing. Shop `config.ing.php` file must be correct. Default `true`.|
 |<b>shop_setup_path</b>| eShop setup directory. After setting up the shop, setup directory will be deleted. For shop installation to work during tests run, path to this directory must be specified. If not set, uses default (i.e. shop dir `/var/www/eshop/source/`, default setup dir `/var/www/eshop/source/setup` ). |
 |<b>restore_shop_after_tests_suite</b>| Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it. Default `false`.  |
-|<b>temp_path</b>| If php has no write access to /tmp folder, provide alternative temp folder for tests. |
+|<b>tmp_path</b>| If php has no write access to /tmp folder, provide alternative temp folder for tests. |
 |<b>database_restoration_class</b>| Currently exists `dbRestore` and `dbRestore_largeDb`. `dbRestore_largeDb` - used with local database, `dbRestore` - used with external database. Default `dbRestore`.  |
-|<b>run_shop_tests</b>| Whether to run shop unit tests. This applies only when correct shop_tests_path are set. |
-|<b>run_modules_tests</b>| Whether to run modules unit tests. All modules provided in modules_path will be tested. If shop_tests_path and run_shop_tests are set, shop tests will be run with module tests. |
+|<b>run_tests_for_shop</b>| Whether to run shop unit tests. This applies only when correct shop_tests_path are set. |
+|<b>run_tests_for_modules</b>| Whether to run modules unit tests. All modules provided in modules_path will be tested. If shop_tests_path and run_shop_tests are set, shop tests will be run with module tests. |
 |<b>screen_shots_path</b>| Folder where to save selenium screen shots. If not specified, screenshots will not be taken. Default `null`.|
 |<b>screen_shots_url</b>| Url, where selenium screen shots should be available. Default `null`.  |
 |<b>browser_name</b>| Browser name which will be used for acceptance testing. Possible values: `*iexplore, *iehta, *firefox, *chrome, *piiexplore, *pifirefox, *safari, *opera`. make sure that path to browser executable is known for the system. Default `firefox`.  |

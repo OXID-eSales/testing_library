@@ -59,7 +59,7 @@ class ShopPreparation implements ShopServiceInterface
     private function _importSqlFromUploadedFile()
     {
         $oFileUploader = new FileUploader();
-        $sFilePath = TEMP_PATH.'/import.sql';
+        $sFilePath = TMP_PATH.'/import.sql';
         $oFileUploader->uploadFile('importSql', $sFilePath);
 
         $oDbHandler = $this->_getDbHandler();
