@@ -33,15 +33,49 @@ class Test_Config
     /** @var string */
     private $shopPath;
 
+    /** @var string Path to vendors directory */
+    private $vendorPath;
+
+    /** @var string Shop edition. Either EE, PE or CE. */
+    private $shopEdition;
+
+    /** @var string Shop url. */
+    private $shopUrl;
+
+    /** @var string Currently running test suite path. */
+    private $currentTestSuite;
+
+    /** @var array All defined test suites. */
+    private $testSuites;
+
     /**
      * Initiates configuration from configuration yaml file.
      */
     public function __construct()
     {
+        require_once $this->getVendorPath() .'/autoload.php';
+
         $yaml = Yaml::parse(file_get_contents($this->getConfigFileName()));
         $this->configuration = array_merge($yaml['mandatory_parameters'], $yaml['optional_parameters']);
     }
 
+    /**
+     * Returns path to vendors directory.
+     *
+     * @return string
+     */
+    public function getVendorPath()
+    {
+        if (is_null($this->vendorPath)) {
+            $vendorPath = TEST_LIBRARY_BASE_PATH . "../../../vendor/";
+            if (!file_exists($vendorPath)) {
+                $vendorPath = TEST_LIBRARY_BASE_PATH .'/vendor/';
+            }
+            $this->vendorPath = realpath($vendorPath);
+        }
+
+        return $this->vendorPath;
+    }
 
     /**
      * Returns path to shop source directory.
@@ -77,24 +111,27 @@ class Test_Config
      */
     public function getShopEdition()
     {
-        $shopEdition = $this->getValue('shop_edition', 'SHOP_EDITION');
+        if (is_null($this->shopEdition)) {
+            $shopEdition = $this->getValue('shop_edition', 'SHOP_EDITION');
 
-        if (!$shopEdition) {
-            if (defined('OXID_VERSION_EE')) {
-                $shopEdition = OXID_VERSION_EE ? 'EE' : '';
-                $shopEdition = OXID_VERSION_PE_PE ? 'PE' : $shopEdition;
-                $shopEdition = OXID_VERSION_PE_CE ? 'CE' : $shopEdition;
-            }
             if (!$shopEdition) {
-                $shopPath = $this->getShopPath();
-                include_once $shopPath . 'core/oxsupercfg.php';
-                include_once $shopPath . 'core/oxconfig.php';
-                $config = new oxConfig();
-                $shopEdition = $config->getEdition();
+                if (defined('OXID_VERSION_EE')) {
+                    $shopEdition = OXID_VERSION_EE ? 'EE' : '';
+                    $shopEdition = OXID_VERSION_PE_PE ? 'PE' : $shopEdition;
+                    $shopEdition = OXID_VERSION_PE_CE ? 'CE' : $shopEdition;
+                }
+                if (!$shopEdition) {
+                    $shopPath = $this->getShopPath();
+                    include_once $shopPath . 'core/oxsupercfg.php';
+                    include_once $shopPath . 'core/oxconfig.php';
+                    $config = new oxConfig();
+                    $shopEdition = $config->getEdition();
+                }
             }
+            $this->shopEdition = strtoupper($shopEdition);
         }
 
-        return strtoupper($shopEdition);
+        return $this->shopEdition;
     }
 
     /**
@@ -131,15 +168,18 @@ class Test_Config
      */
     public function getShopUrl()
     {
-        $sShopUrl = $this->getValue('shop_url', 'SHOP_URL');
-        if (!$sShopUrl) {
-            $shopPath = $this->getShopPath();
-            include_once $shopPath . 'core/oxconfigfile.php';
-            $oConfigFile = new oxConfigFile($shopPath . "config.inc.php");
-            $sShopUrl = $sShopUrl ? $sShopUrl : $oConfigFile->sShopURL;
+        if (is_null($this->shopUrl)) {
+            $sShopUrl = $this->getValue('shop_url', 'SHOP_URL');
+            if (!$sShopUrl) {
+                $shopPath = $this->getShopPath();
+                include_once $shopPath . 'core/oxconfigfile.php';
+                $oConfigFile = new oxConfigFile($shopPath . "config.inc.php");
+                $sShopUrl = $sShopUrl ? $sShopUrl : $oConfigFile->sShopURL;
+            }
+            $this->shopUrl = rtrim($sShopUrl, '/') . '/';
         }
 
-        return rtrim($sShopUrl, '/') . '/';
+        return $this->shopUrl;
     }
 
     /**
@@ -149,12 +189,12 @@ class Test_Config
      */
     public function getShopTestsPath()
     {
-        $sTestsPath = $this->getValue('shop_tests_path');
-        if (strpos($sTestsPath, '/') !== 0) {
-            $sTestsPath = $this->getShopPath() . $sTestsPath;
+        $testsPath = $this->getValue('shop_tests_path');
+        if (strpos($testsPath, '/') !== 0) {
+            $testsPath = $this->getShopPath() . $testsPath;
         }
 
-        return rtrim($sTestsPath, '/') . '/';
+        return realpath($testsPath) . '/';
     }
 
     /**
@@ -165,6 +205,14 @@ class Test_Config
     public function getModulePaths()
     {
         return $this->getValue('modules_path', 'MODULES_PATH');
+    }
+
+    /**
+     * Returns for activation.
+     */
+    public function getModulesToActivate()
+    {
+        return array();
     }
 
     /**
@@ -262,7 +310,7 @@ class Test_Config
      *
      * @return string|null
      */
-    public function getSeleniumScreenshotsPath()
+    public function getScreenShotsPath()
     {
         return $this->getValue('screen_shots_path', 'SCREENSHOTS_PATH');
     }
@@ -298,6 +346,61 @@ class Test_Config
     }
 
     /**
+     * Returns current test suite.
+     *
+     * @return null|string
+     */
+    public function getCurrentTestSuite()
+    {
+        if (is_null($this->currentTestSuite)) {
+            $currentSuite = '';
+            $testFilePath = end($_SERVER['argv']);
+            if ($testFilePath == 'AllTestsUnit') {
+                $currentSuite = getenv('TEST_SUITE');
+            } else {
+                $testSuites = $this->getTestSuites();
+                $testFilePath = realpath($testFilePath);
+                foreach ($testSuites as $suite) {
+                    if (strpos($testFilePath, $suite) === 0) {
+                        $currentSuite = $suite;
+                        break;
+                    }
+                }
+            }
+            $this->currentTestSuite = $currentSuite ? $currentSuite : $this->getShopTestsPath();
+        }
+
+        return $this->currentTestSuite;
+    }
+
+    /**
+     * Returns test suites.
+     *
+     * @return array
+     */
+    public function getTestSuites()
+    {
+        if (is_null($this->testSuites)) {
+            $testSuites = array();
+            if ($this->shouldRunModuleTests() && $this->getModulePaths()) {
+                $shopPath = $this->getShopPath();
+                foreach (explode(',', $this->getModulePaths()) as $module) {
+                    if ($suitePath = realpath($shopPath .'/modules/'. $module .'/tests/')) {
+                        $testSuites[] = $suitePath;
+                    }
+                }
+            }
+
+            if ($this->shouldRunShopTests() && $this->getShopTestsPath()) {
+                array_unshift($testSuites, $this->getShopTestsPath());
+            }
+            $this->testSuites = $testSuites;
+        }
+
+        return $this->testSuites;
+    }
+
+    /**
      * Returns value for config parameter.
      *
      * @param string $param
@@ -316,16 +419,18 @@ class Test_Config
     }
 
     /**
+     * Returns possible shop path.
+     *
      * @param string $relativeShopPath
      * @return string
      */
     private function findShopPath($relativeShopPath)
     {
-        $vendorBaseDir = $this->getVendorBasePath();
+        $vendorBaseDir = $this->getVendorPath();
         $availablePaths = array(
-            $vendorBaseDir,
-            $vendorBaseDir . '../../',
-            $vendorBaseDir . '../../../',
+            $vendorBaseDir .'../',
+            $vendorBaseDir .'../../../',
+            $vendorBaseDir .'../../../../',
         );
 
         $shopPath = '';
@@ -336,19 +441,7 @@ class Test_Config
             }
         }
 
-        return $shopPath ? $shopPath : $vendorBaseDir . $relativeShopPath;
-    }
-
-    /**
-     * @return string
-     */
-    private function getVendorBasePath()
-    {
-        $vendorBasePath = TEST_LIBRARY_BASE_PATH . "../../../";
-        if (!file_exists($vendorBasePath . 'vendor')) {
-            $vendorBasePath = TEST_LIBRARY_BASE_PATH;
-        }
-        return $vendorBasePath;
+        return $shopPath ? $shopPath : $vendorBaseDir .'/../'. $relativeShopPath;
     }
 
     /**
@@ -358,6 +451,6 @@ class Test_Config
      */
     private function getConfigFileName()
     {
-        return $this->getVendorBasePath() . "test_config.yml";
+        return $this->getVendorPath() ."/../test_config.yml";
     }
 }
