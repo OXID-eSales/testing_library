@@ -25,43 +25,44 @@
 class oxTestModuleLoader
 {
     /** @var array */
-    protected static $_aModuleData = array('chains' => array(), 'paths' => array());
+    protected static $moduleData = array('chains' => array(), 'paths' => array());
 
-    /** @var bool */
-    protected static $_blOriginal = false;
+    /** @var bool Whether to use original chains. */
+    protected static $original = false;
 
     /**
      * Sets the original chain loading command
      *
-     * @param boolean $blOriginal
+     * @param boolean $original
      */
-    public function useOriginalChain($blOriginal)
+    public function useOriginalChain($original)
     {
-        self::$_blOriginal = $blOriginal;
+        self::$original = $original;
     }
 
     /**
      * Tries to initiate the module classes and includes required files from metadata
      *
-     * @param array $aModulesPath Array of modules to load.
+     * @param array $modules Array of modules to load.
      */
-    public function loadModules($aModulesPath)
+    public function loadModules($modules)
     {
-        $aErrors = array();
-        $sBaseModuleDir = oxRegistry::getConfig()->getConfigParam("sShopDir") . "/modules/";
-        $aModulesPath = is_array($aModulesPath) ? $aModulesPath : array($aModulesPath);
+        $errors = array();
+        $modules = is_array($modules) ? $modules : array($modules);
 
-        foreach ($aModulesPath as $sPath) {
-            if (file_exists($sBaseModuleDir . $sPath . "/metadata.php")) {
-                self::$_aModuleData['paths'][] = $sPath;
-                self::_initMetadata($sBaseModuleDir . $sPath . "/metadata.php");
+        $modulesDir = oxRegistry::getConfig()->getModulesDir();
+        foreach ($modules as $module) {
+            $fullPath = $modulesDir . $module;
+            if (file_exists($fullPath . "/metadata.php")) {
+                self::$moduleData['paths'][] = $module;
+                self::_initMetadata($fullPath . "/metadata.php");
             } else {
-                $aErrors[] = "Unable to find metadata file in directory: $sPath" . PHP_EOL;
+                $errors[] = "Unable to find metadata file in directory: $fullPath" . PHP_EOL;
             }
         }
 
-        if ($aErrors) {
-            die(implode("\n\n", $aErrors));
+        if ($errors) {
+            die(implode("\n\n", $errors));
         }
     }
 
@@ -73,16 +74,16 @@ class oxTestModuleLoader
      */
     public function setModuleInformation()
     {
-        if (count(self::$_aModuleData['chains'])) {
-            $oUtilsObject = oxRegistry::get("oxUtilsObject");
-            $oConfig = oxRegistry::getConfig();
+        if (count(self::$moduleData['chains'])) {
+            $utilsObject = oxRegistry::get("oxUtilsObject");
+            $config = oxRegistry::getConfig();
 
-            $oUtilsObject->setModuleVar("aModules", self::$_aModuleData['chains']);
-            $oConfig->setConfigParam("aModules", self::$_aModuleData['chains']);
-            $oUtilsObject->setModuleVar("aDisabledModules", array());
-            $oConfig->setConfigParam("aDisabledModules", array());
-            $oUtilsObject->setModuleVar("aModulePaths", self::$_aModuleData['paths']);
-            $oConfig->setConfigParam("aModulePaths", self::$_aModuleData['paths']);
+            $utilsObject->setModuleVar("aModules", self::$moduleData['chains']);
+            $config->setConfigParam("aModules", self::$moduleData['chains']);
+            $utilsObject->setModuleVar("aDisabledModules", array());
+            $config->setConfigParam("aDisabledModules", array());
+            $utilsObject->setModuleVar("aModulePaths", self::$moduleData['paths']);
+            $config->setConfigParam("aModulePaths", self::$moduleData['paths']);
         }
     }
 
@@ -126,16 +127,16 @@ class oxTestModuleLoader
     /**
      * Include module files.
      *
-     * @param array $aFiles
+     * @param array $files
      */
-    private function _includeModuleFiles($aFiles)
+    private function _includeModuleFiles($files)
     {
-        foreach ($aFiles as $sFilePath) {
-            $sClassName = basename($sFilePath);
-            $sClassName = substr($sClassName, 0, strlen($sClassName) - 4);
+        foreach ($files as $filePath) {
+            $className = basename($filePath);
+            $className = substr($className, 0, strlen($className) - 4);
 
-            if (!class_exists($sClassName, false)) {
-                require oxRegistry::getConfig()->getConfigParam("sShopDir") . "/modules/" . $sFilePath;
+            if (!class_exists($className, false)) {
+                require oxRegistry::getConfig()->getConfigParam("sShopDir") . "/modules/" . $filePath;
             }
         }
     }
@@ -145,20 +146,20 @@ class oxTestModuleLoader
      * Adds to "original" chain if needed.
      * Adding the "extend" chain to the main chain.
      *
-     * @param array $aExtend
+     * @param array $extend
      */
-    private function _appendToChain($aExtend)
+    private function _appendToChain($extend)
     {
-        if (self::$_blOriginal && !count(self::$_aModuleData['chains'])) {
-            self::$_aModuleData['chains'] = (array)modConfig::getInstance()->getConfigParam("aModules");
+        if (self::$original && !count(self::$moduleData['chains'])) {
+            self::$moduleData['chains'] = (array)oxRegistry::getConfig()->getConfigParam("aModules");
         }
 
-        foreach ($aExtend as $sParent => $sExtends) {
-            if (isset(self::$_aModuleData['chains'][$sParent])) {
-                $sExtends = trim(self::$_aModuleData['chains'][$sParent], "& ") . "&"
-                    . trim($sExtends, "& ");
+        foreach ($extend as $parent => $extends) {
+            if (isset(self::$moduleData['chains'][$parent])) {
+                $extends = trim(self::$moduleData['chains'][$parent], "& ") . "&"
+                    . trim($extends, "& ");
             }
-            self::$_aModuleData['chains'][$sParent] = $sExtends;
+            self::$moduleData['chains'][$parent] = $extends;
         }
     }
 }

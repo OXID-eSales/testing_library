@@ -202,17 +202,31 @@ class Test_Config
      *
      * @return array|null
      */
-    public function getModulePaths()
+    public function getModulesToTest()
     {
-        return $this->getValue('modules_path', 'MODULES_PATH');
+        return explode(',', $this->getValue('modules_path', 'MODULES_PATH'));
     }
 
     /**
-     * Returns for activation.
+     * Returns modules for activation.
+     *
+     * @return array
      */
     public function getModulesToActivate()
     {
-        return array();
+        $modulesToActivate = array();
+
+        $current = $this->getCurrentTestSuite();
+        $modulesDir = $this->getShopPath() .'modules/';
+        foreach ($this->getModulesToTest() as $module) {
+            $fullPath = rtrim($modulesDir . $module, '/') .'/';
+            if (strpos($current, $fullPath) === 0) {
+                $modulesToActivate[] = $module;
+                break;
+            }
+        }
+
+        return $modulesToActivate;
     }
 
     /**
@@ -381,23 +395,35 @@ class Test_Config
     public function getTestSuites()
     {
         if (is_null($this->testSuites)) {
-            $testSuites = array();
-            if ($this->shouldRunModuleTests() && $this->getModulePaths()) {
-                $shopPath = $this->getShopPath();
-                foreach (explode(',', $this->getModulePaths()) as $module) {
-                    if ($suitePath = realpath($shopPath .'/modules/'. $module .'/tests/')) {
-                        $testSuites[] = $suitePath;
-                    }
-                }
-            }
+            $testSuites = $this->getModuleTestSuites();
 
             if ($this->shouldRunShopTests() && $this->getShopTestsPath()) {
-                array_unshift($testSuites, $this->getShopTestsPath());
+                $testSuites[] = $this->getShopTestsPath();
             }
             $this->testSuites = $testSuites;
         }
 
         return $this->testSuites;
+    }
+
+    /**
+     * Returns defined modules test suites.
+     *
+     * @return array
+     */
+    protected function getModuleTestSuites()
+    {
+        $testSuites = array();
+        if ($this->shouldRunModuleTests()) {
+            $modulesDir = $this->getShopPath() .'/modules/';
+            foreach ($this->getModulesToTest() as $module) {
+                if ($suitePath = realpath($modulesDir . $module .'/tests/')) {
+                    $testSuites[] = $suitePath;
+                }
+            }
+        }
+
+        return $testSuites;
     }
 
     /**

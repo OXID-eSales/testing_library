@@ -35,8 +35,8 @@ $fileCopier = new oxFileCopier();
 $config = new Test_Config();
 
 $targetPath = $config->getShopPath();
-if ($config->getModulePaths()) {
-    $modulePaths = explode(',', $config->getModulePaths());
+if ($config->getModulesToTest()) {
+    $modulePaths = explode(',', $config->getModulesToTest());
     $targetPath = $targetPath .'/modules/'. array_shift($modulePaths);
 }
 
