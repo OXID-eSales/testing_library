@@ -367,13 +367,10 @@ class Test_Config
     public function getCurrentTestSuite()
     {
         if (is_null($this->currentTestSuite)) {
-            $currentSuite = '';
-            $testFilePath = end($_SERVER['argv']);
-            if ($testFilePath == 'AllTestsUnit') {
-                $currentSuite = getenv('TEST_SUITE');
-            } else {
+            $currentSuite = getenv('TEST_SUITE');
+            if (!$currentSuite) {
                 $testSuites = $this->getTestSuites();
-                $testFilePath = realpath($testFilePath);
+                $testFilePath = realpath(end($_SERVER['argv']));
                 foreach ($testSuites as $suite) {
                     if (strpos($testFilePath, $suite) === 0) {
                         $currentSuite = $suite;
@@ -411,7 +408,7 @@ class Test_Config
      *
      * @return array
      */
-    protected function getModuleTestSuites()
+    public function getModuleTestSuites()
     {
         $testSuites = array();
         if ($this->shouldRunModuleTests()) {
