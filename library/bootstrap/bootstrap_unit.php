@@ -21,8 +21,12 @@
 
 class UnitBootstrap extends Bootstrap
 {
+    /** @var int Whether to add demo data. */
     protected $addDemoData = 0;
 
+    /**
+     * Initiates shop before testing.
+     */
     public function init()
     {
         parent::init();

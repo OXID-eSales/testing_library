@@ -21,8 +21,12 @@
 
 class SeleniumBootstrap extends Bootstrap
 {
+    /** @var int Whether to add demo data when installing the shop. */
     protected $addDemoData = 1;
 
+    /**
+     * Initiates shop before testing.
+     */
     public function init()
     {
         parent::init();
@@ -37,6 +41,9 @@ class SeleniumBootstrap extends Bootstrap
         require_once TEST_LIBRARY_PATH .'/oxAcceptanceTestCase.php';
     }
 
+    /**
+     * Sets correct oxConfig object for selenium tests.
+     */
     protected function prepareShopModObjects()
     {
         parent::prepareShopModObjects();
