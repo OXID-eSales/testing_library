@@ -335,7 +335,7 @@ class oxTestConfig
      */
     public function shouldRunShopTests()
     {
-        return $this->getValue('run_tests_for_shop');
+        return $this->getValue('run_tests_for_shop', 'RUN_TESTS_FOR_SHOP');
     }
 
     /**
@@ -345,7 +345,7 @@ class oxTestConfig
      */
     public function shouldRunModuleTests()
     {
-        return $this->getValue('run_tests_for_modules');
+        return $this->getValue('run_tests_for_modules', 'RUN_TESTS_FOR_MODULES');
     }
 
     /**
