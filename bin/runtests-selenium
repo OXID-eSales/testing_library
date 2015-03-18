@@ -20,25 +20,43 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-$scriptPath = array_shift($argv);
-$binDir = dirname($scriptPath);
+define('TEST_LIBRARY_PATH', __DIR__ .'/../library/');
 
-$target = empty($argv) ? 'AllTestsSelenium' : '';
+require_once TEST_LIBRARY_PATH . 'Test_Config.php';
+$testConfig = new Test_Config();
+
 $arguments = array();
+array_shift($argv);
 foreach ($argv as $argument) {
     $arguments[] = (strpos($argument, '-') === 0) ? $argument : escapeshellarg($argument);
 }
-$arguments = implode(' ', $arguments);
-
-$phpUnit = "$binDir/phpunit";
-if (!file_exists($phpUnit)) {
-    $phpUnit = "$binDir/../vendor/bin/phpunit";
-    if (!file_exists($phpUnit)) {
-        $phpUnit = "phpunit";
-    }
-}
-
-$bootstrap = __DIR__ ."/../bootstrap.php";
 
 $php = getenv('PHPBIN') ? getenv('PHPBIN') : 'php';
-passthru("$php $phpUnit --bootstrap $bootstrap $arguments $target");
+
+$phpUnit = $testConfig->getVendorPath() ."/bin/phpunit";
+if (!file_exists($phpUnit)) {
+    $phpUnit = "phpunit";
+}
+$phpUnit = "$php $phpUnit --bootstrap " .__DIR__ ."/../bootstrap.php";
+
+if (empty($arguments)) {
+    $testSuites = $testConfig->getTestSuites();
+    $arguments[] = ' AllTestsSelenium';
+    foreach ($testSuites as $suite) {
+        runSuite($suite, $phpUnit, $arguments);
+    }
+} else {
+    $suite = $testConfig->getCurrentTestSuite();
+    runSuite($suite, $phpUnit, $arguments);
+}
+
+function runSuite($suite, $phpUnit, $arguments)
+{
+    $configuration = '';
+    if (file_exists($suite ."/phpunit.xml")) {
+        $configuration = "-c $suite/phpunit.xml";
+    }
+
+    $arguments = implode(' ', $arguments);
+    passthru("TEST_SUITE=$suite $phpUnit $configuration $arguments");
+}

@@ -30,22 +30,33 @@ array_shift($argv);
 foreach ($argv as $argument) {
     $arguments[] = (strpos($argument, '-') === 0) ? $argument : escapeshellarg($argument);
 }
-$arguments = implode(' ', $arguments);
+
+$php = getenv('PHPBIN') ? getenv('PHPBIN') : 'php';
 
 $phpUnit = $testConfig->getVendorPath() ."/bin/phpunit";
 if (!file_exists($phpUnit)) {
     $phpUnit = "phpunit";
 }
-
-$bootstrap = __DIR__ ."/../bootstrap.php";
-$php = getenv('PHPBIN') ? getenv('PHPBIN') : 'php';
+$phpUnit = "$php $phpUnit --bootstrap " .__DIR__ ."/../bootstrap.php";
 
 if (empty($arguments)) {
     $testSuites = $testConfig->getTestSuites();
-
+    $arguments[] = ' AllTestsUnit';
     foreach ($testSuites as $suite) {
-        passthru("TEST_SUITE=$suite $php $phpUnit --bootstrap $bootstrap $arguments AllTestsUnit");
+        runSuite($suite, $phpUnit, $arguments);
     }
 } else {
-    passthru("$php $phpUnit --bootstrap $bootstrap $arguments");
+    $suite = $testConfig->getCurrentTestSuite();
+    runSuite($suite, $phpUnit, $arguments);
+}
+
+function runSuite($suite, $phpUnit, $arguments)
+{
+    $configuration = '';
+    if (file_exists($suite ."/phpunit.xml")) {
+        $configuration = "-c $suite/phpunit.xml";
+    }
+
+    $arguments = implode(' ', $arguments);
+    passthru("TEST_SUITE=$suite $phpUnit $configuration $arguments");
 }
