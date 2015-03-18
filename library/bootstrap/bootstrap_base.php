@@ -19,52 +19,181 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-require_once TEST_LIBRARY_PATH."/bootstrap/bootstrap_config.php";
+define('OXID_PHP_UNIT', true);
 
-if (!defined('oxPATH') || oxPATH == '') {
-    die('Path to tested shop (oxPATH) is not defined');
-}
-
+require_once TEST_LIBRARY_PATH.'Test_Config.php';
 require_once TEST_LIBRARY_PATH.'oxServiceCaller.php';
 require_once TEST_LIBRARY_PATH.'oxFileCopier.php';
+require_once TEST_LIBRARY_PATH .'test_utils.php';
 
-if (file_exists(TEST_LIBRARY_BASE_PATH.'vendor/autoload.php')) {
-    require_once TEST_LIBRARY_BASE_PATH.'vendor/autoload.php';
-} else {
-    require_once TEST_LIBRARY_BASE_PATH.'../../autoload.php';
-}
+class Bootstrap
+{
+    /** @var Test_Config */
+    private $testConfig;
 
-$oFileCopier = new oxFileCopier();
-$sTarget = REMOTE_DIR ? REMOTE_DIR.'/Services' : oxPATH.'/Services';
-$oFileCopier->copyFiles(TEST_LIBRARY_PATH .'Services', $sTarget, true);
+    /** @var int Whether to add demo data when installing the shop. */
+    protected $addDemoData = 1;
 
-if (RESTORE_SHOP_AFTER_TEST_SUITE) {
-    // dumping original database
-    $oServiceCaller = new oxServiceCaller();
-    $oServiceCaller->setParameter('dumpDB', true);
-    $oServiceCaller->setParameter('dump-prefix', 'orig_db_dump');
-    try {
-        $oServiceCaller->callService('ShopPreparation', 1);
-    } catch (Exception $e) {
-        define('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR', true);
+    /**
+     * Initiates class dependencies.
+     */
+    public function __construct()
+    {
+        $this->testConfig = new Test_Config();
+    }
+
+    /**
+     * Prepares tests environment.
+     */
+    public function init()
+    {
+        $testConfig = $this->getTestConfig();
+
+        $this->copyServices();
+
+        if ($testConfig->getTempDirectory()) {
+            $fileCopier = new oxFileCopier();
+            $fileCopier->createEmptyDirectory($testConfig->getTempDirectory());
+        }
+
+        if ($testConfig->shouldRestoreShopAfterTestsSuite()) {
+            $this->registerResetDbAfterSuite();
+        }
+
+        if ($testConfig->shouldInstallShop()) {
+            $this->installShop();
+        }
+
+        $this->setGlobalConstants();
+
+        $this->prepareShopModObjects();
+    }
+
+    /**
+     * Returns tests config.
+     *
+     * @return Test_Config
+     */
+    public function getTestConfig()
+    {
+        return $this->testConfig;
+    }
+
+    /**
+     * Copies services to shop.
+     */
+    protected function copyServices()
+    {
+        $config = $this->getTestConfig();
+        $fileCopier = new oxFileCopier();
+        $target = $config->getRemoteDirectory() ? $config->getRemoteDirectory().'/Services' : $config->getShopPath().'/Services';
+        $fileCopier->copyFiles(TEST_LIBRARY_PATH .'Services', $target, true);
+    }
+
+    /**
+     * Installs the shop.
+     *
+     * @throws Exception
+     */
+    protected function installShop()
+    {
+        $testConfig = $this->getTestConfig();
+        $oCurl = new oxTestCurl();
+        $oCurl->setUrl($testConfig->getShopUrl() . '/Services/_db.php');
+        $oCurl->setParameters(array(
+            'serial' => $testConfig->getShopSerial(),
+            'addDemoData' => $this->addDemoData,
+            'turnOnVarnish' => $testConfig->shouldEnableVarnish(),
+            'setupPath' => $testConfig->getShopSetupPath(),
+        ));
+
+        $oCurl->execute();
+    }
+
+    /**
+     * Sets global constants, as these are still used a lot in tests.
+     * This is used to maintain backwards compatibility.
+     */
+    protected function setGlobalConstants()
+    {
+        $testConfig = $this->getTestConfig();
+
+        if (file_exists($testConfig->getShopPath() . "/_version_define.php")) {
+            include_once $testConfig->getShopPath() . "/_version_define.php";
+        }
+
+        define('oxPATH', $testConfig->getShopPath());
+        define('OX_BASE_PATH', $testConfig->getShopPath());
+        define('shopURL', $testConfig->getShopUrl());
+        define('oxSHOPID', $testConfig->getShopId());
+        define('isSUBSHOP', $testConfig->isSubShop());
+
+        define('CURRENT_TEST_SUITE', $testConfig->getCurrentTestSuite());
+    }
+
+    /**
+     * Creates original database dump and registers database restoration
+     * after the tests suite.
+     */
+    protected function registerResetDbAfterSuite()
+    {
+        $serviceCaller = new oxServiceCaller();
+        $serviceCaller->setParameter('dumpDB', true);
+        $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
+        try {
+            $serviceCaller->callService('ShopPreparation', 1);
+        } catch (Exception $e) {
+            define('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR', true);
+        }
+
+        register_shutdown_function(function () {
+            if (!defined('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR')) {
+                $serviceCaller = new oxServiceCaller();
+                $serviceCaller->setParameter('restoreDB', true);
+                $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
+                $serviceCaller->callService('ShopPreparation', 1);
+            }
+        });
+    }
+
+    /**
+     * Prepares mocked shop objects like oxConfig, oxDb.
+     * Includes shop bootstrap.
+     */
+    protected function prepareShopModObjects()
+    {
+        $shopPath = $this->getTestConfig()->getShopPath();
+        require_once $shopPath .'core/oxfunctions.php';
+
+        $oConfigFile = new oxConfigFile($shopPath . "config.inc.php");
+        oxRegistry::set("OxConfigFile", $oConfigFile);
+        oxRegistry::set("oxConfig", new oxConfig());
+
+        $oDb = new oxDb();
+        $oDb->setConfig($oConfigFile);
+        $oLegacyDb = $oDb->getDb();
+        oxRegistry::set('oxDb', $oLegacyDb);
+
+        oxRegistry::getConfig();
+
+        require_once TEST_LIBRARY_PATH .'modOxUtilsDate.php';
+        require_once $shopPath .'/core/oxutils.php';
+        require_once $shopPath .'/core/adodblite/adodb.inc.php';
+        require_once $shopPath .'/core/oxsession.php';
+        require_once $shopPath .'/core/oxconfig.php';
     }
 }
 
-if (defined('TESTS_TEMP_DIR') && TESTS_TEMP_DIR) {
-    $oFileCopier = new oxFileCopier();
-    $oFileCopier->createEmptyDirectory(TESTS_TEMP_DIR);
-}
-
+/**
+ * @deprecated Use Test_Config::getCurrentTestSuite() or Test_Config::getTempDirectory().
+ *
+ * @return string
+ */
 function getTestsBasePath()
 {
-    return SHOP_TESTS_PATH;
-}
-
-register_shutdown_function(function () {
-    if (RESTORE_SHOP_AFTER_TEST_SUITE && !defined('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR')) {
-        $oServiceCaller = new oxServiceCaller();
-        $oServiceCaller->setParameter('restoreDB', true);
-        $oServiceCaller->setParameter('dump-prefix', 'orig_db_dump');
-        $oServiceCaller->callService('ShopPreparation', 1);
+    $testsPath = '';
+    if (defined('CURRENT_TEST_SUITE')) {
+        $testsPath = CURRENT_TEST_SUITE;
     }
-});
+    return $testsPath;
+}

@@ -19,12 +19,6 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-define('MAX_LOOP_AMOUNT', 4);
-function getRandLTAmnt()
-{
-    return rand(1, MAX_LOOP_AMOUNT - 1);
-}
-
 /**
  * adds new module to specified class
  * Usable if you want to check how many calls of class AA method BB
@@ -72,7 +66,7 @@ function oxAddClassModule($sModuleClass, $sClass)
     $oFactory = new oxUtilsObject();
     $aModules = $oFactory->getModuleVar("aModules");
 
-    //unsetting _possible_ registry instance
+    //unset _possible_ registry instance
     oxRegistry::set($sClass, null);
 
     if ($aModules[strtolower($sClass)]) {
@@ -88,7 +82,7 @@ function oxAddClassModule($sModuleClass, $sClass)
 
 function oxRemClassModule($sModuleClass, $sClass = '')
 {
-    //unsetting _possible_ registry instance
+    //unset _possible_ registry instance
     oxRegistry::set($sClass, null);
 
     $oFactory = new oxUtilsObject();
@@ -424,9 +418,9 @@ abstract class modOXID
         $oConfig->setUser(null);
         $oConfig->setAdminMode(null);
 
-        if (OXID_VERSION_EE) :
+        if (method_exists($oConfig, 'setRights')) {
             $oConfig->setRights(null);
-        endif;
+        }
         oxTestModules::cleanAllModules();
     }
 

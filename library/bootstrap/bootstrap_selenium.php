@@ -19,28 +19,28 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-if (INSTALL_SHOP) {
-    $oCurl = new oxTestCurl();
-    $oCurl->setUrl(shopURL . '/Services/_db.php');
-    $oCurl->setParameters(array(
-        'serial' => TEST_SHOP_SERIAL,
-        'addDemoData' => 1,
-        'turnOnVarnish' => OXID_VARNISH,
-        'setupPath' => SHOP_SETUP_PATH,
-    ));
-    $sResponse = $oCurl->execute();
+class SeleniumBootstrap extends Bootstrap
+{
+    protected $addDemoData = 1;
+
+    public function init()
+    {
+        parent::init();
+
+        define("SHOP_EDITION", ($this->getTestConfig()->getShopEdition() == 'EE') ? 'EE' : 'PE_CE');
+
+        $screenShotsPath = $this->getTestConfig()->getScreenShotsPath();
+        if ($screenShotsPath && !is_dir($screenShotsPath)) {
+            mkdir($screenShotsPath, 0777, true);
+        }
+
+        require_once TEST_LIBRARY_PATH .'/oxAcceptanceTestCase.php';
+    }
+
+    protected function prepareShopModObjects()
+    {
+        parent::prepareShopModObjects();
+
+        oxRegistry::set("oxConfig", oxNew('oxConfig'));
+    }
 }
-
-$oServiceCaller = new oxServiceCaller();
-$oServiceCaller->setParameter('cl', 'oxConfig');
-$oServiceCaller->setParameter('fnc', 'getEdition');
-$edition = $oServiceCaller->callService('ShopObjectConstructor', 1);
-define("SHOP_EDITION", ($edition == 'EE') ? 'EE' : 'PE_CE');
-
-require_once TEST_LIBRARY_PATH . '/bootstrap/prepareDbForUsage.php';
-
-if (SCREENSHOTS_PATH && !is_dir(SCREENSHOTS_PATH)) {
-    mkdir(SCREENSHOTS_PATH, 0777, true);
-}
-
-require_once TEST_LIBRARY_PATH .'/oxAcceptanceTestCase.php';

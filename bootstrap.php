@@ -30,7 +30,7 @@ define('TEST_LIBRARY_BASE_PATH', __DIR__ .'/');
 chdir(TEST_LIBRARY_BASE_PATH);
 
 define('TEST_LIBRARY_PATH', TEST_LIBRARY_BASE_PATH .'library/');
-define('TESTING_LIBRARY_HELPERS_PATH', TEST_LIBRARY_PATH .'helpers/');
+define('TEST_LIBRARY_HELPERS_PATH', TEST_LIBRARY_PATH .'helpers/');
 
 $sTestFilePath = strtolower(end($_SERVER['argv']));
 $sTestType = 'unit';
@@ -46,8 +46,12 @@ require_once TEST_LIBRARY_PATH ."/bootstrap/bootstrap_base.php";
 switch($sTestType) {
     case 'acceptance':
         include_once TEST_LIBRARY_PATH ."/bootstrap/bootstrap_selenium.php";
+        $bootstrap = new SeleniumBootstrap();
         break;
     default:
         include_once TEST_LIBRARY_PATH ."/bootstrap/bootstrap_unit.php";
+        $bootstrap = new UnitBootstrap();
         break;
 }
+
+$bootstrap->init();
