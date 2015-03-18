@@ -22,9 +22,9 @@
 
 define('TEST_LIBRARY_PATH', __DIR__ .'/../library/');
 
-require_once TEST_LIBRARY_PATH . 'Test_Config.php';
+require_once TEST_LIBRARY_PATH . 'oxTestConfig.php';
 require_once TEST_LIBRARY_PATH . 'oxFileCopier.php';
-$testConfig = new Test_Config();
+$testConfig = new oxTestConfig();
 $fileCopier = new oxFileCopier();
 
 $arguments = array();

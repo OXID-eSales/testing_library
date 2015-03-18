@@ -25,7 +25,7 @@ if (!defined('TEST_LIBRARY_BASE_PATH')) {
     define('TEST_LIBRARY_BASE_PATH', __DIR__ . '/../');
 }
 
-class Test_Config
+class oxTestConfig
 {
     /** @var array */
     private $configuration;

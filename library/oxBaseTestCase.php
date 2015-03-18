@@ -6,18 +6,18 @@
  */
 class oxBaseTestCase extends PHPUnit_Framework_TestCase
 {
-    /** @var Test_Config */
+    /** @var oxTestConfig */
     private static $testConfig;
 
     /**
      * Returns test configuration.
      *
-     * @return Test_Config
+     * @return oxTestConfig
      */
     public function getTestConfig()
     {
         if (is_null(self::$testConfig)) {
-            self::$testConfig = new Test_Config();
+            self::$testConfig = new oxTestConfig();
         }
         return self::$testConfig;
     }

@@ -21,14 +21,14 @@
 
 define('OXID_PHP_UNIT', true);
 
-require_once TEST_LIBRARY_PATH.'Test_Config.php';
+require_once TEST_LIBRARY_PATH.'oxTestConfig.php';
 require_once TEST_LIBRARY_PATH.'oxServiceCaller.php';
 require_once TEST_LIBRARY_PATH.'oxFileCopier.php';
 require_once TEST_LIBRARY_PATH .'test_utils.php';
 
 class Bootstrap
 {
-    /** @var Test_Config */
+    /** @var oxTestConfig */
     private $testConfig;
 
     /** @var int Whether to add demo data when installing the shop. */
@@ -39,7 +39,7 @@ class Bootstrap
      */
     public function __construct()
     {
-        $this->testConfig = new Test_Config();
+        $this->testConfig = new oxTestConfig();
     }
 
     /**
@@ -72,7 +72,7 @@ class Bootstrap
     /**
      * Returns tests config.
      *
-     * @return Test_Config
+     * @return oxTestConfig
      */
     public function getTestConfig()
     {
@@ -185,7 +185,7 @@ class Bootstrap
 }
 
 /**
- * @deprecated Use Test_Config::getCurrentTestSuite() or Test_Config::getTempDirectory().
+ * @deprecated Use oxTestConfig::getCurrentTestSuite() or oxTestConfig::getTempDirectory().
  *
  * @return string
  */
