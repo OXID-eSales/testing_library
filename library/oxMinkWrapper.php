@@ -19,6 +19,8 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+require_once TEST_LIBRARY_PATH . "/oxBaseTestCase.php";
+
 class oxMinkWrapper extends oxBaseTestCase
 {
     /**
