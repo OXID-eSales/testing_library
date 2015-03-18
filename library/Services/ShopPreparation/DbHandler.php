@@ -103,7 +103,7 @@ class DbHandler
         $sCmd  = 'mysql -h' . escapeshellarg( $this->_getDbHost() );
         $sCmd .= ' -u' . escapeshellarg( $this->_getDbUser() );
         $sCmd .= ' -p' . escapeshellarg( $this->_getDbPwd() );
-        $sCmd .= ' --default-character-set=utf8 ' . escapeshellarg( $this->_getDbName() );
+        $sCmd .= ' --default-character-set=' . $this->getCharsetMode() .' '. escapeshellarg( $this->_getDbName() );
         $sCmd .= '  < ' . escapeshellarg( $sFileName ) . ' 2>&1';
 
         return $sCmd;
@@ -165,6 +165,16 @@ class DbHandler
         $sFileName = $this->getTemporaryFolder() . '/' . $sDumpFilePrefix . '_' . $this->_getDbName();
 
         return $sFileName;
+    }
+
+    /**
+     * Returns charset mode
+     *
+     * @return string
+     */
+    private function getCharsetMode()
+    {
+        return $this->_configFile->iUtfMode ? 'utf8' : 'latin1';
     }
 
     /**
