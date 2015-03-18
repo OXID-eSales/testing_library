@@ -112,22 +112,11 @@ class Test_Config
     public function getShopEdition()
     {
         if (is_null($this->shopEdition)) {
-            $shopEdition = $this->getValue('shop_edition', 'SHOP_EDITION');
-
-            if (!$shopEdition) {
-                if (defined('OXID_VERSION_EE')) {
-                    $shopEdition = OXID_VERSION_EE ? 'EE' : '';
-                    $shopEdition = OXID_VERSION_PE_PE ? 'PE' : $shopEdition;
-                    $shopEdition = OXID_VERSION_PE_CE ? 'CE' : $shopEdition;
-                }
-                if (!$shopEdition) {
-                    $shopPath = $this->getShopPath();
-                    include_once $shopPath . 'core/oxsupercfg.php';
-                    include_once $shopPath . 'core/oxconfig.php';
-                    $config = new oxConfig();
-                    $shopEdition = $config->getEdition();
-                }
-            }
+            $shopPath = $this->getShopPath();
+            include_once $shopPath . 'core/oxsupercfg.php';
+            include_once $shopPath . 'core/oxconfig.php';
+            $config = new oxConfig();
+            $shopEdition = $config->getEdition();
             $this->shopEdition = strtoupper($shopEdition);
         }
 
