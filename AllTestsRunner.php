@@ -99,34 +99,10 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
         $aTestSuites = getenv('TEST_DIRS')? explode(',', getenv('TEST_DIRS')) : static::$_aTestSuites;
 
         foreach ($aTestSuites as $sSuite) {
-            $aTestDirectories = array_merge($aTestDirectories, static::_getSuiteDirectories($sSuite));
+            $aTestDirectories[] = CURRENT_TEST_SUITE ."/$sSuite";
         }
 
         return array_merge($aTestDirectories, static::_getDirectoryTree($aTestDirectories));
-    }
-
-    /**
-     * Returns test suite directories
-     *
-     * @param array $sTestSuite
-     *
-     * @return array
-     */
-    protected static function _getSuiteDirectories($sTestSuite)
-    {
-        $aDirectories = array();
-
-        if (RUN_SHOP_TESTS && SHOP_TESTS_PATH) {
-            $aDirectories[] = SHOP_TESTS_PATH .$sTestSuite;
-        }
-
-        if (RUN_MODULE_TESTS && MODULES_PATH) {
-            foreach (explode(',', MODULES_PATH) as $sModulePath) {
-                $aDirectories[] = oxPATH .'/modules/'.$sModulePath .'/tests/' .$sTestSuite;
-            }
-        }
-
-        return $aDirectories;
     }
 
     /**
@@ -177,7 +153,6 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     protected static function _addFilesToSuite($oSuite, $aTestFiles)
     {
         foreach ($aTestFiles as $sFilename) {
-
             $sFilter = getenv('PREG_FILTER');
             if (!$sFilter || preg_match("&$sFilter&i", $sFilename)) {
                 $oSuite->addTestFile($sFilename);
