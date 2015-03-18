@@ -285,8 +285,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     {
         $this->openNewWindow(shopURL, $blClearCache);
 
-        /* if ( OXID_VERSION_EE ) : */
-        if (isSUBSHOP || $mForceSubShop) {
+        if ($this->getTestConfig()->isSubShop() || $mForceSubShop) {
             if (!$blForceMainShop) {
                 if (!is_string($mForceSubShop)) {
                     $mForceSubShop = "link=subshop";
@@ -297,7 +296,6 @@ class oxAcceptanceTestCase extends oxMinkWrapper
                 $this->clickAndWait("link=OXID eShop " . $sShopNr);
             }
         }
-        /* endif; */
         $this->checkForErrors();
     }
 
@@ -518,11 +516,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
 
         $this->frame("navigation");
 
-        /* if ( OXID_VERSION_EE ) : */
-        if (isSUBSHOP && !$forceMainShop) { // selecting active subshop
+        if ($this->getTestConfig()->isSubShop() && !$forceMainShop) {
             $this->selectAndWaitFrame("selectshop", "label=subshop", "basefrm");
         }
-        /* endif; */
 
         if ($menuLink1 && $menuLink2) {
             $this->selectMenu($menuLink1, $menuLink2);
@@ -609,11 +605,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
 
         $this->frame("navigation");
 
-        /* if ( OXID_VERSION_EE ) : */
-        if (isSUBSHOP) { // selecting active subshop
+        if ($this->getTestConfig()->isSubShop()) {
             $this->selectAndWaitFrame("selectshop", "label=subshop", "edit");
         }
-        /* endif; */
         $this->waitForElement($link1);
         $this->click($link1);
         $this->click($link2);
@@ -1526,12 +1520,13 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     protected function _getMinkDriver($sDriver)
     {
+        $browserName = $this->getTestConfig()->getBrowserName();
         switch ($sDriver) {
             case 'selenium2':
-                $oDriver = new \Behat\Mink\Driver\Selenium2Driver(browserName);
+                $oDriver = new \Behat\Mink\Driver\Selenium2Driver($browserName);
                 break;
             case 'sahi':
-                $oDriver = new \Behat\Mink\Driver\SahiDriver(browserName, $this->_getClient());
+                $oDriver = new \Behat\Mink\Driver\SahiDriver($browserName, $this->_getClient());
                 break;
             case 'goutte':
                 $aClientOptions = array();
@@ -1544,7 +1539,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
                 break;
             case 'selenium':
                 $client = $this->_getClient();
-                $oDriver = new \Behat\Mink\Driver\SeleniumDriver(browserName, shopURL, $client);
+                $oDriver = new \Behat\Mink\Driver\SeleniumDriver($browserName, shopURL, $client);
                 break;
             default:
                 throw new Exception('Driver ' . $sDriver . ' was not found!');
@@ -1560,7 +1555,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     protected function _getClient()
     {
         if (is_null($this->_oClient)) {
-            $this->_oClient = new \Selenium\Client(SELENIUM_SERVER_IP, '4444');
+            $this->_oClient = new \Selenium\Client($this->getTestConfig()->getSeleniumServerIp(), '4444');
         }
 
         return $this->_oClient;
@@ -1624,9 +1619,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     public function executeSql($sql)
     {
         oxDb::getDb()->execute($sql);
-        if (OXID_VERSION_EE) :
+        if ($this->getTestConfig()->getShopEdition() == 'EE') {
             oxDb::getDb()->execute("delete from oxcache");
-        endif;
+        }
     }
 
     /**
@@ -1928,7 +1923,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
 
             $this->getScreenShot($sPath . $sFileName);
 
-            return 'Screenshot: ' . SCREENSHOTS_URL . '/' . $sFileName . "\n";
+            return 'Screenshot: ' . $this->getTestConfig()->getSeleniumScreenshotsUrl() . '/' . $sFileName . "\n";
         } else {
             return '';
         }
@@ -1939,14 +1934,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     protected function _getScreenShotPath()
     {
-        $sPath = '';
-
-        if (SCREENSHOTS_PATH != '') {
-            $sPath = SCREENSHOTS_PATH;
-
-            if (!in_array(substr($sPath, strlen($sPath) - 1, 1), array("/", "\\"))) {
-                $sPath .= DIRECTORY_SEPARATOR;
-            }
+        $sPath = $this->getTestConfig()->getScreenShotsPath();
+        if ($sPath && !in_array(substr($sPath, strlen($sPath) - 1, 1), array("/", "\\"))) {
+            $sPath .= DIRECTORY_SEPARATOR;
         }
 
         return $sPath;

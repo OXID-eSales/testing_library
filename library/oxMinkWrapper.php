@@ -19,7 +19,7 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-class oxMinkWrapper extends PHPUnit_Framework_TestCase
+class oxMinkWrapper extends oxBaseTestCase
 {
     /**
      * Opens url in browser

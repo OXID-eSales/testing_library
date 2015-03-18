@@ -19,19 +19,21 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+require_once TEST_LIBRARY_PATH . "/oxBaseTestCase.php";
+require_once TEST_LIBRARY_PATH . "/oxTestModuleLoader.php";
 require_once TEST_LIBRARY_PATH . 'Services/ShopPreparation/DbHandler.php';
-require_once TESTING_LIBRARY_HELPERS_PATH . 'oxArticleHelper.php';
-require_once TESTING_LIBRARY_HELPERS_PATH . 'oxSeoEncoderHelper.php';
-require_once TESTING_LIBRARY_HELPERS_PATH . 'oxDeliveryHelper.php';
-require_once TESTING_LIBRARY_HELPERS_PATH . 'oxManufacturerHelper.php';
-require_once TESTING_LIBRARY_HELPERS_PATH . 'oxVendorHelper.php';
-require_once TESTING_LIBRARY_HELPERS_PATH . 'oxAdminViewHelper.php';
+require_once TEST_LIBRARY_HELPERS_PATH . 'oxArticleHelper.php';
+require_once TEST_LIBRARY_HELPERS_PATH . 'oxSeoEncoderHelper.php';
+require_once TEST_LIBRARY_HELPERS_PATH . 'oxDeliveryHelper.php';
+require_once TEST_LIBRARY_HELPERS_PATH . 'oxManufacturerHelper.php';
+require_once TEST_LIBRARY_HELPERS_PATH . 'oxVendorHelper.php';
+require_once TEST_LIBRARY_HELPERS_PATH . 'oxAdminViewHelper.php';
 require_once TEST_LIBRARY_PATH . 'oxMockStubFunc.php';
 
 /**
  * Base tests class. Most tests should extend this class.
  */
-class OxUnitTestCase extends PHPUnit_Framework_TestCase
+class oxUnitTestCase extends oxBaseTestCase
 {
     /** @var array Request parameters backup. */
     protected $_aBackup = array();
@@ -78,11 +80,12 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
      */
     public function __construct($name = null, array $data = array(), $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         if (!self::$_blSetupBeforeTestSuiteDone) {
             $this->setUpBeforeTestSuite();
             self::$_blSetupBeforeTestSuiteDone = true;
         }
-        parent::__construct($name, $data, $dataName);
     }
 
     /**
@@ -90,9 +93,10 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
      */
     public function setUpBeforeTestSuite()
     {
-        if (MODULES_PATH) {
+        $testConfig = $this->getTestConfig();
+        if ($testConfig->getModulesToActivate()) {
             $oTestModuleLoader = $this->_getModuleLoader();
-            $oTestModuleLoader->loadModules(explode(',', MODULES_PATH));
+            $oTestModuleLoader->loadModules($testConfig->getModulesToActivate());
             $oTestModuleLoader->setModuleInformation();
         }
 
@@ -130,7 +134,7 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
 
         oxRegistry::getUtils()->cleanStaticCache();
 
-        if (MODULES_PATH) {
+        if ($this->getTestConfig()->getModulesToActivate()) {
             $oTestModuleLoader = $this->_getModuleLoader();
             $oTestModuleLoader->setModuleInformation();
         }
@@ -489,17 +493,15 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
     {
         oxDb::getDb()->execute($sSql);
 
-        if (OXID_VERSION_EE) :
-            if (in_array($sTable, $this->getMultiShopTables())) {
-                $sMapId = !is_null($sMapId) ? $sMapId : oxDb::getDb()->Insert_ID();
-                $aShopIds = (array)$aShopIds;
+        if ($this->getTestConfig()->getShopEdition() == 'EE' && in_array($sTable, $this->getMultiShopTables())) {
+            $sMapId = !is_null($sMapId) ? $sMapId : oxDb::getDb()->Insert_ID();
+            $aShopIds = (array)$aShopIds;
 
-                foreach ($aShopIds as $iShopId) {
-                    $sSql = "REPLACE INTO `{$sTable}2shop` SET `oxmapobjectid` = ?, `oxshopid` = ?";
-                    oxDb::getDb()->execute($sSql, array($sMapId, $iShopId));
-                }
+            foreach ($aShopIds as $iShopId) {
+                $sSql = "REPLACE INTO `{$sTable}2shop` SET `oxmapobjectid` = ?, `oxshopid` = ?";
+                oxDb::getDb()->execute($sSql, array($sMapId, $iShopId));
             }
-        endif;
+        }
     }
 
     /**
@@ -551,7 +553,7 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
     {
         if (!in_array($sTable, $this->_aTableForCleanups)) {
             $this->_aTableForCleanups[] = $sTable;
-            if (OXID_VERSION_EE && in_array($sTable, $this->getMultiShopTables())) {
+            if ($this->getTestConfig()->getShopEdition() == 'EE' && in_array($sTable, $this->getMultiShopTables())) {
                 $this->_aTableForCleanups[] = "{$sTable}2shop";
             }
         }
@@ -567,7 +569,7 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
     {
         $sCol = (!empty($sColName)) ? $sColName : 'oxid';
 
-        if (OXID_VERSION_EE && in_array($sTable, $this->getMultiShopTables())) {
+        if ($this->getTestConfig()->getShopEdition() == 'EE' && in_array($sTable, $this->getMultiShopTables())) {
             // deletes all records from shop relations table
             $sSql = "delete from `{$sTable}2shop`
                 where oxmapobjectid in (select oxmapid from `$sTable` where `$sCol` like '\_%')";
@@ -668,13 +670,13 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
      * @param string $sFileName
      * @param string $sFileContent
      *
-     * @usage Create file from file name and file content to TESTS_TEMP_DIR.
+     * @usage Create file from file name and file content to temp directory.
      *
      * @return string path to file
      */
     public function createFile($sFileName, $sFileContent)
     {
-        $sPathToFile = TESTS_TEMP_DIR . '/' . $sFileName;
+        $sPathToFile = $this->getTestConfig()->getTempDirectory() . '/' . $sFileName;
 
         file_put_contents($sPathToFile, $sFileContent);
 
@@ -855,6 +857,6 @@ class OxUnitTestCase extends PHPUnit_Framework_TestCase
  * Backward compatibility, do not use it for new tests.
  * @deprecated use oxAcceptanceTestCase instead
  */
-class OxidTestCase extends OxUnitTestCase
+class OxidTestCase extends oxUnitTestCase
 {
 }
