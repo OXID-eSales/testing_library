@@ -119,12 +119,6 @@ class oxUnitTestCase extends oxBaseTestCase
     protected function setUp()
     {
         parent::setUp();
-        if (getenv('TRAVIS_ERROR_LEVEL')) {
-            error_reporting((int)getenv('TRAVIS_ERROR_LEVEL'));
-        } else {
-            error_reporting((E_ALL ^ E_NOTICE) | E_STRICT);
-        }
-        ini_set('display_errors', true);
 
         $this->getConfig();
         $this->getSession();
@@ -138,13 +132,6 @@ class oxUnitTestCase extends oxBaseTestCase
             $oTestModuleLoader = $this->_getModuleLoader();
             $oTestModuleLoader->setModuleInformation();
         }
-
-        if (getenv('TRAVIS_ERROR_LEVEL')) {
-            error_reporting((int)getenv('TRAVIS_ERROR_LEVEL'));
-        } else {
-            error_reporting((E_ALL ^ E_NOTICE) | E_STRICT);
-        }
-        ini_set('display_errors', true);
     }
 
     /**
