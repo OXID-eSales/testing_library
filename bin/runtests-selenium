@@ -39,9 +39,9 @@ if (!file_exists($phpUnit)) {
 }
 $phpUnit = "$php $phpUnit --bootstrap " .__DIR__ ."/../bootstrap.php";
 
-if (empty($arguments)) {
+$arguments = empty($arguments) ? array(escapeshellarg('AllTestsSelenium')) : $arguments;
+if (end($arguments) == escapeshellarg('AllTestsSelenium')) {
     $testSuites = $testConfig->getTestSuites();
-    $arguments[] = ' AllTestsSelenium';
     foreach ($testSuites as $suite) {
         runSuite($suite, $phpUnit, $arguments);
     }
