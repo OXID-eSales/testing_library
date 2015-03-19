@@ -1906,7 +1906,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
 
             $this->getScreenShot($sPath . $sFileName);
 
-            return 'Screenshot: ' . $this->getTestConfig()->getSeleniumScreenshotsUrl() . '/' . $sFileName . "\n";
+            return 'Screenshot: ' . $this->getTestConfig()->getScreenShotsUrl() . '/' . $sFileName . "\n";
         } else {
             return '';
         }

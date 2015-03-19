@@ -85,7 +85,7 @@ class oxTestConfig
     public function getShopPath()
     {
         if (!$this->shopPath) {
-            $this->shopPath = $this->getValue('shop_path', 'SHOP_PATH');
+            $this->shopPath = $this->getValue('shop_path');
             if (strpos($this->shopPath, '/') !== 0) {
                 $this->shopPath = $this->findShopPath($this->shopPath);
             }
@@ -101,7 +101,7 @@ class oxTestConfig
      */
     public function getRemoteDirectory()
     {
-        return $this->getValue('remote_directory', 'REMOTE_DIR');
+        return $this->getValue('remote_directory');
     }
 
     /**
@@ -132,7 +132,7 @@ class oxTestConfig
     {
         $shopId = 'oxbaseshop';
         if ($this->getShopEdition() == 'EE') {
-            $isSubShop = (bool)$this->getValue('is_subshop', 'IS_SUBSHOP');
+            $isSubShop = (bool)$this->getValue('is_subshop');
             $shopId = $isSubShop ? 2 : 1;
         }
 
@@ -158,7 +158,7 @@ class oxTestConfig
     public function getShopUrl()
     {
         if (is_null($this->shopUrl)) {
-            $sShopUrl = $this->getValue('shop_url', 'SHOP_URL');
+            $sShopUrl = $this->getValue('shop_url');
             if (!$sShopUrl) {
                 $shopPath = $this->getShopPath();
                 include_once $shopPath . 'core/oxconfigfile.php';
@@ -187,13 +187,15 @@ class oxTestConfig
     }
 
     /**
-     * Returns array of paths to all modules which should be tested.
+     * Returns array of partial paths to all defined modules.
+     * Paths starts from shop/dir/modules/ folder.
+     * To get full path to module append shop/dir/modules/ to the start of each module path returned.
      *
      * @return array|null
      */
-    public function getModulesToTest()
+    public function getPartialModulePaths()
     {
-        return explode(',', $this->getValue('modules_path', 'MODULES_PATH'));
+        return explode(',', $this->getValue('partial_module_paths'));
     }
 
     /**
@@ -206,11 +208,11 @@ class oxTestConfig
         $modulesToActivate = array();
 
         if ($this->shouldActivateAllModules()) {
-            $modulesToActivate = $this->getModulesToTest();
+            $modulesToActivate = $this->getPartialModulePaths();
         } else {
             $current = $this->getCurrentTestSuite();
             $modulesDir = $this->getShopPath() .'modules/';
-            foreach ($this->getModulesToTest() as $module) {
+            foreach ($this->getPartialModulePaths() as $module) {
                 $fullPath = rtrim($modulesDir . $module, '/') .'/';
                 if (strpos($current, $fullPath) === 0) {
                     $modulesToActivate[] = $module;
@@ -229,7 +231,7 @@ class oxTestConfig
      */
     public function getShopSetupPath()
     {
-        return $this->getValue('shop_setup_path', 'SHOP_SETUP_PATH');
+        return $this->getValue('shop_setup_path');
     }
 
     /**
@@ -239,7 +241,7 @@ class oxTestConfig
      */
     public function getDatabaseRestorationClass()
     {
-        return $this->getValue('database_restoration_class', 'DATABASE_RESTORATION_CLASS');
+        return $this->getValue('database_restoration_class');
     }
 
     /**
@@ -249,7 +251,7 @@ class oxTestConfig
      */
     public function getShopSerial()
     {
-        return $this->getValue('shop_serial', 'TEST_SHOP_SERIAL ');
+        return $this->getValue('shop_serial');
     }
 
     /**
@@ -259,7 +261,7 @@ class oxTestConfig
      */
     public function shouldInstallShop()
     {
-        return (bool)$this->getValue('install_shop', 'INSTALL_SHOP');
+        return (bool)$this->getValue('install_shop');
     }
 
     /**
@@ -289,7 +291,7 @@ class oxTestConfig
      */
     public function getTempDirectory()
     {
-        return $this->getValue('tmp_path', 'TMP_PATH');
+        return $this->getValue('tmp_path');
     }
 
     /**
@@ -299,7 +301,7 @@ class oxTestConfig
      */
     public function shouldEnableVarnish()
     {
-        return $this->getValue('enable_varnish', 'ENABLE_VARNISH');
+        return $this->getValue('enable_varnish');
     }
 
     /**
@@ -309,7 +311,7 @@ class oxTestConfig
      */
     public function getSeleniumServerIp()
     {
-        return $this->getValue('selenium_server_ip', 'SELENIUM_SERVER_IP');
+        return $this->getValue('selenium_server_ip');
     }
 
     /**
@@ -319,7 +321,7 @@ class oxTestConfig
      */
     public function getBrowserName()
     {
-        return $this->getValue('browser_name', 'BROWSER_NAME');
+        return $this->getValue('browser_name');
     }
 
     /**
@@ -329,7 +331,7 @@ class oxTestConfig
      */
     public function getScreenShotsPath()
     {
-        return $this->getValue('screen_shots_path', 'SCREENSHOTS_PATH');
+        return $this->getValue('screen_shots_path');
     }
 
     /**
@@ -337,9 +339,9 @@ class oxTestConfig
      *
      * @return string|null
      */
-    public function getSeleniumScreenshotsUrl()
+    public function getScreenShotsUrl()
     {
-        return $this->getValue('screen_shots_url', 'SCREENSHOTS_URL');
+        return $this->getValue('screen_shots_url');
     }
 
     /**
@@ -349,7 +351,7 @@ class oxTestConfig
      */
     public function shouldRunShopTests()
     {
-        return $this->getValue('run_tests_for_shop', 'RUN_TESTS_FOR_SHOP');
+        return $this->getValue('run_tests_for_shop');
     }
 
     /**
@@ -359,7 +361,7 @@ class oxTestConfig
      */
     public function shouldRunModuleTests()
     {
-        return $this->getValue('run_tests_for_modules', 'RUN_TESTS_FOR_MODULES');
+        return $this->getValue('run_tests_for_modules');
     }
 
     /**
@@ -416,7 +418,7 @@ class oxTestConfig
         $testSuites = array();
         if ($this->shouldRunModuleTests()) {
             $modulesDir = $this->getShopPath() .'/modules/';
-            foreach ($this->getModulesToTest() as $module) {
+            foreach ($this->getPartialModulePaths() as $module) {
                 if ($suitePath = realpath($modulesDir . $module .'/tests/')) {
                     $testSuites[] = $suitePath;
                 }
@@ -427,18 +429,19 @@ class oxTestConfig
     }
 
     /**
-     * Returns value for config parameter.
+     * Returns configuration parameter value. First checks if environmental variable is set with the same uppercase name or provided one.
      *
-     * @param string $param
-     * @param string $alias
+     * @param string $param Parameter name.
      *
      * @return string|array|null
      */
-    private function getValue($param, $alias = null)
+    private function getValue($param)
     {
         $value = array_key_exists($param, $this->configuration) ? $this->configuration[$param] : null;
-        if ($alias && getenv($alias) !== false) {
-            $value = getenv($alias);
+
+        $environmentalParam = strtoupper($param);
+        if (getenv($environmentalParam) !== false) {
+            $value = getenv($environmentalParam);
         }
 
         return $value;
@@ -454,9 +457,9 @@ class oxTestConfig
     {
         $vendorBaseDir = $this->getVendorPath();
         $availablePaths = array(
-            $vendorBaseDir .'../',
-            $vendorBaseDir .'../../../',
-            $vendorBaseDir .'../../../../',
+            $vendorBaseDir .'../', // When vendor directory is in shop base directory
+            $vendorBaseDir .'../../../', // When vendor directory is in /shop/dir/modules/testmodule/ directory
+            $vendorBaseDir .'../../../../', // When vendor directory is in /shop/dir/modules/company/testmodule/ directory
         );
 
         $shopPath = '';
