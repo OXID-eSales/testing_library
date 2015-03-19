@@ -450,24 +450,6 @@ class oxUnitTestCase extends oxBaseTestCase
     }
 
     /**
-     * Mark the test as skipped until given date.
-     * Wrapper function for PHPUnit_Framework_Assert::markTestSkipped.
-     *
-     * @param string $sDate    Date string in format 'Y-m-d'.
-     * @param string $sMessage Message.
-     *
-     * @throws PHPUnit_Framework_SkippedTestError
-     */
-    public function markTestSkippedUntil($sDate, $sMessage = '')
-    {
-        $oDate = DateTime::createFromFormat('Y-m-d', $sDate);
-
-        if (time() < ((int)$oDate->format('U'))) {
-            $this->markTestSkipped($sMessage);
-        }
-    }
-
-    /**
      * Executes SQL and adds table to clean up after test.
      * For EE version elements are added to map table for specified shops.
      *
