@@ -11,18 +11,17 @@ This library is meant to help developers check their shop/module code with ease.
 * eShop version 4.9.4/5.2.4 or later
 * Latest Composer version
 
+This library can be used to test modules with earlier shop versions, but it will not be possible to run shop tests.
+
 ## Installation
 
-First and foremost - make sure you have a working shop, meaning:
-
-1. Shop is installed/configured (`config.inc.php` is filled in with database connection details and so)
-1. Shop can be accessed through url.
-
-Additionally, the setup uses composer to get required packages, so make sure to have composer installed and accessable. You can find composer installation guide [here](https://getcomposer.org/download/).
+Testing library setup uses composer to get required packages, so make sure to have composer installed and accessible. 
+You can find composer installation guide [here](https://getcomposer.org/download/).
 
 ### Selecting where to install testing library
 
-Testing library can be installed directly within shop or to any other directory. However, installation varies slightly depending on selected location. We advise to install it using shop directory. 
+Testing library can be installed directly within shop or to any other directory. 
+However, installation varies slightly depending on selected location. We advise to install it using shop directory. 
 
 #### Option 1: Selecting shop directory for installation (preferred way)
 
@@ -49,7 +48,7 @@ To install testing library within shop directory, update/create `composer.json` 
         }
     },
     "require-dev": {
-        "oxid-esales/testing-library": "^0.0.1",
+        "oxid-esales/testing-library": "~v0.0.2",
         "incenteev/composer-parameter-handler": "~2.0"
     },
     "minimum-stability": "dev",
@@ -77,26 +76,35 @@ To install testing library within shop directory, update/create `composer.json` 
 }
 ```
 Installing this way, binaries will be accessible from `shop/path/vendor/bin`.
+Latest development shop version already includes composer.json file in its source, so no changes needs to be made.
 
 #### Option 2: Selecting any directory for installation (alternative way)
 
-To install testing library to any directory except shop (for shop installation, see above), you need to checkout testing library from Github into desired directory (`git clone https://github.com/OXID-eSales/testing_library`). Installing this way, binaries will be accessible from `testing_library/path/bin`.
+To install testing library to any directory, you need to checkout testing library from Github into desired directory (`git clone https://github.com/OXID-eSales/testing_library`). 
+Installing this way, binaries will be accessible from `testing_library/path/bin`.
 
 #### Installing testing library
 
-After you selected where you want to install the testing library, follow these steps to install testing library:
+After you selected where you want to install the testing library, follow these steps:
 
-1. Navigate to the directory that you picked for installation during the directory selection.
-1. Use composer to setup testing library components (`composer install`). Ensure you do this from within the directory where `composer.json` is located.  
-During setup you will be asked several questions regarding testing library configuration. These options will be explained in more detail here: [Parameter explanation](README.md#configuration)
-
+1. Navigate to the directory that you picked for installation.
+1. Use composer to setup testing library components (`composer install`). Ensure you do this from within the directory where `composer.json` is located. 
+During setup you will be asked several questions regarding testing library configuration. 
+These options will be explained in more detail here: [Parameter explanation](README.md#configuration)
 
 ## Running tests
+
+First and foremost - make sure you have a working shop, meaning:
+
+1. Shop is installed/configured (`config.inc.php` is filled in with database connection details and so)
+1. Shop can be accessed through url (used for shop installation).
+
 Several test runners are available for use once testing library is prepared. These are available in `bin` directory:  
 `./runtests` - run shop/module unit and integration tests.  
 `./runtests-selenium` - run shop/module selenium tests.  
-`./runtests-coverage` - run shop tests with code coverage.  
+`./runtests-coverage` - run shop/module tests with code coverage.  
 `./runmetrics` - execute code metrics test for shop/module.  
+
 Additionally you can pass parameters to these scripts. `runmetrics` uses `pdepend`, and all `runtests` uses `phpunit`.
 You can add `phpunit` parameters to `runtests`, `runtests-selenium`, `runtests-coverage`.
 You can add `pdepend` parameters to `runmetrics`. To see which additional options can be passed to test runner, add `--help` option to the command (i.e. `./runtests --help`, `./runmetrics --help`). This will show available options for desired tool.
@@ -106,20 +114,14 @@ Some usage examples:
 1. Running only a single file tests - `./runtests path/to/test/fileTest.php`
 1. Running only specific pattern matching tests from specified file - `./runtests --filter match_pattern path/to/test/fileTest.php`
 
-One thing to note when adding parameters to these tools - always provide file/folder at the end as it will no longer be picked automatically. Use AllTestsUnit or AllTestsSelenium respectively to run all tests.
-
-
-### Test running tips
-Some changes to configuration can change which tests are executed. Some possible usages:
-
-1. Running only shop tests - <b>`modules_path`</b> should be set to null.  
-1. Running only module tests - <b>`shop_tests_path`</b> should be set to null.  
+One thing to note when adding parameters to these tools - always provide file/folder at the end as it will no longer be picked automatically. 
+Use AllTestsUnit or AllTestsSelenium respectively to run all tests.
 
 ## Configuration
 
-Configuration file is named `test_config.yml` and is placed in the root directory of this library.
+Configuration file is named `test_config.yml` and is placed in the root directory of this library or shop (when installing with shop composer.json).
 During setup you will be asked several questions regarding testing library and shop/module installation.
-After setup `test_config.yml` will be created, and later can be edited when some configuration value needs to be changed.
+After setup `test_config.yml` will be created, and later can be edited if some configuration values needs to be changed.
 
 ### Configuration parameters:
 #### Mandatory parameters:
@@ -152,7 +154,3 @@ These parameters are not required in order to work, but they provide additional 
 |<b>screen_shots_url</b>| Url, where selenium screen shots should be available. Default `null`.  |
 |<b>browser_name</b>| Browser name which will be used for acceptance testing. Possible values: `*iexplore, *iehta, *firefox, *chrome, *piiexplore, *pifirefox, *safari, *opera`. make sure that path to browser executable is known for the system. Default `firefox`.  |
 |<b>selenium_server_ip</b>| Selenium server IP address. Used to connect to selenium server when Mink selenium driver is used for acceptance tests. Default `127.0.0.1`.  |
-
-## Known issues
-
-* Some eShop 4.9/5.2 tests might fail. This is a known issue and this is already fixed in eShop development version.
