@@ -205,13 +205,17 @@ class oxTestConfig
     {
         $modulesToActivate = array();
 
-        $current = $this->getCurrentTestSuite();
-        $modulesDir = $this->getShopPath() .'modules/';
-        foreach ($this->getModulesToTest() as $module) {
-            $fullPath = rtrim($modulesDir . $module, '/') .'/';
-            if (strpos($current, $fullPath) === 0) {
-                $modulesToActivate[] = $module;
-                break;
+        if ($this->shouldActivateAllModules()) {
+            $modulesToActivate = $this->getModulesToTest();
+        } else {
+            $current = $this->getCurrentTestSuite();
+            $modulesDir = $this->getShopPath() .'modules/';
+            foreach ($this->getModulesToTest() as $module) {
+                $fullPath = rtrim($modulesDir . $module, '/') .'/';
+                if (strpos($current, $fullPath) === 0) {
+                    $modulesToActivate[] = $module;
+                    break;
+                }
             }
         }
 
@@ -266,6 +270,16 @@ class oxTestConfig
     public function shouldRestoreShopAfterTestsSuite()
     {
         return (bool)$this->getValue('restore_shop_after_tests_suite');
+    }
+
+    /**
+     * Whether to activate all modules when running tests.
+     *
+     * @return bool
+     */
+    public function shouldActivateAllModules()
+    {
+        return (bool)$this->getValue('activate_all_modules');
     }
 
     /**
