@@ -19,15 +19,10 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+require_once TEST_LIBRARY_PATH . "/oxShopStateBackup.php";
 require_once TEST_LIBRARY_PATH . "/oxBaseTestCase.php";
 require_once TEST_LIBRARY_PATH . "/oxTestModuleLoader.php";
 require_once TEST_LIBRARY_PATH . 'Services/ShopPreparation/DbHandler.php';
-require_once TEST_LIBRARY_HELPERS_PATH . 'oxArticleHelper.php';
-require_once TEST_LIBRARY_HELPERS_PATH . 'oxSeoEncoderHelper.php';
-require_once TEST_LIBRARY_HELPERS_PATH . 'oxDeliveryHelper.php';
-require_once TEST_LIBRARY_HELPERS_PATH . 'oxManufacturerHelper.php';
-require_once TEST_LIBRARY_HELPERS_PATH . 'oxVendorHelper.php';
-require_once TEST_LIBRARY_HELPERS_PATH . 'oxAdminViewHelper.php';
 require_once TEST_LIBRARY_PATH . 'oxMockStubFunc.php';
 
 /**
@@ -35,23 +30,20 @@ require_once TEST_LIBRARY_PATH . 'oxMockStubFunc.php';
  */
 class oxUnitTestCase extends oxBaseTestCase
 {
-    /** @var array Request parameters backup. */
-    protected $_aBackup = array();
-
-    /** @var array Registry cache. */
-    private static $_aRegistryCache = null;
-
     /** @var bool Registry cache. */
     private static $_blSetupBeforeTestSuiteDone = false;
 
     /** @var DbRestore Database restorer object */
-    protected static $_oDbRestore = null;
+    private static $_oDbRestore = null;
 
     /** @var oxTestModuleLoader Module loader. */
-    protected static $_oModuleLoader = null;
+    private static $_oModuleLoader = null;
+
+    /** @var oxShopStateBackup */
+    private static $shopStateBackup;
 
     /** @var array multishop tables used in shop */
-    protected $_aMultiShopTables = array(
+    private $_aMultiShopTables = array(
         'oxarticles',
         'oxcategories',
         'oxattribute',
@@ -66,10 +58,10 @@ class oxUnitTestCase extends oxBaseTestCase
     );
 
     /** @var array variable */
-    protected $_aTeardownSqls = array();
+    private $_aTeardownSqls = array();
 
     /** @var array tables for cleaning */
-    protected $_aTableForCleanups = array();
+    private $_aTableForCleanups = array();
 
     /**
      * Running setUpBeforeTestSuite action.
@@ -107,8 +99,21 @@ class oxUnitTestCase extends oxBaseTestCase
         $oxLang = oxRegistry::getLang();
         $oxLang->resetBaseLanguage();
 
-        $this->_backupRegistry();
-        $this->_backupRequestVariables();
+        $this->getShopStateBackup()->backupRegistry();
+        $this->getShopStateBackup()->backupRequestVariables();
+    }
+
+    /**
+     * Returns shop state backup class.
+     *
+     * @return oxShopStateBackup
+     */
+    protected static function getShopStateBackup()
+    {
+        if (is_null(self::$shopStateBackup)) {
+            self::$shopStateBackup = new oxShopStateBackup();
+        }
+        return self::$shopStateBackup;
     }
 
     /**
@@ -172,8 +177,8 @@ class oxUnitTestCase extends oxBaseTestCase
             $this->getSession()->cleanup();
             $this->getConfig()->cleanup();
 
-            $this->_resetRequestVariables();
-            $this->_resetRegistry();
+            $this->getShopStateBackup()->resetRequestVariables();
+            $this->getShopStateBackup()->resetRegistry();
 
             oxUtilsObject::resetClassInstances();
             oxUtilsObject::resetModuleVars();
@@ -187,13 +192,7 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public static function tearDownAfterClass()
     {
-        oxArticleHelper::cleanup();
-        oxSeoEncoderHelper::cleanup();
-        oxDeliveryHelper::cleanup();
-        oxManufacturerHelper::cleanup();
-        oxAdminViewHelper::cleanup();
-        oxVendorHelper::cleanup();
-
+        self::getShopStateBackup()->resetStaticVariables();
         $oDbRestore = self::_getDbRestore();
         $oDbRestore->restoreDB();
     }
@@ -681,45 +680,6 @@ class oxUnitTestCase extends oxBaseTestCase
     }
 
     /**
-     * Creates registry clone
-     */
-    protected function _backupRegistry()
-    {
-        self::$_aRegistryCache = array();
-        foreach (oxRegistry::getKeys() as $class) {
-            $instance = oxRegistry::get($class);
-            self::$_aRegistryCache[$class] = clone $instance;
-        }
-    }
-
-    /**
-     * Cleans up the registry
-     */
-    protected function _resetRegistry()
-    {
-        $aRegKeys = oxRegistry::getKeys();
-
-        $aSkippedClasses = array("oxconfigfile");
-
-        foreach ($aRegKeys as $sKey) {
-            if (!in_array($sKey, $aSkippedClasses)) {
-                $oInstance = null;
-                if (!isset(self::$_aRegistryCache[$sKey])) {
-                    try {
-                        $oNewInstance = oxNew($sKey);
-                        self::$_aRegistryCache[$sKey] = $oNewInstance;
-                    } catch (oxSystemComponentException $oException) {
-                        oxRegistry::set($sKey, null);
-                        continue;
-                    }
-                }
-                $oInstance = clone self::$_aRegistryCache[$sKey];
-                oxRegistry::set($sKey, $oInstance);
-            }
-        }
-    }
-
-    /**
      * eval Func for invoke mock
      *
      * @param mixed $value
@@ -778,30 +738,6 @@ class oxUnitTestCase extends oxBaseTestCase
         }
 
         return $oObject;
-    }
-
-    /**
-     * Backs up global request variables for reverting them back after test run.
-     */
-    protected function _backupRequestVariables()
-    {
-        $this->_aBackup['_SERVER'] = $_SERVER;
-        $this->_aBackup['_POST'] = $_POST;
-        $this->_aBackup['_GET'] = $_GET;
-        $this->_aBackup['_SESSION'] = $_SESSION;
-        $this->_aBackup['_COOKIE'] = $_COOKIE;
-    }
-
-    /**
-     * Sets global request variables to backed up ones after every test run.
-     */
-    protected function _resetRequestVariables()
-    {
-        $_SERVER = $this->_aBackup['_SERVER'];
-        $_POST = $this->_aBackup['_POST'];
-        $_GET = $this->_aBackup['_GET'];
-        $_SESSION = $this->_aBackup['_SESSION'];
-        $_COOKIE = $this->_aBackup['_COOKIE'];
     }
 
     /**
