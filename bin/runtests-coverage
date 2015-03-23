@@ -41,16 +41,30 @@ if (!file_exists($phpUnit)) {
 $phpUnit = "$php $phpUnit --bootstrap " .__DIR__ ."/../bootstrap.php";
 
 $arguments = empty($arguments) ? array(escapeshellarg('AllTestsUnit')) : $arguments;
+
+$returnCode = 0;
 if (end($arguments) == escapeshellarg('AllTestsUnit')) {
     $testSuites = $testConfig->getTestSuites();
     foreach ($testSuites as $suite) {
-        runSuite($suite, $phpUnit, $arguments);
+        $suiteReturnCode = runSuite($suite, $phpUnit, $arguments);
+        $returnCode = $returnCode == 0 ? $suiteReturnCode : $returnCode;
     }
 } else {
     $suite = $testConfig->getCurrentTestSuite();
-    runSuite($suite, $phpUnit, $arguments);
+    $returnCode = runSuite($suite, $phpUnit, $arguments);
 }
 
+exit($returnCode);
+
+/**
+ * Runs test suite.
+ *
+ * @param string $suite     Suite path.
+ * @param string $phpUnit   PHPUnit run command.
+ * @param array  $arguments arguments to pass to PHPUnit.
+ *
+ * @return int Error code.
+ */
 function runSuite($suite, $phpUnit, $arguments)
 {
     $configuration = '';
@@ -63,5 +77,8 @@ function runSuite($suite, $phpUnit, $arguments)
     $fileCopier->createEmptyDirectory($reportsDir);
 
     $arguments = implode(' ', $arguments);
-    passthru("TEST_SUITE=$suite $phpUnit  --coverage-clover $reportsDir/clover.xml --coverage-html $reportsDir/html $configuration $arguments");
+    $return = 0;
+    passthru("TEST_SUITE=$suite $phpUnit  --coverage-clover $reportsDir/clover.xml --coverage-html $reportsDir/html $configuration $arguments", $return);
+
+    return $return;
 }
