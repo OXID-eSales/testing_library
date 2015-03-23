@@ -100,10 +100,10 @@ First and foremost - make sure you have a working shop, meaning:
 1. Shop can be accessed through url (used for shop installation).
 
 Several test runners are available for use once testing library is prepared. These are available in `bin` directory:  
-`./runtests` - run shop/module unit and integration tests.  
-`./runtests-selenium` - run shop/module selenium tests.  
-`./runtests-coverage` - run shop/module tests with code coverage.  
-`./runmetrics` - execute code metrics test for shop/module.  
+`bin/runtests` - run shop/module unit and integration tests.  
+`bin/runtests-selenium` - run shop/module selenium tests.  
+`bin/runtests-coverage` - run shop/module tests with code coverage.  
+`bin/runmetrics` - execute code metrics test for shop/module.  
 
 Additionally you can pass parameters to these scripts. `runmetrics` uses `pdepend`, and all `runtests` uses `phpunit`.
 You can add `phpunit` parameters to `runtests`, `runtests-selenium`, `runtests-coverage`.
@@ -111,8 +111,9 @@ You can add `pdepend` parameters to `runmetrics`. To see which additional option
 
 Some usage examples:
 
-1. Running only a single file tests - `./runtests path/to/test/fileTest.php`
-1. Running only specific pattern matching tests from specified file - `./runtests --filter match_pattern path/to/test/fileTest.php`
+1. Running only a single file tests - `bin/runtests path/to/test/fileTest.php`
+1. Running only specific pattern matching tests from specified file - `bin/runtests --filter match_pattern path/to/test/fileTest.php`
+1. Running one or multiple test suites - `TEST_DIRS=unit,integration bin/runtests`
 
 One thing to note when adding parameters to these tools - always provide file/folder at the end as it will no longer be picked automatically. 
 Use AllTestsUnit or AllTestsSelenium respectively to run all tests.
@@ -123,6 +124,9 @@ Configuration file is named `test_config.yml` and is placed in the root director
 During setup you will be asked several questions regarding testing library and shop/module installation.
 After setup `test_config.yml` will be created, and later can be edited if some configuration values needs to be changed.
 
+All of the parameters can be set with environmental variables. Environmental parameter names are the same as in
+the configuration file, but should be all uppercase: *shop_path* => *SHOP_PATH*, *browser_name* => *BROWSER_NAME*, etc.
+ 
 ### Configuration parameters:
 #### Mandatory parameters:
 These parameters are required for testing library to work properly.
