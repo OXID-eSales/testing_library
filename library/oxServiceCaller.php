@@ -46,11 +46,6 @@ class oxServiceCaller
             $config = new oxTestConfig();
         }
         $this->config = $config;
-
-        if ($config->getRemoteDirectory() && !self::$servicesCopied) {
-            self::$servicesCopied = true;
-            $this->copyServicesToShop();
-        }
     }
 
     /**
@@ -96,13 +91,13 @@ class oxServiceCaller
         }
 
         if ($testConfig->getRemoteDirectory()) {
-            $sResponse = $this->callRemoteService($serviceName);
+            $response = $this->callRemoteService($serviceName);
         } else {
-            $sResponse = $this->callLocalService($serviceName);
+            $response = $this->callLocalService($serviceName);
         }
 
         $this->_aParameters = array();
-        return $sResponse;
+        return $response;
     }
 
     /**
@@ -114,12 +109,16 @@ class oxServiceCaller
      */
     protected function callRemoteService($sServiceName)
     {
-        $testConfig = $this->getTestConfig();
+        if (!self::$servicesCopied) {
+            self::$servicesCopied = true;
+            $this->copyServicesToShop();
+        }
+
         $oCurl = new oxTestCurl();
 
         $this->setParameter('service', $sServiceName);
 
-        $oCurl->setUrl($testConfig->getShopUrl() . '/Services/service.php');
+        $oCurl->setUrl($this->getTestConfig()->getShopUrl() . '/Services/service.php');
         $oCurl->setParameters($this->getParameters());
 
         $sResponse = $oCurl->execute();
@@ -143,8 +142,8 @@ class oxServiceCaller
         require_once TEST_LIBRARY_PATH . '/Services/Request.php';
 
         $serviceCaller = new ServiceCaller();
-
         $request = new Request($this->getParameters());
+
         return $serviceCaller->callService($serviceName, $request);
     }
     
@@ -164,7 +163,7 @@ class oxServiceCaller
     protected function copyServicesToShop()
     {
         $oFileCopier = new oxFileCopier();
-        $sTarget = $this->getTestConfig()->getRemoteDirectory().'/Services';
+        $sTarget = $this->getTestConfig()->getRemoteDirectory() . '/Services';
         $oFileCopier->copyFiles(TEST_LIBRARY_PATH.'/Services', $sTarget, true);
     }
 
