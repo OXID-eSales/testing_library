@@ -85,7 +85,7 @@ class Bootstrap
     protected function installShop()
     {
         $testConfig = $this->getTestConfig();
-
+        
         $serviceCaller = new oxServiceCaller($this->getTestConfig());
         $serviceCaller->setParameter('serial', $testConfig->getShopSerial());
         $serviceCaller->setParameter('addDemoData', $this->addDemoData);

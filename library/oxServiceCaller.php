@@ -138,10 +138,16 @@ class oxServiceCaller
      */
     protected function callLocalService($serviceName)
     {
+        require_once TEST_LIBRARY_PATH . '/Services/Library/ServiceConfig.php';
+        require_once TEST_LIBRARY_PATH . '/Services/Library/Request.php';
         require_once TEST_LIBRARY_PATH .'/Services/ServiceCaller.php';
-        require_once TEST_LIBRARY_PATH . '/Services/Request.php';
 
-        $serviceCaller = new ServiceCaller();
+        $config = new ServiceConfig();
+        $config->setShopPath($this->getTestConfig()->getShopPath());
+        $config->setShopEdition($this->getTestConfig()->getShopEdition());
+        $config->setTempPath($this->getTestConfig()->getTempDirectory());
+
+        $serviceCaller = new ServiceCaller($config);
         $request = new Request($this->getParameters());
 
         return $serviceCaller->callService($serviceName, $request);

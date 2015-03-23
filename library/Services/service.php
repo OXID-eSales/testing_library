@@ -22,12 +22,13 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
-require_once 'Request.php';
+require_once 'Library/Request.php';
 require_once 'ServiceCaller.php';
 
 try {
     $request = new Request();
-    $oServiceCaller = new ServiceCaller();
+    $config = new ServiceConfig();
+    $oServiceCaller = new ServiceCaller($config);
 
     $mResponse = $oServiceCaller->callService($request->getParameter('service'), $request);
 

@@ -19,35 +19,35 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-define('LIBRARY_PATH', __DIR__.'/Library/');
-
-if (!defined('TEST_SERVICES_PATH')) {
-    define('TEST_SERVICES_PATH', __DIR__);
-}
+define('LIBRARY_PATH', __DIR__ .'/Library/');
 
 if (!defined('TESTS_TEMP_DIR')) {
-    define('TESTS_TEMP_DIR', TEST_SERVICES_PATH.'/temp/');
+    define('TESTS_TEMP_DIR', __DIR__ .'/temp/');
 }
 
 if (!defined('oxPATH')) {
     define('oxPATH', __DIR__ . '/../');
 }
 
-require_once oxPATH ."/bootstrap.php";
-
-require_once 'Request.php';
-require_once 'ShopServiceInterface.php';
-
-if (!file_exists(TESTS_TEMP_DIR)) {
-    mkdir(TESTS_TEMP_DIR, 0777);
-    chmod(TESTS_TEMP_DIR, 0777);
-}
+require_once LIBRARY_PATH .'/ShopServiceInterface.php';
 
 /**
  * Class ServiceCaller
  */
 class ServiceCaller
 {
+    /**
+     * Loads the shop.
+     *
+     * @param ServiceConfig $config
+     */
+    public function __construct($config)
+    {
+        $this->config = $config;
+
+        require_once $this->getServiceConfig()->getShopPath() ."/bootstrap.php";
+    }
+
     /**
      * Calls service
      *
@@ -64,7 +64,7 @@ class ServiceCaller
             $this->setActiveShop($request->getParameter('shp'));
         }
         if (!is_null($request->getParameter('lang'))) {
-            $this->setActiveShop($request->getParameter('lang'));
+            $this->setActiveLanguage($request->getParameter('lang'));
         }
 
         $service = $this->createService($serviceClass);
@@ -79,9 +79,8 @@ class ServiceCaller
      */
     public function setActiveShop($shopId)
     {
-        $config = oxRegistry::getConfig();
-        if ($shopId && $config->getEdition() == 'EE') {
-            $config->setShopId($shopId);
+        if ($shopId && $this->getServiceConfig()->getShopEdition() == 'EE') {
+            oxRegistry::getConfig()->setShopId($shopId);
         }
     }
 
@@ -132,12 +131,20 @@ class ServiceCaller
      */
     protected function includeServiceFile($serviceClass)
     {
-        $file = realpath(TEST_SERVICES_PATH . '/' . $serviceClass . '/' . $serviceClass . '.php');
+        $file = realpath(__DIR__ . '/' . $serviceClass . '/' . $serviceClass . '.php');
 
         if (!file_exists($file)) {
             throw new Exception("Service $serviceClass not found in path $file!");
         }
 
         include_once $file;
+    }
+
+    /**
+     * @return ServiceConfig
+     */
+    protected function getServiceConfig()
+    {
+        return $this->config;
     }
 }
