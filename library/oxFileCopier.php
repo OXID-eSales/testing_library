@@ -28,22 +28,25 @@ class oxFileCopier
     /**
      * Copy files to shop
      *
-     * @param string $sSource          File or directory to copy.
-     * @param string $sTarget          Path where to copy.
-     * @param bool   $blSetPermissions Whether to set given Target permissions to 777.
+     * @param string $source          File or directory to copy.
+     * @param string $target          Path where to copy.
+     * @param bool   $setPermissions Whether to set given Target permissions to 777.
      */
-    public function copyFiles($sSource, $sTarget, $blSetPermissions = false)
+    public function copyFiles($source, $target, $setPermissions = false)
     {
-        if (strpos($sTarget, ':') !== false && strpos($sTarget, '@') !== false) {
-            $this->_executeCommand("scp -rp " . escapeshellarg($sSource . "/.") . " " . escapeshellarg($sTarget));
-            if ($blSetPermissions) {
-                list($sServer, $sDirectory) = explode(":", $sTarget, 2);
-                $this->_executeCommand("ssh " . escapeshellarg($sServer) . " chmod 777 " . escapeshellarg('/' . $sDirectory));
+        if (strpos($target, ':') !== false && strpos($target, '@') !== false) {
+            if (is_dir($source)) {
+                $source .= "/.";
+            }
+            $this->_executeCommand("scp -rp " . escapeshellarg($source) . " " . escapeshellarg($target));
+            if ($setPermissions) {
+                list($server, $sDirectory) = explode(":", $target, 2);
+                $this->_executeCommand("ssh " . escapeshellarg($server) . " chmod 777 " . escapeshellarg('/' . $sDirectory));
             }
         } else {
-            $this->_executeCommand("cp -frT " . escapeshellarg($sSource) . " " . escapeshellarg($sTarget));
-            if ($blSetPermissions) {
-                $this->_executeCommand("chmod 777 " . escapeshellarg($sTarget));
+            $this->_executeCommand("cp -frT " . escapeshellarg($source) . " " . escapeshellarg($target));
+            if ($setPermissions) {
+                $this->_executeCommand("chmod 777 " . escapeshellarg($target));
             }
         }
     }
@@ -51,53 +54,53 @@ class oxFileCopier
     /**
      * Creates new directory if it does not exists, if exists - clears its content.
      *
-     * @param string $sDirectory
+     * @param string $directory
      */
-    public function createEmptyDirectory($sDirectory)
+    public function createEmptyDirectory($directory)
     {
-        if (!is_dir($sDirectory)) {
-            mkdir($sDirectory, 0777, true);
+        if (!is_dir($directory)) {
+            mkdir($directory, 0777, true);
         } else {
-            $this->deleteTree($sDirectory, false);
+            $this->deleteTree($directory, false);
         }
     }
 
     /**
      * Deletes given directory content
      *
-     * @param string $dir       Path to directory.
-     * @param bool   $rmBaseDir Whether to delete base directory.
+     * @param string $directory       Path to directory.
+     * @param bool   $removeBaseDir Whether to delete base directory.
      */
-    private function deleteTree($dir, $rmBaseDir = false)
+    private function deleteTree($directory, $removeBaseDir = false)
     {
-        $files = array_diff(scandir($dir), array('.', '..'));
+        $files = array_diff(scandir($directory), array('.', '..'));
         foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->deleteTree("$dir/$file", true) : @unlink("$dir/$file");
+            (is_dir("$directory/$file")) ? $this->deleteTree("$directory/$file", true) : @unlink("$directory/$file");
         }
 
-        if ($rmBaseDir) {
-            @rmdir($dir);
+        if ($removeBaseDir) {
+            @rmdir($directory);
         }
     }
 
     /**
      * Executes shell command.
      *
-     * @param string $sCommand
+     * @param string $command
      *
      * @throws Exception
      *
      * @return string Output of command.
      */
-    private function _executeCommand($sCommand)
+    private function _executeCommand($command)
     {
-        $blResult = @exec($sCommand, $sOutput, $iCode);
-        $sOutput = implode("\n", $sOutput);
+        $result = @exec($command, $output, $code);
+        $output = implode("\n", $output);
 
-        if ($blResult === false) {
-            throw new Exception("Failed to execute command '$sCommand' with message: [$iCode] '$sOutput'");
+        if ($result === false) {
+            throw new Exception("Failed to execute command '$command' with message: [$code] '$output'");
         }
 
-        return $sOutput;
+        return $output;
     }
 }

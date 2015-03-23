@@ -33,12 +33,33 @@ class SeleniumBootstrap extends Bootstrap
 
         define("SHOP_EDITION", ($this->getTestConfig()->getShopEdition() == 'EE') ? 'EE' : 'PE_CE');
 
+        $this->prepareScreenShots();
+        $this->copyTestFilesToShop();
+
+        require_once TEST_LIBRARY_PATH .'/oxAcceptanceTestCase.php';
+    }
+
+    /**
+     * Creates screenshots directory if it does not exists.
+     */
+    public function prepareScreenShots()
+    {
         $screenShotsPath = $this->getTestConfig()->getScreenShotsPath();
         if ($screenShotsPath && !is_dir($screenShotsPath)) {
             mkdir($screenShotsPath, 0777, true);
         }
+    }
 
-        require_once TEST_LIBRARY_PATH .'/oxAcceptanceTestCase.php';
+    /**
+     * Some test files are needed to successfully run selenium tests.
+     * Currently only files needed for clearing cookies are copied.
+     */
+    public function copyTestFilesToShop()
+    {
+        $config = $this->getTestConfig();
+        $target = $config->getRemoteServerDirectory() ? $config->getRemoteServerDirectory().'/_cc.php' : $config->getShopPath().'/_cc.php';
+        $fileCopier = new oxFileCopier();
+        $fileCopier->copyFiles(TEST_LIBRARY_PATH .'_cc.php', $target, true);
     }
 
     /**

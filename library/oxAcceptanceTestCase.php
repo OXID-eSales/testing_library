@@ -672,34 +672,6 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     }
 
     /**
-     * downloads eFire connector.
-     *
-     * @param string $sNameEfi User name for eFire.
-     * @param string $sPswEfi  User password for eFire.
-     * @param string $user     User name for login to shop admin.
-     * @param string $pass     User password for login to shop admin.
-     */
-    public function downloadConnector($sNameEfi, $sPswEfi, $user = "admin@myoxideshop.com", $pass = "admin0303")
-    {
-        $this->frame("navigation");
-        $this->checkForErrors();
-        $this->click("link=OXID eFire");
-        $this->click("link=Shop connector");
-
-        $this->waitForFrameToLoad('basefrm', 5000, true);
-
-        //testing edit frame for errors
-        $this->frame("edit");
-        $this->assertTextNotPresent("Shop connector downloaded successfully");
-        $this->type("etUsername", $sNameEfi);
-        $this->type("etPassword", $sPswEfi);
-        $this->clickAndWait("etSubmit");
-        $this->assertTextPresent("Shop connector downloaded successfully", "connector was not downloaded successfully");
-        $this->clearCache();
-        echo " connector downloaded successfully. ";
-    }
-
-    /**
      * select frame in Admin interface.
      *
      * @param string $sFrame          Name of the frame.
@@ -1783,18 +1755,22 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     }
 
     /**
-     * Clears shop cache, (with _cc file)
+     * Clears browser cookies, (with _cc file)
      *
      * @return null
      */
     public function clearCookies()
     {
-        $this->open(preg_replace('/:{1}\d{1,}/', '', shopURL) . '/Services/' . "_cc.php");
+        $this->open(preg_replace('/:{1}\d{1,}/', '', shopURL) . '/' . "_cc.php");
+        if ($this->getHtmlSource() != '<head></head><body></body>') {
+            $this->getMinkSession()->stop();
+        }
+
         $this->getTranslator()->setLanguage(1);
     }
 
     /**
-     * Clears shop cache, (with _cc file)
+     * Clears shop cache.
      *
      * @return null
      */

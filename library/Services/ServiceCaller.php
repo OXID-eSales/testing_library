@@ -20,15 +20,6 @@
  */
 
 define('LIBRARY_PATH', __DIR__ .'/Library/');
-
-if (!defined('TESTS_TEMP_DIR')) {
-    define('TESTS_TEMP_DIR', __DIR__ .'/temp/');
-}
-
-if (!defined('oxPATH')) {
-    define('oxPATH', __DIR__ . '/../');
-}
-
 require_once LIBRARY_PATH .'/ShopServiceInterface.php';
 
 /**
@@ -44,6 +35,14 @@ class ServiceCaller
     public function __construct($config)
     {
         $this->config = $config;
+
+        if (!defined('oxPATH')) {
+            define('oxPATH', $this->getServiceConfig()->getShopPath());
+        }
+
+        if (!defined('TESTS_TEMP_DIR')) {
+            define('TESTS_TEMP_DIR', $this->getServiceConfig()->getTempPath());
+        }
 
         require_once $this->getServiceConfig()->getShopPath() ."/bootstrap.php";
     }
