@@ -49,8 +49,6 @@ class Bootstrap
     {
         $testConfig = $this->getTestConfig();
 
-        $this->copyServices();
-
         if ($testConfig->getTempDirectory()) {
             $fileCopier = new oxFileCopier();
             $fileCopier->createEmptyDirectory($testConfig->getTempDirectory());
@@ -77,17 +75,6 @@ class Bootstrap
     public function getTestConfig()
     {
         return $this->testConfig;
-    }
-
-    /**
-     * Copies services to shop.
-     */
-    protected function copyServices()
-    {
-        $config = $this->getTestConfig();
-        $fileCopier = new oxFileCopier();
-        $target = $config->getRemoteDirectory() ? $config->getRemoteDirectory().'/Services' : $config->getShopPath().'/Services';
-        $fileCopier->copyFiles(TEST_LIBRARY_PATH .'Services', $target, true);
     }
 
     /**
@@ -152,7 +139,7 @@ class Bootstrap
 
         register_shutdown_function(function () {
             if (!defined('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR')) {
-                $serviceCaller = new oxServiceCaller();
+                $serviceCaller = new oxServiceCaller(new oxTestConfig());
                 $serviceCaller->setParameter('restoreDB', true);
                 $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
                 $serviceCaller->callService('ShopPreparation', 1);
