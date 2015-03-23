@@ -19,10 +19,6 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-if (!defined('oxPATH')) {
-    define('oxPATH', __DIR__ . '/../../');
-}
-
 include_once LIBRARY_PATH . '/DbHandler.php';
 
 /**
@@ -44,16 +40,16 @@ class ShopInstaller implements ShopServiceInterface
      */
     public function __construct()
     {
-        if (!defined('OXID_VERSION_SUFIX') && file_exists(SHOP_PATH ."_version_define.php")) {
-            include SHOP_PATH ."_version_define.php";
+        if (!defined('OXID_VERSION_SUFIX') && file_exists(oxPATH ."_version_define.php")) {
+            include oxPATH ."_version_define.php";
         } else if (!defined('OXID_VERSION_SUFIX')) {
             define('OXID_VERSION_SUFIX', '');
         }
 
         $this->dbHandler = new DbHandler();
 
-        include SHOP_PATH . "config.inc.php";
-        include SHOP_PATH . "core/oxconfk.php";
+        include oxPATH . "config.inc.php";
+        include oxPATH . "core/oxconfk.php";
     }
 
     /**
@@ -110,7 +106,7 @@ class ShopInstaller implements ShopServiceInterface
     public function getSetupDirectory()
     {
         if ($this->setupDirectory === null) {
-            $this->setupDirectory = SHOP_PATH . '/setup';
+            $this->setupDirectory = oxPATH . '/setup';
         }
 
         return $this->setupDirectory;
@@ -149,24 +145,14 @@ class ShopInstaller implements ShopServiceInterface
      */
     public function setupDatabase()
     {
-        if ($this->getCharsetMode() == 'utf8') {
-            $this->query("alter schema character set utf8 collate utf8_general_ci");
-            $this->query("set names 'utf8'");
-            $this->query("set character_set_database=utf8");
-            $this->query("set character set latin1");//mysql_query("set character set utf8",$oDB);
-            $this->query("set character_set_connection = utf8");
-            $this->query("set character_set_results = utf8");
-            $this->query("set character_set_server = utf8");
-        } else {
-            $this->query("alter schema character set latin1 collate latin1_general_ci");
-            $this->query("set character set latin1");
-        }
+        $this->query("alter schema character set latin1 collate latin1_general_ci");
+        $this->query("set character set latin1");
 
         $this->query('drop database `' . $this->dbName . '`');
         $this->query('create database `' . $this->dbName . '` collate ' . $this->getCharsetMode() . '_general_ci');
 
         $sSetupPath = $this->getSetupDirectory();
-        $this->importFileToDatabase($sSetupPath . '/sql' . OXID_VERSION_SUFIX . '/' . 'database.sql', false);
+        $this->importFileToDatabase($sSetupPath . '/sql'. OXID_VERSION_SUFIX . '/' .'database.sql', 'latin1');
     }
 
     /**
@@ -175,7 +161,7 @@ class ShopInstaller implements ShopServiceInterface
     public function insertDemoData()
     {
         $sSetupPath = $this->getSetupDirectory();
-        $this->importFileToDatabase($sSetupPath . '/sql' . OXID_VERSION_SUFIX . '/' . 'demodata.sql', false);
+        $this->importFileToDatabase($sSetupPath . '/sql'. OXID_VERSION_SUFIX .'/' . 'demodata.sql', 'latin1');
     }
 
     /**
@@ -184,7 +170,7 @@ class ShopInstaller implements ShopServiceInterface
     public function convertToInternational()
     {
         $sSetupPath = $this->getSetupDirectory();
-        $this->importFileToDatabase($sSetupPath . '/sql' . OXID_VERSION_SUFIX . '/' . 'en.sql', false);
+        $this->importFileToDatabase($sSetupPath . '/sql'. OXID_VERSION_SUFIX .'/' . 'en.sql', 'latin1');
     }
 
     /**
@@ -210,8 +196,8 @@ class ShopInstaller implements ShopServiceInterface
      */
     public function setSerialNumber($serialNumber = null)
     {
-        if (file_exists(SHOP_PATH . "core/oxserial.php")) {
-            include_once SHOP_PATH . "core/oxserial.php";
+        if (file_exists(oxPATH . "core/oxserial.php")) {
+            include_once oxPATH . "core/oxserial.php";
         }
 
         if (class_exists('oxSerial')) {
@@ -327,7 +313,14 @@ class ShopInstaller implements ShopServiceInterface
      */
     protected function getDefaultSerial()
     {
-        include_once SHOP_PATH . "setup/oxsetup.php";
+        if (!array_key_exists('oxconfig', oxRegistry::getKeys())) {
+            require_once oxPATH .'core/oxfunctions.php';
+
+            $oConfigFile = new oxConfigFile(oxPATH . "config.inc.php");
+            oxRegistry::set("oxConfigFile", $oConfigFile);
+            oxRegistry::set("oxConfig", new oxConfig());
+        }
+        include_once oxPATH . "setup/oxsetup.php";
 
         $setup = new oxSetup();
         return $setup->getDefaultSerial();

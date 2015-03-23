@@ -57,7 +57,7 @@ class SeleniumBootstrap extends Bootstrap
     public function copyTestFilesToShop()
     {
         $config = $this->getTestConfig();
-        $target = $config->getRemoteServerDirectory() ? $config->getRemoteServerDirectory().'/_cc.php' : $config->getShopPath().'/_cc.php';
+        $target = $config->getRemoteDirectory() ? $config->getRemoteDirectory().'/_cc.php' : $config->getShopPath().'/_cc.php';
         $fileCopier = new oxFileCopier();
         $fileCopier->copyFiles(TEST_LIBRARY_PATH .'_cc.php', $target, true);
     }

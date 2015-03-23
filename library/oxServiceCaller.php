@@ -27,7 +27,7 @@ require_once 'oxTestCurl.php';
 class oxServiceCaller
 {
     /** @var array */
-    private $_aParameters = array();
+    private $parameters = array();
 
     /** @var oxTestConfig */
     private $config;
@@ -56,7 +56,7 @@ class oxServiceCaller
      */
     public function setParameter($sKey, $aVal)
     {
-        $this->_aParameters[$sKey] = $aVal;
+        $this->parameters[$sKey] = $aVal;
     }
 
     /**
@@ -66,7 +66,7 @@ class oxServiceCaller
      */
     public function getParameters()
     {
-        return $this->_aParameters;
+        return $this->parameters;
     }
 
     /**
@@ -96,7 +96,7 @@ class oxServiceCaller
             $response = $this->callLocalService($serviceName);
         }
 
-        $this->_aParameters = array();
+        $this->parameters = array();
         return $response;
     }
 
@@ -142,6 +142,8 @@ class oxServiceCaller
         require_once TEST_LIBRARY_PATH . '/Services/Library/Request.php';
         require_once TEST_LIBRARY_PATH .'/Services/ServiceCaller.php';
 
+        define('TMP_PATH', $this->getTestConfig()->getTempDirectory());
+
         $config = new ServiceConfig();
         $config->setShopPath($this->getTestConfig()->getShopPath());
         $config->setShopEdition($this->getTestConfig()->getShopEdition());
@@ -186,7 +188,7 @@ class oxServiceCaller
     {
         $mResult = unserialize($sString);
         if ($sString !== 'b:0;' && $mResult === false) {
-            throw new Exception(substr($sString, 0, 500));
+            throw new Exception(substr($sString, 0, 5000));
         }
 
         return $mResult;

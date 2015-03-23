@@ -155,14 +155,14 @@ class oxTestConfig
     public function getShopUrl()
     {
         if (is_null($this->shopUrl)) {
-            $sShopUrl = $this->getValue('shop_url');
-            if (!$sShopUrl) {
+            $shopUrl = $this->getValue('shop_url');
+            if (!$shopUrl) {
                 $shopPath = $this->getShopPath();
                 include_once $shopPath . 'core/oxconfigfile.php';
-                $oConfigFile = new oxConfigFile($shopPath . "config.inc.php");
-                $sShopUrl = $sShopUrl ? $sShopUrl : $oConfigFile->sShopURL;
+                $configFile = new oxConfigFile($shopPath . "config.inc.php");
+                $shopUrl = $shopUrl ? $shopUrl : $configFile->sShopURL;
             }
-            $this->shopUrl = rtrim($sShopUrl, '/') . '/';
+            $this->shopUrl = rtrim($shopUrl, '/') . '/';
         }
 
         return $this->shopUrl;

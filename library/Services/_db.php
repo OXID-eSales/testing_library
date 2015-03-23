@@ -24,7 +24,7 @@ ini_set('display_errors', true);
 
 define('LIBRARY_PATH', __DIR__ .'/Library/');
 define('TMP_PATH', __DIR__ .'/temp/');
-define('SHOP_PATH', __DIR__ .'/../');
+define('oxPATH', __DIR__ .'/../');
 
 require_once LIBRARY_PATH . 'Request.php';
 require_once 'ShopServiceInterface.php';

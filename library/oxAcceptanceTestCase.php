@@ -129,7 +129,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $testDataPath = realpath($sTestSuitePath . '/testData/');
         if ($testDataPath) {
             $config = $this->getTestConfig();
-            $target = $config->getRemoteServerDirectory() ? $config->getRemoteServerDirectory() : $config->getShopPath();
+            $target = $config->getRemoteDirectory() ? $config->getRemoteDirectory() : $config->getShopPath();
             $oFileCopier = new oxFileCopier();
             $oFileCopier->copyFiles($testDataPath, $target);
         }
@@ -1896,7 +1896,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     protected function _getScreenShotPath()
     {
         $sPath = $this->getTestConfig()->getScreenShotsPath();
-        return rtrim($sPath, '/\\') . DIRECTORY_SEPARATOR;
+        return $sPath ? rtrim($sPath, '/\\') . DIRECTORY_SEPARATOR : null;
     }
 
     /**

@@ -49,6 +49,8 @@ class Bootstrap
     {
         $testConfig = $this->getTestConfig();
 
+        $this->setGlobalConstants();
+
         if ($testConfig->getTempDirectory()) {
             $fileCopier = new oxFileCopier();
             $fileCopier->createEmptyDirectory($testConfig->getTempDirectory());
@@ -61,8 +63,6 @@ class Bootstrap
         if ($testConfig->shouldInstallShop()) {
             $this->installShop();
         }
-
-        $this->setGlobalConstants();
 
         $this->prepareShopModObjects();
     }
@@ -139,7 +139,7 @@ class Bootstrap
 
         register_shutdown_function(function () {
             if (!defined('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR')) {
-                $serviceCaller = new oxServiceCaller(new oxTestConfig());
+                $serviceCaller = new oxServiceCaller();
                 $serviceCaller->setParameter('restoreDB', true);
                 $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
                 $serviceCaller->callService('ShopPreparation', 1);
@@ -154,22 +154,13 @@ class Bootstrap
     protected function prepareShopModObjects()
     {
         $shopPath = $this->getTestConfig()->getShopPath();
+
         require_once $shopPath .'core/oxfunctions.php';
 
         $oConfigFile = new oxConfigFile($shopPath . "config.inc.php");
-        oxRegistry::set("OxConfigFile", $oConfigFile);
+        oxRegistry::set("oxConfigFile", $oConfigFile);
         oxRegistry::set("oxConfig", new oxConfig());
 
-        $oDb = new oxDb();
-        $oDb->setConfig($oConfigFile);
-        $oLegacyDb = $oDb->getDb();
-        oxRegistry::set('oxDb', $oLegacyDb);
-        oxRegistry::getConfig();
-
         require_once TEST_LIBRARY_PATH .'modOxUtilsDate.php';
-        require_once $shopPath .'/core/oxutils.php';
-        require_once $shopPath .'/core/adodblite/adodb.inc.php';
-        require_once $shopPath .'/core/oxsession.php';
-        require_once $shopPath .'/core/oxconfig.php';
     }
 }
