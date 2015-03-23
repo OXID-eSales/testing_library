@@ -33,6 +33,9 @@ class oxTestConfig
     /** @var string */
     private $shopPath;
 
+    /** @var string */
+    private $charsetMode;
+
     /** @var string Path to vendors directory */
     private $vendorPath;
 
@@ -92,16 +95,6 @@ class oxTestConfig
         }
 
         return realpath($this->shopPath) . '/';
-    }
-
-    /**
-     * Returns remote directory.
-     *
-     * @return string|null
-     */
-    public function getRemoteDirectory()
-    {
-        return $this->getValue('remote_directory');
     }
 
     /**
@@ -172,6 +165,31 @@ class oxTestConfig
         }
 
         return $this->shopUrl;
+    }
+
+    /**
+     * Returns shop charset mode.
+     *
+     * @return string
+     */
+    public function getShopCharset()
+    {
+        if (is_null($this->charsetMode)) {
+            $shopPath = $this->getShopPath();
+            include_once $shopPath . 'core/oxconfigfile.php';
+            $configFile = new oxConfigFile($shopPath . "config.inc.php");
+            $this->charsetMode = $configFile->iUtfMode ? 'utf8' : 'latin1';
+        }
+
+        return $this->charsetMode;
+    }
+
+    /**
+     * Returns whether tested shop is on external server.
+     */
+    public function getRemoteDirectory()
+    {
+        return $this->getValue('remote_server_dir');
     }
 
     /**

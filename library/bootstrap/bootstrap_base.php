@@ -66,6 +66,8 @@ class Bootstrap
 
         $this->setGlobalConstants();
 
+        $this->setGlobalConstants();
+
         $this->prepareShopModObjects();
     }
 

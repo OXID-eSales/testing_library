@@ -27,6 +27,10 @@ optional_parameters:
     # Whether to prepare shop database for testing. Shop config.ing.php file must be correct.
     install_shop: true
 
+    # If defined, testing services will be copied to this directory and called via url instead of used locally.
+    # Example: username@server.com:/path/to/shop
+    remote_server_dir:
+
     # eShop setup directory. After setting up the shop, setup directory will be deleted.
     # For shop installation to work during tests run, path to this directory must be specified.
     # Uses shop/directory/setup/ if not set.
