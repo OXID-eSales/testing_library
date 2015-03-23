@@ -65,6 +65,7 @@ class ServiceConfig
             include_once $shopPath . 'core/oxconfig.php';
             $config = new oxConfig();
             $shopEdition = $config->getEdition();
+
             $this->shopEdition = strtoupper($shopEdition);
         }
         return $this->shopEdition;
