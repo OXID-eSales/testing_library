@@ -59,12 +59,12 @@ class ShopInstaller implements ShopServiceInterface
     /**
      * Starts installation of the shop.
      *
+     * @param Request $request
+     *
      * @return null
      */
-    public function init()
+    public function init($request)
     {
-        $request = new Request();
-
         if ($setupPath = $request->getParameter('setupPath', null)) {
             $this->setSetupDirectory($setupPath);
         }
