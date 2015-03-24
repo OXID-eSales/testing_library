@@ -33,6 +33,9 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     /** @var array Run these tests before any other */
     protected static $_aPriorityTests = array();
 
+    /** @var oxTestConfig */
+    protected static $testConfig;
+
     /**
      * Forms test suite
      *
@@ -98,7 +101,7 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
         $aTestDirectories = array();
         $aTestSuites = getenv('TEST_DIRS')? explode(',', getenv('TEST_DIRS')) : static::$_aTestSuites;
 
-        $testConfig = new oxTestConfig();
+        $testConfig = static::getTestConfig();
         foreach ($aTestSuites as $sSuite) {
             $aTestDirectories[] = $testConfig->getCurrentTestSuite() ."/$sSuite";
         }
@@ -135,8 +138,9 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
      */
     protected static function _getTestFileFilter()
     {
+        $testConfig = static::getTestConfig();
         $sTestFileNameEnd = '*[^8]Test.php';
-        if (getenv('OXID_TEST_UTF8')) {
+        if ($testConfig->getShopCharset() == 'utf8') {
             $sTestFileNameEnd = '*utf8Test.php';
         }
 
@@ -173,5 +177,19 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     protected static function _formClassNameFromFileName($sFilename)
     {
         return str_replace(array("/", ".php"), array("_", ""), $sFilename);
+    }
+
+    /**
+     * Returns Test configuration.
+     *
+     * @return oxTestConfig
+     */
+    protected static function getTestConfig()
+    {
+        if (is_null(static::$testConfig)) {
+            static::$testConfig = new oxTestConfig();
+        }
+
+        return static::$testConfig;
     }
 }
