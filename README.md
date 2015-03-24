@@ -10,6 +10,8 @@ This library is meant to help developers check their shop/module code with ease.
 
 * eShop version 4.9.4/5.2.4 or later
 * Latest Composer version
+* PHP cURL extension
+* Not compatible with Windows (use VM instead)
 
 This library can be used to test modules with earlier shop versions, but it will not be possible to run shop tests.
 
@@ -75,15 +77,15 @@ To install testing library within shop directory, update/create `composer.json` 
     }
 }
 ```
-Installing this way, binaries will be accessible from `shop/path/vendor/bin`.
-Latest development shop version already includes composer.json file in its source, so no changes needs to be made.
+Installing this way, binaries will be accessible from `shop_source_path/vendor/bin`.
+Latest development shop version already includes composer.json file in its source, so no changes need to be made.
 
 #### Option 2: Selecting any directory for installation (alternative way)
 
 To install testing library to any directory, you need to checkout testing library from Github into desired directory (`git clone https://github.com/OXID-eSales/testing_library`). 
-Installing this way, binaries will be accessible from `testing_library/path/bin`.
+Installing this way, binaries will be accessible from `testing_library/bin`.
 
-#### Installing testing library
+### Installing testing library
 
 After you selected where you want to install the testing library, follow these steps:
 
@@ -99,7 +101,7 @@ First and foremost - make sure you have a working shop, meaning:
 1. Shop is installed/configured (`config.inc.php` is filled in with database connection details and so)
 1. Shop can be accessed through url (used for shop installation).
 
-Several test runners are available for use once testing library is prepared. These are available in `bin` directory:  
+Several test runners are available for use once testing library is prepared. These are available in `bin` or `vendor/bin` directory:  
 `bin/runtests` - run shop/module unit and integration tests.  
 `bin/runtests-selenium` - run shop/module selenium tests.  
 `bin/runtests-coverage` - run shop/module tests with code coverage.  
@@ -122,20 +124,20 @@ Use AllTestsUnit or AllTestsSelenium respectively to run all tests.
 
 Configuration file is named `test_config.yml` and is placed in the root directory of this library or shop (when installing with shop composer.json).
 During setup you will be asked several questions regarding testing library and shop/module installation.
-After setup `test_config.yml` will be created, and later can be edited if some configuration values needs to be changed.
+After setup `test_config.yml` will be created, and later can be edited if some configuration values need to be changed.
 
 All of the parameters can be set with environmental variables. Environmental parameter names are the same as in
 the configuration file, but should be all uppercase: *shop_path* => *SHOP_PATH*, *browser_name* => *BROWSER_NAME*, etc.
  
-### Configuration parameters:
-#### Mandatory parameters:
+### Configuration parameters
+#### Mandatory parameters
 These parameters are required for testing library to work properly.
 
 | Parameter name          | Description                                                                                                                                                                                                                                                                |
 |-------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|**shop_path**            | Path to eShop source. Defaults to the same directory as to where vendor is located. Supports relative and absolute paths. Can be left empty when installed from shop or module directory.                                                                                  |
-|**shop_tests_path**      | Path to eShop tests. If shop resides in `/var/www/shop/source` and tests are in `/var/www/shop/tests`, this should be set to `../tests`. Supports relative and absolute paths.                                                                                             |
-|**partial_module_paths** | When testing not activated module, specify module path in shop. Module path in shop, e.g. if module is in `shop/modules/oe/mymodule` directory, value here should be `oe/mymodule`. Multiple modules can be specified separated by comma: `oe/module1,module2,tt/module3`. |
+|**shop_path**            | Path to eShop source. Defaults to the same directory as to where vendor is located. Supports relative and absolute paths. Can be left empty when installed from shop or module directory.                                                                                                                                                                 |
+|**shop_tests_path**      | Path to eShop tests. If shop resides in `/var/www/shop/source` and tests are in `/var/www/shop/tests`, this should be set to `../tests`. Supports relative and absolute paths.                                                                                                                                                                            |
+|**partial_module_paths** | When testing not activated module, specify module path in shop. Module path in shop, e.g. if module is in `shop/modules/oe/mymodule` directory, value here should be `oe/mymodule`. Multiple modules can be specified separated by comma: `oe/module1,module2,tt/module3`. If no modules will be testes, leave this field empty or `null`. Default `null` |
 
 #### Optional parameters
 These parameters are not required in order to work, but they provide additional functionality and options when testing.
@@ -144,7 +146,7 @@ These parameters are not required in order to work, but they provide additional 
 |-----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |**shop_url**                       | eShop base url (if not set, takes it from shop's config.inc.php file). Default `null`.                                                                                                                                                                                                           |  
 |**shop_serial**                    | For PE and EE editions shop serial has to be specified for shop installer to work. Default `''`.                                                                                                                                                                                                 |  
-|**enable_varnish**                 | Run tests with varnish on or off. Shop has to be configured to work with varnish, correct serial must be used.. Default `false`                                                                                                                                                                  |
+|**enable_varnish**                 | Run tests with varnish on or off. Shop has to be configured to work with varnish, correct serial must be used. Default `false`                                                                                                                                                                  |
 |**is_subshop**                     | Whether to run subshop tests. Currently only used when running selenium tests. Default `false`.                                                                                                                                                                                                  |
 |**install_shop**                   | Whether to prepare shop database for testing. Shop `config.ing.php` file must be correct. Default `true`.                                                                                                                                                                                        |
 |**remote_server_dir**              | If defined, testing services will be copied to this directory and called via url instead of used locally. Example: username@server.com:/path/to/shop.                                                                                                                                            |
