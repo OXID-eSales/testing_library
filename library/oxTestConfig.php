@@ -113,6 +113,9 @@ class oxTestConfig
     {
         if (is_null($this->shopEdition)) {
             $shopPath = $this->getShopPath();
+            if (file_exists($shopPath . '/_version_define.php')) {
+                include_once $shopPath . '/_version_define.php';
+            }
             include_once $shopPath . 'core/oxsupercfg.php';
             include_once $shopPath . 'core/oxconfig.php';
             $config = new oxConfig();
