@@ -78,6 +78,7 @@ function runSuite($suite, $phpUnit, $arguments)
 
     $arguments = implode(' ', $arguments);
     $return = 0;
+    $suite = escapeshellarg($suite);
     passthru("TEST_SUITE=$suite $phpUnit  --coverage-clover $reportsDir/clover.xml --coverage-html $reportsDir/html $configuration $arguments", $return);
 
     return $return;

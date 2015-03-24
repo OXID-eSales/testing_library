@@ -73,6 +73,7 @@ function runSuite($suite, $phpUnit, $arguments)
 
     $arguments = implode(' ', $arguments);
     $return = 0;
+    $suite = escapeshellarg($suite);
     passthru("TEST_SUITE=$suite $phpUnit $configuration $arguments", $return);
 
     return $return;
