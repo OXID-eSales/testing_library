@@ -109,7 +109,11 @@ class Bootstrap
             'setupPath' => $testConfig->getShopSetupPath(),
         ));
 
-        $oCurl->execute();
+        try {
+            $oCurl->execute();
+        } catch(Exception $e) {
+            exit("Failed to install shop: ". $e->getMessage(). "\n");
+        }
     }
 
     /**

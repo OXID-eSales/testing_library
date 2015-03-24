@@ -300,7 +300,10 @@ class oxTestCurl
         $this->_close();
 
         if ($iCurlErrorNumber) {
-            throw new Exception("Failed to execute CURL call with message: $sResponse ($iCurlErrorNumber)");
+            $host = $this->getUrl();
+            $parameters = http_build_query($this->getParameters(), "", "&");
+            $message = $this->_getErrorMessage($iCurlErrorNumber);
+            throw new Exception("cURL failed with message '$message' when calling '$host?$parameters'");
         }
 
         return $sResponse;
@@ -466,6 +469,18 @@ class oxTestCurl
     protected function _getErrorNumber()
     {
         return curl_errno($this->_getResource());
+    }
+
+    /**
+     * Check if curl has errors. Set error message if has.
+     *
+     * @param int $errorNr
+     *
+     * @return int
+     */
+    protected function _getErrorMessage($errorNr)
+    {
+        return curl_strerror($errorNr) . " ($errorNr)";
     }
 
     /**
