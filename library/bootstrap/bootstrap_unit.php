@@ -31,16 +31,19 @@ class UnitBootstrap extends Bootstrap
     {
         parent::init();
 
-        $dbRestoreClass = $this->getTestConfig()->getDatabaseRestorationClass();
+        $config = $this->getTestConfig();
+        $dbRestoreClass = $config->getDatabaseRestorationClass();
         if (file_exists(TEST_LIBRARY_PATH .'dbRestore/'.$dbRestoreClass . ".php")) {
             include_once TEST_LIBRARY_PATH .'dbRestore/'. $dbRestoreClass . ".php";
         } else {
             include_once TEST_LIBRARY_PATH .'dbRestore/dbRestore.php';
         }
 
-        $currentTestSuite = $this->getTestConfig()->getCurrentTestSuite();
-        if (file_exists($currentTestSuite .'/additional.inc.php')) {
-            include_once $currentTestSuite .'/additional.inc.php';
+        if ($config->shouldInstallShop()) {
+            $currentTestSuite = $config->getCurrentTestSuite();
+            if (file_exists($currentTestSuite .'/additional.inc.php')) {
+                include_once $currentTestSuite .'/additional.inc.php';
+            }
         }
 
         require_once TEST_LIBRARY_PATH .'/oxUnitTestCase.php';

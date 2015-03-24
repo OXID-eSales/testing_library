@@ -126,6 +126,8 @@ class Bootstrap
 
         if (file_exists($testConfig->getShopPath() . "/_version_define.php")) {
             include_once $testConfig->getShopPath() . "/_version_define.php";
+        } else {
+            define('OXID_VERSION_SUFIX', '');
         }
 
         define('oxPATH', $testConfig->getShopPath());
