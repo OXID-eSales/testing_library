@@ -38,17 +38,17 @@ class oxFileCopier
             if (is_dir($source)) {
                 $source .= "/.";
             }
-            $this->_executeCommand("scp -rp " . escapeshellarg($source) . " " . escapeshellarg($target));
+            $command = "scp -rp " . escapeshellarg($source) . " " . escapeshellarg($target);
             if ($setPermissions) {
-                list($server, $sDirectory) = explode(":", $target, 2);
-                $this->_executeCommand("ssh " . escapeshellarg($server) . " chmod 777 " . escapeshellarg('/' . $sDirectory));
+                $command = "rsync -rp --perms --chmod=u+rwx,g+rwx,o+rwx " . escapeshellarg($source) . " " . escapeshellarg($target);
             }
         } else {
-            $this->_executeCommand("cp -frT " . escapeshellarg($source) . " " . escapeshellarg($target));
+            $command = "cp -frT " . escapeshellarg($source) . " " . escapeshellarg($target);
             if ($setPermissions) {
-                $this->_executeCommand("chmod 777 " . escapeshellarg($target));
+                $command .= " && chmod 777 " . escapeshellarg($target);
             }
         }
+        $this->_executeCommand($command);
     }
 
     /**

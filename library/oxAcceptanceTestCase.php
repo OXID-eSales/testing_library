@@ -128,8 +128,10 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     {
         $testDataPath = realpath($sTestSuitePath . '/testData/');
         if ($testDataPath) {
+            $config = $this->getTestConfig();
+            $target = $config->getRemoteServerDirectory() ? $config->getRemoteServerDirectory() : $config->getShopPath();
             $oFileCopier = new oxFileCopier();
-            $oFileCopier->copyFiles($testDataPath, oxPATH);
+            $oFileCopier->copyFiles($testDataPath, $target);
         }
 
         $sTestSuitePath = realpath($sTestSuitePath . '/testSql/');

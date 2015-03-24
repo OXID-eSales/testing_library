@@ -36,7 +36,7 @@ class ServiceConfig
     public function getShopPath()
     {
         if (is_null($this->shopPath)) {
-            $this->shopPath = realpath(__DIR__ . '../../');
+            $this->shopPath = realpath(__DIR__ . '/../../').'/';
         }
         return $this->shopPath;
     }
@@ -89,7 +89,7 @@ class ServiceConfig
     public function getTempPath()
     {
         if (is_null($this->tempPath)) {
-            $this->tempPath = realpath(__DIR__ .'/../temp/');
+            $this->tempPath = __DIR__ .'/../temp/';
 
             if (!file_exists($this->tempPath)) {
                 mkdir($this->tempPath, 0777);
