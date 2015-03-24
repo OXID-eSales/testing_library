@@ -92,9 +92,10 @@ class oxTestConfig
             if (strpos($this->shopPath, '/') !== 0) {
                 $this->shopPath = $this->findShopPath($this->shopPath);
             }
+            $this->shopPath = realpath($this->shopPath) . '/';
         }
 
-        return realpath($this->shopPath) . '/';
+        return $this->shopPath;
     }
 
     /**
