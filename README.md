@@ -48,7 +48,7 @@ To install testing library within shop directory, update/create `composer.json` 
         }
     },
     "require-dev": {
-        "oxid-esales/testing-library": "~v0.0.2",
+        "oxid-esales/testing-library": "~v1.0.0",
         "incenteev/composer-parameter-handler": "~2.0"
     },
     "minimum-stability": "dev",
@@ -147,6 +147,7 @@ These parameters are not required in order to work, but they provide additional 
 |**enable_varnish**                 | Run tests with varnish on or off. Shop has to be configured to work with varnish, correct serial must be used.. Default `false`                                                                                                                                                                  |
 |**is_subshop**                     | Whether to run subshop tests. Currently only used when running selenium tests. Default `false`.                                                                                                                                                                                                  |
 |**install_shop**                   | Whether to prepare shop database for testing. Shop `config.ing.php` file must be correct. Default `true`.                                                                                                                                                                                        |
+|**remote_server_dir**              | If defined, testing services will be copied to this directory and called via url instead of used locally. Example: username@server.com:/path/to/shop.                                                                                                                                            |
 |**shop_setup_path**                | eShop setup directory. After setting up the shop, setup directory will be deleted. For shop installation to work during tests run, path to this directory must be specified. If not set, uses default (i.e. shop dir `/var/www/eshop/source/`, default setup dir `/var/www/eshop/source/setup` ).|
 |**restore_shop_after_tests_suite** | Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it. Default `false`.                                                                                                                                                   |
 |**tmp_path**                       | If php has no write access to /tmp folder, provide alternative temp folder for tests.                                                                                                                                                                                                            |
