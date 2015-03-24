@@ -75,7 +75,7 @@ class ShopPreparation implements ShopServiceInterface
     {
         if (!$this->_dbHandler) {
             $this->_dbHandler = new DbHandler();
-            $this->_dbHandler->setTemporaryFolder(TEMP_PATH);
+            $this->_dbHandler->setTemporaryFolder(TMP_PATH);
         }
 
         return $this->_dbHandler;
