@@ -1,7 +1,7 @@
 {
     "name": "oxid-esales/testing-library",
     "description": "OXID eShop testing library",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "type": "library",
     "keywords": ["oxid", "testing", "library", "modules", "eShop"],
     "homepage": "https://www.oxid-esales.com/en/home.html",
