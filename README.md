@@ -161,3 +161,11 @@ These parameters are not required in order to work, but they provide additional 
 |**screen_shots_url**               | Url, where selenium screen shots should be available. Default `null`.                                                                                                                                                                                                                            |
 |**browser_name**                   | Browser name which will be used for acceptance testing. Possible values: `*iexplore, *iehta, *firefox, *chrome, *piiexplore, *pifirefox, *safari, *opera`. make sure that path to browser executable is known for the system. Default `firefox`.                                                 |
 |**selenium_server_ip**             | Selenium server IP address. Used to connect to selenium server when Mink selenium driver is used for acceptance tests. Default `127.0.0.1`.                                                                                                                                                      |
+
+### Changing PHPUnit parameters
+
+To change PHPUnit parameters, add phpunit.xml file inside tests directory and it will be used.
+
+### Execution before test run with additional.inc.php
+
+Testing library gives possibility to make some actions before test run. So if there is a need to to do that, add additional.inc.php file into tests directory and it will be executed.
