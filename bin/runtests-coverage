@@ -69,7 +69,7 @@ function runSuite($suite, $phpUnit, $arguments)
 {
     $configuration = '';
     if (file_exists($suite ."/phpunit.xml")) {
-        $configuration = "-c $suite/phpunit.xml";
+        $configuration = "-c ". escapeshellarg("$suite/phpunit.xml");
     }
 
     $fileCopier = new oxFileCopier();
