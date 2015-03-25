@@ -39,11 +39,9 @@ class UnitBootstrap extends Bootstrap
             include_once TEST_LIBRARY_PATH .'dbRestore/dbRestore.php';
         }
 
-        if ($config->shouldInstallShop()) {
-            $currentTestSuite = $config->getCurrentTestSuite();
-            if (file_exists($currentTestSuite .'/additional.inc.php')) {
-                include_once $currentTestSuite .'/additional.inc.php';
-            }
+        $currentTestSuite = $config->getCurrentTestSuite();
+        if (file_exists($currentTestSuite .'/additional.inc.php')) {
+            include_once $currentTestSuite .'/additional.inc.php';
         }
 
         require_once TEST_LIBRARY_PATH .'/oxUnitTestCase.php';
