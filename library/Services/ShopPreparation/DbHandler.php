@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of OXID eSales Testing Library.
  *
@@ -15,26 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with OXID eSales Testing Library. If not, see <http://www.gnu.org/licenses/>.
  *
- * @link http://www.oxid-esales.com
+ * @link          http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+
+include_once SHOP_PATH . "core/oxconfigfile.php";
 
 class DbHandler
 {
     /**
      * @var string
      */
-    private $_sTemporaryFolder = '';
+    private $temporaryFolder = '';
 
     /** @var oxConfigFile */
-    private $_configFile;
+    private $configFile;
 
     /**
      *
      */
     public function __construct()
     {
-        $this->_configFile = new oxConfigFile(SHOP_PATH . "config.inc.php");
+        $this->configFile = new oxConfigFile(SHOP_PATH . "config.inc.php");
     }
 
     /**
@@ -42,9 +45,9 @@ class DbHandler
      *
      * @param string $sTemporaryFolder folder path
      */
-    public function setTemporaryFolder( $sTemporaryFolder )
+    public function setTemporaryFolder($sTemporaryFolder)
     {
-        $this->_sTemporaryFolder = $sTemporaryFolder;
+        $this->temporaryFolder = $sTemporaryFolder;
     }
 
     /**
@@ -54,97 +57,101 @@ class DbHandler
      */
     public function getTemporaryFolder()
     {
-        return $this->_sTemporaryFolder;
+        return $this->temporaryFolder;
     }
 
     /**
      * Creates a dump of the current database, and store in temporary folder.
      * The dump includes the data and sql insert statements.
      *
-     * @param string $sDumpFilePrefix dump file name prefix.
+     * @param string $dumpFilePrefix dump file name prefix.
      */
-    public function dumpDB( $sDumpFilePrefix = null )
+    public function dumpDB($dumpFilePrefix = null)
     {
-        $sFileName = $this->_getDumpFileName( $sDumpFilePrefix );
-        $this->_executeCommand( $this->_getExportCommand( $sFileName ) );
+        $fileName = $this->getDumpFileName($dumpFilePrefix);
+        $this->executeCommand($this->getExportCommand($fileName));
     }
 
     /**
      * Restore db from existing dump
      *
-     * @param string $sDumpFilePrefix dump file name prefix.
+     * @param string $dumpFilePrefix dump file name prefix.
      */
-    public function restoreDB( $sDumpFilePrefix = null )
+    public function restoreDB($dumpFilePrefix = null)
     {
-        $this->import( $this->_getDumpFileName( $sDumpFilePrefix ) );
+        $this->import($this->getDumpFileName($dumpFilePrefix));
     }
 
     /**
      * Execute sql statements from sql file
      *
-     * @param string $sSqlFile sql file name
+     * @param string $sqlFile sql file name
      */
-    public function import( $sSqlFile )
+    public function import($sqlFile)
     {
-        if ( file_exists($sSqlFile) ) {
-            $this->_executeCommand( $this->_getImportCommand( $sSqlFile ) );
+        if (file_exists($sqlFile)) {
+            $this->executeCommand($this->getImportCommand($sqlFile));
         }
     }
 
     /**
      * Returns CLI import command, execute sql from given file
      *
-     * @param string $sFileName - file name
+     * @param string $fileName - file name
      *
      * @return string
      */
-    protected function _getImportCommand( $sFileName )
+    protected function getImportCommand($fileName)
     {
-        $sCmd  = 'mysql -h' . escapeshellarg( $this->_getDbHost() );
-        $sCmd .= ' -u' . escapeshellarg( $this->_getDbUser() );
-        $sCmd .= ' -p' . escapeshellarg( $this->_getDbPwd() );
-        $sCmd .= ' --default-character-set=' . $this->getCharsetMode() .' '. escapeshellarg( $this->_getDbName() );
-        $sCmd .= '  < ' . escapeshellarg( $sFileName ) . ' 2>&1';
+        $command = 'mysql -h' . escapeshellarg($this->getDbHost());
+        $command .= ' -u' . escapeshellarg($this->getDbUser());
+        if ($password = $this->getDbPassword()) {
+            $command .= ' -p' . escapeshellarg($password);
+        }
+        $command .= ' --default-character-set=' . $this->getCharsetMode() . ' ' . escapeshellarg($this->getDbName());
+        $command .= ' < ' . escapeshellarg($fileName) . ' 2>&1';
 
-        return $sCmd;
+        return $command;
     }
 
     /**
      * Returns CLI command for db export to given file name
      *
-     * @param string $sFileName file name
+     * @param string $fileName file name
      *
      * @return string
      */
-    protected function _getExportCommand( $sFileName )
+    protected function getExportCommand($fileName)
     {
-        $sCommand  = 'mysqldump -h' . escapeshellarg( $this->_getDbHost() );
-        $sCommand .= ' -u' . escapeshellarg( $this->_getDbUser() );
-        $sCommand .= ' -p' . escapeshellarg( $this->_getDbPwd() );
-        $sCommand .= ' --add-drop-table ' . escapeshellarg( $this->_getDbName() );
-        $sCommand .= '  > ' . escapeshellarg( $sFileName );
+        $command = 'mysqldump -h' . escapeshellarg($this->getDbHost());
+        $command .= ' -u' . escapeshellarg($this->getDbUser());
+        if ($password = $this->getDbPassword()) {
+            $command .= ' -p' . escapeshellarg($password);
+        }
+        $command .= ' --add-drop-table ' . escapeshellarg($this->getDbName());
+        $command .= ' > ' . escapeshellarg($fileName);
 
-        return $sCommand;
+        return $command;
     }
 
     /**
      * Execute shell command
      *
-     * @param $sCommand
+     * @param $command
      *
      * @throws Exception
      */
-    protected function _executeCommand( $sCommand )
+    protected function executeCommand($command)
     {
-        exec($sCommand, $sOutput, $ret);
+        exec($command, $output, $resultCode);
 
-        if ( $ret > 0 ) {
+        if ($resultCode > 0) {
             sleep(1);
-            exec($sCommand, $sOutput, $ret);
+            exec($command, $output, $resultCode);
 
-            if ($ret > 0) {
-                $sOutput = implode( "\n", $sOutput );
-                throw new Exception( $sOutput );
+            if ($resultCode > 0) {
+                $output = implode("\n", $output);
+                throw new Exception("Failed to execute command: '$command' with output: '$output' ");
             }
         }
     }
@@ -152,19 +159,19 @@ class DbHandler
     /**
      * Create dump file name
      *
-     * @param string $sDumpFilePrefix - dump file prefix
+     * @param string $dumpFilePrefix - dump file prefix
      *
      * @return string
      */
-    protected function _getDumpFileName( $sDumpFilePrefix = null )
+    protected function getDumpFileName($dumpFilePrefix = null)
     {
-        if ( empty( $sDumpFilePrefix ) ) {
-            $sDumpFilePrefix = 'tmp_db_dump';
+        if (empty($dumpFilePrefix)) {
+            $dumpFilePrefix = 'tmp_db_dump';
         }
 
-        $sFileName = $this->getTemporaryFolder() . '/' . $sDumpFilePrefix . '_' . $this->_getDbName();
+        $fileName = $this->getTemporaryFolder() . '/' . $dumpFilePrefix . '_' . $this->getDbName();
 
-        return $sFileName;
+        return $fileName;
     }
 
     /**
@@ -174,37 +181,38 @@ class DbHandler
      */
     private function getCharsetMode()
     {
-        return $this->_configFile->iUtfMode ? 'utf8' : 'latin1';
+        return $this->configFile->iUtfMode ? 'utf8' : 'latin1';
     }
 
     /**
      * @return string
      */
-    protected function _getDbName()
+    protected function getDbName()
     {
-        return $this->_configFile->dbName;
+        return $this->configFile->dbName;
     }
 
     /**
      * @return string
      */
-    protected function _getDbUser()
+    protected function getDbUser()
     {
-        return $this->_configFile->dbUser;
+        return $this->configFile->dbUser;
     }
 
     /**
      * @return string
      */
-    protected function _getDbPwd()
+    protected function getDbPassword()
     {
-        return $this->_configFile->dbPwd;
+        return $this->configFile->dbPwd;
     }
+
     /**
      * @return string
      */
-    protected function _getDbHost()
+    protected function getDbHost()
     {
-        return $this->_configFile->dbHost;
+        return $this->configFile->dbHost;
     }
 }
