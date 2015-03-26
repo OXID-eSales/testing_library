@@ -60,6 +60,20 @@ class ShopInstaller
     }
 
     /**
+     * Returns shop setup directory.
+     *
+     * @return string
+     */
+    public function getSetupDirectory()
+    {
+        if ($this->_sSetupDirectory === null) {
+            $this->_sSetupDirectory = SHOP_PATH . '/setup';
+        }
+
+        return $this->_sSetupDirectory;
+    }
+
+    /**
      * Deletes browser cookies.
      *
      * @return array
@@ -362,19 +376,5 @@ class ShopInstaller
             return $input;
         }
         return $output;
-    }
-
-    /**
-     * Returns shop setup directory.
-     *
-     * @return string
-     */
-    protected function getSetupDirectory()
-    {
-        if ($this->_sSetupDirectory === null) {
-            $this->_sSetupDirectory = SHOP_PATH . '/setup';
-        }
-
-        return $this->_sSetupDirectory;
     }
 }

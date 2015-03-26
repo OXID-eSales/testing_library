@@ -110,7 +110,10 @@ class Bootstrap
         ));
 
         try {
-            $oCurl->execute();
+            $result = $oCurl->execute();
+            if ($oCurl->getStatusCode() == 500) {
+                exit($result ."\n");
+            }
         } catch(Exception $e) {
             exit("Failed to install shop: ". $e->getMessage(). "\n");
         }

@@ -49,6 +49,12 @@ if (!$sTestSqlLocalFile && $_REQUEST['test']) {
     $sTestSqlLocalFile = '../../tests/testsql/testdata'.OXID_VERSION_SUFIX.'.sql';
 }
 
+if (!file_exists($oShopInstaller->getSetupDirectory() .'/sql'.OXID_VERSION_SUFIX)) {
+    echo "Failed to install shop. Setup directory was not found!";
+    http_response_code(500);
+    exit(1);
+}
+
 ?>
 
 <h1>Full reinstall of OXID eShop</h1>
