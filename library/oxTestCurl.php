@@ -480,7 +480,12 @@ class oxTestCurl
      */
     protected function _getErrorMessage($errorNr)
     {
-        return curl_strerror($errorNr) . " ($errorNr)";
+        if (function_exists('curl_strerror')) {
+            $message = curl_strerror($errorNr) . " ($errorNr)";
+        } else {
+            $message = "($errorNr)";
+        }
+        return $message;
     }
 
     /**
