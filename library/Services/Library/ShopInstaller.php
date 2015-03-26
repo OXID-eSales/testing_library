@@ -340,6 +340,7 @@ class ShopInstaller
     private function query($sql)
     {
         $oDB = $this->getDb();
+        mysql_select_db($this->dbName, $oDB);
 
         return mysql_query($sql, $oDB);
     }
