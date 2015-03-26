@@ -20,8 +20,6 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-include_once SHOP_PATH . "core/oxconfigfile.php";
-
 class DbHandler
 {
     /**
@@ -37,6 +35,9 @@ class DbHandler
      */
     public function __construct()
     {
+        if (!class_exists('oxConfigFile')) {
+            include_once SHOP_PATH . "core/oxconfigfile.php";
+        }
         $this->configFile = new oxConfigFile(SHOP_PATH . "config.inc.php");
     }
 

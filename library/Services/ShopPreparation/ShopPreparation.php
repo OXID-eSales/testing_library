@@ -19,8 +19,8 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-require_once LIBRARY_PATH.'/FileUploader.php';
-require_once 'DbHandler.php';
+require_once LIBRARY_PATH .'/FileUploader.php';
+require_once LIBRARY_PATH .'/DbHandler.php';
 
 /**
  * Shop constructor class for modifying shop environment during testing

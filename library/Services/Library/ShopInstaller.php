@@ -23,16 +23,21 @@ if (!defined('SHOP_PATH')) {
     define('SHOP_PATH', __DIR__ . '/../../');
 }
 
+include_once __DIR__ . '/DbHandler.php';
+
 /**
  * Class for shop installation.
  */
 class ShopInstaller
 {
     /** @var resource  */
-    private $_oDb = null;
+    private $db = null;
 
     /** @var string Shop setup directory path */
-    private $_sSetupDirectory = null;
+    private $setupDirectory = null;
+
+    /** @var DbHandler */
+    private $dbHandler;
 
     /**
      * Includes configuration files.
@@ -45,6 +50,8 @@ class ShopInstaller
             define('OXID_VERSION_SUFIX', '');
         }
 
+        $this->dbHandler = new DbHandler();
+
         include SHOP_PATH . "config.inc.php";
         include SHOP_PATH . "core/oxconfk.php";
     }
@@ -56,7 +63,7 @@ class ShopInstaller
      */
     public function setSetupDirectory($sSetupPath)
     {
-        $this->_sSetupDirectory = $sSetupPath;
+        $this->setupDirectory = $sSetupPath;
     }
 
     /**
@@ -66,11 +73,11 @@ class ShopInstaller
      */
     public function getSetupDirectory()
     {
-        if ($this->_sSetupDirectory === null) {
-            $this->_sSetupDirectory = SHOP_PATH . '/setup';
+        if ($this->setupDirectory === null) {
+            $this->setupDirectory = SHOP_PATH . '/setup';
         }
 
-        return $this->_sSetupDirectory;
+        return $this->setupDirectory;
     }
 
     /**
@@ -253,21 +260,19 @@ class ShopInstaller
     /**
      * Imports file data to database.
      *
-     * @param string $sFile                   Path to file.
-     * @param bool   $blSetDefaultCharsetMode Whether to change default charset of mysql when importing file.
+     * @param string $file                   Path to file.
      */
-    public function importFileToDatabase($sFile, $blSetDefaultCharsetMode = false)
+    public function importFileToDatabase($file)
     {
-        $oDB = $this->getDb();
-        mysql_select_db($this->dbName, $oDB);
+        $this->getDbHandler()->import($file);
+    }
 
-        $command = 'mysql -h' . $this->dbHost . ' -u' . $this->dbUser . ' -p' . $this->dbPwd . ' ' . $this->dbName;
-        if ($blSetDefaultCharsetMode) {
-            $command .= ' --default-character-set=' . $this->getCharsetMode();
-        }
-        $command .= ' < ' . "'$sFile'";
-
-        passthru($command);
+    /**
+     * @return DbHandler
+     */
+    protected function getDbHandler()
+    {
+        return $this->dbHandler;
     }
 
     /**
@@ -318,11 +323,11 @@ class ShopInstaller
      */
     private function getDb()
     {
-        if (is_null($this->_oDb)) {
-            $this->_oDb = mysql_connect($this->dbHost, $this->dbUser, $this->dbPwd);
+        if (is_null($this->db)) {
+            $this->db = mysql_connect($this->dbHost, $this->dbUser, $this->dbPwd);
         }
 
-        return $this->_oDb;
+        return $this->db;
     }
 
     /**

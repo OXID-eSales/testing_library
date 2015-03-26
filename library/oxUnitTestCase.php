@@ -22,7 +22,7 @@
 require_once TEST_LIBRARY_PATH . "/oxShopStateBackup.php";
 require_once TEST_LIBRARY_PATH . "/oxBaseTestCase.php";
 require_once TEST_LIBRARY_PATH . "/oxTestModuleLoader.php";
-require_once TEST_LIBRARY_PATH . 'Services/ShopPreparation/DbHandler.php';
+require_once TEST_LIBRARY_PATH . 'Services/Library/DbHandler.php';
 require_once TEST_LIBRARY_PATH . 'oxMockStubFunc.php';
 
 /**
