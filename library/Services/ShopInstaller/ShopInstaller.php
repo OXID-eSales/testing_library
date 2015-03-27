@@ -23,12 +23,12 @@ if (!defined('SHOP_PATH')) {
     define('SHOP_PATH', __DIR__ . '/../../');
 }
 
-include_once __DIR__ . '/DbHandler.php';
+include_once LIBRARY_PATH . '/DbHandler.php';
 
 /**
  * Class for shop installation.
  */
-class ShopInstaller
+class ShopInstaller implements ShopServiceInterface
 {
     /** @var resource  */
     private $db = null;
@@ -44,7 +44,7 @@ class ShopInstaller
      */
     public function __construct()
     {
-        if (file_exists(SHOP_PATH ."_version_define.php")) {
+        if (!defined('OXID_VERSION_SUFIX') && file_exists(SHOP_PATH ."_version_define.php")) {
             include SHOP_PATH ."_version_define.php";
         } else if (!defined('OXID_VERSION_SUFIX')) {
             define('OXID_VERSION_SUFIX', '');
@@ -54,6 +54,42 @@ class ShopInstaller
 
         include SHOP_PATH . "config.inc.php";
         include SHOP_PATH . "core/oxconfk.php";
+    }
+
+    /**
+     * Starts installation of the shop.
+     *
+     * @return null
+     */
+    public function init()
+    {
+        $request = new Request();
+
+        if ($setupPath = $request->getParameter('setupPath', null)) {
+            $this->setSetupDirectory($setupPath);
+        }
+
+        $this->setupDatabase();
+
+        if ($request->getParameter('addDemoData', false)) {
+            $this->insertDemoData();
+        }
+
+        if ($request->getParameter('international', false)) {
+            $this->convertToInternational();
+        }
+
+        $this->setSerialNumber($request->getParameter('serial', false));
+
+        if ($this->getCharsetMode() == 'utf8') {
+            $this->convertToUtf();
+        }
+
+        if ($request->getParameter('turnOnVarnish', $this->turnOnVarnish)) {
+            $this->turnVarnishOn();
+        }
+
+        $this->clearTemp();
     }
 
     /**
@@ -96,6 +132,7 @@ class ShopInstaller
                 $aDeletedCookies[] = $sRawCookie[0];
             }
         }
+
         return $aDeletedCookies;
     }
 

@@ -30,6 +30,22 @@ class oxServiceCaller
     /** @var array */
     private $_aParameters = array();
 
+    /** @var oxTestConfig */
+    private $config;
+
+    /**
+     * If remote shop directory is provided, copies services to it.
+     *
+     * @param oxTestConfig $config
+     */
+    public function __construct($config = null)
+    {
+        if (is_null($config)) {
+            $config = new oxTestConfig();
+        }
+        $this->config = $config;
+    }
+
     /**
      * Sets given parameters.
      *
@@ -55,7 +71,7 @@ class oxServiceCaller
      * Call shop service to execute code in shop.
      *
      * @param string $sServiceName
-     * @param string $sShopId
+     * @param string $shopId
      *
      * @example call to update information to database.
      *
@@ -63,20 +79,20 @@ class oxServiceCaller
      *
      * @return string $sResult
      */
-    public function callService($sServiceName, $sShopId = null)
+    public function callService($sServiceName, $shopId = null)
     {
-        if ($sShopId && oxSHOPID != 'oxbaseshop') {
-            $this->setParameter('shp', $sShopId);
-        } elseif (isSUBSHOP) {
-            $this->setParameter('shp', oxSHOPID);
+        $testConfig = $this->getTestConfig();
+        if (!is_null($shopId) && $testConfig->getShopEdition() == 'EE') {
+            $this->setParameter('shp', $shopId);
+        } elseif ($testConfig->isSubShop()) {
+            $this->setParameter('shp', $testConfig->getShopId());
         }
 
         $oCurl = new oxTestCurl();
 
-        $sShopUrl = shopURL . '/Services/service.php';
         $this->setParameter('service', $sServiceName);
 
-        $oCurl->setUrl($sShopUrl);
+        $oCurl->setUrl($testConfig->getShopUrl() . '/Services/service.php');
         $oCurl->setParameters($this->getParameters());
 
         $sResponse = $oCurl->execute();
@@ -88,6 +104,16 @@ class oxServiceCaller
         $this->_aParameters = array();
 
         return $this->_unserializeString($sResponse);
+    }
+
+    /**
+     * Returns tests config object.
+     *
+     * @return oxTestConfig
+     */
+    protected function getTestConfig()
+    {
+        return $this->config;
     }
 
     /**

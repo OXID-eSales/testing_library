@@ -100,22 +100,17 @@ class Bootstrap
     protected function installShop()
     {
         $testConfig = $this->getTestConfig();
-        $oCurl = new oxTestCurl();
-        $oCurl->setUrl($testConfig->getShopUrl() . '/Services/_db.php');
-        $oCurl->setParameters(array(
-            'serial' => $testConfig->getShopSerial(),
-            'addDemoData' => $this->addDemoData,
-            'turnOnVarnish' => $testConfig->shouldEnableVarnish(),
-            'setupPath' => $testConfig->getShopSetupPath(),
-        ));
+
+        $serviceCaller = new oxServiceCaller($this->getTestConfig());
+        $serviceCaller->setParameter('serial', $testConfig->getShopSerial());
+        $serviceCaller->setParameter('addDemoData', $this->addDemoData);
+        $serviceCaller->setParameter('turnOnVarnish', $testConfig->shouldEnableVarnish());
+        $serviceCaller->setParameter('setupPath', $testConfig->getShopSetupPath());
 
         try {
-            $result = $oCurl->execute();
-            if ($oCurl->getStatusCode() == 500) {
-                exit($result ."\n");
-            }
-        } catch(Exception $e) {
-            exit("Failed to install shop: ". $e->getMessage(). "\n");
+            $serviceCaller->callService('ShopInstaller');
+        } catch (Exception $e) {
+            exit("Failed to install shop with message:" . $e->getMessage());
         }
     }
 
@@ -148,7 +143,7 @@ class Bootstrap
      */
     protected function registerResetDbAfterSuite()
     {
-        $serviceCaller = new oxServiceCaller();
+        $serviceCaller = new oxServiceCaller($this->getTestConfig());
         $serviceCaller->setParameter('dumpDB', true);
         $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
         try {

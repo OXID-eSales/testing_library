@@ -22,7 +22,14 @@
 error_reporting((E_ALL ^ E_NOTICE) | E_STRICT);
 ini_set('display_errors', true);
 
-require_once 'Library/ShopInstaller.php';
+define('LIBRARY_PATH', __DIR__ .'/Library/');
+define('TMP_PATH', __DIR__ .'/temp/');
+define('SHOP_PATH', __DIR__ .'/../');
+
+require_once LIBRARY_PATH . 'Request.php';
+require_once 'ShopServiceInterface.php';
+
+require_once __DIR__ .'/ShopInstaller/ShopInstaller.php';
 
 $oShopInstaller = new ShopInstaller();
 

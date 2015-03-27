@@ -1556,7 +1556,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function dumpDB($sTmpPrefix = null)
     {
-        $oServiceCaller = new oxServiceCaller();
+        $oServiceCaller = new oxServiceCaller($this->getTestConfig());
         $oServiceCaller->setParameter('dumpDB', true);
         $oServiceCaller->setParameter('dump-prefix', $sTmpPrefix);
         $oServiceCaller->callService('ShopPreparation', 1);
@@ -1573,7 +1573,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function restoreDB($sTmpPrefix = null)
     {
-        $oServiceCaller = new oxServiceCaller();
+        $oServiceCaller = new oxServiceCaller($this->getTestConfig());
         $oServiceCaller->setParameter('restoreDB', true);
         $oServiceCaller->setParameter('dump-prefix', $sTmpPrefix);
         $oServiceCaller->callService('ShopPreparation', 1);
@@ -1589,7 +1589,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     public function importSql($sFilePath)
     {
         if (filesize($sFilePath)) {
-            $oServiceCaller = new oxServiceCaller();
+            $oServiceCaller = new oxServiceCaller($this->getTestConfig());
             $oServiceCaller->setParameter('importSql', '@' . $sFilePath);
             $oServiceCaller->callService('ShopPreparation', 1);
         }
@@ -1630,7 +1630,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $sShopId = null,
         $sLang = 'en'
     ) {
-        $oServiceCaller = new oxServiceCaller();
+        $oServiceCaller = new oxServiceCaller($this->getTestConfig());
         $oServiceCaller->setParameter('cl', $sClass);
         $oServiceCaller->setParameter('fnc', $sFnc);
         $oServiceCaller->setParameter('oxid', $sId);
@@ -1661,7 +1661,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function assignElementToSubShopSC($sElementTable, $sShopId, $sParentShopId = 1, $sElementId = null)
     {
-        $oServiceCaller = new oxServiceCaller();
+        $oServiceCaller = new oxServiceCaller($this->getTestConfig());
         $oServiceCaller->setParameter('elementtable', $sElementTable);
         $oServiceCaller->setParameter('shopid', $sShopId);
         $oServiceCaller->setParameter('parentshopid', $sParentShopId);
@@ -1800,7 +1800,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function clearTemp()
     {
-        $oServiceCaller = new oxServiceCaller();
+        $oServiceCaller = new oxServiceCaller($this->getTestConfig());
         try {
             $oServiceCaller->callService('ClearCache', 1);
         } catch (Exception $e) {
