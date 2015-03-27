@@ -42,8 +42,12 @@ try {
     $oServiceCaller = new ServiceCaller();
 
     try {
-        $oServiceCaller->setActiveShop($request->getParameter('shp'));
-        $oServiceCaller->setActiveLanguage($request->getParameter('lang'));
+        if ($request->getParameter('shp')) {
+            $oServiceCaller->setActiveShop($request->getParameter('shp'));
+        }
+        if ($request->getParameter('lang')) {
+            $oServiceCaller->setActiveLanguage($request->getParameter('lang'));
+        }
     } catch (Exception $e) {
         // do nothing even if exception was caught during setting of language or shop
     }
