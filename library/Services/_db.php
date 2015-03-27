@@ -71,9 +71,7 @@ if (!file_exists($oShopInstaller->getSetupDirectory() .'/sql'.OXID_VERSION_SUFIX
         <li>Insert test data <?php $oShopInstaller->importFileToDatabase($sTestSqlLocalFile)?></li>
     <?php endif; ?>
     <li>Add configuration options <?php $oShopInstaller->setConfigurationParameters();?></li>
-    <?php if ($sShopTestingSerial) : ?>
-        <li>Set serial number to: <?=$sShopTestingSerial?><?php $oShopInstaller->setSerialNumber($sShopTestingSerial);?></li>
-    <?php endif; ?>
+    <li>Set serial number to: <?=$sShopTestingSerial?><?php $oShopInstaller->setSerialNumber($sShopTestingSerial);?></li>
     <?php if ($oShopInstaller->iUtfMode) : ?>
         <li>Convert shop to UTF8 <?php $oShopInstaller->convertToUtf();?></li>
     <?php endif; ?>

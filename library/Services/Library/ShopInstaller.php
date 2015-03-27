@@ -169,32 +169,41 @@ class ShopInstaller
     /**
      * Adds serial number to shop.
      *
-     * @param string $sSerial
+     * @param string $serialNumber
      */
-    public function setSerialNumber($sSerial)
+    public function setSerialNumber($serialNumber = null)
     {
-        $sShopId = $this->getShopId();
+        if (file_exists(SHOP_PATH . "core/oxserial.php")) {
+            include_once SHOP_PATH . "core/oxserial.php";
+        }
 
-        include_once SHOP_PATH . "core/oxserial.php";
+        if (class_exists('oxSerial')) {
+            if (!$serialNumber) {
+                $serialNumber = $this->getDefaultSerial();
+            }
 
-        $oSerial = new oxSerial();
-        $oSerial->setEd($this->getShopEdition() == 'EE' ? 2 : 1);
-        $oSerial->isValidSerial($sSerial);
+            $shopId = $this->getShopId();
 
-        $iMaxDays = $oSerial->getMaxDays($sSerial);
-        $iMaxArticles = $oSerial->getMaxArticles($sSerial);
-        $iMaxShops = $oSerial->getMaxShops($sSerial);
+            $serial = new oxSerial();
+            $serial->setEd($this->getShopEdition() == 'EE' ? 2 : 1);
 
-        $this->query("update oxshops set oxserial = '{$sSerial}'");
-        $this->query("delete from oxconfig where oxvarname in ('aSerials','sTagList','IMD','IMA','IMS')");
-        $this->query(
-            "insert into oxconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue) values " .
-            "('serial1', '{$sShopId}', 'aSerials', 'arr', ENCODE('" . serialize(array($sSerial)) . "','{$this->sConfigKey}') )," .
-            "('serial2', '{$sShopId}', 'sTagList', 'str', ENCODE('" . time() . "','{$this->sConfigKey}') )," .
-            "('serial3', '{$sShopId}', 'IMD',      'str', ENCODE('" . $iMaxDays . "','{$this->sConfigKey}') )," .
-            "('serial4', '{$sShopId}', 'IMA',      'str', ENCODE('" . $iMaxArticles . "','{$this->sConfigKey}') )," .
-            "('serial5', '{$sShopId}', 'IMS',      'str', ENCODE('" . $iMaxShops . "','{$this->sConfigKey}') )"
-        );
+            $serial->isValidSerial($serialNumber);
+
+            $maxDays = $serial->getMaxDays($serialNumber);
+            $maxArticles = $serial->getMaxArticles($serialNumber);
+            $maxShops = $serial->getMaxShops($serialNumber);
+
+            $this->query("update oxshops set oxserial = '{$serialNumber}'");
+            $this->query("delete from oxconfig where oxvarname in ('aSerials','sTagList','IMD','IMA','IMS')");
+            $this->query(
+                "insert into oxconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue) values " .
+                "('serial1', '{$shopId}', 'aSerials', 'arr', ENCODE('" . serialize(array($serialNumber)) . "','{$this->sConfigKey}') )," .
+                "('serial2', '{$shopId}', 'sTagList', 'str', ENCODE('" . time() . "','{$this->sConfigKey}') )," .
+                "('serial3', '{$shopId}', 'IMD',      'str', ENCODE('" . $maxDays . "','{$this->sConfigKey}') )," .
+                "('serial4', '{$shopId}', 'IMA',      'str', ENCODE('" . $maxArticles . "','{$this->sConfigKey}') )," .
+                "('serial5', '{$shopId}', 'IMS',      'str', ENCODE('" . $maxShops . "','{$this->sConfigKey}') )"
+            );
+        }
     }
 
     /**
@@ -273,6 +282,17 @@ class ShopInstaller
     protected function getDbHandler()
     {
         return $this->dbHandler;
+    }
+
+    /**
+     * Returns default demo serial number for testing.
+     */
+    protected function getDefaultSerial()
+    {
+        include_once SHOP_PATH . "setup/oxsetup.php";
+
+        $setup = new oxSetup();
+        return $setup->getDefaultSerial();
     }
 
     /**
