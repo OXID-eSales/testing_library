@@ -129,7 +129,7 @@ class ShopInstaller
         $this->query('create database `' . $this->dbName . '` collate ' . $this->getCharsetMode() . '_general_ci');
 
         $sSetupPath = $this->getSetupDirectory();
-        $this->importFileToDatabase($sSetupPath . '/sql' . OXID_VERSION_SUFIX . '/' . 'database.sql');
+        $this->importFileToDatabase($sSetupPath . '/sql' . OXID_VERSION_SUFIX . '/' . 'database.sql', false);
     }
 
     /**
@@ -138,7 +138,7 @@ class ShopInstaller
     public function insertDemoData()
     {
         $sSetupPath = $this->getSetupDirectory();
-        $this->importFileToDatabase($sSetupPath . '/sql' . OXID_VERSION_SUFIX . '/' . 'demodata.sql');
+        $this->importFileToDatabase($sSetupPath . '/sql' . OXID_VERSION_SUFIX . '/' . 'demodata.sql', false);
     }
 
     /**
@@ -147,7 +147,7 @@ class ShopInstaller
     public function convertToInternational()
     {
         $sSetupPath = $this->getSetupDirectory();
-        $this->importFileToDatabase($sSetupPath . '/sql' . OXID_VERSION_SUFIX . '/' . 'en.sql');
+        $this->importFileToDatabase($sSetupPath . '/sql' . OXID_VERSION_SUFIX . '/' . 'en.sql', false);
     }
 
     /**
@@ -269,11 +269,12 @@ class ShopInstaller
     /**
      * Imports file data to database.
      *
-     * @param string $file                   Path to file.
+     * @param string $file           Path to file.
+     * @param bool   $setCharsetMode Whether to set default charset mode when doing import.
      */
-    public function importFileToDatabase($file)
+    public function importFileToDatabase($file, $setCharsetMode = true)
     {
-        $this->getDbHandler()->import($file);
+        $this->getDbHandler()->import($file, $setCharsetMode);
     }
 
     /**

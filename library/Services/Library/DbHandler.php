@@ -86,30 +86,36 @@ class DbHandler
     /**
      * Execute sql statements from sql file
      *
-     * @param string $sqlFile sql file name
+     * @param string $sqlFile        SQL File name to import.
+     * @param bool   $setCharsetMode Whether to set default charset mode when doing import.
      */
-    public function import($sqlFile)
+    public function import($sqlFile, $setCharsetMode = true)
     {
         if (file_exists($sqlFile)) {
-            $this->executeCommand($this->getImportCommand($sqlFile));
+            $this->executeCommand($this->getImportCommand($sqlFile, $setCharsetMode));
         }
     }
 
     /**
      * Returns CLI import command, execute sql from given file
      *
-     * @param string $fileName - file name
+     * @param string $fileName       SQL File name to import.
+     * @param bool   $setCharsetMode Whether to set default charset mode when doing import.
      *
      * @return string
      */
-    protected function getImportCommand($fileName)
+    protected function getImportCommand($fileName, $setCharsetMode)
     {
         $command = 'mysql -h' . escapeshellarg($this->getDbHost());
         $command .= ' -u' . escapeshellarg($this->getDbUser());
         if ($password = $this->getDbPassword()) {
             $command .= ' -p' . escapeshellarg($password);
         }
-        $command .= ' --default-character-set=' . $this->getCharsetMode() . ' ' . escapeshellarg($this->getDbName());
+        if ($setCharsetMode) {
+            $command .= ' --default-character-set=' . $this->getCharsetMode();
+        }
+        $command .= ' ' .escapeshellarg($this->getDbName());
+
         $command .= ' < ' . escapeshellarg($fileName) . ' 2>&1';
 
         return $command;
