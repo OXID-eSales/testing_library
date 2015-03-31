@@ -20,6 +20,7 @@
  */
 
 require_once TEST_LIBRARY_PATH . "/oxShopStateBackup.php";
+require_once TEST_LIBRARY_PATH . "/oxVfsStreamWrapper.php";
 require_once TEST_LIBRARY_PATH . "/oxBaseTestCase.php";
 require_once TEST_LIBRARY_PATH . "/oxTestModuleLoader.php";
 require_once TEST_LIBRARY_PATH . 'Services/Library/DbHandler.php';
@@ -41,6 +42,9 @@ class oxUnitTestCase extends oxBaseTestCase
 
     /** @var oxShopStateBackup */
     private static $shopStateBackup;
+
+    /** @var oxVfsStreamWrapper */
+    private static $vfsStreamWrapper;
 
     /** @var array multishop tables used in shop */
     private $_aMultiShopTables = array(
@@ -633,7 +637,7 @@ class oxUnitTestCase extends oxBaseTestCase
     }
 
     /**
-     * Change to virtual file with vfstream when available.
+     * Creates virtual file with given content.
      *
      * @param string $sFileName
      * @param string $sFileContent
@@ -644,11 +648,19 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public function createFile($sFileName, $sFileContent)
     {
-        $sPathToFile = $this->getTestConfig()->getTempDirectory() . '/' . $sFileName;
+        return $this->getVfsStreamWrapper()->createFile($sFileName, $sFileContent);
+    }
 
-        file_put_contents($sPathToFile, $sFileContent);
+    /**
+     * @return oxVfsStreamWrapper
+     */
+    public function getVfsStreamWrapper()
+    {
+        if (is_null(self::$vfsStreamWrapper)) {
+            self::$vfsStreamWrapper = new oxVfsStreamWrapper();
+        }
 
-        return $sPathToFile;
+        return self::$vfsStreamWrapper;
     }
 
     /**
