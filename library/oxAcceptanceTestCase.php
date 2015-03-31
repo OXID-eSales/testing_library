@@ -1918,11 +1918,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     protected function _getScreenShotPath()
     {
         $sPath = $this->getTestConfig()->getScreenShotsPath();
-        if ($sPath && !in_array(substr($sPath, strlen($sPath) - 1, 1), array("/", "\\"))) {
-            $sPath .= DIRECTORY_SEPARATOR;
-        }
-
-        return $sPath;
+        return rtrim($sPath, '/\\') . DIRECTORY_SEPARATOR;
     }
 
     /**
