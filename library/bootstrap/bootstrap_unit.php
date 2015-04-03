@@ -47,3 +47,34 @@ class UnitBootstrap extends Bootstrap
         require_once TEST_LIBRARY_PATH .'/oxUnitTestCase.php';
     }
 }
+
+/**
+ * @deprecated Use oxTestConfig::getCurrentTestSuite() or oxTestConfig::getTempDirectory().
+ *
+ * @return string
+ */
+function getTestsBasePath()
+{
+    $testsPath = '';
+    if (defined('CURRENT_TEST_SUITE')) {
+        $testsPath = CURRENT_TEST_SUITE;
+    }
+    return $testsPath;
+}
+
+/**
+ * Returns framework base path.
+ *
+ * @return string
+ */
+function getShopBasePath()
+{
+    $shopDirectory = OX_BASE_PATH;
+    if (class_exists('oxUnitTestCase', false)) {
+        $configShopDir = oxRegistry::getConfig()->getConfigParam('sShopDir');
+        $shopDirectory = $configShopDir ? $configShopDir : $shopDirectory;
+    }
+
+    return rtrim($shopDirectory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+}
+

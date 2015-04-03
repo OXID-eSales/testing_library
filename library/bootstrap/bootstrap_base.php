@@ -66,8 +66,6 @@ class Bootstrap
 
         $this->setGlobalConstants();
 
-        $this->setGlobalConstants();
-
         $this->prepareShopModObjects();
     }
 
@@ -179,7 +177,6 @@ class Bootstrap
         $oDb->setConfig($oConfigFile);
         $oLegacyDb = $oDb->getDb();
         oxRegistry::set('oxDb', $oLegacyDb);
-
         oxRegistry::getConfig();
 
         require_once TEST_LIBRARY_PATH .'modOxUtilsDate.php';
@@ -188,18 +185,4 @@ class Bootstrap
         require_once $shopPath .'/core/oxsession.php';
         require_once $shopPath .'/core/oxconfig.php';
     }
-}
-
-/**
- * @deprecated Use oxTestConfig::getCurrentTestSuite() or oxTestConfig::getTempDirectory().
- *
- * @return string
- */
-function getTestsBasePath()
-{
-    $testsPath = '';
-    if (defined('CURRENT_TEST_SUITE')) {
-        $testsPath = CURRENT_TEST_SUITE;
-    }
-    return $testsPath;
 }
