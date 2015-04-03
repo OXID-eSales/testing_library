@@ -141,6 +141,9 @@ class oxUnitTestCase extends oxBaseTestCase
             $oTestModuleLoader = $this->_getModuleLoader();
             $oTestModuleLoader->setModuleInformation();
         }
+
+        $reportingLevel = (int) getenv('TRAVIS_ERROR_LEVEL');
+        error_reporting($reportingLevel ? $reportingLevel : ((E_ALL ^ E_NOTICE) | E_STRICT));
     }
 
     /**
