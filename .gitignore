@@ -4,3 +4,6 @@ vendor/
 
 # Testing library
 test_config.yml
+
+# IDE
+.idea
