@@ -26,14 +26,10 @@ require_once 'Library/ServiceConfig.php';
 require_once 'Library/Request.php';
 require_once 'ServiceCaller.php';
 
-try {
-    $request = new Request();
-    $config = new ServiceConfig();
-    $oServiceCaller = new ServiceCaller($config);
+$request = new Request();
+$config = new ServiceConfig();
+$oServiceCaller = new ServiceCaller($config);
 
-    $mResponse = $oServiceCaller->callService($request->getParameter('service'), $request);
+$mResponse = $oServiceCaller->callService($request->getParameter('service'), $request);
 
-    echo serialize($mResponse);
-} catch (Exception $e) {
-    echo "EXCEPTION: ".$e->getMessage();
-}
+echo serialize($mResponse);

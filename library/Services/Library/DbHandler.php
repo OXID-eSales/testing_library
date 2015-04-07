@@ -22,23 +22,24 @@
 
 class DbHandler
 {
-    /**
-     * @var string
-     */
+    /** @var string Folder to store database dumps. */
     private $temporaryFolder = '';
 
     /** @var oxConfigFile */
     private $configFile;
 
+    /** @var resource Database connection. */
+    private $dbConnection;
+
     /**
+     * Initiates class dependencies.
      *
+     * @param oxConfigFile $configFile
      */
-    public function __construct()
+    public function __construct($configFile)
     {
-        if (!class_exists('oxConfigFile')) {
-            include_once oxPATH . "core/oxconfigfile.php";
-        }
-        $this->configFile = new oxConfigFile(oxPATH . "config.inc.php");
+        $this->configFile = $configFile;
+        $this->dbConnection = mysql_connect($this->getDbHost(), $this->getDbUser(), $this->getDbPassword());
     }
 
     /**
@@ -95,6 +96,82 @@ class DbHandler
             $charsetMode = $charsetMode ? $charsetMode : $this->getCharsetMode();
             $this->executeCommand($this->getImportCommand($sqlFile, $charsetMode));
         }
+    }
+
+    /**
+     * Executes query on database.
+     *
+     * @param string $sql Sql query to execute.
+     *
+     * @return resource
+     */
+    public function query($sql)
+    {
+        $dbConnection = $this->getDbConnection();
+
+        mysql_select_db($this->getDbName(), $dbConnection);
+        return mysql_query($sql, $dbConnection);
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    public function escape($value)
+    {
+        return mysql_real_escape_string($value);
+    }
+
+    /**
+     * Returns charset mode
+     *
+     * @return string
+     */
+    public function getCharsetMode()
+    {
+        return $this->configFile->iUtfMode ? 'utf8' : 'latin1';
+    }
+
+    /**
+     * @return string
+     */
+    public function getDbName()
+    {
+        return $this->configFile->dbName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDbUser()
+    {
+        return $this->configFile->dbUser;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDbPassword()
+    {
+        return $this->configFile->dbPwd;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDbHost()
+    {
+        return $this->configFile->dbHost;
+    }
+
+    /**
+     * Returns database resource
+     *
+     * @return resource
+     */
+    protected function getDbConnection()
+    {
+        return $this->dbConnection;
     }
 
     /**
@@ -177,47 +254,5 @@ class DbHandler
         $fileName = $this->getTemporaryFolder() . '/' . $dumpFilePrefix . '_' . $this->getDbName();
 
         return $fileName;
-    }
-
-    /**
-     * Returns charset mode
-     *
-     * @return string
-     */
-    private function getCharsetMode()
-    {
-        return $this->configFile->iUtfMode ? 'utf8' : 'latin1';
-    }
-
-    /**
-     * @return string
-     */
-    protected function getDbName()
-    {
-        return $this->configFile->dbName;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getDbUser()
-    {
-        return $this->configFile->dbUser;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getDbPassword()
-    {
-        return $this->configFile->dbPwd;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getDbHost()
-    {
-        return $this->configFile->dbHost;
     }
 }

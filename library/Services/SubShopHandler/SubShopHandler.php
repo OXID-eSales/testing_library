@@ -25,6 +25,11 @@
 class SubShopHandler implements ShopServiceInterface
 {
     /**
+     * @param ServiceConfig $config
+     */
+    public function __construct($config) {}
+
+    /**
      * Assigns element to subshop
      *
      * @param Request $request

@@ -25,9 +25,16 @@
 interface ShopServiceInterface
 {
     /**
+     * Initiates service requirements.
+     *
+     * @param ServiceConfig $config
+     */
+    public function __construct($config);
+
+    /**
      * Initiates service.
      *
-     * @param Request $request
+     * @param Request       $request
      *
      * @return mixed
      */

@@ -19,11 +19,18 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+require_once LIBRARY_PATH .'/Cache.php';
+
 /**
  * This script clears shop cache
  */
 class ClearCache implements ShopServiceInterface
 {
+    /**
+     * @param ServiceConfig $config
+     */
+    public function __construct($config) {}
+
     /**
      * Clears shop cache
      *
@@ -33,45 +40,8 @@ class ClearCache implements ShopServiceInterface
      */
     public function init($request)
     {
-        if (class_exists('oxReverseProxyBackEnd')) {
-            // Clean cache
-            if ($sCacheDir = oxRegistry::get('oxConfigFile')->getVar('sCacheDir')) {
-                $this->removeDirectory($sCacheDir, true);
-            }
-
-            // Flush cache
-            $oCache = oxNew('oxCacheBackend');
-            $oCache->flush();
-
-            // Invalidate reverse cache
-            $oReverseProxy = oxNew('oxReverseProxyBackEnd');
-            $oReverseProxy->setFlush();
-            $oReverseProxy->execute();
-        }
-
-        // Clean tmp
-        if ($sCompileDir = oxRegistry::get('oxConfigFile')->getVar('sCompileDir')) {
-            $this->removeDirectory($sCompileDir, true);
-        }
-    }
-
-    /**
-     * Delete all files and dirs recursively
-     *
-     * @param string $sDir directory to delete
-     * @param bool $blKeepTargetDir keep target directory
-     *
-     * @return null
-     */
-    protected function removeDirectory($sDir, $blKeepTargetDir = false)
-    {
-        $aFiles = array_diff( scandir( $sDir ), array('.', '..') );
-        foreach ($aFiles as $sFile) {
-            ( is_dir( "$sDir/$sFile" ) ) ? $this->removeDirectory( "$sDir/$sFile", false ) : @unlink( "$sDir/$sFile" );
-        }
-        if ( !$blKeepTargetDir ) {
-            @rmdir( $sDir );
-        }
+        $cache = new Cache();
+        $cache->clear();
     }
 }
 

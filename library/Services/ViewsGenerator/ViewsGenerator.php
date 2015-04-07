@@ -25,6 +25,11 @@
 class ViewsGenerator implements ShopServiceInterface
 {
     /**
+     * @param ServiceConfig $config
+     */
+    public function __construct($config) {}
+
+    /**
      * Clears shop cache
      *
      * @param Request $request

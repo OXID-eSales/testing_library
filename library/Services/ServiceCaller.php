@@ -36,14 +36,6 @@ class ServiceCaller
     {
         $this->config = $config;
 
-        if (!defined('oxPATH')) {
-            define('oxPATH', $this->getServiceConfig()->getShopPath());
-        }
-
-        if (!defined('TESTS_TEMP_DIR')) {
-            define('TESTS_TEMP_DIR', $this->getServiceConfig()->getTempPath());
-        }
-
         require_once $this->getServiceConfig()->getShopPath() ."/bootstrap.php";
     }
 
@@ -76,7 +68,7 @@ class ServiceCaller
      *
      * @param string $shopId
      */
-    public function setActiveShop($shopId)
+    protected function setActiveShop($shopId)
     {
         if ($shopId && $this->getServiceConfig()->getShopEdition() == 'EE') {
             oxRegistry::getConfig()->setShopId($shopId);
@@ -90,7 +82,7 @@ class ServiceCaller
      *
      * @throws Exception
      */
-    public function setActiveLanguage($language)
+    protected function setActiveLanguage($language)
     {
         $languages = oxRegistry::getLang()->getLanguageIds();
         $languageId = array_search($language, $languages);
@@ -112,7 +104,7 @@ class ServiceCaller
     protected function createService($serviceClass)
     {
         $this->includeServiceFile($serviceClass);
-        $service = new $serviceClass();
+        $service = new $serviceClass($this->getServiceConfig());
 
         if (!($service instanceof ShopServiceInterface)) {
             throw new Exception("Service $serviceClass does not implement ShopServiceInterface interface!");

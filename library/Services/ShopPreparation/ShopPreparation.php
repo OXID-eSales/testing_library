@@ -32,6 +32,19 @@ class ShopPreparation implements ShopServiceInterface
     private $_dbHandler = null;
 
     /**
+     * Initiates class dependencies.
+     *
+     * @param ServiceConfig $config
+     */
+    public function __construct($config)
+    {
+        include_once $config->getShopPath() . "core/oxconfigfile.php";
+        $configFile = new oxConfigFile($config->getShopPath() . "config.inc.php");
+        $this->_dbHandler = new DbHandler($configFile);
+        $this->_dbHandler->setTemporaryFolder($config->getTempPath());
+    }
+
+    /**
      * Handles request parameters.
      *
      * @param Request $request
@@ -41,17 +54,17 @@ class ShopPreparation implements ShopServiceInterface
     public function init($request)
     {
         if ($file = $request->getUploadedFile('importSql')) {
-            $oDbHandler = $this->_getDbHandler();
+            $oDbHandler = $this->getDbHandler();
             $oDbHandler->import($file);
         }
 
         if ($request->getParameter('dumpDB')) {
-            $oDbHandler = $this->_getDbHandler();
+            $oDbHandler = $this->getDbHandler();
             $oDbHandler->dumpDB($request->getParameter('dump-prefix'));
         }
 
         if ($request->getParameter('restoreDB')) {
-            $oDbHandler = $this->_getDbHandler();
+            $oDbHandler = $this->getDbHandler();
             $oDbHandler->restoreDB($request->getParameter('dump-prefix'));
         }
     }
@@ -61,13 +74,8 @@ class ShopPreparation implements ShopServiceInterface
      *
      * @return DbHandler
      */
-    private function _getDbHandler()
+    protected function getDbHandler()
     {
-        if (!$this->_dbHandler) {
-            $this->_dbHandler = new DbHandler();
-            $this->_dbHandler->setTemporaryFolder(TMP_PATH);
-        }
-
         return $this->_dbHandler;
     }
 }

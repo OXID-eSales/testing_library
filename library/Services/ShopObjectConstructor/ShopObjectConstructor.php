@@ -28,6 +28,11 @@ require_once 'Constructors/ConstructorFactory.php';
 class ShopObjectConstructor implements ShopServiceInterface
 {
     /**
+     * @param ServiceConfig $config
+     */
+    public function __construct($config) {}
+
+    /**
      * Loads object, sets class parameters and calls function with parameters.
      * classParams can act two ways - if array('param' => 'value') is given, it sets the values to given keys
      * if array('param', 'param') is passed, values of these params are returned.
