@@ -271,7 +271,8 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public function setConfigParam($sParam, $mxVal = null)
     {
-        $this->getConfig()->setConfigParam($sParam, $mxVal);
+        $config = oxRegistry::getConfig();
+        $config->setConfigParam($sParam, $mxVal);
     }
 
     /**
