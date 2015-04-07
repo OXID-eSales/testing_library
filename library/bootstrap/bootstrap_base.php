@@ -108,7 +108,7 @@ class Bootstrap
 
     /**
      * Sets global constants, as these are still used a lot in tests.
-     * This is used to maintain backwards compatibility.
+     * This is used to maintain backwards compatibility, but should not be used anymore in new code.
      */
     protected function setGlobalConstants()
     {
@@ -120,12 +120,22 @@ class Bootstrap
             define('OXID_VERSION_SUFIX', '');
         }
 
+        /** @deprecated use TestConfig::getShopPath() */
         define('oxPATH', $testConfig->getShopPath());
+
+        /** @deprecated use TestConfig::getShopPath() */
         define('OX_BASE_PATH', $testConfig->getShopPath());
+
+        /** @deprecated use TestConfig::getShopUrl() */
         define('shopURL', $testConfig->getShopUrl());
+
+        /** @deprecated use TestConfig::getShopId() */
         define('oxSHOPID', $testConfig->getShopId());
+
+        /** @deprecated use TestConfig::isSubShop() */
         define('isSUBSHOP', $testConfig->isSubShop());
 
+        /** @deprecated use TestConfig::getCurrentTestSuite() */
         define('CURRENT_TEST_SUITE', $testConfig->getCurrentTestSuite());
     }
 
@@ -155,19 +165,15 @@ class Bootstrap
     }
 
     /**
-     * Prepares mocked shop objects like oxConfig, oxDb.
-     * Includes shop bootstrap.
+     * Prepares shop config object.
      */
     protected function prepareShopModObjects()
     {
         $shopPath = $this->getTestConfig()->getShopPath();
-
         require_once $shopPath .'core/oxfunctions.php';
 
         $oConfigFile = new oxConfigFile($shopPath . "config.inc.php");
         oxRegistry::set("oxConfigFile", $oConfigFile);
         oxRegistry::set("oxConfig", new oxConfig());
-
-        require_once TEST_LIBRARY_PATH .'modOxUtilsDate.php';
     }
 }

@@ -19,12 +19,13 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-require_once TEST_LIBRARY_PATH . "/oxShopStateBackup.php";
-require_once TEST_LIBRARY_PATH . "/oxVfsStreamWrapper.php";
-require_once TEST_LIBRARY_PATH . "/oxBaseTestCase.php";
-require_once TEST_LIBRARY_PATH . "/oxTestModuleLoader.php";
+require_once TEST_LIBRARY_PATH . "oxShopStateBackup.php";
+require_once TEST_LIBRARY_PATH . "oxVfsStreamWrapper.php";
+require_once TEST_LIBRARY_PATH . "oxBaseTestCase.php";
+require_once TEST_LIBRARY_PATH . "oxTestModuleLoader.php";
 require_once TEST_LIBRARY_PATH . 'Services/Library/DbHandler.php';
 require_once TEST_LIBRARY_PATH . 'oxMockStubFunc.php';
+require_once TEST_LIBRARY_PATH . 'modOxUtilsDate.php';
 
 /**
  * Base tests class. Most tests should extend this class.
