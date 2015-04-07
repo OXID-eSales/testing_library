@@ -84,13 +84,20 @@ class Bootstrap
      */
     protected function installShop()
     {
-        $testConfig = $this->getTestConfig();
+        $config = $this->getTestConfig();
         
         $serviceCaller = new oxServiceCaller($this->getTestConfig());
-        $serviceCaller->setParameter('serial', $testConfig->getShopSerial());
+        $serviceCaller->setParameter('serial', $config->getShopSerial());
         $serviceCaller->setParameter('addDemoData', $this->addDemoData);
-        $serviceCaller->setParameter('turnOnVarnish', $testConfig->shouldEnableVarnish());
-        $serviceCaller->setParameter('setupPath', $testConfig->getShopSetupPath());
+        $serviceCaller->setParameter('turnOnVarnish', $config->shouldEnableVarnish());
+
+        if ($setupPath = $config->getShopSetupPath()) {
+            $fileCopier = new oxFileCopier();
+            $remoteDirectory = $config->getRemoteDirectory();
+            $shopDirectory = $remoteDirectory ? $remoteDirectory : $config->getShopPath();
+
+            $fileCopier->copyFiles($setupPath, $shopDirectory.'/setup/');
+        }
 
         try {
             $serviceCaller->callService('ShopInstaller');
