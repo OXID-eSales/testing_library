@@ -30,11 +30,6 @@ class Cache
     public function clear()
     {
         if (class_exists('oxReverseProxyBackEnd')) {
-            // Clean cache
-            if ($sCacheDir = oxRegistry::get('oxConfigFile')->getVar('sCacheDir')) {
-                $this->removeDirectory($sCacheDir, true);
-            }
-
             // Flush cache
             $oCache = oxNew('oxCacheBackend');
             $oCache->flush();
@@ -47,26 +42,26 @@ class Cache
 
         // Clean tmp
         if ($sCompileDir = oxRegistry::get('oxConfigFile')->getVar('sCompileDir')) {
-            $this->removeDirectory($sCompileDir, true);
+            $this->removeDirectory($sCompileDir, false);
         }
     }
 
     /**
      * Delete all files and dirs recursively
      *
-     * @param string $sDir directory to delete
-     * @param bool $blKeepTargetDir keep target directory
+     * @param string $dir directory to delete
+     * @param bool   $rmBaseDir keep target directory
      *
      * @return null
      */
-    protected function removeDirectory($sDir, $blKeepTargetDir = false)
+    private function removeDirectory($dir, $rmBaseDir = false)
     {
-        $aFiles = array_diff( scandir( $sDir ), array('.', '..') );
-        foreach ($aFiles as $sFile) {
-            ( is_dir( "$sDir/$sFile" ) ) ? $this->removeDirectory( "$sDir/$sFile", false ) : @unlink( "$sDir/$sFile" );
+        $files = array_diff(scandir($dir), array('.', '..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? $this->removeDirectory("$dir/$file", true) : @unlink("$dir/$file");
         }
-        if ( !$blKeepTargetDir ) {
-            @rmdir( $sDir );
+        if ($rmBaseDir) {
+            @rmdir($dir);
         }
     }
 }
