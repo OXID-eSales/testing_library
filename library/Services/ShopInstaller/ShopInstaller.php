@@ -61,6 +61,14 @@ class ShopInstaller implements ShopServiceInterface
         if (file_exists($serialClassPath)) {
             include_once $serialClassPath;
         }
+
+        if (!array_key_exists('oxconfig', oxRegistry::getKeys())) {
+            require_once $this->getServiceConfig()->getShopPath() .'core/oxfunctions.php';
+
+            $oConfigFile = new oxConfigFile($this->getServiceConfig()->getShopPath() . "config.inc.php");
+            oxRegistry::set("oxConfigFile", $oConfigFile);
+            oxRegistry::set("oxConfig", new oxConfig());
+        }
     }
 
     /**
@@ -304,13 +312,6 @@ class ShopInstaller implements ShopServiceInterface
      */
     protected function getDefaultSerial()
     {
-        if (!array_key_exists('oxconfig', oxRegistry::getKeys())) {
-            require_once $this->getServiceConfig()->getShopPath() .'core/oxfunctions.php';
-
-            $oConfigFile = new oxConfigFile($this->getServiceConfig()->getShopPath() . "config.inc.php");
-            oxRegistry::set("oxConfigFile", $oConfigFile);
-            oxRegistry::set("oxConfig", new oxConfig());
-        }
         include_once $this->getServiceConfig()->getShopPath() . "setup/oxsetup.php";
 
         $setup = new oxSetup();
