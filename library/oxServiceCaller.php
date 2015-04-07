@@ -26,17 +26,17 @@ require_once 'oxTestCurl.php';
  */
 class oxServiceCaller
 {
-    /** @var array */
+    /** @var array Service parameters. Will be passed to service. */
     private $parameters = array();
 
     /** @var oxTestConfig */
     private $config;
 
-    /** @var bool Where services copied to the shop. */
+    /** @var bool Whether services was copied to the shop. */
     private static $servicesCopied = false;
 
     /**
-     * If remote shop directory is provided, copies services to it.
+     * Initiates class dependencies.
      *
      * @param oxTestConfig $config
      */

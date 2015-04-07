@@ -32,12 +32,14 @@ class UnitBootstrap extends Bootstrap
         parent::init();
 
         $config = $this->getTestConfig();
+
         $dbRestoreClass = $config->getDatabaseRestorationClass();
         if (file_exists(TEST_LIBRARY_PATH .'dbRestore/'.$dbRestoreClass . ".php")) {
-            include_once TEST_LIBRARY_PATH .'dbRestore/'. $dbRestoreClass . ".php";
+            $restoreDbPath = TEST_LIBRARY_PATH .'dbRestore/'. $dbRestoreClass . ".php";
         } else {
-            include_once TEST_LIBRARY_PATH .'dbRestore/dbRestore.php';
+            $restoreDbPath = TEST_LIBRARY_PATH .'dbRestore/dbRestore.php';
         }
+        include_once $restoreDbPath;
 
         $currentTestSuite = $config->getCurrentTestSuite();
         if (file_exists($currentTestSuite .'/additional.inc.php')) {
@@ -64,6 +66,7 @@ function getTestsBasePath()
 
 /**
  * Returns framework base path.
+ * Overwrites original method so that it would be possible to mock shop directory during testing.
  *
  * @return string
  */
