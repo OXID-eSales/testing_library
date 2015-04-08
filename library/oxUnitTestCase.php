@@ -97,6 +97,9 @@ class oxUnitTestCase extends oxBaseTestCase
             $oTestModuleLoader->setModuleInformation();
         }
 
+        oxRegistry::getConfig()->saveShopConfVar('string', 'sCompileDir', $testConfig->getTempDirectory());
+        oxRegistry::getConfig()->setConfigParam('sCompileDir', $testConfig->getTempDirectory());
+
         $this->_backupDatabase();
 
         oxRegistry::getUtils()->commitFileCache();
@@ -130,8 +133,6 @@ class oxUnitTestCase extends oxBaseTestCase
     {
         parent::setUp();
 
-        $this->getConfig();
-        $this->getSession();
         $this->setAdminMode(false);
         $this->setShopId(null);
         oxAddClassModule('modOxUtilsDate', 'oxUtilsDate');
