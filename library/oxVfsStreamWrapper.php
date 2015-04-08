@@ -72,10 +72,14 @@ class oxVfsStreamWrapper
      * Structure example: array('dir' => array('subdir' => array('file' => 'content'))).
      *
      * @param array $structure
+     *
+     * @return string Path to root directory
      */
     public function createStructure($structure)
     {
         vfsStream::create($structure, $this->getRoot());
+
+        return $this->getRootPath();
     }
 
     /**

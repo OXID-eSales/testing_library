@@ -108,4 +108,16 @@ class oxVfsStreamWrapperTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(is_dir($rootPath .'dir/subdir'));
         $this->assertEquals('content', file_get_contents($rootPath .'dir/subdir/testFile'));
     }
+
+    public function testReturningRootDirectoryAfterStructureCreation()
+    {
+        $structure = array();
+
+        $vfsStreamWrapper = new oxVfsStreamWrapper();
+
+        $returnedPath = $vfsStreamWrapper->createStructure($structure);
+        $expectedPath = $vfsStreamWrapper->getRootPath();
+
+        $this->assertEquals($returnedPath, $expectedPath);
+    }
 }
