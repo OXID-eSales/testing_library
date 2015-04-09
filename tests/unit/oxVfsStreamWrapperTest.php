@@ -19,6 +19,8 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+require_once ROOT_DIRECTORY .'library/oxVfsStreamWrapper.php';
+
 class oxVfsStreamWrapperTest extends PHPUnit_Framework_TestCase
 {
     public function testCreationOfRoot()

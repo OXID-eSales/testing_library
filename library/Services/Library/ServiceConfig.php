@@ -24,31 +24,46 @@
  */
 class ServiceConfig
 {
-    private $shopPath;
+    /** @var string Tested shop directory. */
+    private $shopDirectory;
+
+    /** @var string Shop edition. */
     private $shopEdition;
-    private $tempPath;
+
+    /** @var string Temporary directory to store temp files. */
+    private $tempDirectory;
+
+    /** @var string Shop edition suffix. */
+    private $editionSuffix;
+
+    /**
+     * Sets default values.
+     */
+    public function __construct()
+    {
+        $this->shopDirectory = __DIR__ . '/../../';
+        $this->tempDirectory = __DIR__ .'/../temp/';
+    }
 
     /**
      * Returns path to shop source directory.
+     * If shop path was not set, it assumes that services was copied to shop root directory.
      *
      * @return string
      */
-    public function getShopPath()
+    public function getShopDirectory()
     {
-        if (is_null($this->shopPath)) {
-            $this->shopPath = realpath(__DIR__ . '/../../').'/';
-        }
-        return $this->shopPath;
+        return $this->shopDirectory;
     }
 
     /**
      * Sets shop path.
      *
-     * @param string $shopPath
+     * @param string $shopDirectory
      */
-    public function setShopPath($shopPath)
+    public function setShopDirectory($shopDirectory)
     {
-        $this->shopPath = $shopPath;
+        $this->shopDirectory = $shopDirectory;
     }
 
 
@@ -60,7 +75,7 @@ class ServiceConfig
     public function getShopEdition()
     {
         if (is_null($this->shopEdition)) {
-            $shopPath = $this->getShopPath();
+            $shopPath = $this->getShopDirectory();
             include_once $shopPath . 'core/oxsupercfg.php';
             include_once $shopPath . 'core/oxconfig.php';
             $config = new oxConfig();
@@ -88,12 +103,14 @@ class ServiceConfig
      */
     public function getEditionSufix()
     {
-        $versionDefinePath = $this->getShopPath() ."_version_define.php";
-        if (!defined('OXID_VERSION_SUFIX') && file_exists($versionDefinePath)) {
-            include $versionDefinePath;
+        if (is_null($this->editionSuffix)) {
+            $versionDefinePath = $this->getShopDirectory() ."_version_define.php";
+            if (!defined('OXID_VERSION_SUFIX') && file_exists($versionDefinePath)) {
+                include $versionDefinePath;
+            }
+            $this->editionSuffix = defined('OXID_VERSION_SUFIX') ? OXID_VERSION_SUFIX : '';
         }
-
-        return defined('OXID_VERSION_SUFIX') ? OXID_VERSION_SUFIX : '';
+        return $this->editionSuffix;
     }
 
     /**
@@ -101,17 +118,14 @@ class ServiceConfig
      *
      * @return string
      */
-    public function getTempPath()
+    public function getTempDirectory()
     {
-        if (is_null($this->tempPath)) {
-            $this->tempPath = __DIR__ .'/../temp/';
-
-            if (!file_exists($this->tempPath)) {
-                mkdir($this->tempPath, 0777);
-                chmod($this->tempPath, 0777);
-            }
+        if (!file_exists($this->tempDirectory)) {
+            mkdir($this->tempDirectory, 0777);
+            chmod($this->tempDirectory, 0777);
         }
-        return $this->tempPath;
+
+        return $this->tempDirectory;
     }
 
     /**
@@ -119,8 +133,18 @@ class ServiceConfig
      *
      * @param string $tempPath
      */
-    public function setTempPath($tempPath)
+    public function setTempDirectory($tempPath)
     {
-        $this->tempPath = $tempPath;
+        $this->tempDirectory = $tempPath;
+    }
+
+    /**
+     * Returns services root directory.
+     *
+     * @return string
+     */
+    public function getServicesDirectory()
+    {
+        return __DIR__ .'/../';
     }
 }

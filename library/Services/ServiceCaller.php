@@ -36,7 +36,10 @@ class ServiceCaller
     {
         $this->config = $config;
 
-        require_once $this->getServiceConfig()->getShopPath() ."/bootstrap.php";
+        $bootstrapPath = $this->getServiceConfig()->getShopDirectory() ."/bootstrap.php";
+        if (file_exists($bootstrapPath)) {
+            require_once $bootstrapPath;
+        }
     }
 
     /**
@@ -122,7 +125,8 @@ class ServiceCaller
      */
     protected function includeServiceFile($serviceClass)
     {
-        $file = realpath(__DIR__ . '/' . $serviceClass . '/' . $serviceClass . '.php');
+        $servicesDirectory = $this->getServiceConfig()->getServicesDirectory();
+        $file = "$servicesDirectory/$serviceClass/$serviceClass.php";
 
         if (!file_exists($file)) {
             throw new Exception("Service $serviceClass not found in path $file!");

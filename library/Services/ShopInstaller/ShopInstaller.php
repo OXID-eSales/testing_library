@@ -48,7 +48,7 @@ class ShopInstaller implements ShopServiceInterface
     {
         $this->serviceConfig = $config;
 
-        $shopPath = $config->getShopPath();
+        $shopPath = $config->getShopDirectory();
 
         include_once $shopPath . "core/oxconfigfile.php";
         $this->shopConfig = new oxConfigFile($shopPath . "config.inc.php");
@@ -63,9 +63,9 @@ class ShopInstaller implements ShopServiceInterface
         }
 
         if (!array_key_exists('oxconfig', oxRegistry::getKeys())) {
-            require_once $this->getServiceConfig()->getShopPath() .'core/oxfunctions.php';
+            require_once $this->getServiceConfig()->getShopDirectory() .'core/oxfunctions.php';
 
-            $oConfigFile = new oxConfigFile($this->getServiceConfig()->getShopPath() . "config.inc.php");
+            $oConfigFile = new oxConfigFile($this->getServiceConfig()->getShopDirectory() . "config.inc.php");
             oxRegistry::set("oxConfigFile", $oConfigFile);
             oxRegistry::set("oxConfig", new oxConfig());
         }
@@ -126,7 +126,7 @@ class ShopInstaller implements ShopServiceInterface
     public function getSetupDirectory()
     {
         if ($this->setupDirectory === null) {
-            $this->setupDirectory = $this->getServiceConfig()->getShopPath() . '/setup';
+            $this->setupDirectory = $this->getServiceConfig()->getShopDirectory() . '/setup';
         }
 
         return $this->setupDirectory;
@@ -312,7 +312,7 @@ class ShopInstaller implements ShopServiceInterface
      */
     protected function getDefaultSerial()
     {
-        include_once $this->getServiceConfig()->getShopPath() . "setup/oxsetup.php";
+        include_once $this->getServiceConfig()->getShopDirectory() . "setup/oxsetup.php";
 
         $setup = new oxSetup();
         return $setup->getDefaultSerial();

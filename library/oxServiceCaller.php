@@ -145,9 +145,9 @@ class oxServiceCaller
         define('TMP_PATH', $this->getTestConfig()->getTempDirectory());
 
         $config = new ServiceConfig();
-        $config->setShopPath($this->getTestConfig()->getShopPath());
+        $config->setShopDirectory($this->getTestConfig()->getShopPath());
         $config->setShopEdition($this->getTestConfig()->getShopEdition());
-        $config->setTempPath($this->getTestConfig()->getTempDirectory());
+        $config->setTempDirectory($this->getTestConfig()->getTempDirectory());
 
         $serviceCaller = new ServiceCaller($config);
         $request = new Request($this->getParameters());
