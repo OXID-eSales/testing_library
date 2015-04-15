@@ -54,17 +54,18 @@ class Bootstrap
         if ($testConfig->getTempDirectory()) {
             $fileCopier = new oxFileCopier();
             $fileCopier->createEmptyDirectory($testConfig->getTempDirectory());
+            $fileCopier->createEmptyDirectory($testConfig->getTempDirectory().'/smarty/');
         }
 
         if ($testConfig->shouldRestoreShopAfterTestsSuite()) {
             $this->registerResetDbAfterSuite();
         }
 
+        $this->prepareShopModObjects();
+
         if ($testConfig->shouldInstallShop()) {
             $this->installShop();
         }
-
-        $this->prepareShopModObjects();
     }
 
     /**
@@ -90,6 +91,7 @@ class Bootstrap
         $serviceCaller->setParameter('serial', $config->getShopSerial());
         $serviceCaller->setParameter('addDemoData', $this->addDemoData);
         $serviceCaller->setParameter('turnOnVarnish', $config->shouldEnableVarnish());
+        $serviceCaller->setParameter('tempDirectory', $config->getTempDirectory());
 
         if ($setupPath = $config->getShopSetupPath()) {
             $fileCopier = new oxFileCopier();
@@ -169,11 +171,17 @@ class Bootstrap
      */
     protected function prepareShopModObjects()
     {
-        $shopPath = $this->getTestConfig()->getShopPath();
+        $testConfig = $this->getTestConfig();
+
+        $shopPath = $testConfig->getShopPath();
         require_once $shopPath .'core/oxfunctions.php';
 
         $oConfigFile = new oxConfigFile($shopPath . "config.inc.php");
+        $oConfigFile->setVar('sCompileDir', $testConfig->getTempDirectory());
         oxRegistry::set("oxConfigFile", $oConfigFile);
-        oxRegistry::set("oxConfig", new oxConfig());
+
+        $config = new oxConfig();
+        $config->setConfigParam('sCompileDir', $testConfig->getTempDirectory());
+        oxRegistry::set("oxConfig", $config);
     }
 }

@@ -97,8 +97,8 @@ class oxUnitTestCase extends oxBaseTestCase
             $oTestModuleLoader->setModuleInformation();
         }
 
-        oxRegistry::getConfig()->saveShopConfVar('string', 'sCompileDir', $testConfig->getTempDirectory());
-        oxRegistry::getConfig()->setConfigParam('sCompileDir', $testConfig->getTempDirectory());
+        $configFie = oxRegistry::get('oxConfigFile');
+        $configFie->setVar('sCompileDir', $testConfig->getTempDirectory());
 
         $this->_backupDatabase();
 

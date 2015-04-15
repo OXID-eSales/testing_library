@@ -61,14 +61,6 @@ class ShopInstaller implements ShopServiceInterface
         if (file_exists($serialClassPath)) {
             include_once $serialClassPath;
         }
-
-        if (!array_key_exists('oxconfig', oxRegistry::getKeys())) {
-            require_once $this->getServiceConfig()->getShopDirectory() .'core/oxfunctions.php';
-
-            $oConfigFile = new oxConfigFile($this->getServiceConfig()->getShopDirectory() . "config.inc.php");
-            oxRegistry::set("oxConfigFile", $oConfigFile);
-            oxRegistry::set("oxConfig", new oxConfig());
-        }
     }
 
     /**
@@ -80,11 +72,19 @@ class ShopInstaller implements ShopServiceInterface
      */
     public function init($request)
     {
+        $serialNumber = $request->getParameter('serial', false);
+        $serialNumber = $serialNumber ? $serialNumber : $this->getDefaultSerial();
+
         if ($setupPath = $request->getParameter('setupPath', null)) {
             $this->setSetupDirectory($setupPath);
         }
 
         $this->setupDatabase();
+
+        if ($tempDir = $request->getParameter('tempDirectory')) {
+            $this->insertConfigValue('string', 'sCompileDir', $tempDir);
+        }
+        $this->insertConfigValue('int', 'sOnlineLicenseNextCheckTime', time() + 25920000);
 
         if ($request->getParameter('addDemoData', false)) {
             $this->insertDemoData();
@@ -94,7 +94,7 @@ class ShopInstaller implements ShopServiceInterface
             $this->convertToInternational();
         }
 
-        $this->setSerialNumber($request->getParameter('serial', false));
+        $this->setSerialNumber($serialNumber);
 
         if ($this->getDbHandler()->getCharsetMode() == 'utf8') {
             $this->convertToUtf();
@@ -105,7 +105,7 @@ class ShopInstaller implements ShopServiceInterface
         }
 
         $cache = new Cache();
-        $cache->clear();
+        $cache->clearTemporaryDirectory();
     }
 
     /**
@@ -196,8 +196,6 @@ class ShopInstaller implements ShopServiceInterface
         if (class_exists('oxSerial')) {
             $dbHandler = $this->getDbHandler();
 
-            $serialNumber = $serialNumber ? $serialNumber : $this->getDefaultSerial();
-
             $shopId = $this->getShopId();
 
             $serial = new oxSerial();
@@ -232,39 +230,22 @@ class ShopInstaller implements ShopServiceInterface
         $rs = $dbHandler->query(
             "SELECT oxvarname, oxvartype, DECODE( oxvarvalue, '{$this->sConfigKey}') AS oxvarvalue
                        FROM oxconfig
-                       WHERE oxvartype IN ('str', 'arr', 'aarr')
-                       #AND oxvarname != 'aCurrencies'
-                       "
+                       WHERE oxvartype IN ('str', 'arr', 'aarr')"
         );
 
-        $aConverted = array();
         while ($aRow = mysql_fetch_assoc($rs)) {
             if ($aRow['oxvartype'] == 'arr' || $aRow['oxvartype'] == 'aarr') {
                 $aRow['oxvarvalue'] = unserialize($aRow['oxvarvalue']);
             }
-            $aRow['oxvarvalue'] = $this->stringToUtf($aRow['oxvarvalue']);
-            $aConverted[] = $aRow;
-        }
-
-        foreach ($aConverted as $aConfigParam) {
-            $sConfigName = $aConfigParam['oxvarname'];
-            $sConfigValue = $aConfigParam['oxvarvalue'];
-            if (is_array($sConfigValue)) {
-                $sConfigValue = serialize($sConfigValue);
-            }
-            $sConfigValue = $dbHandler->escape($sConfigValue);
-
-            $dbHandler->query("update oxconfig set oxvarvalue = ENCODE( '{$sConfigValue}','{$this->sConfigKey}') where oxvarname = '{$sConfigName}';");
+            $this->updateConfigValue($aRow['oxvarname'], $this->stringToUtf($aRow['oxvarvalue']));
         }
 
         // Change currencies value to same as after 4.6 setup because previous encoding break it.
-        if ($this->getServiceConfig()->getShopEdition() == 'EE') {
-            $query = "REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
-                ('3c4f033dfb8fd4fe692715dda19ecd28', 1, '', 'aCurrencies', 'arr', 0x4dbace2972e14bf2cbd3a9a45157004422e928891572b281961cdebd1e0bbafe8b2444b15f2c7b1cfcbe6e5982d87434c3b19629dacd7728776b54d7caeace68b4b05c6ddeff2df9ff89b467b14df4dcc966c504477a9eaeadd5bdfa5195a97f46768ba236d658379ae6d371bfd53acd9902de08a1fd1eeab18779b191f3e31c258a87b58b9778f5636de2fab154fc0a51a2ecc3a4867db070f85852217e9d5e9aa60507);";
-        } else {
-            $query = "REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
-                ('3c4f033dfb8fd4fe692715dda19ecd28', 'oxbaseshop', '', 'aCurrencies', 'arr', 0x4dbace2972e14bf2cbd3a9a45157004422e928891572b281961cdebd1e0bbafe8b2444b15f2c7b1cfcbe6e5982d87434c3b19629dacd7728776b54d7caeace68b4b05c6ddeff2df9ff89b467b14df4dcc966c504477a9eaeadd5bdfa5195a97f46768ba236d658379ae6d371bfd53acd9902de08a1fd1eeab18779b191f3e31c258a87b58b9778f5636de2fab154fc0a51a2ecc3a4867db070f85852217e9d5e9aa60507);";
-        }
+        $shopId = $this->getServiceConfig()->getShopEdition() == 'EE' ? 1 : "'oxbaseshop'";
+
+        $query = "REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
+            ('3c4f033dfb8fd4fe692715dda19ecd28', $shopId, '', 'aCurrencies', 'arr', 0x4dbace2972e14bf2cbd3a9a45157004422e928891572b281961cdebd1e0bbafe8b2444b15f2c7b1cfcbe6e5982d87434c3b19629dacd7728776b54d7caeace68b4b05c6ddeff2df9ff89b467b14df4dcc966c504477a9eaeadd5bdfa5195a97f46768ba236d658379ae6d371bfd53acd9902de08a1fd1eeab18779b191f3e31c258a87b58b9778f5636de2fab154fc0a51a2ecc3a4867db070f85852217e9d5e9aa60507);";
+
         $dbHandler->query($query);
     }
 
@@ -312,10 +293,12 @@ class ShopInstaller implements ShopServiceInterface
      */
     protected function getDefaultSerial()
     {
-        include_once $this->getServiceConfig()->getShopDirectory() . "setup/oxsetup.php";
+        if ($this->getServiceConfig()->getShopEdition() != 'CE') {
+            include_once $this->getServiceConfig()->getShopDirectory() . "setup/oxsetup.php";
 
-        $setup = new oxSetup();
-        return $setup->getDefaultSerial();
+            $setup = new oxSetup();
+            return $setup->getDefaultSerial();
+        }
     }
 
     /**
@@ -326,6 +309,42 @@ class ShopInstaller implements ShopServiceInterface
     private function getShopId()
     {
         return $this->getServiceConfig()->getShopEdition() == 'EE' ? '1' : 'oxbaseshop';
+    }
+
+    /**
+     * Insert new configuration value to database.
+     *
+     * @param string $type
+     * @param string $name
+     * @param string $value
+     */
+    private function insertConfigValue($type, $name, $value)
+    {
+        $dbHandler = $this->getDbHandler();
+        $shopId = $this->getServiceConfig()->getShopEdition() == 'EE' ? 1 : "'oxbaseshop'";
+
+        $dbHandler->query("DELETE from oxconfig WHERE oxvarname = '$name';");
+        $dbHandler->query("REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
+            ('$name', $shopId, '', '$name', '$type', ENCODE('{$value}','{$this->sConfigKey}'));");
+        if ($shopId === 1) {
+            $dbHandler->query("REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
+                ('${name}_subshop', 2, '', '$name', '$type', ENCODE('{$value}','{$this->sConfigKey}'));");
+        }
+    }
+
+    /**
+     * Updates configuration value.
+     *
+     * @param string $name
+     * @param string $value
+     */
+    private function updateConfigValue($name, $value)
+    {
+        $dbHandler = $this->getDbHandler();
+
+        $value = is_array($value) ? serialize($value) : $value;
+        $value = $dbHandler->escape($value);
+        $dbHandler->query("update oxconfig set oxvarvalue = ENCODE( '{$value}','{$this->sConfigKey}') where oxvarname = '{$name}';");
     }
 
     /**
