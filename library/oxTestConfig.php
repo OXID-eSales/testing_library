@@ -58,7 +58,11 @@ class oxTestConfig
     {
         require_once $this->getVendorPath() .'/autoload.php';
 
-        $yaml = Yaml::parse(file_get_contents($this->getConfigFileName()));
+        $yamlFile = $this->getConfigFileName();
+        if (!file_exists($yamlFile)) {
+            die("Configuration file 'test_config.yml' was not found. Please refer to documentation for instructions.\n");
+        }
+        $yaml = Yaml::parse(file_get_contents($yamlFile));
         $this->configuration = array_merge($yaml['mandatory_parameters'], $yaml['optional_parameters']);
     }
 
