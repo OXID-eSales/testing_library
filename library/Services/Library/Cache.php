@@ -25,25 +25,32 @@
 class Cache
 {
     /**
-     * Clears shop cache
+     * Clears cache backend.
      */
-    public function clear()
+    public function clearCacheBackend()
     {
         if (class_exists('oxReverseProxyBackEnd')) {
             // Flush cache backend
             $oCache = oxNew('oxCacheBackend');
             $oCache->flush();
-
-            // Invalidate reverse cache
-            try {
-                $oReverseProxy = oxNew('oxReverseProxyBackEnd');
-                $oReverseProxy->setFlush();
-                $oReverseProxy->execute();
-            } catch (Exception $e) {
-                // Ignore errors, as cache cleaning can fail during unit tests if no shop url is defined.
-            }
         }
+    }
 
+    /**
+     * Clears reverse proxy cache.
+     */
+    public function clearReverseProxyCache()
+    {
+        $oReverseProxy = oxNew('oxReverseProxyBackEnd');
+        $oReverseProxy->setFlush();
+        $oReverseProxy->execute();
+    }
+
+    /**
+     * Clears temporary directory.
+     */
+    public function clearTemporaryDirectory()
+    {
         if ($sCompileDir = oxRegistry::get('oxConfigFile')->getVar('sCompileDir')) {
             $this->removeDirectory($sCompileDir, false);
         }
