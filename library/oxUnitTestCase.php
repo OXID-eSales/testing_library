@@ -33,13 +33,13 @@ require_once TEST_LIBRARY_PATH . 'modOxUtilsDate.php';
 class oxUnitTestCase extends oxBaseTestCase
 {
     /** @var bool Registry cache. */
-    private static $_blSetupBeforeTestSuiteDone = false;
+    private static $setupBeforeTestSuiteDone = false;
 
     /** @var DbRestore Database restorer object */
-    private static $_oDbRestore = null;
+    private static $dbRestore = null;
 
     /** @var oxTestModuleLoader Module loader. */
-    private static $_oModuleLoader = null;
+    private static $moduleLoader = null;
 
     /** @var oxShopStateBackup */
     private static $shopStateBackup;
@@ -47,8 +47,8 @@ class oxUnitTestCase extends oxBaseTestCase
     /** @var oxVfsStreamWrapper */
     private static $vfsStreamWrapper;
 
-    /** @var array multishop tables used in shop */
-    private $_aMultiShopTables = array(
+    /** @var array MultiShop tables used in shop */
+    private $multiShopTables = array(
         'oxarticles',
         'oxcategories',
         'oxattribute',
@@ -62,11 +62,11 @@ class oxUnitTestCase extends oxBaseTestCase
         'oxwrapping'
     );
 
-    /** @var array variable */
-    private $_aTeardownSqls = array();
+    /** @var array Queries to run on tear down. */
+    private $teardownQueries = array();
 
-    /** @var array tables for cleaning */
-    private $_aTableForCleanups = array();
+    /** @var array Tables to be restored after test run. */
+    private $tablesForCleanup = array();
 
     /**
      * Running setUpBeforeTestSuite action.
@@ -79,9 +79,9 @@ class oxUnitTestCase extends oxBaseTestCase
     {
         parent::__construct($name, $data, $dataName);
 
-        if (!self::$_blSetupBeforeTestSuiteDone) {
+        if (!self::$setupBeforeTestSuiteDone) {
             $this->setUpBeforeTestSuite();
-            self::$_blSetupBeforeTestSuiteDone = true;
+            self::$setupBeforeTestSuiteDone = true;
         }
     }
 
@@ -100,7 +100,7 @@ class oxUnitTestCase extends oxBaseTestCase
         $configFie = oxRegistry::get('oxConfigFile');
         $configFie->setVar('sCompileDir', $testConfig->getTempDirectory());
 
-        $this->_backupDatabase();
+        $this->backupDatabase();
 
         oxRegistry::getUtils()->commitFileCache();
 
@@ -140,8 +140,8 @@ class oxUnitTestCase extends oxBaseTestCase
         oxRegistry::getUtils()->cleanStaticCache();
 
         if ($this->getTestConfig()->getModulesToActivate()) {
-            $oTestModuleLoader = $this->_getModuleLoader();
-            $oTestModuleLoader->setModuleInformation();
+            $testModuleLoader = $this->_getModuleLoader();
+            $testModuleLoader->setModuleInformation();
         }
 
         $reportingLevel = (int) getenv('TRAVIS_ERROR_LEVEL');
@@ -157,7 +157,7 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public function run(PHPUnit_Framework_TestResult $result = null)
     {
-        $this->_removeBlacklistedClassesFromCodeCoverage($result);
+        $this->removeBlacklistedClassesFromCodeCoverage($result);
         $result = parent::run($result);
 
         oxTestModules::cleanUp();
@@ -202,89 +202,89 @@ class oxUnitTestCase extends oxBaseTestCase
     public static function tearDownAfterClass()
     {
         self::getShopStateBackup()->resetStaticVariables();
-        $oDbRestore = self::_getDbRestore();
-        $oDbRestore->restoreDB();
+        $dbRestore = self::_getDbRestore();
+        $dbRestore->restoreDB();
     }
 
     /**
      * Get parameter from session object.
      *
-     * @param string $sParam parameter name.
+     * @param string $parameterName parameter name.
      *
      * @return mixed
      */
-    public function getSessionParam($sParam)
+    public function getSessionParam($parameterName)
     {
-        return $this->getSession()->getVar($sParam);
+        return $this->getSession()->getVar($parameterName);
     }
 
     /**
      * Set parameter to session object.
      *
-     * @param string $sParam Parameter name.
-     * @param object $oVal   Any parameter value, default null.
+     * @param string $parameterName Parameter name.
+     * @param object $value         Any parameter value, default null.
      */
-    public function setSessionParam($sParam, $oVal = null)
+    public function setSessionParam($parameterName, $value = null)
     {
-        $this->getSession()->setVar($sParam, $oVal);
+        $this->getSession()->setVar($parameterName, $value);
     }
 
     /**
      * Get parameter from config request object.
      *
-     * @param string $sParam parameter name.
+     * @param string $parameterName parameter name.
      *
      * @return mixed
      */
-    public function getRequestParam($sParam)
+    public function getRequestParam($parameterName)
     {
-        return $this->getConfig()->getRequestParameter($sParam);
+        return $this->getConfig()->getRequestParameter($parameterName);
     }
 
     /**
      * Set parameter to config request object.
      *
-     * @param string $sParam Parameter name.
-     * @param mixed  $mxVal  Any parameter value, default null.
+     * @param string $parameterName Parameter name.
+     * @param mixed  $value         Any parameter value, default null.
      */
-    public function setRequestParam($sParam, $mxVal = null)
+    public function setRequestParam($parameterName, $value = null)
     {
-        $this->getConfig()->setRequestParameter($sParam, $mxVal);
+        $this->getConfig()->setRequestParameter($parameterName, $value);
     }
 
     /**
      * Get parameter from config object.
      *
-     * @param string $sParam parameter name.
+     * @param string $parameterName parameter name.
      *
      * @return mixed
      */
-    public function getConfigParam($sParam)
+    public function getConfigParam($parameterName)
     {
-        return $this->getConfig()->getConfigParam($sParam);
+        return $this->getConfig()->getConfigParam($parameterName);
     }
 
     /**
      * Set parameter to config object.
      *
-     * @param string $sParam Parameter name.
-     * @param mixed  $mxVal  Any parameter value, default null.
+     * @param string $parameterName Parameter name.
+     * @param mixed  $value         Any parameter value, default null.
      */
-    public function setConfigParam($sParam, $mxVal = null)
+    public function setConfigParam($parameterName, $value = null)
     {
         $config = oxRegistry::getConfig();
-        $config->setConfigParam($sParam, $mxVal);
+        $config->setConfigParam($parameterName, $value);
     }
 
     /**
      * Sets OXID shop admin mode.
      *
-     * @param bool $blAdmin set to admin mode TRUE / FALSE.
+     * @param bool $adminMode set to admin mode TRUE / FALSE.
      */
-    public function setAdminMode($blAdmin)
+    public function setAdminMode($adminMode)
     {
-        $this->setSessionParam('blIsAdmin', $blAdmin);
-        $this->getConfig()->setAdminMode($blAdmin);
+        $this->setSessionParam('blIsAdmin', $adminMode);
+        $this->getConfig()->setAdminMode($adminMode);
     }
 
     /**
@@ -300,21 +300,21 @@ class oxUnitTestCase extends oxBaseTestCase
     /**
      * Sets OXID shop ID.
      *
-     * @param string $sShopId set active shop ID.
+     * @param string $shopId set active shop ID.
      */
-    public function setShopId($sShopId)
+    public function setShopId($shopId)
     {
-        $this->getConfig()->setShopId($sShopId);
+        $this->getConfig()->setShopId($shopId);
     }
 
     /**
      * Set static time value for testing.
      *
-     * @param int $oVal
+     * @param int $time
      */
-    public function setTime($oVal = null)
+    public function setTime($time = null)
     {
-        modOxUtilsDate::getInstance()->UNITSetTime($oVal);
+        modOxUtilsDate::getInstance()->UNITSetTime($time);
     }
 
     /**
@@ -350,15 +350,15 @@ class oxUnitTestCase extends oxBaseTestCase
     /**
      * Returns database object
      *
-     * @param int $iFetchMode
+     * @param int $fetchMode
      *
      * @return oxLegacyDb
      */
-    public static function getDb($iFetchMode = null)
+    public static function getDb($fetchMode = null)
     {
         $oDB = oxDb::getDb();
-        if ($iFetchMode !== null) {
-            $oDB->setFetchMode($iFetchMode);
+        if ($fetchMode !== null) {
+            $oDB->setFetchMode($fetchMode);
         }
 
         return $oDB;
@@ -377,13 +377,13 @@ class oxUnitTestCase extends oxBaseTestCase
     /**
      * Sets language
      *
-     * @param int $iLangId
+     * @param int $languageId
      */
-    public function setLanguage($iLangId)
+    public function setLanguage($languageId)
     {
         $oxLang = oxRegistry::getLang();
-        $oxLang->setBaseLanguage($iLangId);
-        $oxLang->setTplLanguage($iLangId);
+        $oxLang->setBaseLanguage($languageId);
+        $oxLang->setTplLanguage($languageId);
     }
 
     /**
@@ -399,11 +399,11 @@ class oxUnitTestCase extends oxBaseTestCase
     /**
      * Sets template language
      *
-     * @param int $iLangId
+     * @param int $languageId
      */
-    public function setTplLanguage($iLangId)
+    public function setTplLanguage($languageId)
     {
-        oxRegistry::getLang()->setTplLanguage($iLangId);
+        oxRegistry::getLang()->setTplLanguage($languageId);
     }
 
     /**
@@ -423,29 +423,29 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public function getTeardownSqls()
     {
-        return (array)$this->_aTeardownSqls;
+        return (array)$this->teardownQueries;
     }
 
     /**
      * Add single teardown sql
      *
-     * @param string $sSql teardown sql
+     * @param string $query teardown query
      */
-    public function addTeardownSql($sSql)
+    public function addTeardownSql($query)
     {
-        if (!in_array($sSql, $this->_aTeardownSqls)) {
-            $this->_aTeardownSqls[] = $sSql;
+        if (!in_array($query, $this->teardownQueries)) {
+            $this->teardownQueries[] = $query;
         }
     }
 
     /**
      * Set multishop tables array, in case some custom tables need to be used
      *
-     * @param array $aMultiShopTables
+     * @param array $multiShopTables
      */
-    public function setMultiShopTables($aMultiShopTables)
+    public function setMultiShopTables($multiShopTables)
     {
-        $this->_aMultiShopTables = $aMultiShopTables;
+        $this->multiShopTables = $multiShopTables;
     }
 
     /**
@@ -455,29 +455,29 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public function getMultiShopTables()
     {
-        return $this->_aMultiShopTables;
+        return $this->multiShopTables;
     }
 
     /**
      * Executes SQL and adds table to clean up after test.
      * For EE version elements are added to map table for specified shops.
      *
-     * @param string    $sSql     Sql to be executed.
-     * @param string    $sTable   Table name.
-     * @param array|int $aShopIds List of shop IDs.
-     * @param null      $sMapId   Map ID.
+     * @param string    $sql     Sql to be executed.
+     * @param string    $table   Table name.
+     * @param array|int $shopIds List of shop IDs.
+     * @param null      $mapId   Map ID.
      */
-    public function addToDatabase($sSql, $sTable, $aShopIds = 1, $sMapId = null)
+    public function addToDatabase($sql, $table, $shopIds = 1, $mapId = null)
     {
-        oxDb::getDb()->execute($sSql);
+        oxDb::getDb()->execute($sql);
 
-        if ($this->getTestConfig()->getShopEdition() == 'EE' && in_array($sTable, $this->getMultiShopTables())) {
-            $sMapId = !is_null($sMapId) ? $sMapId : oxDb::getDb()->Insert_ID();
-            $aShopIds = (array)$aShopIds;
+        if ($this->getTestConfig()->getShopEdition() == 'EE' && in_array($table, $this->getMultiShopTables())) {
+            $mapId = !is_null($mapId) ? $mapId : oxDb::getDb()->Insert_ID();
+            $shopIds = (array)$shopIds;
 
-            foreach ($aShopIds as $iShopId) {
-                $sSql = "REPLACE INTO `{$sTable}2shop` SET `oxmapobjectid` = ?, `oxshopid` = ?";
-                oxDb::getDb()->execute($sSql, array($sMapId, $iShopId));
+            foreach ($shopIds as $iShopId) {
+                $sql = "REPLACE INTO `{$table}2shop` SET `oxmapobjectid` = ?, `oxshopid` = ?";
+                oxDb::getDb()->execute($sql, array($mapId, $iShopId));
             }
         }
     }
@@ -494,10 +494,10 @@ class oxUnitTestCase extends oxBaseTestCase
             }
         }
 
-        if ($aTablesForCleanup = $this->getTablesForCleanup()) {
-            $oDbRestore = $this->_getDbRestore();
-            foreach ($aTablesForCleanup as $sTable) {
-                $oDbRestore->restoreTable($sTable);
+        if ($tablesForCleanup = $this->getTablesForCleanup()) {
+            $dbRestore = $this->_getDbRestore();
+            foreach ($tablesForCleanup as $sTable) {
+                $dbRestore->restoreTable($sTable);
             }
         }
     }
@@ -505,11 +505,11 @@ class oxUnitTestCase extends oxBaseTestCase
     /**
      * Gets dirty tables for cleaning
      *
-     * @param array $aTablesForCleanup
+     * @param array $tablesForCleanup
      */
-    public function setTablesForCleanup($aTablesForCleanup)
+    public function setTablesForCleanup($tablesForCleanup)
     {
-        $this->_aTableForCleanups = $aTablesForCleanup;
+        $this->tablesForCleanup = $tablesForCleanup;
     }
 
     /**
@@ -519,20 +519,20 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public function getTablesForCleanup()
     {
-        return (array)$this->_aTableForCleanups;
+        return (array)$this->tablesForCleanup;
     }
 
     /**
      * Adds table to be cleaned on teardown
      *
-     * @param string $sTable
+     * @param string $table
      */
-    public function addTableForCleanup($sTable)
+    public function addTableForCleanup($table)
     {
-        if (!in_array($sTable, $this->_aTableForCleanups)) {
-            $this->_aTableForCleanups[] = $sTable;
-            if ($this->getTestConfig()->getShopEdition() == 'EE' && in_array($sTable, $this->getMultiShopTables())) {
-                $this->_aTableForCleanups[] = "{$sTable}2shop";
+        if (!in_array($table, $this->tablesForCleanup)) {
+            $this->tablesForCleanup[] = $table;
+            if ($this->getTestConfig()->getShopEdition() == 'EE' && in_array($table, $this->getMultiShopTables())) {
+                $this->tablesForCleanup[] = "{$table}2shop";
             }
         }
     }
@@ -540,22 +540,22 @@ class oxUnitTestCase extends oxBaseTestCase
     /**
      * Cleans up table
      *
-     * @param string $sTable   Table name
-     * @param string $sColName Column name
+     * @param string $table      Table name
+     * @param string $columnName Column name
      */
-    public function cleanUpTable($sTable, $sColName = null)
+    public function cleanUpTable($table, $columnName = null)
     {
-        $sCol = (!empty($sColName)) ? $sColName : 'oxid';
+        $sCol = (!empty($columnName)) ? $columnName : 'oxid';
 
-        if ($this->getTestConfig()->getShopEdition() == 'EE' && in_array($sTable, $this->getMultiShopTables())) {
+        if ($this->getTestConfig()->getShopEdition() == 'EE' && in_array($table, $this->getMultiShopTables())) {
             // deletes all records from shop relations table
-            $sSql = "delete from `{$sTable}2shop`
-                where oxmapobjectid in (select oxmapid from `$sTable` where `$sCol` like '\_%')";
-            $this->getDb()->execute($sSql);
+            $query = "delete from `{$table}2shop`
+                where oxmapobjectid in (select oxmapid from `$table` where `$sCol` like '\_%')";
+            $this->getDb()->execute($query);
         }
 
         //deletes allrecords where oxid or specified column name values starts with underscore(_)
-        $sQ = "delete from `$sTable` where `$sCol` like '\_%' ";
+        $sQ = "delete from `$table` where `$sCol` like '\_%' ";
         $this->getDb()->execute($sQ);
     }
 
@@ -629,32 +629,25 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public function cleanTmpDir()
     {
-        $sDirName = oxRegistry::getConfig()->getConfigParam('sCompileDir');
-        if (DIRECTORY_SEPARATOR == '\\') {
-            $sDirName = str_replace('/', "\\", $sDirName);
-            system("del $sDirName\\*.txt");
-            system("del $sDirName\\ox*.tmp");
-            system("del $sDirName\\*.tpl.php");
-        } else {
-            system("rm -f $sDirName/*.txt");
-            system("rm -f $sDirName/ox*.tmp");
-            system("rm -f $sDirName/*.tpl.php");
-        }
+        $directory = oxRegistry::getConfig()->getConfigParam('sCompileDir');
+        system("rm -f $directory/*.txt");
+        system("rm -f $directory/ox*.tmp");
+        system("rm -f $directory/*.tpl.php");
     }
 
     /**
      * Creates virtual file with given content.
      *
-     * @param string $sFileName
-     * @param string $sFileContent
+     * @param string $fileName
+     * @param string $fileContent
      *
      * @usage Create file from file name and file content to temp directory.
      *
      * @return string path to file
      */
-    public function createFile($sFileName, $sFileContent)
+    public function createFile($fileName, $fileContent)
     {
-        return $this->getVfsStreamWrapper()->createFile($sFileName, $sFileContent);
+        return $this->getVfsStreamWrapper()->createFile($fileName, $fileContent);
     }
 
     /**
@@ -670,31 +663,29 @@ class oxUnitTestCase extends oxBaseTestCase
     }
 
     /**
-     * Returns database restorer object.
+     * Creates stub object from given class
      *
-     * @return DbRestore
+     * @param string $className   Class name
+     * @param array  $methods     Assoc array with method => value
+     * @param array  $testMethods Array with test methods for mocking
+     *
+     * @return mixed
      */
-    protected static function _getDbRestore()
+    public function createStub($className, $methods, $testMethods = array())
     {
-        if (is_null(self::$_oDbRestore)) {
-            self::$_oDbRestore = new DbRestore();
+        $mockedMethods = array_unique(array_merge(array_keys($methods), $testMethods));
+
+        $object = $this->getMock($className, $mockedMethods, array(), '', false);
+
+        foreach ($methods as $method => $value) {
+            if (!in_array($method, $testMethods)) {
+                $object->expects($this->any())
+                    ->method($method)
+                    ->will($this->returnValue($value));
+            }
         }
 
-        return self::$_oDbRestore;
-    }
-
-    /**
-     * Returns database restorer object.
-     *
-     * @return oxTestModuleLoader
-     */
-    protected static function _getModuleLoader()
-    {
-        if (is_null(self::$_oModuleLoader)) {
-            self::$_oModuleLoader = new oxTestModuleLoader();
-        }
-
-        return self::$_oModuleLoader;
+        return $object;
     }
 
     /**
@@ -706,9 +697,37 @@ class oxUnitTestCase extends oxBaseTestCase
      *
      * @return OxMockStubFunc
      */
-    protected function evalFunction($value)
+    public function evalFunction($value)
     {
         return new oxMockStubFunc($value);
+    }
+
+    /**
+     * Returns database restorer object.
+     *
+     * @return DbRestore
+     */
+    protected static function _getDbRestore()
+    {
+        if (is_null(self::$dbRestore)) {
+            self::$dbRestore = new DbRestore();
+        }
+
+        return self::$dbRestore;
+    }
+
+    /**
+     * Returns database restorer object.
+     *
+     * @return oxTestModuleLoader
+     */
+    protected static function _getModuleLoader()
+    {
+        if (is_null(self::$moduleLoader)) {
+            self::$moduleLoader = new oxTestModuleLoader();
+        }
+
+        return self::$moduleLoader;
     }
 
     /**
@@ -724,38 +743,28 @@ class oxUnitTestCase extends oxBaseTestCase
     }
 
     /**
-     * Backs up database for later restorations.
-     */
-    protected function _backupDatabase()
-    {
-        $oDbRestore = self::_getDbRestore();
-        $oDbRestore->dumpDB();
-    }
-
-    /**
      * Creates stub object from given class
      *
      * @param string $sClass       Class name
      * @param array  $aMethods     Assoc array with method => value
      * @param array  $aTestMethods Array with test methods for mocking
      *
+     * @deprecated use oxUnitTestCase::createStub() instead.
+     *
      * @return mixed
      */
     protected function _createStub($sClass, $aMethods, $aTestMethods = array())
     {
-        $aMockedMethods = array_unique(array_merge(array_keys($aMethods), $aTestMethods));
+        return $this->createStub($sClass, $aMethods, $aTestMethods);
+    }
 
-        $oObject = $this->getMock($sClass, $aMockedMethods, array(), '', false);
-
-        foreach ($aMethods as $sMethod => $sValue) {
-            if (!in_array($sMethod, $aTestMethods)) {
-                $oObject->expects($this->any())
-                    ->method($sMethod)
-                    ->will($this->returnValue($sValue));
-            }
-        }
-
-        return $oObject;
+    /**
+     * Backs up database for later restorations.
+     */
+    protected function backupDatabase()
+    {
+        $oDbRestore = self::_getDbRestore();
+        $oDbRestore->dumpDB();
     }
 
     /**
@@ -763,7 +772,7 @@ class oxUnitTestCase extends oxBaseTestCase
      *
      * @param PHPUnit_Framework_TestResult $result
      */
-    private function _removeBlacklistedClassesFromCodeCoverage($result)
+    private function removeBlacklistedClassesFromCodeCoverage($result)
     {
         if ($result->getCollectCodeCoverageInformation()) {
             $oCoverage = $result->getCodeCoverage();

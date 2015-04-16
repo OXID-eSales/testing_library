@@ -304,26 +304,26 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * Selects shop language in frontend.
      *
-     * @param string $sLanguage language title.
+     * @param string $language Language title.
      */
-    public function switchLanguage($sLanguage)
+    public function switchLanguage($language)
     {
         $this->click("languageTrigger");
         $this->waitForItemAppear("languages");
-        $this->clickAndWait("//ul[@id='languages']//li/a/span[text()='" . $sLanguage . "']");
-        $this->getTranslator()->setLanguageByName($sLanguage);
+        $this->clickAndWait("//ul[@id='languages']//li/a/span[text()='" . $language . "']");
+        $this->getTranslator()->setLanguageByName($language);
     }
 
     /**
      * Selects shop currency in frontend.
      *
-     * @param string $sCurrency currency title.
+     * @param string $currency Currency title.
      */
-    public function switchCurrency($sCurrency)
+    public function switchCurrency($currency)
     {
         $this->click("//p[@id='currencyTrigger']/a");
         $this->waitForItemAppear("currencies");
-        $this->clickAndWait("//ul[@id='currencies']//*[text()='$sCurrency']");
+        $this->clickAndWait("//ul[@id='currencies']//*[text()='$currency']");
     }
 
     /**
@@ -355,49 +355,49 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * Open article page.
      *
-     * @param string $sArticleId
-     * @param bool   $blClearCache
-     * @param string $sShopId
+     * @param string $articleId
+     * @param bool   $clearCache
+     * @param string $shopId
      */
-    public function openArticle($sArticleId, $blClearCache = false, $sShopId = null)
+    public function openArticle($articleId, $clearCache = false, $shopId = null)
     {
         $aParams = array(
             'cl' => 'details',
-            'anid' => $sArticleId,
+            'anid' => $articleId,
         );
 
-        $this->openNewWindow($this->_getShopUrl($aParams, $sShopId), $blClearCache);
+        $this->openNewWindow($this->_getShopUrl($aParams, $shopId), $clearCache);
     }
 
     /**
      * Adds article to basket
      *
-     * @param string $sArticleId        Article id
-     * @param int    $iAmount           Amount of items to add
-     * @param string $sController       Controller name which should be opened after article is added
-     * @param array  $aAdditionalParams Additional parameters (like persparam[details] for label)
-     * @param int    $sShopId           Shop id
+     * @param string $articleId        Article id
+     * @param int    $amount           Amount of items to add
+     * @param string $controller       Controller name which should be opened after article is added
+     * @param array  $additionalParams Additional parameters (like persparam[details] for label)
+     * @param int    $shopId           Shop id
      */
     public function addToBasket(
-        $sArticleId,
-        $iAmount = 1,
-        $sController = 'basket',
-        $aAdditionalParams = array(),
-        $sShopId = null
+        $articleId,
+        $amount = 1,
+        $controller = 'basket',
+        $additionalParams = array(),
+        $shopId = null
     ) {
         $oInput = $this->getElement('stoken', false);
         if ($oInput) {
             $aParams['stoken'] = $oInput->getValue();
         }
-        $aParams['cl'] = $sController;
+        $aParams['cl'] = $controller;
         $aParams['fnc'] = 'tobasket';
-        $aParams['aid'] = $sArticleId;
-        $aParams['am'] = $iAmount;
-        $aParams['anid'] = $sArticleId;
+        $aParams['aid'] = $articleId;
+        $aParams['am'] = $amount;
+        $aParams['anid'] = $articleId;
 
-        $aParams = array_merge($aParams, $aAdditionalParams);
+        $aParams = array_merge($aParams, $additionalParams);
 
-        $this->openNewWindow($this->_getShopUrl($aParams, $sShopId), false);
+        $this->openNewWindow($this->_getShopUrl($aParams, $shopId), false);
     }
 
     /**
@@ -781,13 +781,13 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * clicks entered link in list frame and selects edit frame.
      *
-     * @param string $sTabName tab name that should be opened.
+     * @param string $tabName tab name that should be opened.
      */
-    public function openTab($sTabName)
+    public function openTab($tabName)
     {
         $this->frame('list');
-        $sTabName = "//div[@class='tabs']//a[text()='$sTabName']";
-        $this->clickAndWaitFrame($sTabName, 'edit');
+        $tabName = "//div[@class='tabs']//a[text()='$tabName']";
+        $this->clickAndWaitFrame($tabName, 'edit');
         $this->frame('edit');
     }
 
@@ -1437,24 +1437,24 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /* ------------------------ Mink related functions ---------------------------------- */
 
     /**
-     * @param string $sDriver
+     * @param string $driver
      */
-    public function startMinkSession($sDriver = '')
+    public function startMinkSession($driver = '')
     {
-        $sDriver = $sDriver ? $sDriver : $this->_blDefaultMinkDriver;
+        $driver = $driver ? $driver : $this->_blDefaultMinkDriver;
 
-        $driverInterface = $this->_getMinkDriver($sDriver);
+        $driverInterface = $this->_getMinkDriver($driver);
         $this->_oMinkSession = new \Behat\Mink\Session($driverInterface);
         $this->_oMinkSession->start();
     }
 
     /**
-     * @param $sDriver
+     * @param $driver
      */
-    public function switchMinkSession($sDriver)
+    public function switchMinkSession($driver)
     {
         $this->getMinkSession()->stop();
-        $this->startMinkSession($sDriver);
+        $this->startMinkSession($driver);
     }
 
     /**
