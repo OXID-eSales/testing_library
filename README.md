@@ -50,7 +50,7 @@ To install testing library within shop directory, update/create `composer.json` 
         }
     },
     "require-dev": {
-        "oxid-esales/testing-library": "~v1.0.0",
+        "oxid-esales/testing-library": "^1.0.0-alpha1",
         "incenteev/composer-parameter-handler": "~2.0"
     },
     "minimum-stability": "dev",
@@ -76,6 +76,7 @@ To install testing library within shop directory, update/create `composer.json` 
         }
     }
 }
+
 ```
 Installing this way, binaries will be accessible from `shop_source_path/vendor/bin`.
 Latest development shop version already includes composer.json file in its source, so no changes need to be made.
