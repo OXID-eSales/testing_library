@@ -35,7 +35,7 @@ foreach ($argv as $argument) {
 $arguments = implode(' ', $arguments);
 
 $php = getenv('PHPBIN') ? getenv('PHPBIN') : 'php';
-$pDepend = $testConfig->getVendorPath() ."/bin/pdepend";
+$pDepend = $testConfig->getVendorDirectory() ."/bin/pdepend";
 if (!file_exists($pDepend)) {
     $pDepend = "pdepend";
 }

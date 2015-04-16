@@ -34,7 +34,7 @@ foreach ($argv as $argument) {
 
 $php = getenv('PHPBIN') ? getenv('PHPBIN') : 'php';
 
-$phpUnit = $testConfig->getVendorPath() ."/bin/phpunit";
+$phpUnit = $testConfig->getVendorDirectory() ."/bin/phpunit";
 if (!file_exists($phpUnit)) {
     $phpUnit = "phpunit";
 }

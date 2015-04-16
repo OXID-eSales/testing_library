@@ -26,10 +26,10 @@ if (getenv('TRAVIS_ERROR_LEVEL')) {
 }
 ini_set('display_errors', true);
 
-define('TEST_LIBRARY_BASE_PATH', __DIR__ .'/');
-chdir(TEST_LIBRARY_BASE_PATH);
+define('TEST_LIBRARY_BASE_DIRECTORY', __DIR__ .'/');
+chdir(TEST_LIBRARY_BASE_DIRECTORY);
 
-define('TEST_LIBRARY_PATH', TEST_LIBRARY_BASE_PATH .'library/');
+define('TEST_LIBRARY_PATH', TEST_LIBRARY_BASE_DIRECTORY .'library/');
 define('TEST_LIBRARY_HELPERS_PATH', TEST_LIBRARY_PATH .'helpers/');
 
 $sTestFilePath = strtolower(end($_SERVER['argv']));

@@ -21,8 +21,8 @@
 
 use Symfony\Component\Yaml\Yaml;
 
-if (!defined('TEST_LIBRARY_BASE_PATH')) {
-    define('TEST_LIBRARY_BASE_PATH', __DIR__ . '/../');
+if (!defined('TEST_LIBRARY_BASE_DIRECTORY')) {
+    define('TEST_LIBRARY_BASE_DIRECTORY', __DIR__ . '/../');
 }
 
 class oxTestConfig
@@ -56,7 +56,7 @@ class oxTestConfig
      */
     public function __construct()
     {
-        require_once $this->getVendorPath() .'/autoload.php';
+        require_once $this->getVendorDirectory() .'autoload.php';
 
         $yamlFile = $this->getConfigFileName();
         if (!file_exists($yamlFile)) {
@@ -71,14 +71,18 @@ class oxTestConfig
      *
      * @return string
      */
-    public function getVendorPath()
+    public function getVendorDirectory()
     {
         if (is_null($this->vendorPath)) {
-            $vendorPath = TEST_LIBRARY_BASE_PATH . "../../../vendor/";
+            $vendorPath = TEST_LIBRARY_BASE_DIRECTORY . "../../../vendor/";
             if (!file_exists($vendorPath)) {
-                $vendorPath = TEST_LIBRARY_BASE_PATH .'/vendor/';
+                $vendorPath = TEST_LIBRARY_BASE_DIRECTORY .'/vendor/';
             }
-            $this->vendorPath = realpath($vendorPath);
+            $vendorPath = realpath($vendorPath);
+            if ($vendorPath) {
+                $vendorPath .= DIRECTORY_SEPARATOR;
+            }
+            $this->vendorPath = $vendorPath;
         }
 
         return $this->vendorPath;
@@ -481,7 +485,7 @@ class oxTestConfig
      */
     private function findShopPath($relativeShopPath)
     {
-        $vendorBaseDir = $this->getVendorPath();
+        $vendorBaseDir = $this->getVendorDirectory();
         $availablePaths = array(
             $vendorBaseDir .'../', // When vendor directory is in shop base directory
             $vendorBaseDir .'../../../', // When vendor directory is in /shop/dir/modules/testmodule/ directory
@@ -496,7 +500,7 @@ class oxTestConfig
             }
         }
 
-        return $shopPath ? $shopPath : $vendorBaseDir .'/../'. $relativeShopPath;
+        return $shopPath ? $shopPath : $vendorBaseDir .'../'. $relativeShopPath;
     }
 
     /**
@@ -506,6 +510,6 @@ class oxTestConfig
      */
     private function getConfigFileName()
     {
-        return $this->getVendorPath() ."/../test_config.yml";
+        return $this->getVendorDirectory() ."../test_config.yml";
     }
 }
