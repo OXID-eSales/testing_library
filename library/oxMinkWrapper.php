@@ -155,12 +155,15 @@ class oxMinkWrapper extends oxBaseTestCase
     public function select($sSelector, $sOptionSelector)
     {
         $oSelectorsHandler = $this->getMinkSession()->getSelectorsHandler();
+        $oSelect = null;
 
         if (strpos($sSelector, '/') === false) {
             $page = $this->getMinkSession()->getPage();
             $sParsedSelector = $oSelectorsHandler->xpathLiteral($sSelector);
             $oSelect = $page->find('named', array('select', $sParsedSelector));
-        } else {
+        }
+
+        if (is_null($oSelect)) {
             $oSelect = $this->getElement($sSelector);
         }
 
