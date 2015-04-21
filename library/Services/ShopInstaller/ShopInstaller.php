@@ -22,6 +22,9 @@
 include_once LIBRARY_PATH .'/DbHandler.php';
 require_once LIBRARY_PATH .'/Cache.php';
 
+/** Class is used to stop autoloading in oxsetup as it breaks shop installation. */
+class Conf{}
+
 /**
  * Class for shop installation.
  */
