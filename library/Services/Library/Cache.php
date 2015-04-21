@@ -29,8 +29,7 @@ class Cache
      */
     public function clearCacheBackend()
     {
-        if (class_exists('oxReverseProxyBackEnd')) {
-            // Flush cache backend
+        if (class_exists('oxCacheBackend')) {
             $oCache = oxNew('oxCacheBackend');
             $oCache->flush();
         }
@@ -41,9 +40,11 @@ class Cache
      */
     public function clearReverseProxyCache()
     {
-        $oReverseProxy = oxNew('oxReverseProxyBackEnd');
-        $oReverseProxy->setFlush();
-        $oReverseProxy->execute();
+        if (class_exists('oxReverseProxyBackEnd')) {
+            $oReverseProxy = oxNew('oxReverseProxyBackEnd');
+            $oReverseProxy->setFlush();
+            $oReverseProxy->execute();
+        }
     }
 
     /**
