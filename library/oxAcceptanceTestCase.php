@@ -1833,7 +1833,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     protected function onNotSuccessfulTest(Exception $e)
     {
-        if ($this->_iRetryTimesLeft > 0 && $this->_isInternalServerError()) {
+        if ($this->_iRetryTimesLeft > 0 && ($this->_isInternalServerError() or $this->isServiceUnavailable())) {
             $this->_iRetryTimesLeft--;
             $this->tearDown();
             $this->getMinkSession()->stop();
@@ -1913,6 +1913,25 @@ class oxAcceptanceTestCase extends oxMinkWrapper
 
         return false;
     }
+
+
+    /**
+     * Checks if currently opened window contains Service unavailable
+     *
+     * @return bool
+     */
+    protected function isServiceUnavailable()
+    {
+        $documentSource = $this->getHtmlSource();
+
+        $result = false;
+        if (strpos($documentSource, '503 Service Unavailable') !== false) {
+            $result = true;
+        }
+
+        return $result;
+    }
+
 
     /**
      * Forms trace message from given array.
