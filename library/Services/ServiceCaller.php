@@ -35,11 +35,6 @@ class ServiceCaller
     public function __construct($config)
     {
         $this->config = $config;
-
-        $bootstrapPath = $this->getServiceConfig()->getShopDirectory() ."/bootstrap.php";
-        if (file_exists($bootstrapPath)) {
-            require_once $bootstrapPath;
-        }
     }
 
     /**

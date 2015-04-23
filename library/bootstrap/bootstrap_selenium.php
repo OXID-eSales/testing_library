@@ -51,6 +51,24 @@ class SeleniumBootstrap extends Bootstrap
     }
 
     /**
+     * Sets global constants, as these are still used a lot in tests.
+     * This is used to maintain backwards compatibility, but should not be used anymore in new code.
+     */
+    protected function setGlobalConstants()
+    {
+        $testConfig = $this->getTestConfig();
+
+        /** @deprecated use TestConfig::getShopUrl() */
+        define('shopURL', $testConfig->getShopUrl());
+
+        /** @deprecated use TestConfig::getShopId() */
+        define('oxSHOPID', $testConfig->getShopId());
+
+        /** @deprecated use TestConfig::isSubShop() */
+        define('isSUBSHOP', $testConfig->isSubShop());
+    }
+
+    /**
      * Some test files are needed to successfully run selenium tests.
      * Currently only files needed for clearing cookies are copied.
      */
@@ -65,9 +83,9 @@ class SeleniumBootstrap extends Bootstrap
     /**
      * Sets correct oxConfig object for selenium tests.
      */
-    protected function prepareShopModObjects()
+    protected function prepareShop()
     {
-        parent::prepareShopModObjects();
+        parent::prepareShop();
 
         oxRegistry::set("oxConfig", oxNew('oxConfig'));
     }

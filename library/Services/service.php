@@ -22,14 +22,17 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
+$bootstrapPath = __DIR__ ."../bootstrap.php";
+require_once $bootstrapPath;
+
 require_once 'Library/ServiceConfig.php';
 require_once 'Library/Request.php';
 require_once 'ServiceCaller.php';
 
 $request = new Request();
 $config = new ServiceConfig();
-$oServiceCaller = new ServiceCaller($config);
+$serviceCaller = new ServiceCaller($config);
 
-$mResponse = $oServiceCaller->callService($request->getParameter('service'), $request);
+$response = $serviceCaller->callService($request->getParameter('service'), $request);
 
-echo serialize($mResponse);
+echo serialize($response);

@@ -99,6 +99,8 @@ class oxUnitTestCase extends oxBaseTestCase
 
         $configFie = oxRegistry::get('oxConfigFile');
         $configFie->setVar('sCompileDir', $testConfig->getTempDirectory());
+        $config = oxRegistry::get('oxConfig');
+        $config->setConfigParam('sCompileDir', $testConfig->getTempDirectory());
 
         $this->backupDatabase();
 

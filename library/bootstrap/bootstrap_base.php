@@ -49,19 +49,13 @@ class Bootstrap
     {
         $testConfig = $this->getTestConfig();
 
-        $this->setGlobalConstants();
+        $this->prepareShop();
 
-        if ($testConfig->getTempDirectory()) {
-            $fileCopier = new oxFileCopier();
-            $fileCopier->createEmptyDirectory($testConfig->getTempDirectory());
-            $fileCopier->createEmptyDirectory($testConfig->getTempDirectory().'/smarty/');
-        }
+        $this->setGlobalConstants();
 
         if ($testConfig->shouldRestoreShopAfterTestsSuite()) {
             $this->registerResetDbAfterSuite();
         }
-
-        $this->prepareShopModObjects();
 
         if ($testConfig->shouldInstallShop()) {
             $this->installShop();
@@ -79,6 +73,48 @@ class Bootstrap
     }
 
     /**
+     * Prepares shop config object.
+     */
+    protected function prepareShop()
+    {
+        $testConfig = $this->getTestConfig();
+
+        $shopPath = $testConfig->getShopPath();
+        require_once $shopPath .'bootstrap.php';
+
+        oxRegistry::set("oxConfig", new oxConfig());
+
+        if ($testConfig->getTempDirectory()) {
+            $fileCopier = new oxFileCopier();
+            $fileCopier->createEmptyDirectory($testConfig->getTempDirectory());
+            $fileCopier->createEmptyDirectory($testConfig->getTempDirectory().'/smarty/');
+        }
+    }
+
+    /**
+     * Sets global constants, as these are still used a lot in tests.
+     * This is used to maintain backwards compatibility, but should not be used anymore in new code.
+     */
+    protected function setGlobalConstants()
+    {
+        $testConfig = $this->getTestConfig();
+
+        if (!defined('OXID_VERSION_SUFIX')) {
+            define('OXID_VERSION_SUFIX', '');
+        }
+
+        if (!defined('oxPATH')) {
+            /** @deprecated use TestConfig::getShopPath() */
+            define('oxPATH', $testConfig->getShopPath());
+        }
+
+        if (!defined('CURRENT_TEST_SUITE')) {
+            /** @deprecated use TestConfig::getCurrentTestSuite() */
+            define('CURRENT_TEST_SUITE', $testConfig->getCurrentTestSuite());
+        }
+    }
+
+    /**
      * Installs the shop.
      *
      * @throws Exception
@@ -86,7 +122,7 @@ class Bootstrap
     protected function installShop()
     {
         $config = $this->getTestConfig();
-        
+
         $serviceCaller = new oxServiceCaller($this->getTestConfig());
         $serviceCaller->setParameter('serial', $config->getShopSerial());
         $serviceCaller->setParameter('addDemoData', $this->addDemoData);
@@ -106,39 +142,6 @@ class Bootstrap
         } catch (Exception $e) {
             exit("Failed to install shop with message:" . $e->getMessage());
         }
-    }
-
-    /**
-     * Sets global constants, as these are still used a lot in tests.
-     * This is used to maintain backwards compatibility, but should not be used anymore in new code.
-     */
-    protected function setGlobalConstants()
-    {
-        $testConfig = $this->getTestConfig();
-
-        if (file_exists($testConfig->getShopPath() . "/_version_define.php")) {
-            include_once $testConfig->getShopPath() . "/_version_define.php";
-        } else {
-            define('OXID_VERSION_SUFIX', '');
-        }
-
-        /** @deprecated use TestConfig::getShopPath() */
-        define('oxPATH', $testConfig->getShopPath());
-
-        /** @deprecated use TestConfig::getShopPath() */
-        define('OX_BASE_PATH', $testConfig->getShopPath());
-
-        /** @deprecated use TestConfig::getShopUrl() */
-        define('shopURL', $testConfig->getShopUrl());
-
-        /** @deprecated use TestConfig::getShopId() */
-        define('oxSHOPID', $testConfig->getShopId());
-
-        /** @deprecated use TestConfig::isSubShop() */
-        define('isSUBSHOP', $testConfig->isSubShop());
-
-        /** @deprecated use TestConfig::getCurrentTestSuite() */
-        define('CURRENT_TEST_SUITE', $testConfig->getCurrentTestSuite());
     }
 
     /**
@@ -164,24 +167,5 @@ class Bootstrap
                 $serviceCaller->callService('ShopPreparation', 1);
             }
         });
-    }
-
-    /**
-     * Prepares shop config object.
-     */
-    protected function prepareShopModObjects()
-    {
-        $testConfig = $this->getTestConfig();
-
-        $shopPath = $testConfig->getShopPath();
-        require_once $shopPath .'core/oxfunctions.php';
-
-        $oConfigFile = new oxConfigFile($shopPath . "config.inc.php");
-        $oConfigFile->setVar('sCompileDir', $testConfig->getTempDirectory());
-        oxRegistry::set("oxConfigFile", $oConfigFile);
-
-        $config = new oxConfig();
-        $config->setConfigParam('sCompileDir', $testConfig->getTempDirectory());
-        oxRegistry::set("oxConfig", $config);
     }
 }
