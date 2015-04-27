@@ -121,6 +121,16 @@ Some usage examples:
 One thing to note when adding parameters to these tools - always provide file/folder at the end as it will no longer be picked automatically. 
 Use AllTestsUnit or AllTestsSelenium respectively to run all tests.
 
+### Run with PHPStorm
+
+You need to setup path to bootstrap in order to run tests with PHPStorm.  
+
+1. Open PHPStorm.  
+2. Open Run/Debug configurations window.  
+3. Press on configuration icon (wrench) right after the "Use alternative configuration file" input.  
+4. New PHPUnit window pops up. Check "Default bootstrap file" checkbox and choose path to bootstrap.  
+Path to bootstrap: {source}/vendor/oxid-esales/testing-library/bootstrap.php  
+
 ## Configuration
 
 Configuration file is named `test_config.yml` and is placed in the root directory of this library or shop (when installing with shop composer.json).
