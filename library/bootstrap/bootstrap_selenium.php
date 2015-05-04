@@ -36,6 +36,8 @@ class SeleniumBootstrap extends Bootstrap
         $this->prepareScreenShots();
         $this->copyTestFilesToShop();
 
+        oxRegistry::set("oxConfig", oxNew('oxConfig'));
+
         require_once TEST_LIBRARY_PATH .'/oxAcceptanceTestCase.php';
     }
 
@@ -56,6 +58,7 @@ class SeleniumBootstrap extends Bootstrap
      */
     protected function setGlobalConstants()
     {
+        parent::setGlobalConstants();
         $testConfig = $this->getTestConfig();
 
         /** @deprecated use TestConfig::getShopUrl() */
@@ -78,15 +81,5 @@ class SeleniumBootstrap extends Bootstrap
         $target = $config->getRemoteDirectory() ? $config->getRemoteDirectory().'/_cc.php' : $config->getShopPath().'/_cc.php';
         $fileCopier = new oxFileCopier();
         $fileCopier->copyFiles(TEST_LIBRARY_PATH .'_cc.php', $target, true);
-    }
-
-    /**
-     * Sets correct oxConfig object for selenium tests.
-     */
-    protected function prepareShop()
-    {
-        parent::prepareShop();
-
-        oxRegistry::set("oxConfig", oxNew('oxConfig'));
     }
 }
