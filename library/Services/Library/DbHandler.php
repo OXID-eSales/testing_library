@@ -95,6 +95,8 @@ class DbHandler
         if (file_exists($sqlFile)) {
             $charsetMode = $charsetMode ? $charsetMode : $this->getCharsetMode();
             $this->executeCommand($this->getImportCommand($sqlFile, $charsetMode));
+        } else {
+            throw new Exception("File '$sqlFile' was not found.");
         }
     }
 
