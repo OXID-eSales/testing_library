@@ -51,7 +51,7 @@ class oxTestConfig
     /** @var array All defined test suites. */
     private $testSuites;
 
-    /** @var array All defined test suites. */
+    /** @var string Temporary directory. */
     private $tempDirectory;
 
     /**
