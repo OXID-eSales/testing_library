@@ -51,6 +51,9 @@ class oxTestConfig
     /** @var array All defined test suites. */
     private $testSuites;
 
+    /** @var array All defined test suites. */
+    private $tempDirectory;
+
     /**
      * Initiates configuration from configuration yaml file.
      */
@@ -321,7 +324,11 @@ class oxTestConfig
      */
     public function getTempDirectory()
     {
-        return $this->getValue('tmp_path');
+        if (is_null($this->tempDirectory)) {
+            $this->tempDirectory = realpath($this->getValue('tmp_path')).'/';
+        }
+
+        return $this->tempDirectory;
     }
 
     /**
