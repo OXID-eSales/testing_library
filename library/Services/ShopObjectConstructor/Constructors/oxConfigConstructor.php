@@ -63,7 +63,7 @@ class oxConfigConstructor extends ObjectConstructor
      */
     protected function _createObject($sClassName)
     {
-        return oxRegistry::getConfig();
+        return oxNew('oxConfig');
     }
 
     /**
