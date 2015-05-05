@@ -20,7 +20,7 @@
  */
 
 /**
- * This script clears shop cache
+ * Assigns items to subshop
  */
 class SubShopHandler implements ShopServiceInterface
 {
@@ -60,9 +60,11 @@ class SubShopHandler implements ShopServiceInterface
      */
     public function assignElementToSubShop($sElementTable, $sShopId, $sElementId)
     {
+        /** @var oxBase $oBase */
         $oBase = oxNew('oxBase');
         $oBase->init($sElementTable);
         if ( $oBase->load($sElementId) ) {
+            /** @var oxElement2ShopRelations $oElement2ShopRelations */
             $oElement2ShopRelations = oxNew('oxElement2ShopRelations', $sElementTable);
             $oElement2ShopRelations->setShopIds($sShopId);
             $oElement2ShopRelations->addToShop($oBase->getId());
@@ -80,6 +82,7 @@ class SubShopHandler implements ShopServiceInterface
      */
     public function assignAllElementsToSubShop($sElementTable, $sShopId, $sParentShopId = 1)
     {
+        /** @var oxElement2ShopRelations $oElement2ShopRelations */
         $oElement2ShopRelations = oxNew('oxElement2ShopRelations', $sElementTable);
         $oElement2ShopRelations->setShopIds($sShopId);
         $oElement2ShopRelations->inheritFromShop($sParentShopId);

@@ -20,7 +20,7 @@
  */
 
 /**
- * This script clears shop cache
+ * Regenerates shop views
  */
 class ViewsGenerator implements ShopServiceInterface
 {
@@ -42,5 +42,3 @@ class ViewsGenerator implements ShopServiceInterface
         $oGenerator->updateViews();
     }
 }
-
-

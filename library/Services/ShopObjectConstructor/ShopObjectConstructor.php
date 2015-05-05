@@ -27,10 +27,16 @@ require_once 'Constructors/ConstructorFactory.php';
  */
 class ShopObjectConstructor implements ShopServiceInterface
 {
+    /** @var ServiceConfig */
+    private $serviceConfig;
+
     /**
      * @param ServiceConfig $config
      */
-    public function __construct($config) {}
+    public function __construct($config)
+    {
+        $this->serviceConfig = $config;
+    }
 
     /**
      * Loads object, sets class parameters and calls function with parameters.
@@ -44,6 +50,13 @@ class ShopObjectConstructor implements ShopServiceInterface
      */
     public function init($request)
     {
+        if (!is_null($request->getParameter('shp'))) {
+            $this->setActiveShop($request->getParameter('shp'));
+        }
+        if (!is_null($request->getParameter('lang'))) {
+            $this->setActiveLanguage($request->getParameter('lang'));
+        }
+
         $oConstructorFactory = new ConstructorFactory();
         $oConstructor = $oConstructorFactory->getConstructor($request->getParameter("cl"));
 
@@ -59,5 +72,42 @@ class ShopObjectConstructor implements ShopServiceInterface
         }
 
         return $mResult;
+    }
+
+    /**
+     * @return ServiceConfig
+     */
+    protected function getServiceConfig()
+    {
+        return $this->serviceConfig;
+    }
+
+    /**
+     * Switches active shop
+     *
+     * @param string $shopId
+     */
+    protected function setActiveShop($shopId)
+    {
+        if ($shopId && $this->getServiceConfig()->getShopEdition() == 'EE') {
+            oxRegistry::getConfig()->setShopId($shopId);
+        }
+    }
+
+    /**
+     * Switches active language
+     *
+     * @param string $language
+     *
+     * @throws Exception
+     */
+    protected function setActiveLanguage($language)
+    {
+        $languages = oxRegistry::getLang()->getLanguageIds();
+        $languageId = array_search($language, $languages);
+        if ($languageId === false) {
+            throw new Exception("Language $language was not found or is not active in shop");
+        }
+        oxRegistry::getLang()->setBaseLanguage($languageId);
     }
 }

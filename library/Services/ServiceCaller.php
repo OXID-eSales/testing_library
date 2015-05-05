@@ -49,45 +49,9 @@ class ServiceCaller
      */
     public function callService($serviceClass, $request)
     {
-        if (!is_null($request->getParameter('shp'))) {
-            $this->setActiveShop($request->getParameter('shp'));
-        }
-        if (!is_null($request->getParameter('lang'))) {
-            $this->setActiveLanguage($request->getParameter('lang'));
-        }
-
         $service = $this->createService($serviceClass);
 
         return $service->init($request);
-    }
-
-    /**
-     * Switches active shop
-     *
-     * @param string $shopId
-     */
-    protected function setActiveShop($shopId)
-    {
-        if ($shopId && $this->getServiceConfig()->getShopEdition() == 'EE') {
-            oxRegistry::getConfig()->setShopId($shopId);
-        }
-    }
-
-    /**
-     * Switches active language
-     *
-     * @param string $language
-     *
-     * @throws Exception
-     */
-    protected function setActiveLanguage($language)
-    {
-        $languages = oxRegistry::getLang()->getLanguageIds();
-        $languageId = array_search($language, $languages);
-        if ($languageId === false) {
-            throw new Exception("Language $language was not found or is not active in shop");
-        }
-        oxRegistry::getLang()->setBaseLanguage($languageId);
     }
 
     /**
