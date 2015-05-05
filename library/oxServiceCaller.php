@@ -140,7 +140,7 @@ class oxServiceCaller
     {
         require_once TEST_LIBRARY_PATH . '/Services/Library/ServiceConfig.php';
         require_once TEST_LIBRARY_PATH . '/Services/Library/Request.php';
-        require_once TEST_LIBRARY_PATH .'/Services/ServiceCaller.php';
+        require_once TEST_LIBRARY_PATH .'/Services/ServiceFactory.php';
 
         define('TMP_PATH', $this->getTestConfig()->getTempDirectory());
 
@@ -149,10 +149,11 @@ class oxServiceCaller
         $config->setShopEdition($this->getTestConfig()->getShopEdition());
         $config->setTempDirectory($this->getTestConfig()->getTempDirectory());
 
-        $serviceCaller = new ServiceCaller($config);
+        $serviceCaller = new ServiceFactory($config);
         $request = new Request($this->getParameters());
+        $service = $serviceCaller->createService($serviceName);
 
-        return $serviceCaller->callService($serviceName, $request);
+        return $service->init($request);
     }
     
     /**

@@ -23,9 +23,9 @@ define('LIBRARY_PATH', __DIR__ .'/Library/');
 require_once LIBRARY_PATH .'/ShopServiceInterface.php';
 
 /**
- * Class ServiceCaller
+ * Class ServiceFactory
  */
-class ServiceCaller
+class ServiceFactory
 {
     /**
      * Loads the shop.
@@ -37,22 +37,6 @@ class ServiceCaller
         $this->config = $config;
     }
 
-    /**
-     * Calls service
-     *
-     * @param string $serviceClass
-     * @param Request $request
-     *
-     * @throws Exception
-     *
-     * @return mixed
-     */
-    public function callService($serviceClass, $request)
-    {
-        $service = $this->createService($serviceClass);
-
-        return $service->init($request);
-    }
 
     /**
      * Creates Service object. All services must implement ShopService interface
@@ -63,7 +47,7 @@ class ServiceCaller
      *
      * @return ShopServiceInterface
      */
-    protected function createService($serviceClass)
+    public function createService($serviceClass)
     {
         $this->includeServiceFile($serviceClass);
         $service = new $serviceClass($this->getServiceConfig());

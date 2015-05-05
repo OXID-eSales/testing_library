@@ -27,12 +27,13 @@ require_once $bootstrapPath;
 
 require_once 'Library/ServiceConfig.php';
 require_once 'Library/Request.php';
-require_once 'ServiceCaller.php';
+require_once 'ServiceFactory.php';
 
 $request = new Request();
 $config = new ServiceConfig();
-$serviceCaller = new ServiceCaller($config);
+$serviceFactory = new ServiceFactory($config);
 
-$response = $serviceCaller->callService($request->getParameter('service'), $request);
+$service = $serviceFactory->createService($request->getParameter('service'));
+$response = $service->init($request);
 
 echo serialize($response);

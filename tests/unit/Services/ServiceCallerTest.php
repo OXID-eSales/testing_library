@@ -23,9 +23,9 @@ use org\bovigo\vfs\vfsStream;
 
 require_once ROOT_DIRECTORY .'library/Services/Library/ServiceConfig.php';
 require_once ROOT_DIRECTORY .'library/Services/Library/Request.php';
-require_once ROOT_DIRECTORY .'library/Services/ServiceCaller.php';
+require_once ROOT_DIRECTORY .'library/Services/ServiceFactory.php';
 
-class ServiceCallerTest extends PHPUnit_Framework_TestCase
+class ServiceFactoryTest extends PHPUnit_Framework_TestCase
 {
     public function testCreationOfService()
     {
@@ -48,10 +48,10 @@ class ServiceCallerTest extends PHPUnit_Framework_TestCase
         $config->expects($this->any())->method('getServicesDirectory')->will($this->returnValue(vfsStream::url('root/Services')));
         $config->expects($this->any())->method('getShopDirectory')->will($this->returnValue(vfsStream::url('root')));
 
-        $request = new Request();
+        $serviceFactory = new ServiceFactory($config);
+        $service = $serviceFactory->createService('TestService');
 
-        $serviceCaller = new ServiceCaller($config);
-        $serviceCaller->callService('TestService', $request);
+        $this->assertInstanceOf('TestService', $service);
     }
 
     public function testThrowingExceptionWhenServiceNotFound()
@@ -66,10 +66,8 @@ class ServiceCallerTest extends PHPUnit_Framework_TestCase
         $config->expects($this->any())->method('getServicesDirectory')->will($this->returnValue(vfsStream::url('root')));
         $config->expects($this->any())->method('getShopDirectory')->will($this->returnValue(vfsStream::url('root')));
 
-        $request = new Request();
-
-        $serviceCaller = new ServiceCaller($config);
-        $serviceCaller->callService('TestService', $request);
+        $serviceFactory = new ServiceFactory($config);
+        $serviceFactory->createService('TestService');
     }
 
 }
