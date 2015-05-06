@@ -325,7 +325,7 @@ class oxTestConfig
     public function getTempDirectory()
     {
         if (is_null($this->tempDirectory)) {
-            $this->tempDirectory = realpath($this->getValue('tmp_path')).'/';
+            $this->tempDirectory = rtrim($this->getValue('tmp_path'), '/').'/';
         }
 
         return $this->tempDirectory;
