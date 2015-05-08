@@ -160,17 +160,6 @@ class oxUnitTestCase extends oxBaseTestCase
     }
 
     /**
-     * Sets parameter to POST.
-     *
-     * @param string $paramName
-     * @param string $paramValue
-     */
-    public function setRequestParameter($paramName, $paramValue)
-    {
-        $_POST[$paramName] = $paramValue;
-    }
-
-    /**
      * Starts test.
      *
      * @param PHPUnit_Framework_TestResult $result
@@ -252,28 +241,26 @@ class oxUnitTestCase extends oxBaseTestCase
     }
 
     /**
-     * Get parameter from config request object.
+     * Sets parameter to POST.
+     *
+     * @param string $paramName
+     * @param string $paramValue
+     */
+    public function setRequestParameter($paramName, $paramValue)
+    {
+        $_POST[$paramName] = $paramValue;
+    }
+
+    /**
+     * Get parameter from config object.
      *
      * @param string $parameterName parameter name.
      *
      * @return mixed
      */
-    public function getRequestParam($parameterName)
+    public function getRequestParameter($parameterName)
     {
         return $this->getConfig()->getRequestParameter($parameterName);
-    }
-
-    /**
-     * Set parameter to config request object.
-     *
-     * @deprecated
-     *
-     * @param string $parameterName Parameter name.
-     * @param mixed  $value         Any parameter value, default null.
-     */
-    public function setRequestParam($parameterName, $value = null)
-    {
-        $this->setRequestParameter($parameterName, $value);
     }
 
     /**
