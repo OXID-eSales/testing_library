@@ -562,10 +562,6 @@ class modConfig extends modOXID
         $this->_aConfigparams = array();
 
         parent::cleanup();
-
-        if (oxRegistry::getConfig() === $this) {
-            throw new Exception("clean config failed");
-        }
     }
 
     public function getModConfigParam($paramName)
@@ -578,20 +574,7 @@ class modConfig extends modOXID
 
     public function getConfigParam($paramName)
     {
-        $oInst = self::getInstance();
-        if (($sValue = $this->getModConfigParam($paramName)) !== null) {
-            return $sValue;
-        } else {
-            if (!$oInst->_oRealInstance) {
-                $_i = oxRegistry::getConfig();
-                if ($_i instanceof oxConfig) {
-                    return $_i->getConfigParam($paramName);
-                }
-                throw new Exception("real instance is empty!");
-            }
-
-            return $oInst->_oRealInstance->getConfigParam($paramName);
-        }
+        return oxRegistry::getConfig()->getConfigParam($paramName);
     }
 
     public function isDemoShop()
@@ -653,12 +636,7 @@ class modConfig extends modOXID
      */
     public static function getRequestParameter($paramName, $blRaw = false)
     {
-        // should throw exception if original functionality is needed.
-        if (array_key_exists($paramName, self::getInstance()->_params)) {
-            return self::getInstance()->_params[$paramName];
-        } else {
-            return modSession::getInstance()->getVar($paramName);
-        }
+        return oxRegistry::getConfig()->getRequestParameter($paramName, $blRaw);
     }
 
     /**
@@ -669,8 +647,7 @@ class modConfig extends modOXID
      */
     public static function setRequestParameter($paramName, $paramValue)
     {
-        // should throw exception if original functionality is needed.
-        self::getInstance()->_params[$paramName] = $paramValue;
+        $_POST[$paramName] = $paramValue;
     }
 
     /**
