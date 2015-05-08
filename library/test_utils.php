@@ -49,9 +49,9 @@ function oxClassCacheKey($reset = false, $sProvide = null)
         if ($sProvide) {
             $key = $sProvide;
         } else {
-            $myConfig = modConfig::getInstance();
-            if (is_array($myConfig->getConfigParam('aModules'))) {
-                $key = md5('cc|' . implode('|', $myConfig->getConfigParam('aModules')));
+            $config = oxRegistry::getConfig();
+            if (is_array($config->getConfigParam('aModules'))) {
+                $key = md5('cc|' . implode('|', $config->getConfigParam('aModules')));
             } else {
                 $key = md5('cc|');
             }
@@ -510,153 +510,6 @@ abstract class modOXID
             return;
         }
         unset($this->_oRealInstance->$nm);
-    }
-}
-
-/**
- * config class for test
- *
- * @deprecated
- */
-class modConfig extends modOXID
-{
-
-    // needed 4 modOXID
-    public static $unitMOD = null;
-    public static $unitCustMOD = null;
-    protected static $_inst = null;
-    protected $_aConfigparams = array();
-
-    function modAttach($oObj = null)
-    {
-        parent::modAttach($oObj);
-        self::$unitMOD = null;
-        $this->_oRealInstance = oxRegistry::getConfig();
-        if (!$oObj) {
-            $oObj = $this;
-        }
-        self::$unitMOD = $oObj;
-    }
-
-    /**
-     * @return modConfig
-     */
-    static function getInstance()
-    {
-        if (!self::$_inst) {
-            self::$_inst = new modConfig();
-        }
-        if (!self::$unitMOD) {
-            self::$_inst->modAttach();
-        }
-
-        return self::$_inst;
-    }
-
-    public function cleanup()
-    {
-        self::$unitMOD = null;
-        self::$unitCustMOD = null;
-
-        // cleaning config parameters
-        $this->_aConfigparams = array();
-
-        parent::cleanup();
-    }
-
-    public function getModConfigParam($paramName)
-    {
-        $oInst = self::getInstance();
-        if (array_key_exists($paramName, $oInst->_aConfigparams)) {
-            return $oInst->_aConfigparams[$paramName];
-        }
-    }
-
-    public function getConfigParam($paramName)
-    {
-        return oxRegistry::getConfig()->getConfigParam($paramName);
-    }
-
-    public function isDemoShop()
-    {
-        $oInst = self::getInstance();
-        if (isset($oInst->_aConfigparams['blDemoShop'])) {
-            return $oInst->_aConfigparams['blDemoShop'];
-        } else {
-            return $oInst->_oRealInstance->isDemoShop();
-        }
-    }
-
-    public function isUtf()
-    {
-        $oInst = self::getInstance();
-        if (isset($oInst->_aConfigparams['iUtfMode'])) {
-            return $oInst->_aConfigparams['iUtfMode'];
-        } else {
-            return $oInst->_oRealInstance->isUtf();
-        }
-    }
-
-    public function setConfigParam($paramName, $paramValue)
-    {
-        self::getInstance()->_aConfigparams[$paramName] = $paramValue;
-    }
-
-    /**
-     * @param      $paramName
-     * @param bool $blRaw
-     *
-     * @deprecated since v5.2.0 (2014-07-02); Use static getRequestParameter()
-     *
-     * @return string
-     */
-    static function getParameter($paramName, $blRaw = false)
-    {
-        return self::getRequestParameter($paramName, $blRaw);
-    }
-
-    /**
-     * @param $paramName
-     * @param $paramValue
-     *
-     * @deprecated since v5.2.0 (2014-07-02); Use static setRequestParameter()
-     */
-    static function setParameter($paramName, $paramValue)
-    {
-        self::setRequestParameter($paramName, $paramValue);
-    }
-
-    /**
-     * Returns value of parameter stored in POST,GET for tests.
-     *
-     * @param      $paramName
-     * @param bool $blRaw
-     *
-     * @return string
-     */
-    public static function getRequestParameter($paramName, $blRaw = false)
-    {
-        return oxRegistry::getConfig()->getRequestParameter($paramName, $blRaw);
-    }
-
-    /**
-     * Sets request parameter for test.
-     *
-     * @param $paramName
-     * @param $paramValue
-     */
-    public static function setRequestParameter($paramName, $paramValue)
-    {
-        $_POST[$paramName] = $paramValue;
-    }
-
-    /**
-     * needed for Erp test where it checks it with method_exists
-     *
-     */
-    public function getSerial()
-    {
-        return $this->__call('getSerial', array());
     }
 }
 

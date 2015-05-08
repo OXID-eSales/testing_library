@@ -195,7 +195,6 @@ class oxUnitTestCase extends oxBaseTestCase
             modOxid::globalCleanup();
 
             $this->getSession()->cleanup();
-            modConfig::getInstance()->cleanup();
 
             $this->getShopStateBackup()->resetRequestVariables();
             $this->getShopStateBackup()->resetRegistry();
