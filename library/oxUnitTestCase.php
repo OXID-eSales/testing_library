@@ -195,7 +195,7 @@ class oxUnitTestCase extends oxBaseTestCase
             modOxid::globalCleanup();
 
             $this->getSession()->cleanup();
-            $this->getConfig()->cleanup();
+            modConfig::getInstance()->cleanup();
 
             $this->getShopStateBackup()->resetRequestVariables();
             $this->getShopStateBackup()->resetRegistry();
@@ -260,7 +260,7 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public function setRequestParam($parameterName, $value = null)
     {
-        $this->getConfig()->setRequestParameter($parameterName, $value);
+        modConfig::getInstance()->setRequestParameter($parameterName, $value);
     }
 
     /**
@@ -355,7 +355,7 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public static function getConfig()
     {
-        return modConfig::getInstance();
+        return oxRegistry::getConfig();
     }
 
     /**

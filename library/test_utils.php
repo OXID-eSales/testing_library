@@ -311,7 +311,7 @@ class oxTestModules
      */
     public static function cleanAllModules()
     {
-        modConfig::getInstance()->setConfigParam('aModules', array());
+        oxRegistry::getConfig()->setConfigParam('aModules', array());
         oxClassCacheKey(true, "empty");
     }
 }
@@ -364,13 +364,13 @@ class oxTestsStaticCleaner
  *   e.g.
  *
  *   Executor
- *     $a = modConfig::getInstance();
+ *     $a = $this->getConfig();
  *     $a->addClassFunction('getDB', array($this, 'getMyDb'));
  *
  *   OR
  *
  *   Observer
- *     $a = modConfig::getInstance();
+ *     $a = $this->getConfig();
  *     $a->addClassFunction('getDB', array($this, 'countGetDbCalls'), false);
  *
  *
@@ -406,7 +406,6 @@ abstract class modOXID
         $this->_checkover = array();
         $this->_vars = array();
         $this->_params = array();
-
     }
 
     public static function globalCleanup()
@@ -802,7 +801,7 @@ class modDB extends modOXID
             $oObj = $this;
         }
         self::$unitMOD = $oObj;
-        modConfig::getInstance()->addClassFunction('getDB', create_function('', 'return modDB::$unitMOD;'));
+        $this->addClassFunction('getDB', create_function('', 'return modDB::$unitMOD;'));
     }
 
     static function getInstance()
@@ -819,7 +818,7 @@ class modDB extends modOXID
 
     public function cleanup()
     {
-        modConfig::getInstance()->remClassFunction('getDB');
+        $this->remClassFunction('getDB');
         self::$unitMOD = null;
         parent::cleanup();
     }
