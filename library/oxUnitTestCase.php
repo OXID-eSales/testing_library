@@ -380,7 +380,7 @@ class oxUnitTestCase extends oxBaseTestCase
     /**
      * Returns basic stub of database link object to use as mock for oxDb class
      *
-     * @return PHPUnit_Framework_MockObject_MockObject
+     * @return oxLegacyDb|PHPUnit_Framework_MockObject_MockObject
      */
     public function getDbObjectMock()
     {
