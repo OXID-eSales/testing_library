@@ -68,6 +68,9 @@ class oxUnitTestCase extends oxBaseTestCase
     /** @var array Tables to be restored after test run. */
     private $tablesForCleanup = array();
 
+    /** @var mixed Backing up for earlier value of database link object */
+    private $dbObjectBackup = null;
+
     /**
      * Running setUpBeforeTestSuite action.
      *
@@ -148,6 +151,8 @@ class oxUnitTestCase extends oxBaseTestCase
 
         $reportingLevel = (int) getenv('TRAVIS_ERROR_LEVEL');
         error_reporting($reportingLevel ? $reportingLevel : ((E_ALL ^ E_NOTICE) | E_STRICT));
+
+        $this->dbObjectBackup = oxDb::getDbObject();
     }
 
     /**
@@ -173,6 +178,8 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     protected function tearDown()
     {
+        oxDb::setDbObject($this->dbObjectBackup);
+
         if ($this->getResult() === null) {
             $this->cleanUpDatabase();
 
