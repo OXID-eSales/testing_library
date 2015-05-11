@@ -187,14 +187,12 @@ class oxUnitTestCase extends oxBaseTestCase
         if ($this->getResult() === null) {
             $this->cleanUpDatabase();
 
-            modDb::getInstance()->modAttach(modDb::getInstance()->getRealInstance());
             oxTestsStaticCleaner::clean('oxUtilsObject', '_aInstanceCache');
             oxTestsStaticCleaner::clean('oxArticle', '_aLoadedParents');
 
             modInstances::cleanup();
             oxTestModules::cleanUp();
             modOxid::globalCleanup();
-            modDB::getInstance()->cleanup();
 
             $this->getSession()->cleanup();
             $this->getConfig()->cleanup();
