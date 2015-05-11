@@ -374,6 +374,28 @@ class oxUnitTestCase extends oxBaseTestCase
     }
 
     /**
+     * Returns basic stub of database link object to use as mock for oxDb class
+     *
+     * @return PHPUnit_Framework_MockObject_MockObject
+     */
+    public function getDbObjectMock()
+    {
+        $dbStub = $this->getMockBuilder('oxLegacyDb')->getMock();
+        $dbStub->expects($this->any())
+            ->method('setFetchMode')
+            ->will($this->returnValue(true));
+
+
+        $dbStub->expects($this->any())
+            ->method('quote')
+            ->will($this->returnCallback(function ($s) {
+                return "'" . mysql_real_escape_string($s) . "'";
+            }));
+
+        return $dbStub;
+    }
+
+    /**
      * Returns cache backend
      *
      * @return oxCacheBackend
