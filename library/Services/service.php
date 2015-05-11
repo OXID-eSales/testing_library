@@ -22,7 +22,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
-$bootstrapPath = __DIR__ ."../bootstrap.php";
+$bootstrapPath = __DIR__ ."/../bootstrap.php";
 require_once $bootstrapPath;
 
 require_once 'Library/ServiceConfig.php';
