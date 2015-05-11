@@ -71,6 +71,9 @@ class oxUnitTestCase extends oxBaseTestCase
     /** @var mixed Backing up for earlier value of database link object */
     private $dbObjectBackup = null;
 
+    /** @var array Buffer variable of queries for feature testing */
+    protected $dbQueryBuffer = array();
+
     /**
      * Running setUpBeforeTestSuite action.
      *
@@ -153,6 +156,7 @@ class oxUnitTestCase extends oxBaseTestCase
         error_reporting($reportingLevel ? $reportingLevel : ((E_ALL ^ E_NOTICE) | E_STRICT));
 
         $this->dbObjectBackup = oxDb::getDbObject();
+        $this->dbQueryBuffer = array();
     }
 
     /**
@@ -393,6 +397,15 @@ class oxUnitTestCase extends oxBaseTestCase
             }));
 
         return $dbStub;
+    }
+
+    /**
+     * Add query to query buffer
+     * @param string $query
+     */
+    public function fillDbQueryBuffer($query)
+    {
+        $this->dbQueryBuffer[] = $query;
     }
 
     /**
