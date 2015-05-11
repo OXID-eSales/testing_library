@@ -36,7 +36,12 @@ class SeleniumBootstrap extends Bootstrap
         $this->prepareScreenShots();
         $this->copyTestFilesToShop();
 
-        oxRegistry::set("oxConfig", oxNew('oxConfig'));
+        /** @var oxConfig $config */
+        $config = oxNew('oxConfig');
+        oxRegistry::set("oxConfig", $config);
+
+        /** Reset static variable in oxSuperCfg class, which is base class for every class. */
+        $config->setConfig($config);
 
         require_once TEST_LIBRARY_PATH .'/oxAcceptanceTestCase.php';
     }
