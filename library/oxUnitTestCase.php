@@ -194,8 +194,6 @@ class oxUnitTestCase extends oxBaseTestCase
             oxTestModules::cleanUp();
             modOxid::globalCleanup();
 
-            $this->getSession()->cleanup();
-
             $this->getShopStateBackup()->resetRequestVariables();
             $this->getShopStateBackup()->resetRegistry();
 
@@ -225,7 +223,7 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public function getSessionParam($parameterName)
     {
-        return $this->getSession()->getVar($parameterName);
+        return $this->getSession()->getVariable($parameterName);
     }
 
     /**
@@ -236,7 +234,7 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public function setSessionParam($parameterName, $value = null)
     {
-        $this->getSession()->setVar($parameterName, $value);
+        $this->getSession()->setVariable($parameterName, $value);
     }
 
     /**
@@ -344,7 +342,7 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public static function getSession()
     {
-        return modSession::getInstance();
+        return oxRegistry::getSession();
     }
 
     /**
