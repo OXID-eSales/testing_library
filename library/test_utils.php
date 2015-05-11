@@ -555,32 +555,6 @@ class modDB extends modOXID
     }
 }
 
-// useful for extending getDB()->Execute method
-class modResource
-{
-    public $recordCount = 0;
-    public $eof = true;
-    public $fields = array();
-
-    function RecordCount()
-    {
-        if ($this->recordCount) {
-            $this->EOF = false;
-        } else {
-            $this->EOF = true;
-        }
-
-        return $this->recordCount;
-    }
-
-    function MoveNext()
-    {
-        if ((--$this->recordCount) == 0) {
-            $this->EOF = true;
-        }
-    }
-}
-
 // Stores added objects instances in array
 // On cleanup clears all stored instances
 // Add modInstances->getInstance()->cleanup() when testing in tearDown()
