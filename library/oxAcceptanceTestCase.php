@@ -1757,13 +1757,14 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     }
 
     /**
-     * Clears browser cookies, (with _cc file)
+     * Clears browser cookies, (with _cc file).
      *
      * @return null
      */
     public function clearCookies()
     {
-        $this->open(preg_replace('/:{1}\d{1,}/', '', shopURL) . '/' . "_cc.php");
+        $testConfig = new oxTestConfig();
+        $this->open($testConfig->getShopUrl() . '/_cc.php?' . time());
         if ($this->getHtmlSource() != '<head></head><body></body>') {
             $this->getMinkSession()->stop();
         }
