@@ -194,9 +194,6 @@ class oxUnitTestCase extends oxBaseTestCase
             oxTestModules::cleanUp();
             modOxid::globalCleanup();
 
-            $this->getSession()->cleanup();
-            $this->getConfig()->cleanup();
-
             $this->getShopStateBackup()->resetRequestVariables();
             $this->getShopStateBackup()->resetRegistry();
 
@@ -226,7 +223,7 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public function getSessionParam($parameterName)
     {
-        return $this->getSession()->getVar($parameterName);
+        return $this->getSession()->getVariable($parameterName);
     }
 
     /**
@@ -237,30 +234,30 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public function setSessionParam($parameterName, $value = null)
     {
-        $this->getSession()->setVar($parameterName, $value);
+        $this->getSession()->setVariable($parameterName, $value);
     }
 
     /**
-     * Get parameter from config request object.
+     * Sets parameter to POST.
+     *
+     * @param string $paramName
+     * @param string $paramValue
+     */
+    public function setRequestParameter($paramName, $paramValue)
+    {
+        $_POST[$paramName] = $paramValue;
+    }
+
+    /**
+     * Get parameter from config object.
      *
      * @param string $parameterName parameter name.
      *
      * @return mixed
      */
-    public function getRequestParam($parameterName)
+    public function getRequestParameter($parameterName)
     {
         return $this->getConfig()->getRequestParameter($parameterName);
-    }
-
-    /**
-     * Set parameter to config request object.
-     *
-     * @param string $parameterName Parameter name.
-     * @param mixed  $value         Any parameter value, default null.
-     */
-    public function setRequestParam($parameterName, $value = null)
-    {
-        $this->getConfig()->setRequestParameter($parameterName, $value);
     }
 
     /**
@@ -345,7 +342,7 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public static function getSession()
     {
-        return modSession::getInstance();
+        return oxRegistry::getSession();
     }
 
     /**
@@ -355,7 +352,7 @@ class oxUnitTestCase extends oxBaseTestCase
      */
     public static function getConfig()
     {
-        return modConfig::getInstance();
+        return oxRegistry::getConfig();
     }
 
     /**

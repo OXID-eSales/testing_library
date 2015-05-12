@@ -49,9 +49,9 @@ function oxClassCacheKey($reset = false, $sProvide = null)
         if ($sProvide) {
             $key = $sProvide;
         } else {
-            $myConfig = modConfig::getInstance();
-            if (is_array($myConfig->getConfigParam('aModules'))) {
-                $key = md5('cc|' . implode('|', $myConfig->getConfigParam('aModules')));
+            $config = oxRegistry::getConfig();
+            if (is_array($config->getConfigParam('aModules'))) {
+                $key = md5('cc|' . implode('|', $config->getConfigParam('aModules')));
             } else {
                 $key = md5('cc|');
             }
@@ -311,7 +311,7 @@ class oxTestModules
      */
     public static function cleanAllModules()
     {
-        modConfig::getInstance()->setConfigParam('aModules', array());
+        oxRegistry::getConfig()->setConfigParam('aModules', array());
         oxClassCacheKey(true, "empty");
     }
 }
@@ -364,13 +364,13 @@ class oxTestsStaticCleaner
  *   e.g.
  *
  *   Executor
- *     $a = modConfig::getInstance();
+ *     $a = $this->getConfig();
  *     $a->addClassFunction('getDB', array($this, 'getMyDb'));
  *
  *   OR
  *
  *   Observer
- *     $a = modConfig::getInstance();
+ *     $a = $this->getConfig();
  *     $a->addClassFunction('getDB', array($this, 'countGetDbCalls'), false);
  *
  *
@@ -406,7 +406,6 @@ abstract class modOXID
         $this->_checkover = array();
         $this->_vars = array();
         $this->_params = array();
-
     }
 
     public static function globalCleanup()
@@ -515,275 +514,6 @@ abstract class modOXID
 }
 
 /**
- * config class for test
- *
- * @deprecated
- */
-class modConfig extends modOXID
-{
-
-    // needed 4 modOXID
-    public static $unitMOD = null;
-    public static $unitCustMOD = null;
-    protected static $_inst = null;
-    protected $_aConfigparams = array();
-
-    function modAttach($oObj = null)
-    {
-        parent::modAttach($oObj);
-        self::$unitMOD = null;
-        $this->_oRealInstance = oxRegistry::getConfig();
-        if (!$oObj) {
-            $oObj = $this;
-        }
-        self::$unitMOD = $oObj;
-    }
-
-    /**
-     * @return modConfig
-     */
-    static function getInstance()
-    {
-        if (!self::$_inst) {
-            self::$_inst = new modConfig();
-        }
-        if (!self::$unitMOD) {
-            self::$_inst->modAttach();
-        }
-
-        return self::$_inst;
-    }
-
-    public function cleanup()
-    {
-        self::$unitMOD = null;
-        self::$unitCustMOD = null;
-
-        // cleaning config parameters
-        $this->_aConfigparams = array();
-
-        parent::cleanup();
-
-        if (oxRegistry::getConfig() === $this) {
-            throw new Exception("clean config failed");
-        }
-    }
-
-    public function getModConfigParam($paramName)
-    {
-        $oInst = self::getInstance();
-        if (array_key_exists($paramName, $oInst->_aConfigparams)) {
-            return $oInst->_aConfigparams[$paramName];
-        }
-    }
-
-    public function getConfigParam($paramName)
-    {
-        $oInst = self::getInstance();
-        if (($sValue = $this->getModConfigParam($paramName)) !== null) {
-            return $sValue;
-        } else {
-            if (!$oInst->_oRealInstance) {
-                $_i = oxRegistry::getConfig();
-                if ($_i instanceof oxConfig) {
-                    return $_i->getConfigParam($paramName);
-                }
-                throw new Exception("real instance is empty!");
-            }
-
-            return $oInst->_oRealInstance->getConfigParam($paramName);
-        }
-    }
-
-    public function isDemoShop()
-    {
-        $oInst = self::getInstance();
-        if (isset($oInst->_aConfigparams['blDemoShop'])) {
-            return $oInst->_aConfigparams['blDemoShop'];
-        } else {
-            return $oInst->_oRealInstance->isDemoShop();
-        }
-    }
-
-    public function isUtf()
-    {
-        $oInst = self::getInstance();
-        if (isset($oInst->_aConfigparams['iUtfMode'])) {
-            return $oInst->_aConfigparams['iUtfMode'];
-        } else {
-            return $oInst->_oRealInstance->isUtf();
-        }
-    }
-
-    public function setConfigParam($paramName, $paramValue)
-    {
-        self::getInstance()->_aConfigparams[$paramName] = $paramValue;
-    }
-
-    /**
-     * @param      $paramName
-     * @param bool $blRaw
-     *
-     * @deprecated since v5.2.0 (2014-07-02); Use static getRequestParameter()
-     *
-     * @return string
-     */
-    static function getParameter($paramName, $blRaw = false)
-    {
-        return self::getRequestParameter($paramName, $blRaw);
-    }
-
-    /**
-     * @param $paramName
-     * @param $paramValue
-     *
-     * @deprecated since v5.2.0 (2014-07-02); Use static setRequestParameter()
-     */
-    static function setParameter($paramName, $paramValue)
-    {
-        self::setRequestParameter($paramName, $paramValue);
-    }
-
-    /**
-     * Returns value of parameter stored in POST,GET for tests.
-     *
-     * @param      $paramName
-     * @param bool $blRaw
-     *
-     * @return string
-     */
-    public static function getRequestParameter($paramName, $blRaw = false)
-    {
-        // should throw exception if original functionality is needed.
-        if (array_key_exists($paramName, self::getInstance()->_params)) {
-            return self::getInstance()->_params[$paramName];
-        } else {
-            return modSession::getInstance()->getVar($paramName);
-        }
-    }
-
-    /**
-     * Sets request parameter for test.
-     *
-     * @param $paramName
-     * @param $paramValue
-     */
-    public static function setRequestParameter($paramName, $paramValue)
-    {
-        // should throw exception if original functionality is needed.
-        self::getInstance()->_params[$paramName] = $paramValue;
-    }
-
-    /**
-     * needed for Erp test where it checks it with method_exists
-     *
-     */
-    public function getSerial()
-    {
-        return $this->__call('getSerial', array());
-    }
-}
-
-/**
- * Class modSession
- *
- * @deprecated
- */
-class modSession extends modOXID
-{
-    public static $unitMOD = null;
-    public static $unitCustMOD = null;
-    protected static $_inst = null;
-    protected $_id = null;
-
-    /**
-     * Keeps test session vars
-     *
-     * @var array
-     */
-    protected $_aSessionVars = array();
-
-    function modAttach($oObj = null)
-    {
-        parent::modAttach($oObj);
-        $this->_oRealInstance = oxRegistry::getSession();
-        if (!$oObj) {
-            $oObj = $this;
-        }
-        self::$unitMOD = $oObj;
-        $this->_id = $this->_oRealInstance->getId();
-    }
-
-    static function getInstance()
-    {
-        if (!self::$_inst) {
-            self::$_inst = new modSession();
-        }
-        if (!self::$unitMOD) {
-            self::$_inst->modAttach();
-        }
-
-        return self::$_inst;
-    }
-
-    public function cleanup()
-    {
-        if ($this->_oRealInstance) {
-            $this->_oRealInstance->setId($this->_id);
-        }
-        self::$unitMOD = null;
-        self::$unitCustMOD = null;
-        parent::cleanup();
-        $this->_aSessionVars = array();
-    }
-
-    /**
-     * Set session var for testing
-     *
-     * @param string $sVar
-     * @param string $sVal
-     */
-    public function setVar($sVar, $sVal)
-    {
-        $this->_aSessionVars[$sVar] = $sVal;
-    }
-
-    /**
-     * Gets session var for testing
-     *
-     * @param string $sVar
-     *
-     * @return string
-     */
-    public function getVar($sVar)
-    {
-        if (isset($this->_aSessionVars[$sVar])) {
-            return $this->_aSessionVars[$sVar];
-        }
-
-        return $_SESSION[$sVar];
-    }
-
-    /**
-     * Session properties getter
-     *
-     * @param string $nm name of parameter
-     *
-     * @return mixed
-     */
-    public function __get($nm)
-    {
-        // maybe should copy var line in __set function ???
-        // if it would help to clone object properties...
-        if (array_key_exists($nm, $this->_vars)) {
-            return $this->_vars[$nm];
-        }
-
-        return $this->_oRealInstance->$nm;
-    }
-}
-
-/**
  * Class modDB
  *
  * @deprecated
@@ -802,7 +532,7 @@ class modDB extends modOXID
             $oObj = $this;
         }
         self::$unitMOD = $oObj;
-        modConfig::getInstance()->addClassFunction('getDB', create_function('', 'return modDB::$unitMOD;'));
+        $this->addClassFunction('getDB', create_function('', 'return modDB::$unitMOD;'));
     }
 
     static function getInstance()
@@ -819,35 +549,9 @@ class modDB extends modOXID
 
     public function cleanup()
     {
-        modConfig::getInstance()->remClassFunction('getDB');
+        $this->remClassFunction('getDB');
         self::$unitMOD = null;
         parent::cleanup();
-    }
-}
-
-// useful for extending getDB()->Execute method
-class modResource
-{
-    public $recordCount = 0;
-    public $eof = true;
-    public $fields = array();
-
-    function RecordCount()
-    {
-        if ($this->recordCount) {
-            $this->EOF = false;
-        } else {
-            $this->EOF = true;
-        }
-
-        return $this->recordCount;
-    }
-
-    function MoveNext()
-    {
-        if ((--$this->recordCount) == 0) {
-            $this->EOF = true;
-        }
     }
 }
 

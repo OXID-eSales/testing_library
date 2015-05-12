@@ -84,10 +84,11 @@ class Bootstrap
 
         oxRegistry::set("oxConfig", new oxConfig());
 
-        if ($testConfig->getTempDirectory()) {
+        $tempDirectory = $testConfig->getTempDirectory();
+        if ($tempDirectory && $tempDirectory != '/') {
             $fileCopier = new oxFileCopier();
-            $fileCopier->createEmptyDirectory($testConfig->getTempDirectory());
-            $fileCopier->createEmptyDirectory($testConfig->getTempDirectory().'/smarty/');
+            $fileCopier->createEmptyDirectory($tempDirectory);
+            $fileCopier->createEmptyDirectory($tempDirectory.'/smarty/');
         }
     }
 
