@@ -454,9 +454,9 @@ class oxTestConfig
     {
         $testSuites = array();
         if ($this->shouldRunModuleTests()) {
-            $modulesDir = $this->getShopPath() .'/modules/';
+            $modulesDir = $this->getShopPath() .'modules/';
             foreach ($this->getPartialModulePaths() as $module) {
-                if ($suitePath = realpath($modulesDir . $module .'/tests/')) {
+                if ($suitePath = $modulesDir . $module .'/tests/') {
                     $testSuites[] = $suitePath;
                 }
             }
