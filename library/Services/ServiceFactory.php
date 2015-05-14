@@ -35,6 +35,8 @@ class ServiceFactory
     public function __construct($config)
     {
         $this->config = $config;
+
+        require_once $config->getShopDirectory() . '/bootstrap.php';
     }
 
 
