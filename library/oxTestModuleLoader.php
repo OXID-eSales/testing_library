@@ -84,6 +84,11 @@ class oxTestModuleLoader
             $config->setConfigParam("aDisabledModules", array());
             $utilsObject->setModuleVar("aModulePaths", self::$moduleData['paths']);
             $config->setConfigParam("aModulePaths", self::$moduleData['paths']);
+
+            // Mocking of module classes does not work without calling oxNew first.
+            foreach (self::$moduleData['chains'] as $parent => $chain) {
+                oxNew($parent);
+            }
         }
     }
 
@@ -114,6 +119,11 @@ class oxTestModuleLoader
         // adding and extending the module files
         if (isset($aModule["extend"]) && count($aModule["extend"])) {
             $this->_appendToChain($aModule["extend"]);
+        }
+
+        // adding settings
+        if (isset($aModule["settings"]) && count($aModule["settings"])) {
+            $this->_addSettings($aModule["settings"]);
         }
 
         // running onActivate method.
@@ -160,6 +170,19 @@ class oxTestModuleLoader
                     . trim($extends, "& ");
             }
             self::$moduleData['chains'][$parent] = $extends;
+        }
+    }
+
+    /**
+     * Adds settings to configuration.
+     *
+     * @param array $settings
+     */
+    private function _addSettings($settings)
+    {
+        $config = oxRegistry::getConfig();
+        foreach ($settings as $setting) {
+            $config->saveShopConfVar($setting['type'], $setting['name'], $setting['value']);
         }
     }
 }
