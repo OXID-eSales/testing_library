@@ -1462,7 +1462,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function getMinkSession()
     {
-        if (is_null($this->_oMinkSession)) {
+        if (is_null($this->_oMinkSession) || !$this->_oMinkSession->isStarted()) {
             $this->startMinkSession();
         }
         return $this->_oMinkSession;
