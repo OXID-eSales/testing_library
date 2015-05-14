@@ -134,11 +134,8 @@ class oxUnitTestCase extends oxBaseTestCase
     protected function setUp()
     {
         parent::setUp();
-
-        $this->setAdminMode(false);
-        $this->setShopId(null);
         oxAddClassModule('modOxUtilsDate', 'oxUtilsDate');
-
+        
         oxRegistry::getUtils()->cleanStaticCache();
 
         if ($this->getTestConfig()->getModulesToActivate()) {
@@ -148,6 +145,9 @@ class oxUnitTestCase extends oxBaseTestCase
 
         $reportingLevel = (int) getenv('TRAVIS_ERROR_LEVEL');
         error_reporting($reportingLevel ? $reportingLevel : ((E_ALL ^ E_NOTICE) | E_STRICT));
+
+        $this->setAdminMode(false);
+        $this->setShopId(null);
     }
 
     /**
