@@ -20,7 +20,7 @@
  */
 
 // Clean cookies
-if (isset($_SERVER['HTTP_COOKIE'])) {
+if (array_key_exists('HTTP_COOKIE', $_SERVER) && !empty($_SERVER['HTTP_COOKIE'])) {
     $aCookies = explode(';', $_SERVER['HTTP_COOKIE']);
     foreach ($aCookies as $sCookie) {
         $sRawCookie = explode('=', $sCookie);
