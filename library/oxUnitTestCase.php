@@ -140,9 +140,6 @@ class oxUnitTestCase extends oxBaseTestCase
     protected function setUp()
     {
         parent::setUp();
-
-        $this->setAdminMode(false);
-        $this->setShopId(null);
         oxAddClassModule('modOxUtilsDate', 'oxUtilsDate');
 
         oxRegistry::getUtils()->cleanStaticCache();
@@ -157,6 +154,9 @@ class oxUnitTestCase extends oxBaseTestCase
 
         $this->dbObjectBackup = oxDb::getDbObject();
         $this->dbQueryBuffer = array();
+
+        $this->setShopId(null);
+        $this->setAdminMode(false);
     }
 
     /**
