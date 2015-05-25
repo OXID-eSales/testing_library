@@ -1764,7 +1764,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     public function clearCookies()
     {
         $testConfig = new oxTestConfig();
-        $this->open($testConfig->getShopUrl() . '/_cc.php?' . time());
+        $shopUrl = preg_replace("|(https?://[^:/]*?):[0-9]+|", '$1', $testConfig->getShopUrl());
+        $this->open($shopUrl . '/_cc.php');
         if ($this->getHtmlSource() != '<head></head><body></body>') {
             $this->getMinkSession()->stop();
         }
