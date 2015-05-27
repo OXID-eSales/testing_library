@@ -22,6 +22,7 @@
 require_once TEST_LIBRARY_PATH . 'oxMinkWrapper.php';
 require_once TEST_LIBRARY_PATH . 'oxObjectValidator.php';
 require_once TEST_LIBRARY_PATH . 'oxTranslator.php';
+require_once TEST_LIBRARY_PATH . 'oxRetryTestException.php';
 
 /**
  * Base class for Selenium tests.
@@ -32,7 +33,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     protected $_iWaitTimeMultiplier = 1;
 
     /** @var int How many times to retry after server error. */
-    private $_iRetryTimesLeft = 3;
+    protected $_iRetryTimesLeft = 3;
 
     /** @var bool Whether to start mink session before test run. New tests can start session in runtime. */
     protected $_blStartMinkSession = true;
@@ -169,11 +170,10 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         try {
             parent::runBare();
         } catch (Exception $oException) {
-            $this->getMinkSession()->stop();
+            $this->stopMinkSession();
             throw $oException;
         }
-
-        $this->getMinkSession()->stop();
+        $this->stopMinkSession();
     }
 
     /**
@@ -195,7 +195,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         }
         echo $sErrorMsg;
         echo " Selenium tests terminated.";
-        $this->getMinkSession()->stop();
+        $this->stopMinkSession();
 
         exit(1);
     }
@@ -906,7 +906,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
             } catch (Exception $e) {
             }
             if ($iSecond >= $iTimeToWait) {
-                $this->fail("Ajax timeout while waiting for '${locator}' or value is not equal to '${value}' ");
+                $this->retryTest("Ajax timeout while waiting for '${locator}' or value is not equal to '${value}' ");
             }
             usleep(500000);
         }
@@ -1449,11 +1449,21 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     }
 
     /**
+     * Stops Mink session if it is started.
+     */
+    public function stopMinkSession()
+    {
+        if ($this->_oMinkSession && $this->_oMinkSession->isStarted()) {
+            $this->_oMinkSession->stop();
+        }
+    }
+
+    /**
      * @param $driver
      */
     public function switchMinkSession($driver)
     {
-        $this->getMinkSession()->stop();
+        $this->stopMinkSession();
         $this->startMinkSession($driver);
     }
 
@@ -1767,7 +1777,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $shopUrl = preg_replace("|(https?://[^:/]*?):[0-9]+|", '$1', $testConfig->getShopUrl());
         $this->open($shopUrl . '/_cc.php');
         if ($this->getHtmlSource() != '<head></head><body></body>') {
-            $this->getMinkSession()->stop();
+            $this->stopMinkSession();
         }
 
         $this->getTranslator()->setLanguage(1);
@@ -1815,6 +1825,18 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     }
 
     /**
+     * If retry count is still not over, reruns the test.
+     *
+     * @param string $message Failure message to show if retry is not available.
+     *
+     * @throws oxRetryTestException
+     */
+    public function retryTest($message = '')
+    {
+        throw new oxRetryTestException($message);
+    }
+
+    /**
      * Clear spaces and new lines as Mink do.
      * @param $sToClear
      * @return mixed
@@ -1828,45 +1850,59 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * Fix for showing stack trace with phpunit 3.6 and later
      *
-     * @param Exception $e
-     * @throws PHPUnit_Framework_Error
-     * @throws PHPUnit_Framework_IncompleteTestError
-     * @throws PHPUnit_Framework_SkippedTestError
+     * @param Exception $exception
+     *
+     * @throws Exception
      */
-    protected function onNotSuccessfulTest(Exception $e)
+    protected function onNotSuccessfulTest(Exception $exception)
     {
-        if ($this->_iRetryTimesLeft > 0 && ($this->_isInternalServerError() or $this->isServiceUnavailable())) {
+        if ($this->_iRetryTimesLeft > 0 && $this->shouldRetryTest($exception)) {
             $this->_iRetryTimesLeft--;
             $this->tearDown();
-            $this->getMinkSession()->stop();
+            $this->stopMinkSession();
             $this->runBare();
             return;
         }
-        try {
-            parent::onNotSuccessfulTest($e);
-        } catch (PHPUnit_Framework_IncompleteTestError $e) {
-            throw $e;
-        } catch (PHPUnit_Framework_SkippedTestError $e) {
-            throw $e;
-        } catch (Exception $oParentException) {
-            $aFilteredTrace = PHPUnit_Util_Filter::getFilteredStacktrace($e, false);
-            $sErrorMessage = $this->_getScreenShot();
-            $sErrorMessage .= $oParentException->getMessage();
-            $sErrorMessage .= "\nSelected Frame: '" . $this->getSelectedFrame() . "' in window '" . $this->getSelectedWindow() . "' ";
-            $sErrorMessage .= "\n\n" . $this->_formTrace($aFilteredTrace);
 
-            $oTrace = $oParentException;
-            if (version_compare(PHPUnit_Runner_Version::id(), '3.7', '<')) {
-                $oTrace = $oParentException->getTrace();
-            }
-            throw new PHPUnit_Framework_Error(
-                $sErrorMessage,
-                $oParentException->getCode(),
-                $oParentException->getFile(),
-                $oParentException->getLine(),
-                $oTrace
+        if ($exception instanceof PHPUnit_Framework_AssertionFailedError) {
+            $newExceptionClass = get_class($exception);
+            $exception = new $newExceptionClass(
+                $this->formExceptionMessage($exception),
+                $exception->getCode()
             );
         }
+
+        $this->stopMinkSession();
+        throw $exception;
+    }
+
+    /**
+     * Checks whether test should be retried.
+     *
+     * @param Exception $e
+     *
+     * @return bool
+     */
+    protected function shouldRetryTest(Exception $e)
+    {
+        return $this->isInternalServerError() || $this->isServiceUnavailable() || $e instanceof oxRetryTestException;
+    }
+
+    /**
+     * @param Exception $exception
+     *
+     * @return string
+     */
+    protected function formExceptionMessage($exception)
+    {
+        $trace = PHPUnit_Util_Filter::getFilteredStacktrace($exception, false);
+
+        $errorMessage = $this->_getScreenShot();
+        $errorMessage .= $exception->getMessage();
+        $errorMessage .= "\nSelected Frame: '" . $this->getSelectedFrame() . "'";
+        $errorMessage .= "\n\n" . $this->_formTrace($trace);
+
+        return $errorMessage;
     }
 
     /**
@@ -1906,7 +1942,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      *
      * @return bool
      */
-    protected function _isInternalServerError()
+    protected function isInternalServerError()
     {
         $sHTML = $this->getHtmlSource();
         if (strpos($sHTML, '500 Internal Server Error') !== false) {
@@ -1946,7 +1982,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         if (!is_array($aTrace)) {
             return $aTrace;
         }
-        $aSkipMethods = array("main");
+        $aSkipMethods = array('main', 'runBare', '');
         $sResult = '';
         $aReversedTrace = array_reverse($aTrace);
         foreach ($aReversedTrace as $aCall) {
