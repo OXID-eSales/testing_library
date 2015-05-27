@@ -197,7 +197,10 @@ class oxTestConfig
     }
 
     /**
-     * Returns whether tested shop is on external server.
+     * Returns external server directory.
+     * This directory should be in 'user@host:/directory/on/server' format.
+     *
+     * @return string
      */
     public function getRemoteDirectory()
     {
