@@ -1865,11 +1865,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         }
 
         if ($exception instanceof PHPUnit_Framework_AssertionFailedError) {
-            $newExceptionClass = get_class($exception);
-            $exception = new $newExceptionClass(
-                $this->formExceptionMessage($exception),
-                $exception->getCode()
-            );
+            $exception = $this->formException($exception);
         }
 
         $this->stopMinkSession();
@@ -2050,6 +2046,29 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     {
         $class = new ReflectionClass(get_class($this));
         return dirname($class->getFileName());
+    }
+
+    /**
+     * Newly forms Exception according provided Exception object.
+     *
+     * @param Exception $exception
+     *
+     * @return Exception|PHPUnit_Framework_AssertionFailedError
+     */
+    protected function formException(Exception $exception)
+    {
+        $exceptionClassName = get_class($exception);
+
+        if ($exception instanceof PHPUnit_Framework_ExpectationFailedException) {
+            $exceptionClassName = get_class(new PHPUnit_Framework_AssertionFailedError());
+        }
+
+        $newException = new $exceptionClassName(
+            $this->formExceptionMessage($exception),
+            $exception->getCode()
+        );
+
+        return $newException;
     }
 }
 
