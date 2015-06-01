@@ -923,6 +923,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $this->click($item);
         $this->checkForErrors();
         $this->dragAndDropToObject($item, $container);
+        if ($this->isElementPresent($item))  {
+            sleep(1);
+        }
     }
 
     /* ------------------------ Selenium API related functions, override functions ---------------------- */
