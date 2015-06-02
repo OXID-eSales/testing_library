@@ -1174,8 +1174,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
                     if ($blIgnoreResult) {
                         return;
                     } else {
-                        $sMessage = "Timeout waiting for '" . implode(' | ', $aParams) . "' ";
-                        $this->fail($sMessage);
+                        $sMessage = "Timeout waiting for '" . implode(' | ', $aParams) . "'.";
+                        $this->retryTest($sMessage);
                     }
                 }
             }
