@@ -44,6 +44,10 @@ class SeleniumBootstrap extends Bootstrap
         $config->setConfig($config);
 
         require_once TEST_LIBRARY_PATH .'/oxAcceptanceTestCase.php';
+
+        register_shutdown_function(function () {
+            oxAcceptanceTestCase::stopMinkSession();
+        });
     }
 
     /**

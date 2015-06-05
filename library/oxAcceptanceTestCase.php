@@ -81,7 +81,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     private $client = null;
 
     /** @var \Behat\Mink\Session Mink session */
-    private $minkSession = null;
+    private static $minkSession = null;
 
     /**
      * Constructs a test case with the given name.
@@ -170,6 +170,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     protected function tearDown()
     {
         $this->restoreDB('reset_test_db_dump');
+        if ($this->isMinkSessionStarted()) {
+            $this->clearCookies();
+        }
 
         parent::tearDown();
     }
@@ -183,15 +186,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
             $this->startMinkSession();
         }
 
-        try {
-            parent::runBare();
-        } catch (Exception $oException) {
-            $this->stopMinkSession();
-            throw $oException;
-        }
+        parent::runBare();
 
         $this->retryTimesLeft = $this->retryTimes;
-        $this->stopMinkSession();
     }
 
     /**
@@ -1458,24 +1455,37 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /* ------------------------ Mink related functions ---------------------------------- */
 
     /**
+     * @return \Behat\Mink\Session
+     */
+    public function getMinkSession()
+    {
+        if (!$this->isMinkSessionStarted()) {
+            $this->startMinkSession();
+        }
+
+        return self::$minkSession;
+    }
+
+    /**
      * @param string $driver
      */
     public function startMinkSession($driver = '')
     {
+        $this->stopMinkSession();
         $driver = $driver ? $driver : $this->_blDefaultMinkDriver;
 
         $driverInterface = $this->_getMinkDriver($driver);
-        $this->minkSession = new \Behat\Mink\Session($driverInterface);
-        $this->minkSession->start();
+        self::$minkSession = new \Behat\Mink\Session($driverInterface);
+        self::$minkSession->start();
     }
 
     /**
      * Stops Mink session if it is started.
      */
-    public function stopMinkSession()
+    public static function stopMinkSession()
     {
-        if ($this->isMinkSessionStarted()) {
-            $this->minkSession->stop();
+        if (self::isMinkSessionStarted()) {
+            self::$minkSession->stop();
         }
     }
 
@@ -1484,29 +1494,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      *
      * @return bool
      */
-    public function isMinkSessionStarted()
+    public static function isMinkSessionStarted()
     {
-        return $this->minkSession && $this->minkSession->isStarted();
-    }
-
-    /**
-     * @param $driver
-     */
-    public function switchMinkSession($driver)
-    {
-        $this->stopMinkSession();
-        $this->startMinkSession($driver);
-    }
-
-    /**
-     * @return \Behat\Mink\Session
-     */
-    public function getMinkSession()
-    {
-        if (!$this->isMinkSessionStarted()) {
-            $this->startMinkSession();
-        }
-        return $this->minkSession;
+        return self::$minkSession && self::$minkSession->isStarted();
     }
 
     /**
