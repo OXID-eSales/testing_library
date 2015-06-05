@@ -1473,9 +1473,19 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function stopMinkSession()
     {
-        if ($this->minkSession && $this->minkSession->isStarted()) {
+        if ($this->isMinkSessionStarted()) {
             $this->minkSession->stop();
         }
+    }
+
+    /**
+     * Returns whether mink session was started.
+     *
+     * @return bool
+     */
+    public function isMinkSessionStarted()
+    {
+        return $this->minkSession && $this->minkSession->isStarted();
     }
 
     /**
@@ -1492,7 +1502,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function getMinkSession()
     {
-        if (is_null($this->minkSession) || !$this->minkSession->isStarted()) {
+        if (!$this->isMinkSessionStarted()) {
             $this->startMinkSession();
         }
         return $this->minkSession;
@@ -1884,7 +1894,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
             return;
         }
 
-        if ($exception instanceof PHPUnit_Framework_AssertionFailedError) {
+        if ($this->shouldReformatExceptionMessage($exception)) {
             $exception = $this->formException($exception);
         }
 
@@ -1901,7 +1911,30 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     protected function shouldRetryTest(Exception $e)
     {
-        return ($e instanceof oxRetryTestException) || $this->isInternalServerError() || $this->isServiceUnavailable();
+        $isForcedRetry = $e instanceof oxRetryTestException;
+
+        $isServerProblems = false;
+        if ($this->isMinkSessionStarted()) {
+            $isServerProblems = $this->isInternalServerError() || $this->isServiceUnavailable();
+        }
+
+        return $isForcedRetry || $isServerProblems;
+    }
+
+    /**
+     * Checks whether test should be retried.
+     *
+     * @param Exception $exception
+     *
+     * @return bool
+     */
+    protected function shouldReformatExceptionMessage(Exception $exception)
+    {
+        $isAssertionException = $exception instanceof PHPUnit_Framework_AssertionFailedError;
+        $isTestSkipped = $exception instanceof PHPUnit_Framework_SkippedTest
+            || $exception instanceof PHPUnit_Framework_IncompleteTest;
+
+        return $isAssertionException && !$isTestSkipped;
     }
 
     /**
