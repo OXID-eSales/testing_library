@@ -1552,7 +1552,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     protected function _getClient()
     {
         if (is_null($this->client)) {
-            $this->client = new \Selenium\Client($this->getTestConfig()->getSeleniumServerIp(), '4444');
+            $config = $this->getTestConfig();
+            $this->client = new \Selenium\Client($config->getSeleniumServerIp(), $config->getSeleniumServerPort());
         }
 
         return $this->client;

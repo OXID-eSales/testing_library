@@ -355,6 +355,16 @@ class oxTestConfig
     }
 
     /**
+     * Returns selenium server port.
+     *
+     * @return string|null
+     */
+    public function getSeleniumServerPort()
+    {
+        return $this->getValue('selenium_server_port');
+    }
+
+    /**
      * Returns which browser should be used when running selenium tests.
      *
      * @return string|null

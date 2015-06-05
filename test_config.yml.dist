@@ -71,3 +71,6 @@ optional_parameters:
 
     # Selenium server IP address. Used to connect to selenium server when Mink selenium driver is used for acceptance tests.
     selenium_server_ip: '127.0.0.1'
+
+    # Selenium server port. Used to connect to selenium server when Mink selenium driver is used for acceptance tests.
+    selenium_server_port: '4444'
