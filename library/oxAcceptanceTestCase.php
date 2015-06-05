@@ -108,6 +108,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
             self::$testsSuitePath = $currentTestsSuitePath;
             $this->setUpTestsSuite($currentTestsSuitePath);
         }
+        $this->getTranslator()->setLanguage(1);
 
         $this->selectedFrame = 'relative=top';
         $this->selectedWindow = null;
