@@ -1901,7 +1901,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     protected function shouldRetryTest(Exception $e)
     {
-        return $this->isInternalServerError() || $this->isServiceUnavailable() || $e instanceof oxRetryTestException;
+        return ($e instanceof oxRetryTestException) || $this->isInternalServerError() || $this->isServiceUnavailable();
     }
 
     /**
