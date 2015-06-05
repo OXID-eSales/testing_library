@@ -36,7 +36,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     protected $retryTimes = 2;
 
     /** @var bool Whether to start mink session before test run. New tests can start session in runtime. */
-    protected $_blStartMinkSession = true;
+    protected $_blStartMinkSession = false;
 
     /** @var string Default Mink driver. */
     protected $_blDefaultMinkDriver = 'selenium';
