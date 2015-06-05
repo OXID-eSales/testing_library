@@ -33,7 +33,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     protected $_iWaitTimeMultiplier = 1;
 
     /** @var int How many times to retry after server error. */
-    protected $_iRetryTimesLeft = 3;
+    protected $retryTimes = 2;
 
     /** @var bool Whether to start mink session before test run. New tests can start session in runtime. */
     protected $_blStartMinkSession = true;
@@ -41,32 +41,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /** @var string Default Mink driver. */
     protected $_blDefaultMinkDriver = 'selenium';
 
-    /** @var bool Tracks the start of tests run. */
-    protected static $_blStarted = false;
-
-    /** @var string Tests suite path. */
-    protected static $_testsSuitePath = '';
-
-    /** @var string Used to follow which frame is currently selected by driver. */
-    protected $_sSelectedFrame = 'relative=top';
-
-    /** @var string Used to follow which window is currently selected by driver. */
-    protected $_sSelectedWindow = null;
-
     /** @var bool Is logging of function calls length enabled */
     protected $_blEnableLog = false;
-
-    /** @var oxTranslator Translator object */
-    protected static $_oTranslator = null;
-
-    /** @var oxObjectValidator Object validator object */
-    protected $_oValidator = null;
-
-    /** @var \Selenium\Client Selenium client. Used only with selenium driver. */
-    protected $_oClient = null;
-
-    /** @var \Behat\Mink\Session Mink session */
-    protected $_oMinkSession = null;
 
     /** @var array List of frames. Used to go to correct frame from the top frame. */
     protected $_aFramePaths = array(
@@ -80,22 +56,61 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         "dynexport_do" => "basefrm/dynexport_do",
     );
 
+    /** @var bool Tracks the start of tests run. */
+    protected static $testsSuiteStarted = false;
+
+    /** @var string Tests suite path. */
+    protected static $testsSuitePath = '';
+
+    /** @var string Used to follow which frame is currently selected by driver. */
+    private $selectedFrame = 'relative=top';
+
+    /** @var string Used to follow which window is currently selected by driver. */
+    private $selectedWindow = null;
+
+    /** @var int How many retry times are left. */
+    private $retryTimesLeft;
+
+    /** @var oxTranslator Translator object */
+    protected static $translator = null;
+
+    /** @var oxObjectValidator Object validator object */
+    private $validator = null;
+
+    /** @var \Selenium\Client Selenium client. Used only with selenium driver. */
+    private $client = null;
+
+    /** @var \Behat\Mink\Session Mink session */
+    private $minkSession = null;
+
+    /**
+     * Constructs a test case with the given name.
+     *
+     * @param string $name
+     * @param array  $data
+     * @param string $dataName
+     */
+    public function __construct($name = NULL, array $data = array(), $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+        $this->retryTimesLeft = $this->retryTimes;
+    }
+
     /**
      * Sets up default environment for tests.
      */
     protected function setUp()
     {
-        $testsSuitePath = $this->getSuitePath();
+        $currentTestsSuitePath = $this->getSuitePath();
 
-        if (static::$_testsSuitePath !== $testsSuitePath) {
-            static::$_testsSuitePath = $testsSuitePath;
-            $this->setUpTestsSuite($testsSuitePath);
+        if (self::$testsSuitePath !== $currentTestsSuitePath) {
+            self::$testsSuitePath = $currentTestsSuitePath;
+            $this->setUpTestsSuite($currentTestsSuitePath);
         }
 
-        $this->setTranslator(new oxTranslator());
-
-        $this->_sSelectedFrame = 'relative=top';
-        $this->_sSelectedWindow = null;
+        $this->selectedFrame = 'relative=top';
+        $this->selectedWindow = null;
 
         $this->clearTemp();
     }
@@ -108,8 +123,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function setUpTestsSuite($testSuitePath)
     {
-        if (!static::$_blStarted) {
-            self::$_blStarted = true;
+        if (!self::$testsSuiteStarted) {
+            self::$testsSuiteStarted = true;
             $this->dumpDb('reset_suite_db_dump');
         } else {
             $this->restoreDb('reset_suite_db_dump');
@@ -173,6 +188,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
             $this->stopMinkSession();
             throw $oException;
         }
+
+        $this->retryTimesLeft = $this->retryTimes;
         $this->stopMinkSession();
     }
 
@@ -210,7 +227,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function openNewWindow($sUrl, $blClearCache = true)
     {
-        $this->_sSelectedFrame = 'relative=top';
+        $this->selectedFrame = 'relative=top';
         try {
             $this->selectWindow(null);
             $this->windowMaximize(null);
@@ -238,7 +255,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public static function setTranslator($oTranslator)
     {
-        self::$_oTranslator = $oTranslator;
+        self::$translator = $oTranslator;
     }
 
     /**
@@ -248,10 +265,10 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public static function getTranslator()
     {
-        if (is_null(self::$_oTranslator)) {
-            self::$_oTranslator = new oxTranslator();
+        if (is_null(self::$translator)) {
+            self::$translator = new oxTranslator();
         }
-        return self::$_oTranslator;
+        return self::$translator;
     }
 
     /**
@@ -1447,8 +1464,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $driver = $driver ? $driver : $this->_blDefaultMinkDriver;
 
         $driverInterface = $this->_getMinkDriver($driver);
-        $this->_oMinkSession = new \Behat\Mink\Session($driverInterface);
-        $this->_oMinkSession->start();
+        $this->minkSession = new \Behat\Mink\Session($driverInterface);
+        $this->minkSession->start();
     }
 
     /**
@@ -1456,8 +1473,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function stopMinkSession()
     {
-        if ($this->_oMinkSession && $this->_oMinkSession->isStarted()) {
-            $this->_oMinkSession->stop();
+        if ($this->minkSession && $this->minkSession->isStarted()) {
+            $this->minkSession->stop();
         }
     }
 
@@ -1475,10 +1492,10 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function getMinkSession()
     {
-        if (is_null($this->_oMinkSession) || !$this->_oMinkSession->isStarted()) {
+        if (is_null($this->minkSession) || !$this->minkSession->isStarted()) {
             $this->startMinkSession();
         }
-        return $this->_oMinkSession;
+        return $this->minkSession;
     }
 
     /**
@@ -1524,11 +1541,11 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     protected function _getClient()
     {
-        if (is_null($this->_oClient)) {
-            $this->_oClient = new \Selenium\Client($this->getTestConfig()->getSeleniumServerIp(), '4444');
+        if (is_null($this->client)) {
+            $this->client = new \Selenium\Client($this->getTestConfig()->getSeleniumServerIp(), '4444');
         }
 
-        return $this->_oClient;
+        return $this->client;
     }
 
 //----------------------------- Tests BoilerPlate related functions ------------------------------------
@@ -1668,11 +1685,11 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function getObjectValidator()
     {
-        if (!$this->_oValidator) {
-            $this->_oValidator = new oxObjectValidator();
+        if (!$this->validator) {
+            $this->validator = new oxObjectValidator();
         }
 
-        return $this->_oValidator;
+        return $this->validator;
     }
 
     /**
@@ -1859,8 +1876,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     protected function onNotSuccessfulTest(Exception $exception)
     {
-        if ($this->_iRetryTimesLeft > 0 && $this->shouldRetryTest($exception)) {
-            $this->_iRetryTimesLeft--;
+        if ($this->retryTimesLeft > 0 && $this->shouldRetryTest($exception)) {
+            $this->retryTimesLeft--;
             $this->tearDown();
             $this->stopMinkSession();
             $this->runBare();
