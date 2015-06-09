@@ -68,6 +68,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /** @var string Used to follow which window is currently selected by driver. */
     private $selectedWindow = null;
 
+    /** @var string Currently used mink driver. */
+    private $currentMinkDriver = '';
+
     /** @var int How many retry times are left. */
     private $retryTimesLeft;
 
@@ -111,6 +114,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $this->getTranslator()->setLanguage(1);
 
         $this->selectedFrame = 'relative=top';
+        $this->currentMinkDriver = $this->_blDefaultMinkDriver;
         $this->selectedWindow = null;
 
         $this->clearTemp();
@@ -1472,9 +1476,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     public function startMinkSession($driver = '')
     {
         $this->stopMinkSession();
-        $driver = $driver ? $driver : $this->_blDefaultMinkDriver;
+        $this->currentMinkDriver = $driver ? $driver : $this->currentMinkDriver;
 
-        $driverInterface = $this->_getMinkDriver($driver);
+        $driverInterface = $this->_getMinkDriver($this->currentMinkDriver);
         self::$minkSession = new \Behat\Mink\Session($driverInterface);
         self::$minkSession->start();
     }
