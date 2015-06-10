@@ -231,7 +231,12 @@ class oxTestConfig
      */
     public function getPartialModulePaths()
     {
-        return explode(',', $this->getValue('partial_module_paths'));
+        $modulePaths = array();
+        if ($paths = $this->getValue('partial_module_paths')) {
+            $modulePaths = explode(',', $paths);
+        }
+
+        return $modulePaths;
     }
 
     /**
