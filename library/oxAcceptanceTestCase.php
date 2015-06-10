@@ -105,17 +105,16 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     protected function setUp()
     {
-        $currentTestsSuitePath = $this->getSuitePath();
+        $this->selectedFrame = 'relative=top';
+        $this->currentMinkDriver = $this->_blDefaultMinkDriver;
+        $this->selectedWindow = null;
 
+        $currentTestsSuitePath = $this->getSuitePath();
         if (self::$testsSuitePath !== $currentTestsSuitePath) {
             self::$testsSuitePath = $currentTestsSuitePath;
             $this->setUpTestsSuite($currentTestsSuitePath);
         }
         $this->getTranslator()->setLanguage(1);
-
-        $this->selectedFrame = 'relative=top';
-        $this->currentMinkDriver = $this->_blDefaultMinkDriver;
-        $this->selectedWindow = null;
 
         $this->clearTemp();
     }
