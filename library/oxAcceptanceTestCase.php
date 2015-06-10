@@ -1908,13 +1908,14 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     protected function shouldRetryTest(Exception $e)
     {
         $isForcedRetry = $e instanceof oxRetryTestException;
+        $isSeleniumServerError = $e instanceof \Selenium\Exception;
 
         $isServerProblems = false;
         if ($this->isMinkSessionStarted()) {
             $isServerProblems = $this->isInternalServerError() || $this->isServiceUnavailable();
         }
 
-        return $isForcedRetry || $isServerProblems;
+        return $isForcedRetry || $isServerProblems || $isSeleniumServerError;
     }
 
     /**
