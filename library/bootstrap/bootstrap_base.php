@@ -128,7 +128,6 @@ class Bootstrap
         $serviceCaller->setParameter('serial', $config->getShopSerial());
         $serviceCaller->setParameter('addDemoData', $this->addDemoData);
         $serviceCaller->setParameter('turnOnVarnish', $config->shouldEnableVarnish());
-        $serviceCaller->setParameter('tempDirectory', $config->getTempDirectory());
 
         if ($setupPath = $config->getShopSetupPath()) {
             $fileCopier = new oxFileCopier();
