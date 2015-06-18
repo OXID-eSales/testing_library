@@ -117,6 +117,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $this->getTranslator()->setLanguage(1);
 
         $this->clearTemp();
+        if ($this->isMinkSessionStarted()) {
+            $this->clearCookies();
+        }
     }
 
     /**
@@ -173,9 +176,6 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     protected function tearDown()
     {
         $this->restoreDB('reset_test_db_dump');
-        if ($this->isMinkSessionStarted()) {
-            $this->clearCookies();
-        }
 
         parent::tearDown();
     }
@@ -1883,7 +1883,6 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     {
         if ($this->retryTimesLeft > 0 && $this->shouldRetryTest($exception)) {
             $this->retryTimesLeft--;
-            $this->tearDown();
             $this->stopMinkSession();
             $this->runBare();
             return;
