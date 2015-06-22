@@ -144,7 +144,7 @@ class oxTestModules
         if ($cnt = count(self::$_addedmods[$class])) {
             $last = self::$_addedmods[$class][$cnt - 1];
         } else {
-            $last = $class;
+            $last = oxRegistry::get('oxUtilsObject')->getClassName(strtolower($class));
         }
         eval ("class $name extends $last { $access \$$varName = $default;}");
         oxAddClassModule($name, $class);
@@ -170,7 +170,7 @@ class oxTestModules
         if ($cnt = count(self::$_addedmods[$class])) {
             $last = self::$_addedmods[$class][$cnt - 1];
         } else {
-            $last = $class;
+            $last = oxRegistry::get('oxUtilsObject')->getClassName(strtolower($class));
         }
         $sCode = '';
         if (preg_match('/^{.*}$/ms', $func)) {

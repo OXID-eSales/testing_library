@@ -61,6 +61,13 @@ abstract class BootstrapBase
         if ($testConfig->shouldInstallShop()) {
             $this->installShop();
         }
+
+        /** @var oxConfig $config */
+        $config = oxNew('oxConfig');
+        oxRegistry::set("oxConfig", $config);
+
+        /** Reset static variable in oxSuperCfg class, which is base class for every class. */
+        $config->setConfig($config);
     }
 
     /**
