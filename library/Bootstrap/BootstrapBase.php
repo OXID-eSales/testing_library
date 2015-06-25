@@ -68,6 +68,8 @@ abstract class BootstrapBase
 
         /** Reset static variable in oxSuperCfg class, which is base class for every class. */
         $config->setConfig($config);
+
+        $config->init();
     }
 
     /**
