@@ -140,6 +140,7 @@ abstract class UnitTestCase extends BaseTestCase
     {
         parent::setUp();
         oxRegistry::getUtils()->cleanStaticCache();
+        oxRegistry::set('oxtableviewnamegenerator', null);
 
         if ($this->getTestConfig()->getModulesToActivate()) {
             $testModuleLoader = $this->_getModuleLoader();
