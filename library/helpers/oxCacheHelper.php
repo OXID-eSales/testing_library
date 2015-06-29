@@ -22,7 +22,7 @@
 /**
  * Helper class for oxCache.
  */
-class oxCacheHelper extends oxCache
+class oxCacheHelper extends OxidEsales\Enterprise\Core\Cache\DynamicContent\ContentCache
 {
     /**
      * Throw an exception on reset.

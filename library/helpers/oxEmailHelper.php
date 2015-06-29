@@ -58,15 +58,15 @@ class oxEmailHelper extends oxEmail
     /**
      * Mocked method for testing.
      *
-     * @param oxOrder $oOrder
-     * @param string    $sSubject
+     * @param oxOrder $order
+     * @param string    $subject
      *
      * @return null
      */
-    public function sendOrderEmailToOwner($oOrder, $sSubject = null)
+    public function sendOrderEmailToOwner($order, $subject = null)
     {
         self::$blSendToOwnerWasCalled = true;
-        self::$oOwnerOrder = $oOrder;
+        self::$oOwnerOrder = $order;
 
         return null;
     }
