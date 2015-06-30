@@ -30,25 +30,37 @@ use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
  */
 class ClearCache implements ShopServiceInterface
 {
+    /** @var ServiceConfig */
+    private $serviceConfig;
+
     /**
      * @param ServiceConfig $config
      */
     public function __construct($config)
     {
+        $this->serviceConfig = $config;
     }
 
     /**
-     * Clears shop cache
+     * Clears shop cache.
      *
      * @param Request $request
      */
     public function init($request)
     {
         $cache = new Cache();
-        if (OXID_VERSION_EE) {
+        if ($this->getServiceConfig()->getShopEdition() === ServiceConfig::EDITION_ENTERPRISE) {
             $cache->clearCacheBackend();
             $cache->clearReverseProxyCache();
         }
         $cache->clearTemporaryDirectory();
+    }
+
+    /**
+     * @return ServiceConfig
+     */
+    protected function getServiceConfig()
+    {
+        return $this->serviceConfig;
     }
 }
