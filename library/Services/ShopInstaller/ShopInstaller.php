@@ -60,7 +60,7 @@ class ShopInstaller implements ShopServiceInterface
 
         include $shopPath ."core/oxconfk.php";
 
-        $serialClassPath = $shopPath ."Edition/Professional/Core/oxserial.php";
+        $serialClassPath = $shopPath ."core/oxserial.php";
         if (file_exists($serialClassPath)) {
             include_once $serialClassPath;
         }
@@ -196,12 +196,12 @@ class ShopInstaller implements ShopServiceInterface
      */
     public function setSerialNumber($serialNumber = null)
     {
-        if (class_exists('OxidEsales\Professional\Core\Serial')) {
+        if (class_exists('oxSerial')) {
             $dbHandler = $this->getDbHandler();
 
             $shopId = $this->getShopId();
 
-            $serial = new OxidEsales\Professional\Core\Serial();
+            $serial = new oxSerial();
             $serial->setEd($this->getServiceConfig()->getShopEdition() == 'EE' ? 2 : 1);
 
             $serial->isValidSerial($serialNumber);
