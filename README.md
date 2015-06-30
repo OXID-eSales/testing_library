@@ -28,7 +28,7 @@ However, installation varies slightly depending on selected location. We advise 
 #### Option 1: Selecting shop directory for installation (preferred way)
 
 To install testing library within shop directory, update/create `composer.json` with following values:
-```
+```json
 {
     "name": "oxid-esales/eshop",
     "description": "OXID eShop",
