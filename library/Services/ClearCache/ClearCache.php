@@ -45,8 +45,10 @@ class ClearCache implements ShopServiceInterface
     public function init($request)
     {
         $cache = new Cache();
-        $cache->clearCacheBackend();
-        $cache->clearReverseProxyCache();
+        if (OXID_VERSION_EE) {
+            $cache->clearCacheBackend();
+            $cache->clearReverseProxyCache();
+        }
         $cache->clearTemporaryDirectory();
     }
 }
