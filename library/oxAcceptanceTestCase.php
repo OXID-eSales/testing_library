@@ -62,15 +62,6 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /** @var string Tests suite path. */
     protected static $testsSuitePath = '';
 
-    /** @var string Used to follow which frame is currently selected by driver. */
-    private $selectedFrame = 'relative=top';
-
-    /** @var string Used to follow which window is currently selected by driver. */
-    private $selectedWindow = null;
-
-    /** @var string Currently used mink driver. */
-    private $currentMinkDriver = '';
-
     /** @var int How many retry times are left. */
     private $retryTimesLeft;
 
@@ -80,12 +71,6 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /** @var oxObjectValidator Object validator object */
     private $validator = null;
 
-    /** @var \Selenium\Client Selenium client. Used only with selenium driver. */
-    private $client = null;
-
-    /** @var \Behat\Mink\Session Mink session */
-    private static $minkSession = null;
-
     /**
      * Constructs a test case with the given name.
      *
@@ -93,7 +78,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      * @param array  $data
      * @param string $dataName
      */
-    public function __construct($name = NULL, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
@@ -231,7 +216,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $this->selectedFrame = 'relative=top';
         try {
             $this->selectWindow(null);
-            $this->windowMaximize(null);
+            $this->windowMaximize();
         } catch (\Behat\Mink\Exception\Exception $e) {
             // Do nothing if methods not implemented, for example with headless driver.
         }
@@ -692,6 +677,24 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     }
 
     /**
+     * Waits for frame to load by frame name
+     *
+     * @param string $sFrame         frame name
+     * @param int    $iTimeout       time to wait for frame
+     * @param bool   $blIgnoreResult Ignores if frame does not load
+     * @throws Exception
+     */
+    public function waitForFrameToLoad($sFrame, $iTimeout = 10000, $blIgnoreResult = true)
+    {
+        $sSelectedFrame = $this->getSelectedFrame();
+        $sFrame = $this->selectParentFrame($sFrame);
+
+        parent::waitForFrameToLoad($sFrame, $iTimeout, $blIgnoreResult);
+
+        $this->frame($sSelectedFrame);
+    }
+
+    /**
      * select frame in Admin interface.
      *
      * @param string $sFrame          Name of the frame.
@@ -714,6 +717,23 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         }
 
         $this->checkForErrors();
+    }
+
+    /**
+     * Selects frame by name.
+     *
+     * @param string $sFrame
+     *
+     * @return null
+     */
+    public function selectFrame($sFrame)
+    {
+        if ($sFrame == 'relative=top') {
+            $this->selectWindow(null);
+        } else {
+            $this->_waitForAppear('isElementPresent', $sFrame, 5, true);
+            parent::selectFrame($sFrame);
+        }
     }
 
     /**
@@ -941,7 +961,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $this->click($item);
         $this->checkForErrors();
         $this->dragAndDropToObject($item, $container);
-        if ($this->isElementPresent($item))  {
+        if ($this->isElementPresent($item)) {
             sleep(1);
         }
     }
@@ -1266,6 +1286,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     public function click($sLocator)
     {
         $sLocator = $this->translate($sLocator);
+        $this->waitForElement($sLocator, 5);
         return parent::click($sLocator);
     }
 
@@ -1457,101 +1478,6 @@ class oxAcceptanceTestCase extends oxMinkWrapper
 
     /* ------------------------ Mink related functions ---------------------------------- */
 
-    /**
-     * @return \Behat\Mink\Session
-     */
-    public function getMinkSession()
-    {
-        if (!$this->isMinkSessionStarted()) {
-            $this->startMinkSession();
-        }
-
-        return self::$minkSession;
-    }
-
-    /**
-     * @param string $driver
-     */
-    public function startMinkSession($driver = '')
-    {
-        $this->stopMinkSession();
-        $this->currentMinkDriver = $driver ? $driver : $this->currentMinkDriver;
-
-        $driverInterface = $this->_getMinkDriver($this->currentMinkDriver);
-        self::$minkSession = new \Behat\Mink\Session($driverInterface);
-        self::$minkSession->start();
-    }
-
-    /**
-     * Stops Mink session if it is started.
-     */
-    public static function stopMinkSession()
-    {
-        if (self::isMinkSessionStarted()) {
-            self::$minkSession->stop();
-        }
-    }
-
-    /**
-     * Returns whether mink session was started.
-     *
-     * @return bool
-     */
-    public static function isMinkSessionStarted()
-    {
-        return self::$minkSession && self::$minkSession->isStarted();
-    }
-
-    /**
-     * @param string $sDriver Driver name
-     *
-     * @throws Exception
-     *
-     * @return \Behat\Mink\Driver\DriverInterface
-     */
-    protected function _getMinkDriver($sDriver)
-    {
-        $browserName = $this->getTestConfig()->getBrowserName();
-        switch ($sDriver) {
-            case 'selenium2':
-                $oDriver = new \Behat\Mink\Driver\Selenium2Driver($browserName);
-                break;
-            case 'sahi':
-                $oDriver = new \Behat\Mink\Driver\SahiDriver($browserName, $this->_getClient());
-                break;
-            case 'goutte':
-                $aClientOptions = array();
-                $oGoutteClient = new \Behat\Mink\Driver\Goutte\Client();
-                $oGoutteClient->setClient(new \Guzzle\Http\Client('', $aClientOptions));
-                $oDriver = new \Behat\Mink\Driver\GoutteDriver($oGoutteClient);
-                break;
-            case 'zombie':
-                $oDriver = new \Behat\Mink\Driver\ZombieDriver();
-                break;
-            case 'selenium':
-                $client = $this->_getClient();
-                $oDriver = new \Behat\Mink\Driver\SeleniumDriver($browserName, shopURL, $client);
-                break;
-            default:
-                throw new Exception('Driver ' . $sDriver . ' was not found!');
-                break;
-        }
-
-        return $oDriver;
-    }
-
-    /**
-     * @return \Selenium\Client
-     */
-    protected function _getClient()
-    {
-        if (is_null($this->client)) {
-            $config = $this->getTestConfig();
-            $this->client = new \Selenium\Client($config->getSeleniumServerIp(), $config->getSeleniumServerPort());
-        }
-
-        return $this->client;
-    }
 
 //----------------------------- Tests BoilerPlate related functions ------------------------------------
 

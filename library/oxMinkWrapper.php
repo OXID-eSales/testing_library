@@ -19,10 +19,127 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+use \Behat\Mink\Element\NodeElement;
+
 require_once TEST_LIBRARY_PATH . "/oxBaseTestCase.php";
 
 class oxMinkWrapper extends oxBaseTestCase
 {
+
+    /** @var \Selenium\Client Selenium client. Used only with selenium driver. */
+    protected $client = null;
+
+    /** @var \Behat\Mink\Session Mink session */
+    protected static $minkSession = null;
+
+    /** @var string Currently used mink driver. */
+    protected $currentMinkDriver = '';
+
+    /** @var string Used to follow which window is currently selected by driver. */
+    protected $selectedWindow = null;
+
+    /** @var string Used to follow which frame is currently selected by driver. */
+    protected $selectedFrame = 'relative=top';
+
+    /**
+     * @return \Behat\Mink\Session
+     */
+    public function getMinkSession()
+    {
+        if (!$this->isMinkSessionStarted()) {
+            $this->startMinkSession();
+        }
+
+        return self::$minkSession;
+    }
+
+    /**
+     * Starts Mink session.
+     * Currently supported drivers: selenium, selenium2, goutte, sahi, zombie.
+     *
+     * @param string $driver
+     */
+    public function startMinkSession($driver = '')
+    {
+        $this->stopMinkSession();
+        $this->currentMinkDriver = $driver ? $driver : $this->currentMinkDriver;
+
+        $driverInterface = $this->_getMinkDriver($this->currentMinkDriver);
+        self::$minkSession = new \Behat\Mink\Session($driverInterface);
+        self::$minkSession->start();
+    }
+
+    /**
+     * Stops Mink session if it is started.
+     */
+    public static function stopMinkSession()
+    {
+        if (self::isMinkSessionStarted()) {
+            self::$minkSession->stop();
+        }
+    }
+
+    /**
+     * Returns whether mink session was started.
+     *
+     * @return bool
+     */
+    public static function isMinkSessionStarted()
+    {
+        return self::$minkSession && self::$minkSession->isStarted();
+    }
+
+    /**
+     * @param string $sDriver Driver name
+     *
+     * @throws Exception
+     *
+     * @return \Behat\Mink\Driver\DriverInterface
+     */
+    protected function _getMinkDriver($sDriver)
+    {
+        $browserName = $this->getTestConfig()->getBrowserName();
+        switch ($sDriver) {
+            case 'selenium2':
+                $oDriver = new \Behat\Mink\Driver\Selenium2Driver($browserName);
+                break;
+            case 'sahi':
+                $oDriver = new \Behat\Mink\Driver\SahiDriver($browserName, $this->_getClient());
+                break;
+            case 'goutte':
+                $aClientOptions = array();
+                $oGoutteClient = new \Behat\Mink\Driver\Goutte\Client();
+                $oGoutteClient->setClient(new \Guzzle\Http\Client('', $aClientOptions));
+                $oDriver = new \Behat\Mink\Driver\GoutteDriver($oGoutteClient);
+                break;
+            case 'zombie':
+                $oDriver = new \Behat\Mink\Driver\ZombieDriver();
+                break;
+            case 'selenium':
+                $client = $this->_getClient();
+                $oDriver = new \Behat\Mink\Driver\SeleniumDriver($browserName, shopURL, $client);
+                break;
+            default:
+                throw new Exception('Driver ' . $sDriver . ' was not found!');
+                break;
+        }
+
+        return $oDriver;
+    }
+
+    /**
+     * @return \Selenium\Client
+     */
+    protected function _getClient()
+    {
+        if (is_null($this->client)) {
+            $config = $this->getTestConfig();
+            $this->client = new \Selenium\Client($config->getSeleniumServerIp(), $config->getSeleniumServerPort());
+        }
+
+        return $this->client;
+    }
+
     /**
      * Opens url in browser
      *
@@ -37,14 +154,15 @@ class oxMinkWrapper extends oxBaseTestCase
      * Selects window
      *
      * @param string $sId
+     *
      * @return null
      */
     public function selectWindow($sId)
     {
         $this->getMinkSession()->getDriver()->switchToWindow($sId);
-        $this->_sSelectedWindow = $sId;
+        $this->selectedWindow = $sId;
         if (is_null($sId)) {
-            $this->_sSelectedFrame = 'relative=top';
+            $this->selectedFrame = 'relative=top';
         }
     }
 
@@ -55,24 +173,20 @@ class oxMinkWrapper extends oxBaseTestCase
      */
     public function getSelectedWindow()
     {
-        return $this->_sSelectedWindow;
+        return $this->selectedWindow;
     }
 
     /**
      * Selects frame by name
      *
      * @param string $sFrame
+     *
      * @return null
      */
     public function selectFrame($sFrame)
     {
-        if ($sFrame == 'relative=top') {
-            $this->selectWindow(null);
-        } else {
-            $this->_waitForAppear('isElementPresent', $sFrame, 5, true);
-            $this->getMinkSession()->getDriver()->switchToIFrame($sFrame);
-        }
-        $this->_sSelectedFrame = $sFrame;
+        $this->getMinkSession()->getDriver()->switchToIFrame($sFrame);
+        $this->selectedFrame = $sFrame;
     }
 
     /**
@@ -82,9 +196,14 @@ class oxMinkWrapper extends oxBaseTestCase
      */
     public function getSelectedFrame()
     {
-        return $this->_sSelectedFrame;
+        return $this->selectedFrame;
     }
 
+    /**
+     * Returns page title.
+     *
+     * @return string
+     */
     public function getTitle()
     {
         return $this->getMinkSession()->getDriver()->getBrowser()->getTitle();
@@ -95,7 +214,6 @@ class oxMinkWrapper extends oxBaseTestCase
      */
     public function windowMaximize()
     {
-//        $this->getMinkSession()->getDriver()->getWebDriverSession()->window('current')->maximize();
         $this->getMinkSession()->getDriver()->getBrowser()->windowMaximize();
     }
 
@@ -131,7 +249,6 @@ class oxMinkWrapper extends oxBaseTestCase
      */
     public function click($sSelector)
     {
-        $this->waitForElement($sSelector, 5);
         $this->getElement($sSelector)->click();
     }
 
@@ -196,8 +313,8 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Adds selection
      *
-     * @param $sSelector
-     * @param $sOptionSelector
+     * @param string $sSelector
+     * @param string $sOptionSelector
      */
     public function addSelection($sSelector, $sOptionSelector)
     {
@@ -208,7 +325,7 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Check checkbox
      *
-     * @param $sSelector
+     * @param string $sSelector
      */
     public function check($sSelector)
     {
@@ -218,7 +335,7 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Uncheck checkbox
      *
-     * @param $sSelector
+     * @param string $sSelector
      */
     public function uncheck($sSelector)
     {
@@ -226,7 +343,8 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
-     *
+     * @param string $sSelector
+     * @return bool
      */
     public function isChecked($sSelector)
     {
@@ -236,8 +354,8 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Execute keyUp action on element
      *
-     * @param $sSelector
-     * @param $sChar
+     * @param string $sSelector
+     * @param string $sChar
      */
     public function keyUp($sSelector, $sChar)
     {
@@ -247,8 +365,8 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Execute keyDown action on element
      *
-     * @param $sSelector
-     * @param $sChar
+     * @param string $sSelector
+     * @param string $sChar
      */
     public function keyDown($sSelector, $sChar)
     {
@@ -258,8 +376,8 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Execute keyPress action on element
      *
-     * @param $sSelector
-     * @param $sChar
+     * @param string $sSelector
+     * @param string $sChar
      */
     public function keyPress($sSelector, $sChar)
     {
@@ -267,7 +385,7 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
-     * @param $sSelector
+     * @param string $sSelector
      */
     public function mouseDown($sSelector)
     {
@@ -275,10 +393,18 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
+     * @param string $sSelector
+     */
+    public function mouseOver($sSelector)
+    {
+        $this->fireEvent($sSelector, 'mouseover');
+    }
+
+    /**
      * Drags element to container
      *
-     * @param $sSelector
-     * @param $sContainer
+     * @param string $sSelector
+     * @param string $sContainer
      */
     public function dragAndDropToObject($sSelector, $sContainer)
     {
@@ -303,7 +429,7 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Checks whether given element is present on page
      *
-     * @param $sSelector
+     * @param string $sSelector
      * @return bool
      */
     public function isElementPresent($sSelector)
@@ -325,7 +451,7 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Checks whether element is editable
      *
-     * @param $sSelector
+     * @param string $sSelector
      * @return mixed
      */
     public function isEditable($sSelector)
@@ -337,11 +463,11 @@ class oxMinkWrapper extends oxBaseTestCase
      * Overrides original method - waits for element before checking for text
      *
      * @param string $sSelector text to be searched
+     *
      * @return string
      */
     public function getText($sSelector)
     {
-//        return str_replace(array("\n", "&nbsp;") ,array("", " "), preg_replace( "/ +/", " ", trim( strip_tags( $this->getElement( $sSelector )->getHtml() ) ) ) );
         $oElement = $this->getElement($sSelector);
         try {
             $sText = $oElement->getText();
@@ -355,12 +481,12 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Returns element's value
      *
-     * @param $sSelector
+     * @param string $sSelector
+     *
      * @return mixed|string
      */
     public function getValue($sSelector)
     {
-//        $mValue = $this->getElement( $sSelector )->getValue();
         $mValue = $this->_getValue($this->getElement($sSelector)->getXpath());
 
         $sType = $this->getElement($sSelector)->getAttribute('type');
@@ -374,7 +500,8 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Returns selected option label
      *
-     * @param $sSelector
+     * @param string $sSelector
+     *
      * @return null|string
      */
     public function getSelectedLabel($sSelector)
@@ -412,7 +539,8 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Returns selected option label
      *
-     * @param $sSelector
+     * @param string $sSelector
+     *
      * @return null|string
      */
     public function getSelectedIndex($sSelector)
@@ -433,7 +561,6 @@ class oxMinkWrapper extends oxBaseTestCase
      */
     public function getConfirmation()
     {
-//        $this->getMinkSession()->getDriver()->getWebDriverSession()->accept_alert();
         $this->getMinkSession()->getDriver()->getBrowser()->getConfirmation();
     }
 
@@ -442,7 +569,6 @@ class oxMinkWrapper extends oxBaseTestCase
      */
     public function close()
     {
-//        $this->getMinkSession()->getDriver()->getWebDriverSession()->deleteWindow();
         $this->getMinkSession()->getDriver()->getBrowser()->close();
         $this->getMinkSession()->getDriver()->switchToWindow(null);
     }
@@ -463,12 +589,19 @@ class oxMinkWrapper extends oxBaseTestCase
         return $sSource;
     }
 
+    /**
+     * Waits for PopUp window to appear
+     */
     public function waitForPopUp()
     {
     }
 
     /**
+     * Returns count of all elements which can be found by xPath.
      *
+     * @param string $sSelector
+     *
+     * @return int
      */
     public function getXpathCount($sSelector)
     {
@@ -482,7 +615,8 @@ class oxMinkWrapper extends oxBaseTestCase
      *
      * @param string $sSelector
      * @param bool   $blFailOnError
-     * @return \Behat\Mink\Element\NodeElement|null
+     *
+     * @return NodeElement|null
      */
     public function getElement($sSelector, $blFailOnError = true)
     {
@@ -503,7 +637,9 @@ class oxMinkWrapper extends oxBaseTestCase
 
     /**
      * Get attribute from selector with attribute
-     * @param $sSelectorWithAttribute
+     *
+     * @param string $sSelectorWithAttribute
+     *
      * @return mixed|null
      */
     public function getAttribute($sSelectorWithAttribute)
@@ -524,7 +660,7 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
-     * Call event on element
+     * Call event on element.
      *
      * @param string $sSelector
      * @param string $sEvent
@@ -535,8 +671,11 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
+     * Waits for page to load. Can make additional check if page is still loading (though not always works).
+     *
      * @param int  $iTimeout
      * @param bool $blCheckIfLoading
+     *
      * @return null|void
      */
     public function waitForPageToLoad($iTimeout = 10000, $blCheckIfLoading = false)
@@ -549,7 +688,21 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
-     * @return mixed
+     * Waits for jQuery to finish. Includes waiting for ajax requests or animations to finish.
+     *
+     * @param int $iTimeout
+     */
+    public function waitForJQueryToFinish($iTimeout = 10000)
+    {
+        $this->getMinkSession()->wait($iTimeout * $this->_iWaitTimeMultiplier,
+            "(typeof jQuery !== 'undefined' && 0 === jQuery.active && 0 === jQuery(':animated').length)"
+        );
+    }
+
+    /**
+     * Returns array with all open windows.
+     *
+     * @return array
      */
     public function getAllWindowNames()
     {
@@ -563,13 +716,11 @@ class oxMinkWrapper extends oxBaseTestCase
      * @param string $sFrame         frame name
      * @param int    $iTimeout       time to wait for frame
      * @param bool   $blIgnoreResult Ignores if frame does not load
+     *
      * @throws Exception
      */
     public function waitForFrameToLoad($sFrame, $iTimeout = 10000, $blIgnoreResult = true)
     {
-        $sSelectedFrame = $this->getSelectedFrame();
-        $sFrame = $this->selectParentFrame($sFrame);
-
         try {
             $this->getMinkSession()->getDriver()->getBrowser()->waitForFrameToLoad($sFrame,
                 $iTimeout * $this->_iWaitTimeMultiplier);
@@ -578,8 +729,6 @@ class oxMinkWrapper extends oxBaseTestCase
                 throw $e;
             }
         }
-
-        $this->frame($sSelectedFrame);
     }
 
     /**
@@ -594,8 +743,11 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
-     * @param $locator
-     * @param $value
+     * Types value to locator element.
+     *
+     * @param string $locator
+     * @param string $value
+     *
      * @return mixed
      */
     public function typeKeys($locator, $value)
@@ -606,7 +758,8 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Captures screen shot to given file.
      *
-     * @param $sFileName
+     * @param string $sFileName
+     *
      * @return string
      */
     public function getScreenShot($sFileName)
@@ -621,6 +774,7 @@ class oxMinkWrapper extends oxBaseTestCase
 
     /**
      * Call getCurrentUrl()
+     *
      * @return string
      */
     public function getLocation()
@@ -629,8 +783,9 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
-     * @param $sSelector
-     * @return \Behat\Mink\Element\NodeElement|mixed|null
+     * @param string $sSelector
+     *
+     * @return NodeElement|mixed|null
      */
     protected function _getElement($sSelector)
     {
@@ -656,8 +811,9 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Returns element by given id or name
      *
-     * @param $sSelector
-     * @return \Behat\Mink\Element\NodeElement|null
+     * @param string $sSelector
+     *
+     * @return NodeElement|null
      */
     protected function _getElementByIdOrName($sSelector)
     {
@@ -675,7 +831,8 @@ class oxMinkWrapper extends oxBaseTestCase
     /**
      * Returns element by given link
      *
-     * @param $sSelector
+     * @param string $sSelector
+     *
      * @return mixed
      */
     protected function _getElementByLink($sSelector)
@@ -697,8 +854,9 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
-     * @param $sSelector
-     * @return \Behat\Mink\Element\NodeElement|null
+     * @param string $sSelector
+     *
+     * @return NodeElement|null
      */
     protected function _getElementByCss($sSelector)
     {
@@ -708,8 +866,9 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
-     * @param $sSelector
-     * @return \Behat\Mink\Element\NodeElement|null
+     * @param string $sSelector
+     *
+     * @return NodeElement|null
      */
     protected function _getElementByIdOrNameCSS($sSelector)
     {
@@ -718,8 +877,9 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
-     * @param $sSelector
-     * @return \Behat\Mink\Element\NodeElement|null
+     * @param string $sSelector
+     *
+     * @return NodeElement|null
      */
     protected function _getElementByIdOrNameXpath($sSelector)
     {
@@ -728,8 +888,9 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
-     * @param $sSelectorWithAttribute
-     * @param $iSeparatorPosition
+     * @param string $sSelectorWithAttribute
+     * @param int    $iSeparatorPosition
+     *
      * @return string
      */
     protected function _getSelectorWithoutAttribute($sSelectorWithAttribute, $iSeparatorPosition)
@@ -744,8 +905,9 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
-     * @param $sSelectorWithAttribute
-     * @param $iSeparatorPosition
+     * @param string $sSelectorWithAttribute
+     * @param int    $iSeparatorPosition
+     *
      * @return string
      */
     protected function _getAttributeWithoutSelector($sSelectorWithAttribute, $iSeparatorPosition)
@@ -755,28 +917,34 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
-     * @param $oSelect
-     * @param $iIndex
+     * @param NodeElement $oSelect
+     * @param int         $iIndex
+     *
+     * @return string
      */
     protected function _getSelectOptionByIndex($oSelect, $iIndex)
     {
         $oOptions = $oSelect->findAll('css', "option");
         foreach ($oOptions as $iKey => $oOption) {
+            /** @var \Behat\Mink\Element\NodeElement $oOption  */
             if ($iIndex == $iKey) {
                 return $oOption->getValue();
             }
         }
+
         return $oOption->getValue();
     }
 
     /**
-     * @param $aElements
-     * @param $sValue
+     * @param array[NodeElement] $aElements
+     * @param string             $sValue
+     *
      * @return mixed
      */
     protected function _getExactMatch($aElements, $sValue)
     {
         foreach ($aElements as $oElement) {
+            /** @var NodeElement $oElement */
             if (strcasecmp($oElement->getValue(), $sValue) == 0 || strcasecmp($oElement->getText(), $sValue) == 0) {
                 return $oElement;
             }
@@ -786,7 +954,8 @@ class oxMinkWrapper extends oxBaseTestCase
     }
 
     /**
-     * @param $xpath
+     * @param string $xpath
+     *
      * @return mixed
      */
     public function _getValue($xpath)
