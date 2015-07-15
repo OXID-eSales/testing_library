@@ -2053,10 +2053,3 @@ class AcceptanceTestCase extends MinkWrapper
     }
 }
 
-/**
- * Backward compatibility, do not use it for new tests.
- * @deprecated use oxAcceptanceTestCase instead
- */
-class oxTestCase extends AcceptanceTestCase
-{
-}

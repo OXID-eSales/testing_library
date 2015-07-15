@@ -838,11 +838,3 @@ class UnitTestCase extends BaseTestCase
         }
     }
 }
-
-/**
- * Backward compatibility, do not use it for new tests.
- * @deprecated use oxAcceptanceTestCase instead
- */
-class OxidTestCase extends UnitTestCase
-{
-}

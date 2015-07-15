@@ -23,7 +23,6 @@ namespace OxidEsales\TestingLibrary;
 
 class ObjectValidator
 {
-
     /**
      * @var array
      */
