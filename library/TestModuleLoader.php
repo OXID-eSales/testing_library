@@ -19,10 +19,14 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+namespace OxidEsales\TestingLibrary;
+
+use oxRegistry;
+
 /**
  * Class oxTestModuleLoader
  */
-class oxTestModuleLoader
+class TestModuleLoader
 {
     /** @var array */
     protected static $moduleData = array('chains' => array(), 'paths' => array());

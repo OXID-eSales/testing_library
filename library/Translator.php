@@ -19,9 +19,12 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-class oxTranslator
-{
+namespace OxidEsales\TestingLibrary;
 
+use oxRegistry;
+
+class Translator
+{
     /**
      * @var $_iLanguage integer variable
      */
@@ -208,7 +211,7 @@ class oxTranslator
      *
      * @param $sString
      *
-     * @return oxTranslator
+     * @return bool
      */
     protected function _isTranslateAble($sString)
     {

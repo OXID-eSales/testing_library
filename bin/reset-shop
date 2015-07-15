@@ -22,13 +22,11 @@
 
 define('TEST_LIBRARY_PATH', __DIR__ .'/../library/');
 
-require_once TEST_LIBRARY_PATH . 'oxTestConfig.php';
-require_once TEST_LIBRARY_PATH . 'oxFileCopier.php';
-require_once TEST_LIBRARY_PATH . 'oxServiceCaller.php';
+require_once TEST_LIBRARY_PATH . 'TestConfig.php';
 
-$testConfig = new oxTestConfig();
+$testConfig = new OxidEsales\TestingLibrary\TestConfig();
 
-$serviceCaller = new oxServiceCaller($testConfig);
+$serviceCaller = new OxidEsales\TestingLibrary\ServiceCaller($testConfig);
 $serviceCaller->setParameter('serial', $testConfig->getShopSerial());
 $serviceCaller->setParameter('addDemoData', 1);
 $serviceCaller->setParameter('turnOnVarnish', $testConfig->shouldEnableVarnish());

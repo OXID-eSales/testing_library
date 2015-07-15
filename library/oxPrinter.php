@@ -19,12 +19,6 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-require_once 'PHPUnit/Framework.php';
-require_once 'PHPUnit/Util/Filter.php';
-require_once 'PHPUnit/Util/Printer.php';
-require_once 'PHPUnit/Framework/TestSuite.php';
-require_once 'dbRestore.php';
-
 class oxPrinter extends PHPUnit_TextUI_ResultPrinter
 {
 

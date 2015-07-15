@@ -19,10 +19,14 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+namespace OxidEsales\TestingLibrary;
+
+use PHPUnit_Framework_MockObject_Invocation as Invocation;
+
 /**
  * Class for creating stub objects.
  */
-class oxMockStubFunc implements PHPUnit_Framework_MockObject_Stub
+class MockStubFunc implements \PHPUnit_Framework_MockObject_Stub
 {
     /** @var string */
     private $_func;
@@ -41,13 +45,13 @@ class oxMockStubFunc implements PHPUnit_Framework_MockObject_Stub
      * Fakes the processing of the invocation $invocation by returning a
      * specific value.
      *
-     * @param PHPUnit_Framework_MockObject_Invocation $invocation
+     * @param Invocation $invocation
      * The invocation which was mocked and matched by the current method
      * and argument matchers.
      *
      * @return mixed
      */
-    public function invoke(PHPUnit_Framework_MockObject_Invocation $invocation)
+    public function invoke(Invocation $invocation)
     {
         if (is_string($this->_func) && preg_match('/^\{.+\}$/', $this->_func)) {
             $args = $invocation->parameters;

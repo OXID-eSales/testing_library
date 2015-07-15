@@ -19,6 +19,8 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+namespace OxidEsales\TestingLibrary;
+
 use \org\bovigo\vfs\vfsStream;
 use \org\bovigo\vfs\vfsStreamDirectory;
 
@@ -26,7 +28,7 @@ use \org\bovigo\vfs\vfsStreamDirectory;
  * VfsStream wrapper class. This class should be used to work with vfsStreams while testing to
  * avoid problems.
  */
-class oxVfsStreamWrapper
+class VfsStreamWrapper
 {
     const ROOT_DIRECTORY = 'root';
 

@@ -19,13 +19,15 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+namespace OxidEsales\TestingLibrary;
+
 use Symfony\Component\Yaml\Yaml;
 
 if (!defined('TEST_LIBRARY_BASE_DIRECTORY')) {
     define('TEST_LIBRARY_BASE_DIRECTORY', __DIR__ . '/../');
 }
 
-class oxTestConfig
+class TestConfig
 {
     /** @var array */
     private $configuration;
@@ -123,7 +125,7 @@ class oxTestConfig
             }
             include_once $shopPath . 'core/oxsupercfg.php';
             include_once $shopPath . 'core/oxconfig.php';
-            $config = new oxConfig();
+            $config = new \oxConfig();
             $shopEdition = $config->getEdition();
             $this->shopEdition = strtoupper($shopEdition);
         }
@@ -170,7 +172,7 @@ class oxTestConfig
             if (!$shopUrl) {
                 $shopPath = $this->getShopPath();
                 include_once $shopPath . 'core/oxconfigfile.php';
-                $configFile = new oxConfigFile($shopPath . "config.inc.php");
+                $configFile = new \oxConfigFile($shopPath . "config.inc.php");
                 $shopUrl = $shopUrl ? $shopUrl : $configFile->sShopURL;
             }
             $this->shopUrl = rtrim($shopUrl, '/') . '/';
@@ -189,7 +191,7 @@ class oxTestConfig
         if (is_null($this->charsetMode)) {
             $shopPath = $this->getShopPath();
             include_once $shopPath . 'core/oxconfigfile.php';
-            $configFile = new oxConfigFile($shopPath . "config.inc.php");
+            $configFile = new \oxConfigFile($shopPath . "config.inc.php");
             $this->charsetMode = $configFile->iUtfMode ? 'utf8' : 'latin1';
         }
 

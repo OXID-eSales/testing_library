@@ -19,67 +19,66 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-namespace OxidEsales\TestingLibrary\Bootstrap;
+namespace OxidEsales\TestingLibrary\Bootstrap {
+    class UnitBootstrap extends BootstrapBase
+    {
+        /** @var int Whether to add demo data. */
+        protected $addDemoData = 0;
 
-class UnitBootstrap extends BootstrapBase
-{
-    /** @var int Whether to add demo data. */
-    protected $addDemoData = 0;
+        /**
+         * Initiates shop before testing.
+         */
+        public function init()
+        {
+            parent::init();
+
+            $config = $this->getTestConfig();
+
+            $dbRestoreClass = $config->getDatabaseRestorationClass();
+            if (file_exists(TEST_LIBRARY_PATH .'dbRestore/'.$dbRestoreClass . ".php")) {
+                $restoreDbPath = TEST_LIBRARY_PATH .'dbRestore/'. $dbRestoreClass . ".php";
+            } else {
+                $restoreDbPath = TEST_LIBRARY_PATH .'dbRestore/dbRestore.php';
+            }
+            include_once $restoreDbPath;
+
+            $currentTestSuite = $config->getCurrentTestSuite();
+            if (file_exists($currentTestSuite .'/additional.inc.php')) {
+                include_once $currentTestSuite .'/additional.inc.php';
+            }
+        }
+    }
+}
+
+namespace {
+    /**
+     * @deprecated Use TestConfig::getCurrentTestSuite() or TestConfig::getTempDirectory().
+     *
+     * @return string
+     */
+    function getTestsBasePath()
+    {
+        $testsPath = '';
+        if (defined('CURRENT_TEST_SUITE')) {
+            $testsPath = CURRENT_TEST_SUITE;
+        }
+        return $testsPath;
+    }
 
     /**
-     * Initiates shop before testing.
+     * Returns framework base path.
+     * Overwrites original method so that it would be possible to mock shop directory during testing.
+     *
+     * @return string
      */
-    public function init()
+    function getShopBasePath()
     {
-        parent::init();
-
-        $config = $this->getTestConfig();
-
-        $dbRestoreClass = $config->getDatabaseRestorationClass();
-        if (file_exists(TEST_LIBRARY_PATH .'dbRestore/'.$dbRestoreClass . ".php")) {
-            $restoreDbPath = TEST_LIBRARY_PATH .'dbRestore/'. $dbRestoreClass . ".php";
-        } else {
-            $restoreDbPath = TEST_LIBRARY_PATH .'dbRestore/dbRestore.php';
-        }
-        include_once $restoreDbPath;
-
-        $currentTestSuite = $config->getCurrentTestSuite();
-        if (file_exists($currentTestSuite .'/additional.inc.php')) {
-            include_once $currentTestSuite .'/additional.inc.php';
+        $shopDirectory = OX_BASE_PATH;
+        if (class_exists('oxUnitTestCase', false)) {
+            $configShopDir = \oxRegistry::getConfig()->getConfigParam('sShopDir');
+            $shopDirectory = $configShopDir ? $configShopDir : $shopDirectory;
         }
 
-        require_once TEST_LIBRARY_PATH .'/oxUnitTestCase.php';
+        return rtrim($shopDirectory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
 }
-
-/**
- * @deprecated Use oxTestConfig::getCurrentTestSuite() or oxTestConfig::getTempDirectory().
- *
- * @return string
- */
-function getTestsBasePath()
-{
-    $testsPath = '';
-    if (defined('CURRENT_TEST_SUITE')) {
-        $testsPath = CURRENT_TEST_SUITE;
-    }
-    return $testsPath;
-}
-
-/**
- * Returns framework base path.
- * Overwrites original method so that it would be possible to mock shop directory during testing.
- *
- * @return string
- */
-function getShopBasePath()
-{
-    $shopDirectory = OX_BASE_PATH;
-    if (class_exists('oxUnitTestCase', false)) {
-        $configShopDir = \oxRegistry::getConfig()->getConfigParam('sShopDir');
-        $shopDirectory = $configShopDir ? $configShopDir : $shopDirectory;
-    }
-
-    return rtrim($shopDirectory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-}
-

@@ -21,14 +21,15 @@
 
 namespace OxidEsales\TestingLibrary\Bootstrap;
 
-require_once TEST_LIBRARY_PATH.'oxTestConfig.php';
-require_once TEST_LIBRARY_PATH.'oxServiceCaller.php';
-require_once TEST_LIBRARY_PATH.'oxFileCopier.php';
 require_once TEST_LIBRARY_PATH .'test_utils.php';
+
+use OxidEsales\TestingLibrary\TestConfig;
+use OxidEsales\TestingLibrary\FileCopier;
+use OxidEsales\TestingLibrary\ServiceCaller;
 
 abstract class BootstrapBase
 {
-    /** @var \oxTestConfig */
+    /** @var TestConfig */
     private $testConfig;
 
     /** @var int Whether to add demo data when installing the shop. */
@@ -39,7 +40,7 @@ abstract class BootstrapBase
      */
     public function __construct()
     {
-        $this->testConfig = new \oxTestConfig();
+        $this->testConfig = new TestConfig();
     }
 
     /**
@@ -65,7 +66,7 @@ abstract class BootstrapBase
     /**
      * Returns tests config.
      *
-     * @return \oxTestConfig
+     * @return TestConfig
      */
     public function getTestConfig()
     {
@@ -86,7 +87,7 @@ abstract class BootstrapBase
 
         $tempDirectory = $testConfig->getTempDirectory();
         if ($tempDirectory && $tempDirectory != '/') {
-            $fileCopier = new \oxFileCopier();
+            $fileCopier = new FileCopier();
             $fileCopier->createEmptyDirectory($tempDirectory);
             $fileCopier->createEmptyDirectory($tempDirectory.'/smarty/');
         }
@@ -124,13 +125,13 @@ abstract class BootstrapBase
     {
         $config = $this->getTestConfig();
 
-        $serviceCaller = new \oxServiceCaller($this->getTestConfig());
+        $serviceCaller = new ServiceCaller($this->getTestConfig());
         $serviceCaller->setParameter('serial', $config->getShopSerial());
         $serviceCaller->setParameter('addDemoData', $this->addDemoData);
         $serviceCaller->setParameter('turnOnVarnish', $config->shouldEnableVarnish());
 
         if ($setupPath = $config->getShopSetupPath()) {
-            $fileCopier = new \oxFileCopier();
+            $fileCopier = new FileCopier();
             $remoteDirectory = $config->getRemoteDirectory();
             $shopDirectory = $remoteDirectory ? $remoteDirectory : $config->getShopPath();
 
@@ -150,7 +151,7 @@ abstract class BootstrapBase
      */
     protected function registerResetDbAfterSuite()
     {
-        $serviceCaller = new \oxServiceCaller($this->getTestConfig());
+        $serviceCaller = new ServiceCaller($this->getTestConfig());
         $serviceCaller->setParameter('dumpDB', true);
         $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
         try {
@@ -161,7 +162,7 @@ abstract class BootstrapBase
 
         register_shutdown_function(function () {
             if (!defined('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR')) {
-                $serviceCaller = new \oxServiceCaller();
+                $serviceCaller = new ServiceCaller();
                 $serviceCaller->setParameter('restoreDB', true);
                 $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
                 $serviceCaller->callService('ShopPreparation', 1);

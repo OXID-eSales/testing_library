@@ -19,13 +19,17 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+namespace OxidEsales\TestingLibrary;
+
+use Exception;
+
 /**
  * CURL request handler.
  * Handles CURL calls
  *
  * @package model
  */
-class oxTestCurl
+class Curl
 {
     /**
      * Curl instance.
@@ -98,8 +102,6 @@ class oxTestCurl
      * Sets url to call
      *
      * @param string $sUrl URL to call.
-     *
-     * @throws oxException if url is not valid
      *
      * @return null
      */

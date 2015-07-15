@@ -19,17 +19,17 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-require_once 'oxTestCurl.php';
+namespace OxidEsales\TestingLibrary;
 
 /**
  * Class for calling services. Services must already exist in shop.
  */
-class oxServiceCaller
+class ServiceCaller
 {
     /** @var array Service parameters. Will be passed to service. */
     private $parameters = array();
 
-    /** @var oxTestConfig */
+    /** @var TestConfig */
     private $config;
 
     /** @var bool Whether services was copied to the shop. */
@@ -38,12 +38,12 @@ class oxServiceCaller
     /**
      * Initiates class dependencies.
      *
-     * @param oxTestConfig $config
+     * @param TestConfig $config
      */
     public function __construct($config = null)
     {
         if (is_null($config)) {
-            $config = new oxTestConfig();
+            $config = new TestConfig();
         }
         $this->config = $config;
     }
@@ -77,7 +77,7 @@ class oxServiceCaller
      *
      * @example call to update information to database.
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return string $sResult
      */
@@ -105,7 +105,7 @@ class oxServiceCaller
      *
      * @param $sServiceName
      * @return string
-     * @throws Exception
+     * @throws \Exception
      */
     protected function callRemoteService($sServiceName)
     {
@@ -114,7 +114,7 @@ class oxServiceCaller
             $this->copyServicesToShop();
         }
 
-        $oCurl = new oxTestCurl();
+        $oCurl = new Curl();
 
         $this->setParameter('service', $sServiceName);
 
@@ -144,13 +144,13 @@ class oxServiceCaller
 
         define('TMP_PATH', $this->getTestConfig()->getTempDirectory());
 
-        $config = new ServiceConfig();
+        $config = new \ServiceConfig();
         $config->setShopDirectory($this->getTestConfig()->getShopPath());
         $config->setShopEdition($this->getTestConfig()->getShopEdition());
         $config->setTempDirectory($this->getTestConfig()->getTempDirectory());
 
-        $serviceCaller = new ServiceFactory($config);
-        $request = new Request($this->getParameters());
+        $serviceCaller = new \ServiceFactory($config);
+        $request = new \Request($this->getParameters());
         $service = $serviceCaller->createService($serviceName);
 
         return $service->init($request);
@@ -159,7 +159,7 @@ class oxServiceCaller
     /**
      * Returns tests config object.
      *
-     * @return oxTestConfig
+     * @return TestConfig
      */
     protected function getTestConfig()
     {
@@ -171,7 +171,7 @@ class oxServiceCaller
      */
     protected function copyServicesToShop()
     {
-        $oFileCopier = new oxFileCopier();
+        $oFileCopier = new FileCopier();
         $sTarget = $this->getTestConfig()->getRemoteDirectory() . '/Services';
         $oFileCopier->copyFiles(TEST_LIBRARY_PATH.'/Services', $sTarget, true);
     }
@@ -181,7 +181,7 @@ class oxServiceCaller
      *
      * @param string $sString
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return mixed
      */
@@ -189,7 +189,7 @@ class oxServiceCaller
     {
         $mResult = unserialize($sString);
         if ($sString !== 'b:0;' && $mResult === false) {
-            throw new Exception(substr($sString, 0, 5000));
+            throw new \Exception(substr($sString, 0, 5000));
         }
 
         return $mResult;

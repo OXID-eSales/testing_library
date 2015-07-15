@@ -19,10 +19,14 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+namespace OxidEsales\TestingLibrary;
+
+use Exception;
+
 /**
  * Class for copying files. Can copy files locally or to external server.
  */
-class oxFileCopier
+class FileCopier
 {
 
     /**

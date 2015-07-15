@@ -19,18 +19,33 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-require_once TEST_LIBRARY_PATH . "oxShopStateBackup.php";
-require_once TEST_LIBRARY_PATH . "oxVfsStreamWrapper.php";
-require_once TEST_LIBRARY_PATH . "oxBaseTestCase.php";
-require_once TEST_LIBRARY_PATH . "oxTestModuleLoader.php";
+namespace OxidEsales\TestingLibrary;
+
+use DbRestore;
+use oxRegistry;
+use oxDb;
+use oxUtilsObject;
+use oxConfig;
+use oxSession;
+use oxLegacyDb;
+use oxCacheBackend;
+use ReflectionClass;
+use PHPUnit_Framework_TestResult as TestResult;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
+
+use oxTestsStaticCleaner;
+use oxTestModules;
+use modInstances;
+use modOxid;
+use modOxUtilsDate;
+
 require_once TEST_LIBRARY_PATH . 'Services/Library/DbHandler.php';
-require_once TEST_LIBRARY_PATH . 'oxMockStubFunc.php';
 require_once TEST_LIBRARY_PATH . 'modOxUtilsDate.php';
 
 /**
  * Base tests class. Most tests should extend this class.
  */
-class oxUnitTestCase extends oxBaseTestCase
+class UnitTestCase extends BaseTestCase
 {
     /** @var bool Registry cache. */
     private static $setupBeforeTestSuiteDone = false;
@@ -38,13 +53,13 @@ class oxUnitTestCase extends oxBaseTestCase
     /** @var DbRestore Database restorer object */
     private static $dbRestore = null;
 
-    /** @var oxTestModuleLoader Module loader. */
+    /** @var TestModuleLoader Module loader. */
     private static $moduleLoader = null;
 
-    /** @var oxShopStateBackup */
+    /** @var ShopStateBackup */
     private static $shopStateBackup;
 
-    /** @var oxVfsStreamWrapper */
+    /** @var VfsStreamWrapper */
     private static $vfsStreamWrapper;
 
     /** @var array MultiShop tables used in shop */
@@ -122,12 +137,12 @@ class oxUnitTestCase extends oxBaseTestCase
     /**
      * Returns shop state backup class.
      *
-     * @return oxShopStateBackup
+     * @return ShopStateBackup
      */
     protected static function getShopStateBackup()
     {
         if (is_null(self::$shopStateBackup)) {
-            self::$shopStateBackup = new oxShopStateBackup();
+            self::$shopStateBackup = new ShopStateBackup();
         }
         return self::$shopStateBackup;
     }
@@ -162,11 +177,11 @@ class oxUnitTestCase extends oxBaseTestCase
     /**
      * Starts test.
      *
-     * @param PHPUnit_Framework_TestResult $result
+     * @param TestResult $result
      *
-     * @return PHPUnit_Framework_TestResult
+     * @return TestResult
      */
-    public function run(PHPUnit_Framework_TestResult $result = null)
+    public function run(TestResult $result = null)
     {
         $this->removeBlacklistedClassesFromCodeCoverage($result);
         $result = parent::run($result);
@@ -375,7 +390,7 @@ class oxUnitTestCase extends oxBaseTestCase
     /**
      * Returns basic stub of database link object to use as mock for oxDb class
      *
-     * @return oxLegacyDb|PHPUnit_Framework_MockObject_MockObject
+     * @return oxLegacyDb|MockObject
      */
     public function getDbObjectMock()
     {
@@ -690,12 +705,12 @@ class oxUnitTestCase extends oxBaseTestCase
     }
 
     /**
-     * @return oxVfsStreamWrapper
+     * @return VfsStreamWrapper
      */
     public function getVfsStreamWrapper()
     {
         if (is_null(self::$vfsStreamWrapper)) {
-            self::$vfsStreamWrapper = new oxVfsStreamWrapper();
+            self::$vfsStreamWrapper = new VfsStreamWrapper();
         }
 
         return self::$vfsStreamWrapper;
@@ -734,11 +749,11 @@ class oxUnitTestCase extends oxBaseTestCase
      *
      * @access protected
      *
-     * @return OxMockStubFunc
+     * @return MockStubFunc
      */
     public function evalFunction($value)
     {
-        return new oxMockStubFunc($value);
+        return new MockStubFunc($value);
     }
 
     /**
@@ -758,12 +773,12 @@ class oxUnitTestCase extends oxBaseTestCase
     /**
      * Returns database restorer object.
      *
-     * @return oxTestModuleLoader
+     * @return TestModuleLoader
      */
     protected static function _getModuleLoader()
     {
         if (is_null(self::$moduleLoader)) {
-            self::$moduleLoader = new oxTestModuleLoader();
+            self::$moduleLoader = new TestModuleLoader();
         }
 
         return self::$moduleLoader;
@@ -809,7 +824,7 @@ class oxUnitTestCase extends oxBaseTestCase
     /**
      * Removes blacklisted classes from code coverage report, as this is only fixed in PHPUnit 4.0.
      *
-     * @param PHPUnit_Framework_TestResult $result
+     * @param TestResult $result
      */
     private function removeBlacklistedClassesFromCodeCoverage($result)
     {
@@ -828,6 +843,6 @@ class oxUnitTestCase extends oxBaseTestCase
  * Backward compatibility, do not use it for new tests.
  * @deprecated use oxAcceptanceTestCase instead
  */
-class OxidTestCase extends oxUnitTestCase
+class OxidTestCase extends UnitTestCase
 {
 }

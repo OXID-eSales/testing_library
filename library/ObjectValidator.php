@@ -19,7 +19,9 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-class oxObjectValidator
+namespace OxidEsales\TestingLibrary;
+
+class ObjectValidator
 {
 
     /**
@@ -89,15 +91,16 @@ class oxObjectValidator
     /**
      * Returns object parameters
      *
-     * @param        $sClass
+     * @param string $sClass
      * @param array  $aObjectParams
      * @param string $sOxId
      * @param string $sShopId
+     *
      * @return array
      */
     protected function _getObjectParameters($sClass, $aObjectParams, $sOxId = null, $sShopId = null)
     {
-        $oServiceCaller = new oxServiceCaller();
+        $oServiceCaller = new ServiceCaller();
         $oServiceCaller->setParameter('cl', $sClass);
 
         $sOxId = $sOxId ? $sOxId : 'lastInsertedId';

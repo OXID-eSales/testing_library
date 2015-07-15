@@ -19,15 +19,22 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-require_once TEST_LIBRARY_PATH . 'oxMinkWrapper.php';
-require_once TEST_LIBRARY_PATH . 'oxObjectValidator.php';
-require_once TEST_LIBRARY_PATH . 'oxTranslator.php';
-require_once TEST_LIBRARY_PATH . 'oxRetryTestException.php';
+namespace OxidEsales\TestingLibrary;
+
+use oxDb;
+use Exception;
+use DateTime;
+use ReflectionClass;
+use PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
+use PHPUnit_Framework_AssertionFailedError as AssertionFailedError;
+use PHPUnit_Framework_SkippedTest as SkippedTest;
+use PHPUnit_Framework_IncompleteTest as IncompleteTest;
+use PHPUnit_Util_Filter;
 
 /**
  * Base class for Selenium tests.
  */
-class oxAcceptanceTestCase extends oxMinkWrapper
+class AcceptanceTestCase extends MinkWrapper
 {
     /** @var int How much time to wait for pages to load. Wait time is multiplied by this value. */
     protected $_iWaitTimeMultiplier = 1;
@@ -65,10 +72,10 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /** @var int How many retry times are left. */
     private $retryTimesLeft;
 
-    /** @var oxTranslator Translator object */
+    /** @var Translator Translator object */
     protected static $translator = null;
 
-    /** @var oxObjectValidator Object validator object */
+    /** @var ObjectValidator Object validator object */
     private $validator = null;
 
     /**
@@ -138,7 +145,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         if ($testDataPath) {
             $config = $this->getTestConfig();
             $target = $config->getRemoteDirectory() ? $config->getRemoteDirectory() : $config->getShopPath();
-            $oFileCopier = new oxFileCopier();
+            $oFileCopier = new FileCopier();
             $oFileCopier->copyFiles($testDataPath, $target);
         }
 
@@ -191,7 +198,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
             try {
                 $this->onNotSuccessfulTest($oErrorException);
             } catch (Exception $oE) {
-                if ($oE instanceof PHPUnit_Framework_ExpectationFailedException) {
+                if ($oE instanceof ExpectationFailedException) {
                     $sErrorMsg .= "\n\n---\n" . $oE->getCustomMessage();
                 }
             }
@@ -247,18 +254,18 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /**
      * $_oTranslator getter
      *
-     * @return oxTranslator
+     * @return Translator
      */
     public static function getTranslator()
     {
         if (is_null(self::$translator)) {
-            self::$translator = new oxTranslator();
+            self::$translator = new Translator();
         }
         return self::$translator;
     }
 
     /**
-     * Calls oxTranslator and tries to translate a string
+     * Calls Translator and tries to translate a string
      * throws fail if string is found, but can't be translated
      *
      * @param string $sString
@@ -1491,7 +1498,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function dumpDB($sTmpPrefix = null)
     {
-        $oServiceCaller = new oxServiceCaller($this->getTestConfig());
+        $oServiceCaller = new ServiceCaller($this->getTestConfig());
         $oServiceCaller->setParameter('dumpDB', true);
         $oServiceCaller->setParameter('dump-prefix', $sTmpPrefix);
         $oServiceCaller->callService('ShopPreparation', 1);
@@ -1508,7 +1515,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function restoreDB($sTmpPrefix = null)
     {
-        $oServiceCaller = new oxServiceCaller($this->getTestConfig());
+        $oServiceCaller = new ServiceCaller($this->getTestConfig());
         $oServiceCaller->setParameter('restoreDB', true);
         $oServiceCaller->setParameter('dump-prefix', $sTmpPrefix);
         $oServiceCaller->callService('ShopPreparation', 1);
@@ -1524,7 +1531,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     public function importSql($sFilePath)
     {
         if (filesize($sFilePath)) {
-            $oServiceCaller = new oxServiceCaller($this->getTestConfig());
+            $oServiceCaller = new ServiceCaller($this->getTestConfig());
             $oServiceCaller->setParameter('importSql', '@' . $sFilePath);
             $oServiceCaller->callService('ShopPreparation', 1);
         }
@@ -1565,7 +1572,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $sShopId = null,
         $sLang = 'en'
     ) {
-        $oServiceCaller = new oxServiceCaller($this->getTestConfig());
+        $oServiceCaller = new ServiceCaller($this->getTestConfig());
         $oServiceCaller->setParameter('cl', $sClass);
         $oServiceCaller->setParameter('fnc', $sFnc);
         $oServiceCaller->setParameter('oxid', $sId);
@@ -1596,7 +1603,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function assignElementToSubShopSC($sElementTable, $sShopId, $sParentShopId = 1, $sElementId = null)
     {
-        $oServiceCaller = new oxServiceCaller($this->getTestConfig());
+        $oServiceCaller = new ServiceCaller($this->getTestConfig());
         $oServiceCaller->setParameter('elementtable', $sElementTable);
         $oServiceCaller->setParameter('shopid', $sShopId);
         $oServiceCaller->setParameter('parentshopid', $sParentShopId);
@@ -1612,12 +1619,12 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     }
 
     /**
-     * @return oxObjectValidator
+     * @return ObjectValidator
      */
     public function getObjectValidator()
     {
         if (!$this->validator) {
-            $this->validator = new oxObjectValidator();
+            $this->validator = new ObjectValidator();
         }
 
         return $this->validator;
@@ -1724,7 +1731,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function clearCookies()
     {
-        $testConfig = new oxTestConfig();
+        $testConfig = new TestConfig();
         $shopUrl = preg_replace("|(https?://[^:/]*?):[0-9]+|", '$1', $testConfig->getShopUrl());
         $this->open($shopUrl . '/_cc.php');
         if ($this->getHtmlSource() != '<head></head><body></body>') {
@@ -1741,7 +1748,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function clearTemp()
     {
-        $oServiceCaller = new oxServiceCaller($this->getTestConfig());
+        $oServiceCaller = new ServiceCaller($this->getTestConfig());
         try {
             $oServiceCaller->callService('ClearCache', 1);
         } catch (Exception $e) {
@@ -1780,11 +1787,11 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      *
      * @param string $message Failure message to show if retry is not available.
      *
-     * @throws oxRetryTestException
+     * @throws RetryTestException
      */
     public function retryTest($message = '')
     {
-        throw new oxRetryTestException($message);
+        throw new RetryTestException($message);
     }
 
     /**
@@ -1831,7 +1838,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     protected function shouldRetryTest(Exception $e)
     {
-        $isForcedRetry = $e instanceof oxRetryTestException;
+        $isForcedRetry = $e instanceof RetryTestException;
         $isSeleniumServerError = $e instanceof \Selenium\Exception;
 
         $isServerProblems = false;
@@ -1851,9 +1858,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     protected function shouldReformatExceptionMessage(Exception $exception)
     {
-        $isAssertionException = $exception instanceof PHPUnit_Framework_AssertionFailedError;
-        $isTestSkipped = $exception instanceof PHPUnit_Framework_SkippedTest
-            || $exception instanceof PHPUnit_Framework_IncompleteTest;
+        $isAssertionException = $exception instanceof AssertionFailedError;
+        $isTestSkipped = $exception instanceof SkippedTest
+            || $exception instanceof IncompleteTest;
 
         return $isAssertionException && !$isTestSkipped;
     }
@@ -2027,14 +2034,14 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      *
      * @param Exception $exception
      *
-     * @return Exception|PHPUnit_Framework_AssertionFailedError
+     * @return Exception|AssertionFailedError
      */
     protected function formException(Exception $exception)
     {
         $exceptionClassName = get_class($exception);
 
-        if ($exception instanceof PHPUnit_Framework_ExpectationFailedException) {
-            $exceptionClassName = get_class(new PHPUnit_Framework_AssertionFailedError());
+        if ($exception instanceof ExpectationFailedException) {
+            $exceptionClassName = get_class(new AssertionFailedError());
         }
 
         $newException = new $exceptionClassName(
@@ -2050,6 +2057,6 @@ class oxAcceptanceTestCase extends oxMinkWrapper
  * Backward compatibility, do not use it for new tests.
  * @deprecated use oxAcceptanceTestCase instead
  */
-class oxTestCase extends oxAcceptanceTestCase
+class oxTestCase extends AcceptanceTestCase
 {
 }

@@ -22,8 +22,8 @@
 
 define('TEST_LIBRARY_PATH', __DIR__ .'/../library/');
 
-require_once TEST_LIBRARY_PATH . 'oxTestConfig.php';
-$testConfig = new oxTestConfig();
+require_once TEST_LIBRARY_PATH . 'TestConfig.php';
+$testConfig = new OxidEsales\TestingLibrary\TestConfig();
 
 $arguments = array();
 array_shift($argv);

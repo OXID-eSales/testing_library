@@ -19,6 +19,11 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+namespace OxidEsales\TestingLibrary;
+
+use oxRegistry;
+use oxSystemComponentException;
+
 require_once TEST_LIBRARY_HELPERS_PATH . 'oxArticleHelper.php';
 require_once TEST_LIBRARY_HELPERS_PATH . 'oxSeoEncoderHelper.php';
 require_once TEST_LIBRARY_HELPERS_PATH . 'oxDeliveryHelper.php';
@@ -29,7 +34,7 @@ require_once TEST_LIBRARY_HELPERS_PATH . 'oxAdminViewHelper.php';
 /**
  * This class is used to backup and restore shop state during testing.
  */
-class oxShopStateBackup
+class ShopStateBackup
 {
     /** @var array Registry objects saved for restoration. */
     private $registryCache;
@@ -42,12 +47,12 @@ class oxShopStateBackup
      */
     public function resetStaticVariables()
     {
-        oxArticleHelper::cleanup();
-        oxSeoEncoderHelper::cleanup();
-        oxDeliveryHelper::cleanup();
-        oxManufacturerHelper::cleanup();
-        oxAdminViewHelper::cleanup();
-        oxVendorHelper::cleanup();
+        \oxArticleHelper::cleanup();
+        \oxSeoEncoderHelper::cleanup();
+        \oxDeliveryHelper::cleanup();
+        \oxManufacturerHelper::cleanup();
+        \oxAdminViewHelper::cleanup();
+        \oxVendorHelper::cleanup();
     }
 
     /**

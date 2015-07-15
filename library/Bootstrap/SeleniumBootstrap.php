@@ -21,6 +21,9 @@
 
 namespace OxidEsales\TestingLibrary\Bootstrap;
 
+use OxidEsales\TestingLibrary\AcceptanceTestCase;
+use OxidEsales\TestingLibrary\FileCopier;
+
 class SeleniumBootstrap extends BootstrapBase
 {
     /** @var int Whether to add demo data when installing the shop. */
@@ -45,10 +48,8 @@ class SeleniumBootstrap extends BootstrapBase
         /** Reset static variable in oxSuperCfg class, which is base class for every class. */
         $config->setConfig($config);
 
-        require_once TEST_LIBRARY_PATH .'/oxAcceptanceTestCase.php';
-
         register_shutdown_function(function () {
-            \oxAcceptanceTestCase::stopMinkSession();
+            AcceptanceTestCase::stopMinkSession();
         });
     }
 
@@ -90,7 +91,7 @@ class SeleniumBootstrap extends BootstrapBase
     {
         $config = $this->getTestConfig();
         $target = $config->getRemoteDirectory() ? $config->getRemoteDirectory().'/_cc.php' : $config->getShopPath().'/_cc.php';
-        $fileCopier = new \oxFileCopier();
+        $fileCopier = new FileCopier();
         $fileCopier->copyFiles(TEST_LIBRARY_PATH .'_cc.php', $target, true);
     }
 }

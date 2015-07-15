@@ -19,9 +19,11 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+namespace OxidEsales\TestingLibrary;
+
 /**
  * Extension to PHPUnit_Framework_AssertionFailedError to mark that test should be retried.
  */
-class oxRetryTestException extends PHPUnit_Framework_AssertionFailedError
+class RetryTestException extends \PHPUnit_Framework_AssertionFailedError
 {
 }

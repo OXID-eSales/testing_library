@@ -19,11 +19,12 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-use \Behat\Mink\Element\NodeElement;
+namespace OxidEsales\TestingLibrary;
 
-require_once TEST_LIBRARY_PATH . "/oxBaseTestCase.php";
+use Behat\Mink\Element\NodeElement;
+use Exception;
 
-class oxMinkWrapper extends oxBaseTestCase
+class MinkWrapper extends BaseTestCase
 {
 
     /** @var \Selenium\Client Selenium client. Used only with selenium driver. */

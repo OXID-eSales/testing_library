@@ -22,9 +22,9 @@
 
 define('TEST_LIBRARY_PATH', __DIR__ .'/../library/');
 
-require_once TEST_LIBRARY_PATH . 'oxTestConfig.php';
-require_once TEST_LIBRARY_PATH . 'oxFileCopier.php';
-$testConfig = new oxTestConfig();
+require_once TEST_LIBRARY_PATH . 'TestConfig.php';
+require_once TEST_LIBRARY_PATH . 'FileCopier.php';
+$testConfig = new OxidEsales\TestingLibrary\TestConfig();
 
 $arguments = array();
 array_shift($argv);
@@ -72,7 +72,7 @@ function runSuite($suite, $phpUnit, $arguments)
         $configuration = "-c ". escapeshellarg("$suite/phpunit.xml");
     }
 
-    $fileCopier = new oxFileCopier();
+    $fileCopier = new OxidEsales\TestingLibrary\FileCopier();
     $reportsDir = $suite .'/reports';
     $fileCopier->createEmptyDirectory($reportsDir);
 
