@@ -32,6 +32,10 @@ chdir(TEST_LIBRARY_BASE_DIRECTORY);
 define('TEST_LIBRARY_PATH', TEST_LIBRARY_BASE_DIRECTORY .'library/');
 define('TEST_LIBRARY_HELPERS_PATH', TEST_LIBRARY_PATH .'helpers/');
 
+define('OXID_PHP_UNIT', true);
+
+require_once 'vendor/autoload.php';
+
 $sTestFilePath = strtolower(end($_SERVER['argv']));
 $sTestType = 'unit';
 foreach (array('acceptance', 'selenium', 'javascript') as $search) {
@@ -41,16 +45,12 @@ foreach (array('acceptance', 'selenium', 'javascript') as $search) {
     }
 }
 
-require_once TEST_LIBRARY_PATH ."/bootstrap/bootstrap_base.php";
-
 switch($sTestType) {
     case 'acceptance':
-        include_once TEST_LIBRARY_PATH ."/bootstrap/bootstrap_selenium.php";
-        $bootstrap = new SeleniumBootstrap();
+        $bootstrap = new OxidEsales\TestingLibrary\Bootstrap\SeleniumBootstrap();
         break;
     default:
-        include_once TEST_LIBRARY_PATH ."/bootstrap/bootstrap_unit.php";
-        $bootstrap = new UnitBootstrap();
+        $bootstrap = new OxidEsales\TestingLibrary\Bootstrap\UnitBootstrap();
         break;
 }
 

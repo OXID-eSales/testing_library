@@ -19,7 +19,9 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-class UnitBootstrap extends Bootstrap
+namespace OxidEsales\TestingLibrary\Bootstrap;
+
+class UnitBootstrap extends BootstrapBase
 {
     /** @var int Whether to add demo data. */
     protected $addDemoData = 0;
@@ -74,7 +76,7 @@ function getShopBasePath()
 {
     $shopDirectory = OX_BASE_PATH;
     if (class_exists('oxUnitTestCase', false)) {
-        $configShopDir = oxRegistry::getConfig()->getConfigParam('sShopDir');
+        $configShopDir = \oxRegistry::getConfig()->getConfigParam('sShopDir');
         $shopDirectory = $configShopDir ? $configShopDir : $shopDirectory;
     }
 

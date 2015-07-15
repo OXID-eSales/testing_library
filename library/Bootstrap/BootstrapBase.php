@@ -19,16 +19,16 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-define('OXID_PHP_UNIT', true);
+namespace OxidEsales\TestingLibrary\Bootstrap;
 
 require_once TEST_LIBRARY_PATH.'oxTestConfig.php';
 require_once TEST_LIBRARY_PATH.'oxServiceCaller.php';
 require_once TEST_LIBRARY_PATH.'oxFileCopier.php';
 require_once TEST_LIBRARY_PATH .'test_utils.php';
 
-class Bootstrap
+abstract class BootstrapBase
 {
-    /** @var oxTestConfig */
+    /** @var \oxTestConfig */
     private $testConfig;
 
     /** @var int Whether to add demo data when installing the shop. */
@@ -39,7 +39,7 @@ class Bootstrap
      */
     public function __construct()
     {
-        $this->testConfig = new oxTestConfig();
+        $this->testConfig = new \oxTestConfig();
     }
 
     /**
@@ -65,7 +65,7 @@ class Bootstrap
     /**
      * Returns tests config.
      *
-     * @return oxTestConfig
+     * @return \oxTestConfig
      */
     public function getTestConfig()
     {
@@ -82,11 +82,11 @@ class Bootstrap
         $shopPath = $testConfig->getShopPath();
         require_once $shopPath .'bootstrap.php';
 
-        oxRegistry::set("oxConfig", new oxConfig());
+        \oxRegistry::set("oxConfig", new \oxConfig());
 
         $tempDirectory = $testConfig->getTempDirectory();
         if ($tempDirectory && $tempDirectory != '/') {
-            $fileCopier = new oxFileCopier();
+            $fileCopier = new \oxFileCopier();
             $fileCopier->createEmptyDirectory($tempDirectory);
             $fileCopier->createEmptyDirectory($tempDirectory.'/smarty/');
         }
@@ -118,19 +118,19 @@ class Bootstrap
     /**
      * Installs the shop.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     protected function installShop()
     {
         $config = $this->getTestConfig();
 
-        $serviceCaller = new oxServiceCaller($this->getTestConfig());
+        $serviceCaller = new \oxServiceCaller($this->getTestConfig());
         $serviceCaller->setParameter('serial', $config->getShopSerial());
         $serviceCaller->setParameter('addDemoData', $this->addDemoData);
         $serviceCaller->setParameter('turnOnVarnish', $config->shouldEnableVarnish());
 
         if ($setupPath = $config->getShopSetupPath()) {
-            $fileCopier = new oxFileCopier();
+            $fileCopier = new \oxFileCopier();
             $remoteDirectory = $config->getRemoteDirectory();
             $shopDirectory = $remoteDirectory ? $remoteDirectory : $config->getShopPath();
 
@@ -139,7 +139,7 @@ class Bootstrap
 
         try {
             $serviceCaller->callService('ShopInstaller');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             exit("Failed to install shop with message:" . $e->getMessage());
         }
     }
@@ -150,18 +150,18 @@ class Bootstrap
      */
     protected function registerResetDbAfterSuite()
     {
-        $serviceCaller = new oxServiceCaller($this->getTestConfig());
+        $serviceCaller = new \oxServiceCaller($this->getTestConfig());
         $serviceCaller->setParameter('dumpDB', true);
         $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
         try {
             $serviceCaller->callService('ShopPreparation', 1);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             define('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR', true);
         }
 
         register_shutdown_function(function () {
             if (!defined('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR')) {
-                $serviceCaller = new oxServiceCaller();
+                $serviceCaller = new \oxServiceCaller();
                 $serviceCaller->setParameter('restoreDB', true);
                 $serviceCaller->setParameter('dump-prefix', 'orig_db_dump');
                 $serviceCaller->callService('ShopPreparation', 1);

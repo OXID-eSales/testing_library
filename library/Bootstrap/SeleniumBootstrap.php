@@ -19,7 +19,9 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-class SeleniumBootstrap extends Bootstrap
+namespace OxidEsales\TestingLibrary\Bootstrap;
+
+class SeleniumBootstrap extends BootstrapBase
 {
     /** @var int Whether to add demo data when installing the shop. */
     protected $addDemoData = 1;
@@ -36,9 +38,9 @@ class SeleniumBootstrap extends Bootstrap
         $this->prepareScreenShots();
         $this->copyTestFilesToShop();
 
-        /** @var oxConfig $config */
+        /** @var \oxConfig $config */
         $config = oxNew('oxConfig');
-        oxRegistry::set("oxConfig", $config);
+        \oxRegistry::set("oxConfig", $config);
 
         /** Reset static variable in oxSuperCfg class, which is base class for every class. */
         $config->setConfig($config);
@@ -46,7 +48,7 @@ class SeleniumBootstrap extends Bootstrap
         require_once TEST_LIBRARY_PATH .'/oxAcceptanceTestCase.php';
 
         register_shutdown_function(function () {
-            oxAcceptanceTestCase::stopMinkSession();
+            \oxAcceptanceTestCase::stopMinkSession();
         });
     }
 
@@ -88,7 +90,7 @@ class SeleniumBootstrap extends Bootstrap
     {
         $config = $this->getTestConfig();
         $target = $config->getRemoteDirectory() ? $config->getRemoteDirectory().'/_cc.php' : $config->getShopPath().'/_cc.php';
-        $fileCopier = new oxFileCopier();
+        $fileCopier = new \oxFileCopier();
         $fileCopier->copyFiles(TEST_LIBRARY_PATH .'_cc.php', $target, true);
     }
 }
