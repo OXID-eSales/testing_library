@@ -31,6 +31,9 @@
     "include-path": [
         "../../symfony/yaml/"
     ],
+    "autoload": {
+        "psr-4": {"OxidEsales\\TestingLibrary\\": "library/"}
+    },
     "scripts": {
         "post-install-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
