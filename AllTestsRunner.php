@@ -33,7 +33,7 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     /** @var array Run these tests before any other */
     protected static $_aPriorityTests = array();
 
-    /** @var oxTestConfig */
+    /** @var OxidEsales\TestingLibrary\TestConfig */
     protected static $testConfig;
 
     /**
@@ -183,12 +183,12 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     /**
      * Returns Test configuration.
      *
-     * @return oxTestConfig
+     * @return OxidEsales\TestingLibrary\TestConfig
      */
     protected static function getTestConfig()
     {
         if (is_null(static::$testConfig)) {
-            static::$testConfig = new oxTestConfig();
+            static::$testConfig = new OxidEsales\TestingLibrary\TestConfig();
         }
 
         return static::$testConfig;
