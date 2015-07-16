@@ -27,8 +27,8 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
     use OxidEsales\TestingLibrary\Services\Library\Request;
     use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
     use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
-    use oxSerial;
-    use OxSetup;
+    use OxidEsales\EshopProfessional\Core\Serial;
+    use oxSetup;
 
     /**
      * Class for shop installation.
@@ -62,11 +62,6 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
             $this->dbHandler = new DatabaseHandler($this->shopConfig);
 
             include $shopPath ."core/oxconfk.php";
-
-            $serialClassPath = $shopPath ."core/oxserial.php";
-            if (file_exists($serialClassPath)) {
-                include_once $serialClassPath;
-            }
         }
 
         /**
@@ -196,12 +191,12 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
          */
         public function setSerialNumber($serialNumber = null)
         {
-            if (class_exists('oxSerial')) {
+            if (class_exists('OxidEsales\Professional\Core\Serial')) {
                 $dbHandler = $this->getDbHandler();
 
                 $shopId = $this->getShopId();
 
-                $serial = new oxSerial();
+                $serial = new Serial();
                 $serial->setEd($this->getServiceConfig()->getShopEdition() == 'EE' ? 2 : 1);
 
                 $serial->isValidSerial($serialNumber);
