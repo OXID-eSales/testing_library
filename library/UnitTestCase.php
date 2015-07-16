@@ -29,10 +29,10 @@ use oxUtilsObject;
 use oxConfig;
 use oxSession;
 use oxLegacyDb;
-use oxCacheBackend;
 use ReflectionClass;
 use PHPUnit_Framework_TestResult as TestResult;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit_Framework_Exception;
 
 use oxTestsStaticCleaner;
 use oxTestModules;
@@ -403,7 +403,7 @@ abstract class UnitTestCase extends BaseTestCase
     /**
      * Returns cache backend
      *
-     * @return oxCacheBackend
+     * @return \OxidEsales\Enterprise\Core\Cache\Generic\Cache
      */
     public function getCacheBackend()
     {
@@ -532,7 +532,7 @@ abstract class UnitTestCase extends BaseTestCase
      * @param  boolean    $callOriginalClone       Can be used to disable the call to the original class' clone constructor.
      * @param  boolean    $callAutoload            Can be used to disable __autoload() during the generation of the test double class.
      * @param  boolean    $cloneArguments
-     * @return PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      * @throws PHPUnit_Framework_Exception
      * @since  Method available since Release 3.0.0
      */
