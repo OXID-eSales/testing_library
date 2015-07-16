@@ -27,3 +27,13 @@
 class OxidTestCase extends OxidEsales\TestingLibrary\UnitTestCase
 {
 }
+
+/**
+ * Backward compatibility, do not use it for new tests.
+ *
+ * @deprecated use OxidEsales\TestingLibrary\UnitTestCase instead
+ */
+class UnitTestCase extends OxidEsales\TestingLibrary\UnitTestCase
+{
+
+}
