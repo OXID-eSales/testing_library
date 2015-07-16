@@ -8,7 +8,7 @@ This library is meant to help developers check their shop/module code with ease.
 
 ## Requirements
 
-* eShop version 4.9.4/5.2.4 or later
+* Latest eShop development version (use b-1.0 branch for earlier versions)
 * Latest Composer version
 * PHP cURL extension
 * Not compatible with Windows (use VM instead)
