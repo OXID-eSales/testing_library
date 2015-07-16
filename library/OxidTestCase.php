@@ -33,7 +33,7 @@ class OxidTestCase extends OxidEsales\TestingLibrary\UnitTestCase
  *
  * @deprecated use OxidEsales\TestingLibrary\UnitTestCase instead
  */
-class UnitTestCase extends OxidEsales\TestingLibrary\UnitTestCase
+class oxUnitTestCase extends OxidEsales\TestingLibrary\UnitTestCase
 {
 
 }
