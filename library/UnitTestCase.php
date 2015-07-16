@@ -53,7 +53,7 @@ class UnitTestCase extends BaseTestCase
     /** @var DbRestore Database restorer object */
     private static $dbRestore = null;
 
-    /** @var TestModuleLoader Module loader. */
+    /** @var ModuleLoader Module loader. */
     private static $moduleLoader = null;
 
     /** @var ShopStateBackup */
@@ -773,12 +773,12 @@ class UnitTestCase extends BaseTestCase
     /**
      * Returns database restorer object.
      *
-     * @return TestModuleLoader
+     * @return ModuleLoader
      */
     protected static function _getModuleLoader()
     {
         if (is_null(self::$moduleLoader)) {
-            self::$moduleLoader = new TestModuleLoader();
+            self::$moduleLoader = new ModuleLoader();
         }
 
         return self::$moduleLoader;

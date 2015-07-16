@@ -24,9 +24,9 @@ namespace OxidEsales\TestingLibrary;
 use oxRegistry;
 
 /**
- * Class oxTestModuleLoader
+ * Module loader class. Can imitate loaded moudle for testing.
  */
-class TestModuleLoader
+class ModuleLoader
 {
     /** @var array */
     protected static $moduleData = array('chains' => array(), 'paths' => array());
