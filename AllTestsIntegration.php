@@ -28,5 +28,5 @@ class AllTestsSelenium extends AllTestsRunner
 {
 
     /** @var array Default test suites */
-    protected static $_aTestSuites = array('integration');
+    protected static $_aTestSuites = array('integration', 'Integration');
 }

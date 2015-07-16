@@ -28,5 +28,5 @@ class AllTestsUnit extends AllTestsRunner
 {
 
     /** @var array Default test suites */
-    protected static $testSuites = array('unit', 'integration');
+    protected static $testSuites = array('unit', 'integration', 'Unit', 'Integration');
 }

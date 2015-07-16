@@ -191,12 +191,10 @@ class TestConfig
      */
     public function getShopTestsPath()
     {
-        $testsPath = $this->getValue('shop_tests_path');
-        if (strpos($testsPath, '/') !== 0) {
-            $testsPath = $this->getShopPath() . $testsPath;
-        }
+        $partialPath = $this->getValue('shop_tests_path');
+        $fullPath = $this->prependShopPath($partialPath);
 
-        return realpath($testsPath) . '/';
+        return realpath($fullPath) . '/';
     }
 
     /**
@@ -204,16 +202,27 @@ class TestConfig
      * Paths starts from shop/dir/modules/ folder.
      * To get full path to module append shop/dir/modules/ to the start of each module path returned.
      *
-     * @return array|null
+     * @return array
      */
     public function getPartialModulePaths()
     {
-        $modulePaths = array();
-        if ($paths = $this->getValue('partial_module_paths')) {
-            $modulePaths = explode(',', $paths);
+        return $this->parseMultipleValues('partial_module_paths');
+    }
+
+    /**
+     * Returns array of additional test paths.
+     *
+     * @return array
+     */
+    public function getAdditionalTestPaths()
+    {
+        $testsPaths = array();
+        $parsedConfigOptionValue = $this->parseMultipleValues('additional_test_paths');
+        foreach ($parsedConfigOptionValue as $partialTestsPath) {
+            $testsPaths[] = realpath($this->prependShopPath($partialTestsPath));
         }
 
-        return $modulePaths;
+        return $testsPaths;
     }
 
     /**
@@ -434,12 +443,7 @@ class TestConfig
     public function getTestSuites()
     {
         if (is_null($this->testSuites)) {
-            $testSuites = $this->getModuleTestSuites();
-
-            if ($this->shouldRunShopTests() && $this->getShopTestsPath()) {
-                $testSuites[] = $this->getShopTestsPath();
-            }
-            $this->testSuites = $testSuites;
+            $this->testSuites = $this->formTestSuites();
         }
 
         return $this->testSuites;
@@ -536,5 +540,50 @@ class TestConfig
     private function getConfigFileName()
     {
         return $this->getVendorDirectory() ."../test_config.yml";
+    }
+
+    /**
+     * @return array
+     */
+    private function formTestSuites()
+    {
+        $testSuites = $this->getModuleTestSuites();
+        if ($this->shouldRunShopTests() && $this->getShopTestsPath()) {
+            $testSuites[] = $this->getShopTestsPath();
+        }
+        foreach ($this->getAdditionalTestPaths() as $testPaths) {
+            $testSuites[] = $testPaths;
+        }
+
+        return $testSuites;
+    }
+
+    /**
+     * @var string $configOptionName
+     *
+     * @return array
+     */
+    private function parseMultipleValues($configOptionName)
+    {
+        $multipleValues = array();
+        if ($valueSeparatedComma = $this->getValue($configOptionName)) {
+            $multipleValues = explode(',', $valueSeparatedComma);
+        }
+
+        return $multipleValues;
+    }
+
+    /**
+     * @param $partialPath
+     * @return string
+     */
+    private function prependShopPath($partialPath)
+    {
+        $testsPath = $partialPath;
+        if (strpos($partialPath, '/') !== 0) {
+            $testsPath = $this->getShopPath() . $partialPath;
+        }
+
+        return $testsPath;
     }
 }

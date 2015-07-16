@@ -78,3 +78,6 @@ optional_parameters:
 
     # Selenium server port. Used to connect to selenium server when Mink selenium driver is used for acceptance tests.
     selenium_server_port: '4444'
+
+    # For running additional tests, please specify paths separated by commas.
+    additional_test_paths: 'Edition/Enterprise/Tests,Edition/Professional/Tests'
