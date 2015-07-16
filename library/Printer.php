@@ -19,7 +19,14 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-class oxPrinter extends PHPUnit_TextUI_ResultPrinter
+namespace OxidEsales\TestingLibrary;
+
+use PHPUnit_Framework_Test;
+use PHPUnit_Framework_AssertionFailedError;
+use Exception;
+use PHPUnit_Framework_TestSuite;
+
+class Printer extends \PHPUnit_TextUI_ResultPrinter
 {
     /** @var int */
     private $timeStats;
