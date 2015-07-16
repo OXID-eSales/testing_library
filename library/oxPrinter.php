@@ -21,97 +21,73 @@
 
 class oxPrinter extends PHPUnit_TextUI_ResultPrinter
 {
+    /** @var int */
+    private $timeStats;
 
-    private $_iDBChangeMode;
-    private $_iDBChangeOutput;
-    private $_blDBResetPerSuit;
-    private $_blDBResetPerTest;
-
-    private $_timeStats;
-
-    private $_oDbRestore;
-
-    public function __construct($_blDBResetPerTest = true, $_blDBResetPerSuit = true, $iDBChangeMode = MAINTENANCE_SINGLEROWS, $_iDBChangeOutput = MAINTENANCE_MODE_ONLYRESET, $blVerbose = false)
-    {
-        parent::__construct(null, (bool) $blVerbose);
-        $this->_iDBChangeMode = $iDBChangeMode;
-        $this->_iDBChangeOutput = $_iDBChangeOutput;
-        $this->_blDBResetPerTest = $_blDBResetPerTest;
-        $this->_blDBResetPerSuit = $_blDBResetPerSuit;
-        $this->_oDbRestore = new DbRestore();
-
-    }
-
+    /**
+     * @inheritdoc
+     */
     public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
         if ($this->verbose) {
             echo "        ERROR: '" . $e->getMessage() . "'\n" . $e->getTraceAsString();
         }
         parent::addError($test, $e, $time);
-        if ($this->_blDBResetPerTest && !isset ($test->blNoDbResetAfterTest)) {
-            $this->_oDbRestore->restoreDB($this->_iDBChangeMode, $this->_iDBChangeOutput);
-            echo("|");
-        }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
     {
         if ($this->verbose) {
             echo "        FAIL: '" . $e->getMessage() . "'\n" . $e->getTraceAsString();
         }
         parent::addFailure($test, $e, $time);
-        if ($this->_blDBResetPerTest && !isset ($test->blNoDbResetAfterTest)) {
-            $this->_oDbRestore->restoreDB($this->_iDBChangeMode, $this->_iDBChangeOutput);
-            echo("|");
-        }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function endTest(PHPUnit_Framework_Test $test, $time)
     {
-
-        $t = microtime(true) - $this->_timeStats['startTime'];
-        if ($this->_timeStats['min'] > $t) {
-            $this->_timeStats['min'] = $t;
+        $t = microtime(true) - $this->timeStats['startTime'];
+        if ($this->timeStats['min'] > $t) {
+            $this->timeStats['min'] = $t;
         }
-        if ($this->_timeStats['max'] < $t) {
-            $this->_timeStats['max'] = $t;
-            $this->_timeStats['slowest'] = $test->getName();
+        if ($this->timeStats['max'] < $t) {
+            $this->timeStats['max'] = $t;
+            $this->timeStats['slowest'] = $test->getName();
         }
-        $this->_timeStats['avg'] = ($t + $this->_timeStats['avg'] * $this->_timeStats['cnt']) / (++$this->_timeStats['cnt']);
+        $this->timeStats['avg'] = ($t + $this->timeStats['avg'] * $this->timeStats['cnt']) / (++$this->timeStats['cnt']);
 
         parent::endTest($test, $time);
-        if ($this->_blDBResetPerTest && !isset ($test->blNoDbResetAfterTest)) {
-            $this->_oDbRestore->restoreDB($this->_iDBChangeMode, $this->_iDBChangeOutput);
-            echo("|");
-        }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
         parent::endTestSuite($suite);
-        if ($this->_blDBResetPerSuit) {
-            $this->_oDbRestore->restoreDB($this->_iDBChangeMode, $this->_iDBChangeOutput);
-            echo("|");
-        }
 
-        echo "\ntime stats: min {$this->_timeStats['min']}, max {$this->_timeStats['max']}, avg {$this->_timeStats['avg']}, slowest test: {$this->_timeStats['slowest']}|\n";
+        echo "\ntime stats: min {$this->timeStats['min']}, max {$this->timeStats['max']}, avg {$this->timeStats['avg']}, slowest test: {$this->timeStats['slowest']}|\n";
     }
 
+    /**
+     * @inheritdoc
+     */
     public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
         echo("\n\n" . $suite->getName() . "\n");
 
-        $this->_timeStats = array('cnt' => 0, 'min' => 9999999, 'max' => 0, 'avg' => 0, 'startTime' => 0, 'slowest' => '_ERROR_');
+        $this->timeStats = array('cnt' => 0, 'min' => 9999999, 'max' => 0, 'avg' => 0, 'startTime' => 0, 'slowest' => '_ERROR_');
 
         parent::startTestSuite($suite);
     }
 
     /**
-     * A test started.
-     *
-     * @param  PHPUnit_Framework_Test $test
-     *
-     * @access public
+     * @inheritdoc
      */
     public function startTest(PHPUnit_Framework_Test $test)
     {
@@ -119,10 +95,8 @@ class oxPrinter extends PHPUnit_TextUI_ResultPrinter
             echo "\n        " . $test->getName();
         }
 
-        $this->_timeStats['startTime'] = microtime(true);
+        $this->timeStats['startTime'] = microtime(true);
 
         parent::startTest($test);
     }
 }
-
-?>
