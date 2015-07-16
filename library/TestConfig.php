@@ -23,10 +23,6 @@ namespace OxidEsales\TestingLibrary;
 
 use Symfony\Component\Yaml\Yaml;
 
-if (!defined('TEST_LIBRARY_BASE_DIRECTORY')) {
-    define('TEST_LIBRARY_BASE_DIRECTORY', __DIR__ . '/../');
-}
-
 class TestConfig
 {
     /** @var array */
@@ -61,8 +57,6 @@ class TestConfig
      */
     public function __construct()
     {
-        require_once $this->getVendorDirectory() .'autoload.php';
-
         $yamlFile = $this->getConfigFileName();
         if (!file_exists($yamlFile)) {
             die("Configuration file 'test_config.yml' was not found. Please refer to documentation for instructions.\n");
@@ -78,18 +72,6 @@ class TestConfig
      */
     public function getVendorDirectory()
     {
-        if (is_null($this->vendorPath)) {
-            $vendorPath = TEST_LIBRARY_BASE_DIRECTORY . "../../../vendor/";
-            if (!file_exists($vendorPath)) {
-                $vendorPath = TEST_LIBRARY_BASE_DIRECTORY .'/vendor/';
-            }
-            $vendorPath = realpath($vendorPath);
-            if ($vendorPath) {
-                $vendorPath .= DIRECTORY_SEPARATOR;
-            }
-            $this->vendorPath = $vendorPath;
-        }
-
         return $this->vendorPath;
     }
 

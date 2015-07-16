@@ -19,22 +19,9 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-if (getenv('TRAVIS_ERROR_LEVEL')) {
-    error_reporting((int)getenv('TRAVIS_ERROR_LEVEL'));
-} else {
-    error_reporting((E_ALL ^ E_NOTICE) | E_STRICT);
-}
-ini_set('display_errors', true);
-
-define('TEST_LIBRARY_BASE_DIRECTORY', __DIR__ .'/');
-chdir(TEST_LIBRARY_BASE_DIRECTORY);
-
-define('TEST_LIBRARY_PATH', TEST_LIBRARY_BASE_DIRECTORY .'library/');
-define('TEST_LIBRARY_HELPERS_PATH', TEST_LIBRARY_PATH .'helpers/');
+require_once 'base.php';
 
 define('OXID_PHP_UNIT', true);
-
-require_once 'vendor/autoload.php';
 
 $sTestFilePath = strtolower(end($_SERVER['argv']));
 $sTestType = 'unit';

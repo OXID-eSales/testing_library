@@ -20,9 +20,7 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-define('TEST_LIBRARY_PATH', __DIR__ .'/../library/');
-
-require_once TEST_LIBRARY_PATH . 'TestConfig.php';
+require_once __DIR__ .'/../base.php';
 
 $testConfig = new OxidEsales\TestingLibrary\TestConfig();
 

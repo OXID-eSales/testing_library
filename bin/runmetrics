@@ -20,10 +20,8 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-define('TEST_LIBRARY_PATH', __DIR__ .'/../library/');
+require_once __DIR__ .'/../base.php';
 
-require_once TEST_LIBRARY_PATH . 'TestConfig.php';
-require_once TEST_LIBRARY_PATH . 'FileCopier.php';
 $testConfig = new OxidEsales\TestingLibrary\TestConfig();
 $fileCopier = new OxidEsales\TestingLibrary\FileCopier();
 
