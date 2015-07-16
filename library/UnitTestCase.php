@@ -40,7 +40,7 @@ use modOxid;
 use modOxUtilsDate;
 
 require_once TEST_LIBRARY_PATH . 'Services/Library/DbHandler.php';
-require_once TEST_LIBRARY_PATH . 'modOxUtilsDate.php';
+require_once TEST_LIBRARY_HELPERS_PATH . 'modOxUtilsDate.php';
 
 /**
  * Base tests class. Most tests should extend this class.

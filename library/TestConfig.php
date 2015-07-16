@@ -34,9 +34,6 @@ class TestConfig
     /** @var string */
     private $charsetMode;
 
-    /** @var string Path to vendors directory */
-    private $vendorPath;
-
     /** @var string Shop edition. Either EE, PE or CE. */
     private $shopEdition;
 
@@ -72,7 +69,7 @@ class TestConfig
      */
     public function getVendorDirectory()
     {
-        return $this->vendorPath;
+        return TEST_LIBRARY_VENDOR_DIRECTORY;
     }
 
     /**
