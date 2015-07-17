@@ -192,9 +192,8 @@ class TestConfig
     public function getShopTestsPath()
     {
         $partialPath = $this->getValue('shop_tests_path');
-        $fullPath = $this->prependShopPath($partialPath);
 
-        return realpath($fullPath) . '/';
+        return  $this->formFullPath($partialPath);
     }
 
     /**
@@ -219,7 +218,7 @@ class TestConfig
         $testsPaths = array();
         $parsedConfigOptionValue = $this->parseMultipleValues('additional_test_paths');
         foreach ($parsedConfigOptionValue as $partialTestsPath) {
-            $testsPaths[] = realpath($this->prependShopPath($partialTestsPath));
+            $testsPaths[] = $this->formFullPath($partialTestsPath);
         }
 
         return $testsPaths;
@@ -577,13 +576,13 @@ class TestConfig
      * @param $partialPath
      * @return string
      */
-    private function prependShopPath($partialPath)
+    private function formFullPath($partialPath)
     {
         $testsPath = $partialPath;
         if (strpos($partialPath, '/') !== 0) {
             $testsPath = $this->getShopPath() . $partialPath;
         }
 
-        return $testsPath;
+        return realpath($testsPath . '/');
     }
 }
