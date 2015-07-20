@@ -547,11 +547,11 @@ class TestConfig
     private function formTestSuites()
     {
         $testSuites = $this->getModuleTestSuites();
-        if ($this->shouldRunShopTests() && $this->getShopTestsPath()) {
-            $testSuites[] = $this->getShopTestsPath();
-        }
         foreach ($this->getAdditionalTestPaths() as $testPaths) {
             $testSuites[] = $testPaths;
+        }
+        if ($this->shouldRunShopTests() && $this->getShopTestsPath()) {
+            $testSuites[] = $this->getShopTestsPath();
         }
 
         return $testSuites;
