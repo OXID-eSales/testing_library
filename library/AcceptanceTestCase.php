@@ -1814,6 +1814,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     {
         $oServiceCaller = new ServiceCaller($this->getTestConfig());
         try {
+            $oServiceCaller->setParameter('clearVarnish', $this->getTestConfig()->shouldEnableVarnish());
             $oServiceCaller->callService('ClearCache', 1);
         } catch (Exception $e) {
             $this->fail('Failed to clear cache with message: ' . $e->getMessage());

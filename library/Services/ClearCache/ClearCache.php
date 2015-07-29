@@ -51,7 +51,9 @@ class ClearCache implements ShopServiceInterface
         $cache = new Cache();
         if ($this->getServiceConfig()->getShopEdition() === ServiceConfig::EDITION_ENTERPRISE) {
             $cache->clearCacheBackend();
-            $cache->clearReverseProxyCache();
+            if ($request->getParameter('clearVarnish')) {
+                $cache->clearReverseProxyCache();
+            }
         }
         $cache->clearTemporaryDirectory();
     }
