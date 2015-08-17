@@ -36,16 +36,4 @@ class oxBaseConstructor extends ObjectConstructor
     {
         return $this->getObject()->init($objectId);
     }
-
-    /**
-     * Returns core table name instead of oxBase
-     *
-     * @param string $className
-     *
-     * @return string
-     */
-    protected function _getTableName($className)
-    {
-        return $this->getObject()->getCoreTableName();
-    }
 }

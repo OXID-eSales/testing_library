@@ -36,7 +36,7 @@ class oxListConstructor extends ObjectConstructor
      */
     public function load($objectId)
     {
-        $this->getObject()->init($objectId, $this->_getTableName($objectId));
+        $this->getObject()->init($objectId, $objectId);
     }
 
     /**
@@ -85,7 +85,7 @@ class oxListConstructor extends ObjectConstructor
     {
         $result = array();
         $fields = $object->getFieldNames();
-        $tableName = $this->_getTableName(get_class($object));
+        $tableName = $object->getCoreTableName();
         foreach ($fields as $field) {
             $fieldName = $tableName.'__'.$field;
             $result[$field] = $object->$fieldName->value;

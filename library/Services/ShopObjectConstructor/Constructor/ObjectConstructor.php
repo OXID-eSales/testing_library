@@ -114,7 +114,7 @@ class ObjectConstructor
     public function setClassParameters($classParams)
     {
         $object = $this->getObject();
-        $tableName = $this->_getTableName(get_class($object));
+        $tableName = $object->getCoreTableName();
         $values = array();
         foreach ($classParams as $sParamKey => $paramValue) {
             if (is_int($sParamKey)) {
@@ -161,32 +161,6 @@ class ObjectConstructor
     }
 
     /**
-     * Return table name from class name.
-     * @example $sClassName = oxArticle; return oxarticles;
-     * @example $sClassName = oxRole; return oxroles;
-     *
-     * @param string $className
-     *
-     * @return string
-     */
-    protected function _getTableName($className)
-    {
-        $classNamesWithoutS = array("oxarticle", "oxcounter", "oxrole", "oxfile", "oxrating", "oxreview", "oxrecommlist", "oxshop",
-                                    "oxmanufacturer", "oxmediaurl", "oxvoucherserie", "oxorderarticle", "oxorderfile", "oxpayment",
-                                    "oxuserbasketitem", "oxuserbasket", "oxuserpayment", "oxvoucher", "oxvoucherserie", "oxcontent");
-        $classNamesWithoutIes = array("oxcategory", "oxgbentry");
-
-        $className = $tableName = strtolower($className);
-        if (in_array($className, $classNamesWithoutS)) {
-            $tableName = $className . "s";
-        } elseif (in_array($className, $classNamesWithoutIes)) {
-            $tableName = substr($className, 0, -1) . "ies";
-        }
-
-        return $tableName;
-    }
-
-    /**
      * @param string $tableName
      * @param string $paramValue
      *
@@ -211,7 +185,7 @@ class ObjectConstructor
         $objectId = null;
         $oDb = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
 
-        $tableName = $this->_getTableName(get_class($this->getObject()));
+        $tableName = $this->getObject()->getCoreTableName();
         $query = 'SELECT OXID FROM '. $tableName .' ORDER BY OXTIMESTAMP DESC LIMIT 1';
         $result = $oDb->select($query);
 
