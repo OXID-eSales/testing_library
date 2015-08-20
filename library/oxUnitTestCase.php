@@ -215,13 +215,40 @@ class oxUnitTestCase extends oxBaseTestCase
     /**
      * Get parameter from config request object.
      *
+     * @deprecated Use getRequestParameter() instead.
+     *
      * @param string $parameterName parameter name.
      *
      * @return mixed
      */
     public function getRequestParam($parameterName)
     {
+        $this->getRequestParameter($parameterName);
+    }
+
+    /**
+     * Get parameter from config request object.
+     *
+     * @param string $parameterName parameter name.
+     *
+     * @return mixed
+     */
+    public function getRequestParameter($parameterName)
+    {
         return $this->getConfig()->getRequestParameter($parameterName);
+    }
+
+    /**
+     * Set parameter to config request object.
+     *
+     * @deprecated Use setRequestParameter() instead.
+     *
+     * @param string $parameterName Parameter name.
+     * @param mixed  $value         Any parameter value, default null.
+     */
+    public function setRequestParam($parameterName, $value = null)
+    {
+        $this->setRequestParameter($parameterName, $value);
     }
 
     /**
@@ -230,7 +257,7 @@ class oxUnitTestCase extends oxBaseTestCase
      * @param string $parameterName Parameter name.
      * @param mixed  $value         Any parameter value, default null.
      */
-    public function setRequestParam($parameterName, $value = null)
+    public function setRequestParameter($parameterName, $value = null)
     {
         $this->getConfig()->setRequestParameter($parameterName, $value);
     }
