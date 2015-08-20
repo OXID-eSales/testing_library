@@ -24,24 +24,23 @@
  */
 class modOxUtilsDate extends oxUtilsDate
 {
-
     /** @var string */
     protected $_sTime = null;
 
     /**
-     * Returns instance of oxUtilsDate.
+     * @param string $sTime
      *
-     * @return oxUtilsDate
+     * @deprecated Still used for old tests to work. Use setTime instead.
      */
-    public static function getInstance()
+    public function UNITSetTime($sTime)
     {
-        return oxRegistry::get("oxUtilsDate");
+        $this->setTime($sTime);
     }
 
     /**
      * @param string $sTime
      */
-    public function UNITSetTime($sTime)
+    public function setTime($sTime)
     {
         $this->_sTime = $sTime;
     }

@@ -117,11 +117,7 @@ class UnitTestCase extends BaseTestCase
             $oTestModuleLoader->loadModules($testConfig->getModulesToActivate());
             $oTestModuleLoader->setModuleInformation();
         }
-
-        $configFie = oxRegistry::get('oxConfigFile');
-        $configFie->setVar('sCompileDir', $testConfig->getTempDirectory());
-        $config = oxRegistry::get('oxConfig');
-        $config->setConfigParam('sCompileDir', $testConfig->getTempDirectory());
+        oxRegistry::set("oxUtilsDate", new modOxUtilsDate());
 
         $this->backupDatabase();
 
@@ -134,18 +130,6 @@ class UnitTestCase extends BaseTestCase
         $this->getShopStateBackup()->backupRequestVariables();
     }
 
-    /**
-     * Returns shop state backup class.
-     *
-     * @return ShopStateBackup
-     */
-    protected static function getShopStateBackup()
-    {
-        if (is_null(self::$shopStateBackup)) {
-            self::$shopStateBackup = new ShopStateBackup();
-        }
-        return self::$shopStateBackup;
-    }
 
     /**
      * Initialize the fixture.
@@ -155,8 +139,6 @@ class UnitTestCase extends BaseTestCase
     protected function setUp()
     {
         parent::setUp();
-        oxAddClassModule('modOxUtilsDate', 'oxUtilsDate');
-
         oxRegistry::getUtils()->cleanStaticCache();
 
         if ($this->getTestConfig()->getModulesToActivate()) {
@@ -337,7 +319,7 @@ class UnitTestCase extends BaseTestCase
      */
     public function setTime($time = null)
     {
-        modOxUtilsDate::getInstance()->UNITSetTime($time);
+        oxRegistry::get("oxUtilsDate")->setTime($time);
     }
 
     /**
@@ -347,7 +329,7 @@ class UnitTestCase extends BaseTestCase
      */
     public function getTime()
     {
-        return modOxUtilsDate::getInstance()->getTime();
+        return oxRegistry::get("oxUtilsDate")->getTime();
     }
 
     /**
@@ -754,6 +736,19 @@ class UnitTestCase extends BaseTestCase
     public function evalFunction($value)
     {
         return new MockStubFunc($value);
+    }
+
+    /**
+     * Returns shop state backup class.
+     *
+     * @return oxShopStateBackup
+     */
+    protected static function getShopStateBackup()
+    {
+        if (is_null(self::$shopStateBackup)) {
+            self::$shopStateBackup = new oxShopStateBackup();
+        }
+        return self::$shopStateBackup;
     }
 
     /**

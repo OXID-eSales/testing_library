@@ -89,7 +89,6 @@ abstract class BootstrapBase
         if ($tempDirectory && $tempDirectory != '/') {
             $fileCopier = new FileCopier();
             $fileCopier->createEmptyDirectory($tempDirectory);
-            $fileCopier->createEmptyDirectory($tempDirectory.'/smarty/');
         }
     }
 
