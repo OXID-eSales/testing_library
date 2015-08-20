@@ -88,7 +88,6 @@ class Bootstrap
         if ($tempDirectory && $tempDirectory != '/') {
             $fileCopier = new oxFileCopier();
             $fileCopier->createEmptyDirectory($tempDirectory);
-            $fileCopier->createEmptyDirectory($tempDirectory.'/smarty/');
         }
     }
 
