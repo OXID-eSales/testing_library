@@ -71,7 +71,7 @@ To install testing library within shop directory, update/create `composer.json` 
             "env-map": {
                 "shop_path": "SHOP_PATH",
                 "shop_tests_path": "SHOP_TESTS_PATH",
-                "modules_path": "MODULES_PATH"
+                "partial_module_paths": "PARTIAL_MODULE_PATHS"
             }
         }
     }
