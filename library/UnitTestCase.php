@@ -741,12 +741,12 @@ class UnitTestCase extends BaseTestCase
     /**
      * Returns shop state backup class.
      *
-     * @return oxShopStateBackup
+     * @return ShopStateBackup
      */
     protected static function getShopStateBackup()
     {
         if (is_null(self::$shopStateBackup)) {
-            self::$shopStateBackup = new oxShopStateBackup();
+            self::$shopStateBackup = new ShopStateBackup();
         }
         return self::$shopStateBackup;
     }
