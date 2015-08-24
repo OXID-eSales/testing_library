@@ -76,7 +76,7 @@ namespace {
     function getShopBasePath()
     {
         $shopDirectory = OX_BASE_PATH;
-        if (class_exists('oxUnitTestCase', false)) {
+        if (class_exists('oxConfig', false)) {
             $configShopDir = \oxRegistry::getConfig()->getConfigParam('sShopDir');
             $shopDirectory = $configShopDir ? $configShopDir : $shopDirectory;
         }
