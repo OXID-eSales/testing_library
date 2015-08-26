@@ -91,7 +91,7 @@ class ModuleLoader
 
             // Mocking of module classes does not work without calling oxNew first.
             foreach (self::$moduleData['chains'] as $parent => $chain) {
-                oxNew($parent);
+                $utilsObject->getClassName($parent);
             }
         }
     }
