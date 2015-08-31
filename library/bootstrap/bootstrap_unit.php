@@ -73,7 +73,7 @@ function getTestsBasePath()
 function getShopBasePath()
 {
     $shopDirectory = OX_BASE_PATH;
-    if (class_exists('oxConfig', false) && class_exists('oxDb', false)) {
+    if (class_exists('oxConfig', false) && class_exists('oxDb', false) && class_exists('ADONewConnection', false)) {
         $configShopDir = oxRegistry::getConfig()->getConfigParam('sShopDir');
         $shopDirectory = $configShopDir ? $configShopDir : $shopDirectory;
     }
