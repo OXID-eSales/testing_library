@@ -61,7 +61,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
             $this->shopConfig = \oxRegistry::get("oxConfigFile");
             $this->dbHandler = new DatabaseHandler($this->shopConfig);
 
-            include $shopPath ."core/oxconfk.php";
+            include $shopPath ."Core/oxconfk.php";
         }
 
         /**

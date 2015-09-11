@@ -103,8 +103,8 @@ class TestConfig
                 include_once $shopPath . '/_version_define.php';
                 $this->shopEdition = OXID_VERSION_EE ? 'EE' : (OXID_VERSION_PE_PE ? 'PE' : 'CE');
             } else {
-                include_once $shopPath . 'core/oxsupercfg.php';
-                include_once $shopPath . 'core/oxutilsobject.php';
+                include_once $shopPath . 'Core/oxsupercfg.php';
+                include_once $shopPath . 'Core/oxutilsobject.php';
                 $config = new \oxConfig();
                 $shopEdition = $config->getEdition();
                 $this->shopEdition = strtoupper($shopEdition);
@@ -471,7 +471,7 @@ class TestConfig
     /**
      * Returns oxConfigFile from registry or creates new object
      *
-     * @return \OxConfigFile
+     * @return \oxConfigFile
      */
     protected function getConfigFile()
     {
@@ -479,7 +479,7 @@ class TestConfig
             $configFile = \oxRegistry::get('oxConfigFile');
         } else {
             $shopPath = $this->getShopPath();
-            include_once $shopPath . 'core/oxconfigfile.php';
+            include_once $shopPath . 'Core/oxconfigfile.php';
             $configFile = new \oxConfigFile($shopPath . "config.inc.php");
         }
 

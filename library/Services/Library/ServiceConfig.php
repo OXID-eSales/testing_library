@@ -85,8 +85,8 @@ class ServiceConfig
     {
         if (is_null($this->shopEdition)) {
             $shopPath = $this->getShopDirectory();
-            include_once $shopPath . 'core/oxsupercfg.php';
-            include_once $shopPath . 'core/oxconfig.php';
+            include_once $shopPath . 'Core/oxsupercfg.php';
+            include_once $shopPath . 'Core/oxconfig.php';
             $config = new oxConfig();
             $shopEdition = $config->getEdition();
 
