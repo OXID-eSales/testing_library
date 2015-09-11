@@ -161,19 +161,16 @@ class oxUnitTestCase extends oxBaseTestCase
             oxTestsStaticCleaner::clean('oxUtilsObject', '_aInstanceCache');
             oxTestsStaticCleaner::clean('oxArticle', '_aLoadedParents');
 
-            modInstances::cleanup();
-            oxTestModules::cleanUp();
-            modOxid::globalCleanup();
-            modDB::getInstance()->cleanup();
-
             $this->getSession()->cleanup();
             $this->getConfig()->cleanup();
 
             $this->getShopStateBackup()->resetRequestVariables();
             $this->getShopStateBackup()->resetRegistry();
 
-            oxUtilsObject::resetClassInstances();
-            oxUtilsObject::resetModuleVars();
+            modInstances::cleanup();
+            modOxid::globalCleanup();
+            modDB::getInstance()->cleanup();
+            oxTestModules::cleanUp();
 
             parent::tearDown();
         }

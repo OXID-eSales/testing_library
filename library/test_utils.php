@@ -300,10 +300,10 @@ class oxTestModules
     {
         self::$_aModuleMap = array();
         self::$_oOrigOxUtilsObj = null;
-        foreach (self::$_addedmods as $class => $arr) {
-            oxRemClassModule('allmods', $class);
-        }
         self::$_addedmods = array();
+
+        oxUtilsObject::resetClassInstances();
+        oxUtilsObject::resetModuleVars();
     }
 
     /**
