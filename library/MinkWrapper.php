@@ -543,12 +543,9 @@ abstract class MinkWrapper extends BaseTestCase
             $value = $this->getMinkSession()->getSelectorsHandler()->xpathLiteral($value);
             $aOptions = $oSelect->findAll('xpath', '//option[@value=' . $value . ']');
         }
-        $oOption = array_pop($aOptions);
+        $oOption = !empty($aOptions) ? array_pop($aOptions) : $oSelect->find('xpath', 'option');
 
-        if (is_null($oOption)) {
-            return $oSelect->find('xpath', 'option')->getText();
-        }
-        return $oOption->getText();
+        return $oOption ? $oOption->getText() : '';
     }
 
     /**
