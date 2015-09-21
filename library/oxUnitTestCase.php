@@ -119,6 +119,9 @@ class oxUnitTestCase extends oxBaseTestCase
         parent::setUp();
         oxRegistry::getUtils()->cleanStaticCache();
 
+        // Initialize module variables. Only for backwards compatibility with older shops.
+        oxUtilsObject::getInstance()->getModuleVar('aModules');
+
         if ($this->getTestConfig()->getModulesToActivate()) {
             $testModuleLoader = $this->_getModuleLoader();
             $testModuleLoader->setModuleInformation();
