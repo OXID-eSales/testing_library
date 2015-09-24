@@ -40,11 +40,7 @@ class DatabaseRestorerFactory
             $className = __NAMESPACE__ . '\\' . $className;
         }
 
-        if (!class_exists($className)) {
-            throw new Exception("No database restorer class found: $className");
-        }
-
-        $restorer = new $className;
+        $restorer = class_exists($className) ? new $className : new DatabaseRestorer();
 
         if (!($restorer instanceof DatabaseRestorerInterface)) {
             throw new Exception("Database restorer class should implement DatabaseRestorerInterface interface!");
