@@ -98,11 +98,11 @@ class ShopInstaller implements ShopServiceInterface
             $this->convertToInternational();
         }
 
-        $this->setSerialNumber($serialNumber);
-
         if ($this->getDbHandler()->getCharsetMode() == 'utf8') {
             $this->convertToUtf();
         }
+
+        $this->setSerialNumber($serialNumber);
 
         if ($request->getParameter('turnOnVarnish', $this->getShopConfig()->turnOnVarnish)) {
             $this->turnVarnishOn();
@@ -241,7 +241,9 @@ class ShopInstaller implements ShopServiceInterface
             if ($aRow['oxvartype'] == 'arr' || $aRow['oxvartype'] == 'aarr') {
                 $aRow['oxvarvalue'] = unserialize($aRow['oxvarvalue']);
             }
-            $this->updateConfigValue($aRow['oxvarname'], $this->stringToUtf($aRow['oxvarvalue']));
+            if (!empty($aRow['oxvarvalue']) && !is_int($aRow['oxvarvalue'])) {
+                $this->updateConfigValue($aRow['oxvarname'], $this->stringToUtf($aRow['oxvarvalue']));
+            }
         }
 
         // Change currencies value to same as after 4.6 setup because previous encoding break it.
