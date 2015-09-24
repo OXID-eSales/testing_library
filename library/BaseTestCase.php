@@ -37,7 +37,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
      *
      * @return TestConfig
      */
-    public function getTestConfig()
+    public static function getTestConfig()
     {
         if (is_null(self::$testConfig)) {
             self::$testConfig = new TestConfig();

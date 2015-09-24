@@ -34,14 +34,6 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
 
             $config = $this->getTestConfig();
 
-            $dbRestoreClass = $config->getDatabaseRestorationClass();
-            if (file_exists(TEST_LIBRARY_PATH .'dbRestore/'.$dbRestoreClass . ".php")) {
-                $restoreDbPath = TEST_LIBRARY_PATH .'dbRestore/'. $dbRestoreClass . ".php";
-            } else {
-                $restoreDbPath = TEST_LIBRARY_PATH .'dbRestore/dbRestore.php';
-            }
-            include_once $restoreDbPath;
-
             $currentTestSuite = $config->getCurrentTestSuite();
             if (file_exists($currentTestSuite .'/additional.inc.php')) {
                 include_once $currentTestSuite .'/additional.inc.php';

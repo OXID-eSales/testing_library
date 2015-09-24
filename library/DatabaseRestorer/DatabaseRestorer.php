@@ -18,13 +18,16 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\DatabaseRestorer;
 
-require_once __DIR__.'/dbRestoreInterface.php';
+use oxDb;
+use oxRegistry;
+use Exception;
 
 /**
  * Database maintenance class responsible complete for backuping and restoration of test database.
  */
-class DbRestore implements DbRestoreInterface
+class DatabaseRestorer implements DatabaseRestorerInterface
 {
     /** @var string Dump name to use for database restoration */
     private $dumpName = 'test';

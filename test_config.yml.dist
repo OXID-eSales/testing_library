@@ -42,10 +42,10 @@ optional_parameters:
     # If php has no write access to /tmp folder, provide alternative temp folder for tests.
     tmp_path: /tmp/oxid_test_library/
 
-    # Currently exists dbRestore and dbRestore_largeDb.
-    # dbRestore_localDb - used with local database
-    # dbRestore - used with external database.
-    database_restoration_class: 'dbRestore'
+    # Currently exists DatabaseRestorer and LocalDatabaseRestorer.
+    # DatabaseRestorer - used with external database.
+    # LocalDatabaseRestorer - used with local database (faster).
+    database_restoration_class: 'DatabaseRestorer'
 
     # Whether to activate all modules defined in partial_module_paths when running tests.
     # Normally only tested module is activated during test run. Modules will be activated in the specified order.

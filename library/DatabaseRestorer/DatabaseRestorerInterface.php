@@ -18,11 +18,14 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\DatabaseRestorer;
+
+use Exception;
 
 /**
  * Database maintenance class responsible complete for backuping and restoration of test database.
  */
-interface DbRestoreInterface
+interface DatabaseRestorerInterface
 {
     /**
      * Creates a dump of the current database, stored in the file '/tmp/tmp_db_dump'

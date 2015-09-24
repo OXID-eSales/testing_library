@@ -21,7 +21,8 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use DbRestore;
+use OxidEsales\TestingLibrary\DatabaseRestorer\DatabaseRestorerFactory;
+use OxidEsales\TestingLibrary\DatabaseRestorer\DatabaseRestorerInterface;
 use oxRegistry;
 use oxDb;
 use oxUtilsObject;
@@ -50,7 +51,7 @@ class UnitTestCase extends BaseTestCase
     /** @var bool Registry cache. */
     private static $setupBeforeTestSuiteDone = false;
 
-    /** @var DbRestore Database restorer object */
+    /** @var DatabaseRestorerInterface Database restorer object */
     private static $dbRestore = null;
 
     /** @var ModuleLoader Module loader. */
@@ -754,12 +755,13 @@ class UnitTestCase extends BaseTestCase
     /**
      * Returns database restorer object.
      *
-     * @return DbRestore
+     * @return DatabaseRestorerInterface
      */
     protected static function _getDbRestore()
     {
         if (is_null(self::$dbRestore)) {
-            self::$dbRestore = new DbRestore();
+            $factory = new DatabaseRestorerFactory();
+            self::$dbRestore = $factory->createRestorer(self::getTestConfig()->getDatabaseRestorationClass());
         }
 
         return self::$dbRestore;
