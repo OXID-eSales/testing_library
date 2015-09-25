@@ -68,9 +68,12 @@ namespace {
     function getShopBasePath()
     {
         $shopDirectory = OX_BASE_PATH;
-        if (class_exists('oxUnitTestCase', false) && class_exists('oxConfig', false)) {
-            $configShopDir = \oxRegistry::getConfig()->getConfigParam('sShopDir');
-            $shopDirectory = $configShopDir ? $configShopDir : $shopDirectory;
+        if (class_exists('oxConfig', false)) {
+            $config = \oxRegistry::getConfig();
+            if (!empty($config->sConfigKey)) {
+                $configShopDir = $config->getConfigParam('sShopDir');
+                $shopDirectory = $configShopDir ? $configShopDir : $shopDirectory;
+            }
         }
 
         return rtrim($shopDirectory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
