@@ -180,3 +180,38 @@ To change PHPUnit parameters, add phpunit.xml file inside tests directory and it
 ### Execution before test run with additional.inc.php
 
 Testing library gives possibility to make some actions before test run. So if there is a need to to do that, add additional.inc.php file into tests directory and it will be executed.
+
+## Writing Tests
+
+### Directory Structure
+
+Module tests should be placed in module root directory: `path/to/shop/modules/my_module/tests`.
+Tests can by placed in three directories: unit, integration and acceptance depending on tests type.
+`./runtests` collects tests from unit and integration directories, while `./runtests-selenium` - from acceptance.
+Code coverage is calculated from both unit and integration tests.
+
+### Writing unit and integration tests
+
+Unit and integration should be placed under `tests/unit` and `tests/integration` directories. Any number of subdirectories
+can be created inside - all tests will be collected.
+Unit and integration tests should extend `oxUnitTestCase` class so that database, 
+registry, configuration parameters restoration, module activation would work.
+If unit tests are not relying on database or registry and are real clean unit tests, `PHPUnit_Framework_TestCase` class
+can be extended, but have in mind that autoloading of module classes and correct shop classes extension will not work.
+All preparation works can be done in `additional.inc.php` file. This file is loaded before database dump creation and
+before running any of the test, so can be used autoloaders registration, demodata preparation, etc.
+For unit testing shop is installed without default demodata added. 
+
+### Writing acceptance tests
+
+Currently for acceptance testing Mink library and selenium/goutte drivers are used.
+Acceptance tests should be placed under `tests/acceptance` directory and extend `oxAcceptanceTestCase`.
+Tested module will NOT be activated by default, but this can be done by extending `AcceptanceTestCase::addTestData()`
+method and activating module manually. This method will be run before any test and before database dump creation, 
+but only once per tests suite.
+For acceptance testing shop is installed with default demodata. 
+Additional demodata can be added to `testSql` directory by the name of `demodata_EE.sql`, `demodata_PE_CE.sql` or 
+`demodata_EE_mall.sql` (when subshop functionality is enabled in test_config). These files will be loaded on top of the database
+depending on the shop edition.
+Any additional files, needed for testing can be placed under `testData` directory - all content will be copied onto
+the shop source before running tests.
