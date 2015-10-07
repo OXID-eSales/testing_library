@@ -22,6 +22,22 @@ Requirements
 This library can be used to test modules with earlier shop versions, but
 it will not be possible to run shop tests.
 
+Compatibility with OXID Shops
+-----------------------------
+
++---------------+-----------+---------+
+| eShop version | UTF 0     | UTF 1   |
++===============+===========+=========+
+| development   |    ✔      |    ✔    |
++---------------+-----------+---------+
+| v4.9.5        |    ✘      |    ✘    |
++---------------+-----------+---------+
+| v5.2.5        |    ✘      |    ✘    |
++---------------+-----------+---------+
+
+| ✔   - Works fully with shop and module tests
+| ✘   - Does not work (please use b-1.0 branch for these and earlier versions)
+
 Installation
 ------------
 
