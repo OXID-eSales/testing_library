@@ -41,7 +41,7 @@ Compatibility with OXID Shops
 +------------------+-----------+---------+
 
 | ✔   - Works fully with shop and module tests
-| ✔/✘ - Module tests works, but shop tests does not
+| ✔/✘ - Module tests work, but shop tests do not
 | ✘   - Does not work
 
 .. [*] when shop package is used and additional modules are included in to shop, one of the shop tests fails (Unit_Admin_ModuleListTest::testRender).
