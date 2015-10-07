@@ -27,26 +27,26 @@ Compatibility with OXID Shops
 +---------------+-----------+---------+
 | eShop version | UTF 0     | UTF 1   |
 +===============+===========+=========+
-| development   |    ?      |    ?    |
+| development   |    ✘      |    ✘    |
 +---------------+-----------+---------+
-| v4.9.5        |    ? [*]_ |    ?    |
+| v4.9.5        |    ✔ [*]_ |    ✔    |
 +---------------+-----------+---------+
-| v5.2.5        |    ?      |    ?    |
+| v5.2.5        |    ✔      |    ✔    |
 +---------------+-----------+---------+
-| v4.8.9        |   ?/?     |   ?/?   |
+| v4.8.9        |   ✔/✘     |   ✔/✘   |
 +---------------+-----------+---------+
-| v5.1.9        |   ?/?     |   ?/?   |
+| v5.1.9        |   ✔/✘     |   ✔/✘   |
 +---------------+-----------+---------+
-| v4.7.14       |   ?/?     |   ?/?   |
+| v4.7.14       |   ✔/✘     |   ✔/✘   |
 +---------------+-----------+---------+
-| v5.0.14       |   ?/?     |   ?/?   |
+| v5.0.14       |   ✔/✘     |   ✔/✘   |
 +---------------+-----------+---------+
-| v4.6.8        |    ?      |    ?    |
+| v4.6.8        |    ✘      |    ✘    |
 +---------------+-----------+---------+
 
-| ?   - Works fully with shop and module tests
-| ?/? - Module tests works, but shop tests does not
-| ?   - Does not work
+| ✔   - Works fully with shop and module tests
+| ✔/✘ - Module tests works, but shop tests does not
+| ✘   - Does not work
 
 .. [*] when shop package is used and additional modules are included in to shop, one of the shop tests fails.
 
