@@ -578,14 +578,16 @@ try {
         $aStats = $oMetrics->getClassesStats();
 
         foreach ($aStats as $sClass => $aClass) {
-            echo("Total for $sClass" . PHP_EOL);
-            echo "\tAvg ccn \t= " . round($aClass['stat']['cnn'],
-                    3) . " (max: " . $aClass['max']['cnn'] . ")" . PHP_EOL;
-            echo "\tAvg crap\t= " . round($aClass['stat']['crap'],
-                    3) . " (max: " . $aClass['max']['crap'] . ")" . PHP_EOL;
-            echo "\tAvg npath\t= " . round($aClass['stat']['npath'],
-                    3) . " (max: " . $aClass['max']['npath'] . ")" . PHP_EOL;
-            echo "\tLLOC \t\t= " . $aClass['sum']['locExecutable'] . PHP_EOL . PHP_EOL;
+            if (array_key_exists('stat', $aClass)) {
+                echo("Total for $sClass" . PHP_EOL);
+                echo "\tAvg ccn \t= " . round($aClass['stat']['cnn'],
+                        3) . " (max: " . $aClass['max']['cnn'] . ")" . PHP_EOL;
+                echo "\tAvg crap\t= " . round($aClass['stat']['crap'],
+                        3) . " (max: " . $aClass['max']['crap'] . ")" . PHP_EOL;
+                echo "\tAvg npath\t= " . round($aClass['stat']['npath'],
+                        3) . " (max: " . $aClass['max']['npath'] . ")" . PHP_EOL;
+                echo "\tLLOC \t\t= " . $aClass['sum']['locExecutable'] . PHP_EOL . PHP_EOL;
+            }
         }
     } else {
         echo "\n\nMetrics file: " . $sMetricsXml . " not exist, please select existing file!\n\n";
