@@ -28,7 +28,7 @@ class DbHandler
     /** @var oxConfigFile */
     private $configFile;
 
-    /** @var resource Database connection. */
+    /** @var mysqli Database connection. */
     private $dbConnection;
 
     /**
@@ -39,7 +39,7 @@ class DbHandler
     public function __construct($configFile)
     {
         $this->configFile = $configFile;
-        $this->dbConnection = mysql_connect($this->getDbHost(), $this->getDbUser(), $this->getDbPassword());
+        $this->dbConnection = mysqli_connect($this->getDbHost(), $this->getDbUser(), $this->getDbPassword(), $this->getDbName());
     }
 
     /**
@@ -109,10 +109,7 @@ class DbHandler
      */
     public function query($sql)
     {
-        $dbConnection = $this->getDbConnection();
-
-        mysql_select_db($this->getDbName(), $dbConnection);
-        return mysql_query($sql, $dbConnection);
+        mysqli_query($this->getDbConnection(), $sql);
     }
 
     /**
@@ -121,7 +118,7 @@ class DbHandler
      */
     public function escape($value)
     {
-        return mysql_real_escape_string($value);
+        return mysqli_real_escape_string($this->getDbConnection(), $value);
     }
 
     /**
@@ -169,9 +166,9 @@ class DbHandler
     /**
      * Returns database resource
      *
-     * @return resource
+     * @return mysqli
      */
-    protected function getDbConnection()
+    public function getDbConnection()
     {
         return $this->dbConnection;
     }
