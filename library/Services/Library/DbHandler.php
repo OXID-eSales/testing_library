@@ -39,7 +39,7 @@ class DbHandler
     public function __construct($configFile)
     {
         $this->configFile = $configFile;
-        $this->dbConnection = mysqli_connect($this->getDbHost(), $this->getDbUser(), $this->getDbPassword(), $this->getDbName());
+        $this->dbConnection = mysqli_connect($this->getDbHost(), $this->getDbUser(), $this->getDbPassword());
     }
 
     /**
@@ -109,6 +109,7 @@ class DbHandler
      */
     public function query($sql)
     {
+        mysqli_select_db($this->getDbConnection(), $this->getDbName());
         mysqli_query($this->getDbConnection(), $sql);
     }
 
