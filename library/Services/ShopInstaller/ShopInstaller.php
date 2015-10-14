@@ -147,7 +147,7 @@ class ShopInstaller implements ShopServiceInterface
 
         $dbHandler->query('drop database `' . $dbHandler->getDbName() . '`');
         $dbHandler->query('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
-
+        $this->getDbHandler()->getDbConnection()->select_db($this->getDbHandler()->getDbName());
         $sSetupPath = $this->getSetupDirectory();
         $suffix = $this->getServiceConfig()->getEditionSufix();
         $dbHandler->import($sSetupPath . "/sql$suffix/database.sql", 'latin1');
@@ -237,7 +237,7 @@ class ShopInstaller implements ShopServiceInterface
                        WHERE oxvartype IN ('str', 'arr', 'aarr')"
         );
 
-        while ($aRow = mysql_fetch_assoc($rs)) {
+        while ($aRow = mysqli_fetch_assoc($rs)) {
             if ($aRow['oxvartype'] == 'arr' || $aRow['oxvartype'] == 'aarr') {
                 $aRow['oxvarvalue'] = unserialize($aRow['oxvarvalue']);
             }
