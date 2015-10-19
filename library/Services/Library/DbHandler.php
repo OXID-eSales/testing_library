@@ -110,7 +110,7 @@ class DbHandler
     public function query($sql)
     {
         mysqli_select_db($this->getDbConnection(), $this->getDbName());
-        mysqli_query($this->getDbConnection(), $sql);
+        return mysqli_query($this->getDbConnection(), $sql);
     }
 
     /**
