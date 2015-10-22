@@ -24,7 +24,7 @@ require_once 'AllTestsRunner.php';
 /**
  * This class is used to run all CE|PE|EE edition integration tests.
  */
-class AllTestsSelenium extends AllTestsRunner
+class AllTestsIntegration extends AllTestsRunner
 {
 
     /** @var array Default test suites */
