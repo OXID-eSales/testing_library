@@ -191,7 +191,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
          */
         public function setSerialNumber($serialNumber = null)
         {
-            if (class_exists('OxidEsales\Professional\Core\Serial')) {
+            if (class_exists('OxidEsales\EshopProfessional\Core\Serial')) {
                 $dbHandler = $this->getDbHandler();
 
                 $shopId = $this->getShopId();

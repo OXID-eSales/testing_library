@@ -32,7 +32,7 @@ class Cache
      */
     public function clearCacheBackend()
     {
-        if (class_exists('\OxidEsales\Enterprise\Core\Cache\Generic\Cache')) {
+        if (class_exists('\OxidEsales\EshopEnterprise\Core\Cache\Generic\Cache')) {
             $oCache = oxNew('oxCacheBackend');
             $oCache->flush();
         }
@@ -43,7 +43,7 @@ class Cache
      */
     public function clearReverseProxyCache()
     {
-        if (class_exists('\OxidEsales\Enterprise\Core\Cache\ReverseProxy\ReverseProxyBackend')) {
+        if (class_exists('\OxidEsales\EshopEnterprise\Core\Cache\ReverseProxy\ReverseProxyBackend')) {
             $oReverseProxy = oxNew('oxReverseProxyBackend');
             $oReverseProxy->setFlush();
             $oReverseProxy->execute();

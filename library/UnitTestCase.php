@@ -403,7 +403,7 @@ abstract class UnitTestCase extends BaseTestCase
     /**
      * Returns cache backend
      *
-     * @return \OxidEsales\Enterprise\Core\Cache\Generic\Cache
+     * @return \OxidEsales\EshopEnterprise\Core\Cache\Generic\Cache
      */
     public function getCacheBackend()
     {
