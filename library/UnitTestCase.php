@@ -521,22 +521,26 @@ abstract class UnitTestCase extends BaseTestCase
     /**
      * Returns a mock object for the specified class.
      *
-     * @param  string     $originalClassName       Name of the class to mock.
-     * @param  array|null $methods                 When provided, only methods whose names are in the array
-     *                                             are replaced with a configurable test double. The behavior
-     *                                             of the other methods is not changed.
-     *                                             Providing null means that no methods will be replaced.
-     * @param  array      $arguments               Parameters to pass to the original class' constructor.
-     * @param  string     $mockClassName           Class name for the generated test double class.
-     * @param  boolean    $callOriginalConstructor Can be used to disable the call to the original class' constructor.
-     * @param  boolean    $callOriginalClone       Can be used to disable the call to the original class' clone constructor.
-     * @param  boolean    $callAutoload            Can be used to disable __autoload() during the generation of the test double class.
-     * @param  boolean    $cloneArguments
+     * @param string     $originalClassName       Name of the class to mock.
+     * @param array|null $methods                 When provided, only methods whose names are in the array
+     *                                            are replaced with a configurable test double. The behavior
+     *                                            of the other methods is not changed.
+     *                                            Providing null means that no methods will be replaced.
+     * @param array      $arguments               Parameters to pass to the original class' constructor.
+     * @param string     $mockClassName           Class name for the generated test double class.
+     * @param bool       $callOriginalConstructor Can be used to disable the call to the original class' constructor.
+     * @param bool       $callOriginalClone       Can be used to disable the call to the original class' clone constructor.
+     * @param bool       $callAutoload            Can be used to disable __autoload() during the generation of the test double class.
+     * @param bool       $cloneArguments
+     * @param bool       $callOriginalMethods
+     *
      * @return MockObject
+     *
      * @throws PHPUnit_Framework_Exception
+     *
      * @since  Method available since Release 3.0.0
      */
-    public function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = TRUE, $callOriginalClone = TRUE, $callAutoload = TRUE, $cloneArguments = FALSE)
+    public function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = false, $callOriginalMethods = false)
     {
         // TODO: remove this condition when namespaces will be implemented fully.
         if (strpos($originalClassName, 'OxidEsales\\') === false) {
