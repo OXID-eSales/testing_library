@@ -22,7 +22,9 @@
 namespace OxidEsales\TestingLibrary;
 
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\ElementException;
 use Exception;
+use InvalidArgumentException;
 
 class MinkWrapper extends BaseTestCase
 {
@@ -250,7 +252,11 @@ class MinkWrapper extends BaseTestCase
      */
     public function click($sSelector)
     {
-        $this->getElement($sSelector)->click();
+        try {
+            $this->getElement($sSelector)->click();
+        } catch (ElementException $e) {
+            $this->getElement($sSelector)->click();
+        }
     }
 
     /**
@@ -261,7 +267,11 @@ class MinkWrapper extends BaseTestCase
      */
     public function type($sSelector, $sText)
     {
-        $this->getElement($sSelector)->setValue($sText);
+        try {
+            $this->getElement($sSelector)->setValue($sText);
+        } catch (ElementException $e) {
+            $this->getElement($sSelector)->setValue($sText);
+        }
     }
 
     /**
@@ -490,7 +500,11 @@ class MinkWrapper extends BaseTestCase
     {
         $mValue = $this->_getValue($this->getElement($sSelector)->getXpath());
 
-        $sType = $this->getElement($sSelector)->getAttribute('type');
+        try {
+            $sType = $this->getElement($sSelector)->getAttribute('type');
+        } catch (InvalidArgumentException $e) {
+            $sType = $this->getElement($sSelector)->getAttribute('type');
+        }
         if ($sType == 'checkbox') {
             $mValue = $mValue ? 'on' : 'off';
         }
