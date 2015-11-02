@@ -767,7 +767,11 @@ class MinkWrapper extends BaseTestCase
      */
     public function typeKeys($locator, $value)
     {
-        return $this->getMinkSession()->getDriver()->getBrowser()->typeKeys($locator, $value);
+        try {
+            return $this->getMinkSession()->getDriver()->getBrowser()->typeKeys($locator, $value);
+        } catch (\Selenium\Exception $e) {
+            return $this->getMinkSession()->getDriver()->getBrowser()->typeKeys($locator, $value);
+        }
     }
 
     /**
