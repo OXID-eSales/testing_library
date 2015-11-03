@@ -21,8 +21,8 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use OxidEsales\TestingLibrary\DatabaseRestorer\DatabaseRestorerFactory;
-use OxidEsales\TestingLibrary\DatabaseRestorer\DatabaseRestorerInterface;
+use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
+use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
 use oxRegistry;
 use oxDb;
 use oxUtilsObject;
@@ -40,7 +40,6 @@ use modInstances;
 use modOxid;
 use modOxUtilsDate;
 
-require_once TEST_LIBRARY_PATH . 'Services/Library/DbHandler.php';
 require_once TEST_LIBRARY_HELPERS_PATH . 'modOxUtilsDate.php';
 
 /**

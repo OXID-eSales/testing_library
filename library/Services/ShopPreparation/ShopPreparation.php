@@ -20,8 +20,9 @@
  */
 namespace OxidEsales\TestingLibrary\Services\ShopPreparation;
 
-use OxConfigFile;
-use OxidEsales\TestingLibrary\Services\Library\DbHandler;
+use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
+use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
+use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
@@ -32,8 +33,11 @@ use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
  */
 class ShopPreparation implements ShopServiceInterface
 {
-    /** @var DbHandler Database communicator object */
-    private $_dbHandler = null;
+    /** @var DatabaseHandler Database communicator object */
+    private $databaseHandler = null;
+
+    /** @var DatabaseRestorerInterface Database communicator object */
+    private $databaseRestorer = null;
 
     /**
      * Initiates class dependencies.
@@ -42,10 +46,11 @@ class ShopPreparation implements ShopServiceInterface
      */
     public function __construct($config)
     {
-        include_once $config->getShopDirectory() . "core/oxconfigfile.php";
-        $configFile = new oxConfigFile($config->getShopDirectory() . "config.inc.php");
-        $this->_dbHandler = new DbHandler($configFile);
-        $this->_dbHandler->setTemporaryFolder($config->getTempDirectory());
+        $configFile = \oxRegistry::get('oxConfigFile');
+        $this->databaseHandler = new DatabaseHandler($configFile, $config->getTempDirectory());
+
+        $factory = new DatabaseRestorerFactory();
+        $this->databaseRestorer = $factory->createRestorer('DatabaseRestorerToFile');
     }
 
     /**
@@ -56,28 +61,34 @@ class ShopPreparation implements ShopServiceInterface
     public function init($request)
     {
         if ($file = $request->getUploadedFile('importSql')) {
-            $oDbHandler = $this->getDbHandler();
-            $oDbHandler->import($file);
+            $databaseHandler = $this->getDatabaseHandler();
+            $databaseHandler->import($file);
         }
 
         if ($request->getParameter('dumpDB')) {
-            $oDbHandler = $this->getDbHandler();
-            $oDbHandler->dumpDB($request->getParameter('dump-prefix'));
+            $databaseRestorer = $this->getDatabaseRestorer();
+            $databaseRestorer->dumpDB($request->getParameter('dump-prefix'));
         }
 
         if ($request->getParameter('restoreDB')) {
-            $oDbHandler = $this->getDbHandler();
-            $oDbHandler->restoreDB($request->getParameter('dump-prefix'));
+            $databaseRestorer = $this->getDatabaseRestorer();
+            $databaseRestorer->restoreDB($request->getParameter('dump-prefix'));
         }
     }
 
     /**
-     * Returns Database handler object.
-     *
-     * @return DbHandler
+     * @return DatabaseHandler
      */
-    protected function getDbHandler()
+    protected function getDatabaseHandler()
     {
-        return $this->_dbHandler;
+        return $this->databaseHandler;
+    }
+
+    /**
+     * @return DatabaseRestorerInterface
+     */
+    protected function getDatabaseRestorer()
+    {
+        return $this->databaseRestorer;
     }
 }

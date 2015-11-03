@@ -44,7 +44,8 @@ optional_parameters:
 
     # Currently exists DatabaseRestorer and LocalDatabaseRestorer.
     # DatabaseRestorer - used with external database.
-    # LocalDatabaseRestorer - used with local database (faster).
+    # DatabaseRestorerLocal - used with local database (faster).
+    # DatabaseRestorerToFile - used for selenium tests, but can also be used for units.
     database_restoration_class: 'DatabaseRestorer'
 
     # Whether to activate all modules defined in partial_module_paths when running tests.

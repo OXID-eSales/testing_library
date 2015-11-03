@@ -26,11 +26,11 @@ use mysqli;
 use mysqli_result;
 use OxConfigFile;
 
-class DbHandler
+/**
+ * Simple database connector.
+ */
+class DatabaseHandler
 {
-    /** @var string Folder to store database dumps. */
-    private $temporaryFolder = '';
-
     /** @var oxConfigFile */
     private $configFile;
 
@@ -49,52 +49,12 @@ class DbHandler
     }
 
     /**
-     * Set temporary folder
-     *
-     * @param string $sTemporaryFolder folder path
-     */
-    public function setTemporaryFolder($sTemporaryFolder)
-    {
-        $this->temporaryFolder = $sTemporaryFolder;
-    }
-
-    /**
-     * Return temporary folder path
-     *
-     * @return string
-     */
-    public function getTemporaryFolder()
-    {
-        return $this->temporaryFolder;
-    }
-
-    /**
-     * Creates a dump of the current database, and store in temporary folder.
-     * The dump includes the data and sql insert statements.
-     *
-     * @param string $dumpFilePrefix dump file name prefix.
-     */
-    public function dumpDB($dumpFilePrefix = null)
-    {
-        $fileName = $this->getDumpFileName($dumpFilePrefix);
-        $this->executeCommand($this->getExportCommand($fileName));
-    }
-
-    /**
-     * Restore db from existing dump
-     *
-     * @param string $dumpFilePrefix dump file name prefix.
-     */
-    public function restoreDB($dumpFilePrefix = null)
-    {
-        $this->import($this->getDumpFileName($dumpFilePrefix));
-    }
-
-    /**
      * Execute sql statements from sql file
      *
      * @param string $sqlFile     SQL File name to import.
      * @param string $charsetMode Charset of imported file. Will use shop charset mode if not set.
+     *
+     * @throws Exception
      */
     public function import($sqlFile, $charsetMode = null)
     {
@@ -104,6 +64,15 @@ class DbHandler
         } else {
             throw new Exception("File '$sqlFile' was not found.");
         }
+    }
+
+    /**
+     * @param string $sqlFile
+     * @param array  $tables
+     */
+    public function export($sqlFile, $tables)
+    {
+        $this->executeCommand($this->getExportCommand($sqlFile, $tables));
     }
 
     /**
@@ -206,17 +175,24 @@ class DbHandler
      * Returns CLI command for db export to given file name
      *
      * @param string $fileName file name
+     * @param array  $tables   Tables to export
      *
      * @return string
      */
-    protected function getExportCommand($fileName)
+    protected function getExportCommand($fileName, $tables = null)
     {
-        $command = 'mysqldump -h' . escapeshellarg($this->getDbHost());
+        $command = 'mysqldump';
+        $command .= ' -h' . escapeshellarg($this->getDbHost());
         $command .= ' -u' . escapeshellarg($this->getDbUser());
         if ($password = $this->getDbPassword()) {
             $command .= ' -p' . escapeshellarg($password);
         }
-        $command .= ' --add-drop-table ' . escapeshellarg($this->getDbName());
+        if (!empty($tables)) {
+            array_map('escapeshellarg', $tables);
+            $command .= ' --no-create-info';
+            $tables = ' ' . implode($tables);
+        }
+        $command .= ' ' . escapeshellarg($this->getDbName()) . $tables;
         $command .= ' > ' . escapeshellarg($fileName);
 
         return $command;
@@ -242,23 +218,5 @@ class DbHandler
                 throw new Exception("Failed to execute command: '$command' with output: '$output' ");
             }
         }
-    }
-
-    /**
-     * Create dump file name
-     *
-     * @param string $dumpFilePrefix - dump file prefix
-     *
-     * @return string
-     */
-    protected function getDumpFileName($dumpFilePrefix = null)
-    {
-        if (empty($dumpFilePrefix)) {
-            $dumpFilePrefix = 'tmp_db_dump';
-        }
-
-        $fileName = $this->getTemporaryFolder() . '/' . $dumpFilePrefix . '_' . $this->getDbName();
-
-        return $fileName;
     }
 }

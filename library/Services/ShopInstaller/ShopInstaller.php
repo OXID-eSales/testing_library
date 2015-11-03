@@ -23,7 +23,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
 
     use OxConfigFile;
     use OxidEsales\TestingLibrary\Services\Library\Cache;
-    use OxidEsales\TestingLibrary\Services\Library\DbHandler;
+    use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
     use OxidEsales\TestingLibrary\Services\Library\Request;
     use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
     use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
@@ -38,7 +38,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
         /** @var string Shop setup directory path */
         private $setupDirectory = null;
 
-        /** @var DbHandler */
+        /** @var DatabaseHandler */
         private $dbHandler;
 
         /** @var ServiceConfig */
@@ -61,7 +61,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
             include_once $shopPath . "core/oxconfigfile.php";
             $this->shopConfig = new oxConfigFile($shopPath . "config.inc.php");
 
-            $this->dbHandler = new DbHandler($this->shopConfig);
+            $this->dbHandler = new DatabaseHandler($this->shopConfig);
 
             include $shopPath ."core/oxconfk.php";
 
@@ -288,7 +288,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
         }
 
         /**
-         * @return DbHandler
+         * @return DatabaseHandler
          */
         protected function getDbHandler()
         {

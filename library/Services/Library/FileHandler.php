@@ -18,34 +18,29 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
-namespace OxidEsales\TestingLibrary\DatabaseRestorer;
-
-use Exception;
+namespace OxidEsales\TestingLibrary\Services\Library;
 
 /**
- * Factory for DatabaseRestorer.
+ * Class used for uploading files in services.
  */
-class DatabaseRestorerFactory
+class FileHandler
 {
     /**
-     * Creates and returns database restoration object.
+     * Creates directory with write permissions
      *
-     * @param $className
-     * @return mixed
-     * @throws Exception
+     * @param string $directoryPath
+     * @param int    $permissions
      */
-    public function createRestorer($className)
+    public function createDirectory($directoryPath, $permissions = 0777)
     {
-        if (!class_exists($className)) {
-            $className = __NAMESPACE__ . '\\' . $className;
+        $current = '';
+        $parts = array_filter(explode('/', $directoryPath));
+        foreach ($parts as $part) {
+            $current = "$current/$part";
+            if (!empty($part) && !file_exists($current)) {
+                mkdir($current, $permissions);
+                chmod($current, $permissions);
+            }
         }
-
-        $restorer = class_exists($className) ? new $className : new DatabaseRestorer();
-
-        if (!($restorer instanceof DatabaseRestorerInterface)) {
-            throw new Exception("Database restorer class should implement DatabaseRestorerInterface interface!");
-        }
-
-        return $restorer;
     }
 }

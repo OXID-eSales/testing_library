@@ -18,7 +18,7 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
-namespace OxidEsales\TestingLibrary\DatabaseRestorer;
+namespace OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer;
 
 use oxDb;
 use oxRegistry;

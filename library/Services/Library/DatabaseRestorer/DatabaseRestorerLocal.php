@@ -18,27 +18,39 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
-namespace OxidEsales\TestingLibrary\DatabaseRestorer;
+namespace OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer;
 
 use oxDb;
+use OxidEsales\TestingLibrary\Services\Library\FileHandler;
 use oxRegistry;
 
 /**
  * Database maintenance class responsible complete for backuping and restoration of test database.
  */
-class LocalDatabaseRestorer implements DatabaseRestorerInterface
+class DatabaseRestorerLocal implements DatabaseRestorerInterface
 {
     /** @var string Temp directory, where to store database dump */
-    private $tmpDir = '/tmp/';
+    private $tempDirectory = '/tmp/';
 
     /** @var string Dump file path */
     private $tmpFilePath = null;
 
     /** @var array Dump of the original db */
-    private $dbChecksum = null;
+    private $checksum = array();
 
     /** @var string Dump name */
     private $dumpName = 'test';
+
+    /** @var FileHandler */
+    private $fileHandler = null;
+
+    /**
+     * Sets class dependencies.
+     */
+    public function __construct()
+    {
+        $this->fileHandler = new FileHandler();
+    }
 
     /**
      * Sets which dump should be used for restoration.
@@ -81,7 +93,7 @@ class LocalDatabaseRestorer implements DatabaseRestorerInterface
             $db->query($query);
         }
 
-        $this->dbChecksum[$dumpName] = $this->getTableChecksum($tables);
+        $this->checksum[$dumpName] = $this->getTableChecksum($tables);
     }
 
     /**
@@ -129,26 +141,26 @@ class LocalDatabaseRestorer implements DatabaseRestorerInterface
             return;
         }
 
-        $sFile = $this->getDumpFolderPath() .'/'. $table ."_dump.sql";
+        $file = $this->getDumpFolderPath() .'/'. $table ."_dump.sql";
 
-        if (file_exists($sFile)) {
-            $oDb = oxDb::getDb();
-            $oDb->query("TRUNCATE TABLE `$table`");
+        if (file_exists($file)) {
+            $database = oxDb::getDb();
+            $database->query("TRUNCATE TABLE `$table`");
 
-            $sql = "LOAD DATA INFILE '$sFile' INTO TABLE `$table`";
-            $oDb->Query($sql);
+            $query = "LOAD DATA INFILE '$file' INTO TABLE `$table`";
+            $database->Query($query);
         }
     }
 
     /**
      * Drops table
      *
-     * @param string $sTable
+     * @param string $table
      */
-    private function dropTable($sTable)
+    private function dropTable($table)
     {
-        $oDB = oxDb::getDb();
-        $oDB->query("DROP TABLE `$sTable`");
+        $database = oxDb::getDb();
+        $database->query("DROP TABLE `$table`");
     }
 
     /**
@@ -160,12 +172,9 @@ class LocalDatabaseRestorer implements DatabaseRestorerInterface
     {
         if (is_null($this->tmpFilePath)) {
             $dumpName = $this->getDumpName();
-            $sDbName = oxRegistry::getConfig()->getConfigParam('dbName');
-            $this->tmpFilePath = $this->tmpDir . '/' . $sDbName . '_dbdump/'. $dumpName .'/';
-            if (!file_exists($this->tmpFilePath)) {
-                mkdir($this->tmpFilePath, 0777, true);
-                chmod($this->tmpFilePath, 0777);
-            }
+            $databaseName = oxRegistry::getConfig()->getConfigParam('dbName');
+            $this->tmpFilePath = $this->tempDirectory . '/' . $databaseName . '_dbdump/'. $dumpName .'/';
+            $this->getFileHandler()->createDirectory($this->tmpFilePath);
         }
 
         return $this->tmpFilePath;
@@ -179,31 +188,31 @@ class LocalDatabaseRestorer implements DatabaseRestorerInterface
     private function getDumpChecksum()
     {
         $dumpName = $this->getDumpName();
-        return $this->dbChecksum[$dumpName];
+        return $this->checksum[$dumpName];
     }
 
     /**
      * Returns given tables checksum values.
      *
-     * @param array $aTables Tables for which checksum will be generated.
+     * @param array $tables Tables for which checksum will be generated.
      *
      * @return array
      */
-    private function getTableChecksum($aTables)
+    private function getTableChecksum($tables)
     {
-        $aTables = is_array($aTables) ? $aTables : array($aTables);
-        $oDb = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
-        $sSelect = 'CHECKSUM TABLE ' . implode(", ", $aTables);
-        $aResults = $oDb->getArray($sSelect);
+        $tables = is_array($tables) ? $tables : array($tables);
+        $database = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $query = 'CHECKSUM TABLE ' . implode(", ", $tables);
+        $results = $database->getArray($query);
 
-        $sDbName = oxRegistry::getConfig()->getConfigParam('dbName');
-        $aChecksum = array();
-        foreach ($aResults as $aResult) {
-            $sTable = str_replace($sDbName . '.', '', $aResult['Table']);
-            $aChecksum[$sTable] = $aResult['Checksum'];
+        $databaseName = oxRegistry::getConfig()->getConfigParam('dbName');
+        $checksum = array();
+        foreach ($results as $result) {
+            $table = str_replace($databaseName . '.', '', $result['Table']);
+            $checksum[$table] = $result['Checksum'];
         }
 
-        return $aChecksum;
+        return $checksum;
     }
 
     /**
@@ -213,14 +222,22 @@ class LocalDatabaseRestorer implements DatabaseRestorerInterface
      */
     private function getDbTables()
     {
-        $oDB = oxDb::getDb(oxDb::FETCH_MODE_NUM);
-        $aTables = $oDB->getCol("SHOW TABLES");
+        $database = oxDb::getDb(oxDb::FETCH_MODE_NUM);
+        $tables = $database->getCol("SHOW TABLES");
 
-        foreach ($aTables as $iKey => $sTable) {
-            if (strpos($sTable, 'oxv_') === 0) {
-                unset($aTables[$iKey]);
+        foreach ($tables as $key => $table) {
+            if (strpos($table, 'oxv_') === 0) {
+                unset($tables[$key]);
             }
         }
-        return $aTables;
+        return $tables;
+    }
+
+    /**
+     * @return FileHandler
+     */
+    protected function getFileHandler()
+    {
+        return $this->fileHandler;
     }
 }
