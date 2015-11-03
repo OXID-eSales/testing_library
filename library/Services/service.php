@@ -19,15 +19,24 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+use OxidEsales\TestingLibrary\Services\Library\Request;
+use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
+use OxidEsales\TestingLibrary\Services\ServiceFactory;
+
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
-$bootstrapPath = __DIR__ ."/../bootstrap.php";
-require_once $bootstrapPath;
+spl_autoload_register(function($className) {
+    if (strpos($className, 'OxidEsales\\TestingLibrary\\Services\\') !== false) {
+        $class = substr($className, 35);
+        $filePath = __DIR__.'/'.str_replace('\\', '/', $class).'.php';
+        if (file_exists($filePath)) {
+            include_once $filePath;
+        }
+    }
+});
 
-require_once 'Library/ServiceConfig.php';
-require_once 'Library/Request.php';
-require_once 'ServiceFactory.php';
+require_once __DIR__ ."/../bootstrap.php";
 
 $request = new Request();
 $config = new ServiceConfig();

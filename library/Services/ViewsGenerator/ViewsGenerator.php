@@ -18,6 +18,11 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\Services\ViewsGenerator;
+
+use OxidEsales\TestingLibrary\Services\Library\Request;
+use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
+use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
 /**
  * Regenerates shop views
@@ -33,8 +38,6 @@ class ViewsGenerator implements ShopServiceInterface
      * Clears shop cache
      *
      * @param Request $request
-     *
-     * @return null
      */
     public function init($request)
     {

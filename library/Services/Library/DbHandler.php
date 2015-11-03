@@ -19,6 +19,12 @@
  * @link          http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\Services\Library;
+
+use Exception;
+use mysqli;
+use mysqli_result;
+use OxConfigFile;
 
 class DbHandler
 {
@@ -105,7 +111,7 @@ class DbHandler
      *
      * @param string $sql Sql query to execute.
      *
-     * @return resource
+     * @return mysqli_result
      */
     public function query($sql)
     {
@@ -219,7 +225,7 @@ class DbHandler
     /**
      * Execute shell command
      *
-     * @param $command
+     * @param string $command
      *
      * @throws Exception
      */

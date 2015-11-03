@@ -18,6 +18,7 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\Services\Library;
 
 /**
  * Class used for uploading files in services.
@@ -62,13 +63,13 @@ class Request
      */
     public function getUploadedFile($name)
     {
-        $sFilePath = '';
+        $filePath = '';
         if (array_key_exists($name, $_FILES)) {
-            $sFilePath = $_FILES[$name]['tmp_name'];
-        } else if (array_key_exists($name, $this->parameters)) {
-            $sFilePath = substr($this->parameters[$name], 1);
+            $filePath = $_FILES[$name]['tmp_name'];
+        } elseif (array_key_exists($name, $this->parameters)) {
+            $filePath = substr($this->parameters[$name], 1);
         }
 
-        return $sFilePath;
+        return $filePath;
     }
 }

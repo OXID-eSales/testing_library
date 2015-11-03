@@ -18,6 +18,9 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\Services\ShopObjectConstructor\Constructor;
+
+use oxConfig;
 
 /**
  * Class oxConfigCaller
@@ -28,40 +31,44 @@ class oxConfigConstructor extends ObjectConstructor
     /**
      * Skip loading of config object, as it is already loaded
      *
-     * @param $sOxId
+     * @param string $objectId
      */
-    public function load($sOxId) {}
+    public function load($objectId)
+    {
+    }
 
     /**
      * Sets class parameters
      *
-     * @param array $aClassParams
+     * @param array $classParams
+     *
      * @return array
      */
-    public function setClassParameters($aClassParams)
+    public function setClassParameters($classParams)
     {
-        $aValues = array();
-        foreach ($aClassParams as $sConfKey => $aConfParams) {
+        $values = array();
+        foreach ($classParams as $sConfKey => $configParameters) {
             if (is_int($sConfKey)) {
-                $aValues[$aConfParams] = $this->getObject()->getConfigParam($aConfParams);
+                $values[$configParameters] = $this->getObject()->getConfigParam($configParameters);
             } else {
-                $aFormedParams = $this->_formSaveConfigParameters($sConfKey, $aConfParams);
+                $aFormedParams = $this->_formSaveConfigParameters($sConfKey, $configParameters);
                 if ($aFormedParams) {
                     $this->callFunction("saveShopConfVar", $aFormedParams);
                 }
             }
         }
 
-        return $aValues;
+        return $values;
     }
 
     /**
      * Returns created object to work with
      *
-     * @param $sClassName
+     * @param string $className
+     *
      * @return oxConfig
      */
-    protected function _createObject($sClassName)
+    protected function _createObject($className)
     {
         return oxNew('oxConfig');
     }
@@ -69,19 +76,19 @@ class oxConfigConstructor extends ObjectConstructor
     /**
      * Forms parameters for saveShopConfVar function from given parameters
      *
-     * @param $sConfKey
-     * @param $aConfParams
+     * @param string $configKey
+     * @param array  $configParameters
      * @return array|bool
      */
-    private function _formSaveConfigParameters($sConfKey, $aConfParams)
+    private function _formSaveConfigParameters($configKey, $configParameters)
     {
-        $sType = $aConfParams['type'] ? $aConfParams['type'] : null;
-        $sValue = $aConfParams['value'] ? $aConfParams['value'] : null;
-        $sModule = $aConfParams['module'] ? $aConfParams['module'] : null;
+        $type = $configParameters['type'] ? $configParameters['type'] : null;
+        $value = $configParameters['value'] ? $configParameters['value'] : null;
+        $module = $configParameters['module'] ? $configParameters['module'] : null;
 
-        if (($sType == "arr" || $sType == 'aarr') && !is_array($sValue)) {
-            $sValue = unserialize(htmlspecialchars_decode($sValue));
+        if (($type == "arr" || $type == 'aarr') && !is_array($value)) {
+            $value = unserialize(htmlspecialchars_decode($value));
         }
-        return !empty($sType) ? array($sType, $sConfKey, $sValue, null, $sModule) : false;
+        return !empty($type) ? array($type, $configKey, $value, null, $module) : false;
     }
 }

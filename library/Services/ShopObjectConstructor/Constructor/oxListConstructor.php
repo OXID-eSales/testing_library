@@ -18,36 +18,41 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\Services\ShopObjectConstructor\Constructor;
+
+use Iterator;
+use oxBase;
+use oxList;
 
 /**
  * Class oxConfigCaller
  */
 class oxListConstructor extends ObjectConstructor
 {
-
     /**
      * Skip loading of config object, as it is already loaded
      *
-     * @param $sOxId
+     * @param string $objectId
      */
-    public function load($sOxId) {
-        $this->getObject()->init($sOxId, $this->_getTableName($sOxId));
+    public function load($objectId)
+    {
+        $this->getObject()->init($objectId, $this->_getTableName($objectId));
     }
 
     /**
      * Calls object function with given parameters
      *
-     * @param $sFunction
-     * @param $aParameters
+     * @param string $functionName
+     * @param string $parameters
      * @return mixed
      */
-    public function callFunction($sFunction, $aParameters)
+    public function callFunction($functionName, $parameters)
     {
-        if ($sFunction == 'getList') {
+        if ($functionName == 'getList') {
             $oObject = $this->getObject();
             $mResponse = $this->_formArrayFromList($oObject->getList());
         } else {
-            $mResponse = parent::callFunction($sFunction, $aParameters);
+            $mResponse = parent::callFunction($functionName, $parameters);
         }
 
         return $mResponse;
@@ -56,14 +61,14 @@ class oxListConstructor extends ObjectConstructor
     /**
      * Returns formed array with data from given list
      *
-     * @param $oList
+     * @param oxList|Iterator $oList
      * @return array
      */
     protected function _formArrayFromList($oList)
     {
         $aData = array();
-        foreach ($oList as $sKey => $oObject) {
-            $aData[$sKey] = $this->_getObjectFieldValues($oObject);
+        foreach ($oList as $sKey => $object) {
+            $aData[$sKey] = $this->_getObjectFieldValues($object);
         }
 
         return $aData;
@@ -72,19 +77,20 @@ class oxListConstructor extends ObjectConstructor
     /**
      * Returns object field values
      *
-     * @param object $oObject
+     * @param oxBase|object $object
+     *
      * @return array
      */
-    protected function _getObjectFieldValues($oObject)
+    protected function _getObjectFieldValues($object)
     {
-        $aData = array();
-        $aFields = $oObject->getFieldNames();
-        $sTableName = $this->_getTableName(get_class($oObject));
-        foreach ($aFields as $sField) {
-            $sFieldName = $sTableName.'__'.$sField;
-            $aData[$sField] = $oObject->$sFieldName->value;
+        $result = array();
+        $fields = $object->getFieldNames();
+        $tableName = $this->_getTableName(get_class($object));
+        foreach ($fields as $field) {
+            $fieldName = $tableName.'__'.$field;
+            $result[$field] = $object->$fieldName->value;
         }
 
-        return $aData;
+        return $result;
     }
 }

@@ -18,6 +18,9 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\Services\Library;
+
+use oxRegistry;
 
 /**
  * Class used for uploading files in services.
@@ -60,10 +63,8 @@ class Cache
     /**
      * Delete all files and dirs recursively
      *
-     * @param string $dir directory to delete
-     * @param bool   $rmBaseDir keep target directory
-     *
-     * @return null
+     * @param string $dir       Directory to delete
+     * @param bool   $rmBaseDir Keep target directory
      */
     private function removeDirectory($dir, $rmBaseDir = false)
     {

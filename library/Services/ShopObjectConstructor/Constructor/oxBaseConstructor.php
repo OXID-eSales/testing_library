@@ -18,30 +18,33 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\Services\ShopObjectConstructor\Constructor;
 
 /**
  * Class oxConfigCaller
  */
 class oxBaseConstructor extends ObjectConstructor
 {
-
     /**
      * Initiates object instead of loading it
      *
-     * @param string $sOxId
+     * @param string $objectId
+     *
+     * @return mixed
      */
-    protected function _loadById($sOxId)
+    protected function _loadById($objectId)
     {
-        return $this->getObject()->init($sOxId);
+        return $this->getObject()->init($objectId);
     }
 
     /**
      * Returns core table name instead of oxBase
      *
-     * @param string $sClass
+     * @param string $className
+     *
      * @return string
      */
-    protected function _getTableName($sClass)
+    protected function _getTableName($className)
     {
         return $this->getObject()->getCoreTableName();
     }

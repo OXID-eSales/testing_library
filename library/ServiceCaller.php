@@ -21,6 +21,10 @@
 
 namespace OxidEsales\TestingLibrary;
 
+use OxidEsales\TestingLibrary\Services\Library\Request;
+use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
+use OxidEsales\TestingLibrary\Services\ServiceFactory;
+
 /**
  * Class for calling services. Services must already exist in shop.
  */
@@ -103,11 +107,13 @@ class ServiceCaller
     /**
      * Calls service on remote server.
      *
-     * @param $sServiceName
-     * @return string
+     * @param string $serviceName
+     *
      * @throws \Exception
+     *
+     * @return string
      */
-    protected function callRemoteService($sServiceName)
+    protected function callRemoteService($serviceName)
     {
         if (!self::$servicesCopied) {
             self::$servicesCopied = true;
@@ -116,7 +122,7 @@ class ServiceCaller
 
         $oCurl = new Curl();
 
-        $this->setParameter('service', $sServiceName);
+        $this->setParameter('service', $serviceName);
 
         $oCurl->setUrl($this->getTestConfig()->getShopUrl() . '/Services/service.php');
         $oCurl->setParameters($this->getParameters());
@@ -127,30 +133,27 @@ class ServiceCaller
             $sResponse = $oCurl->execute();
         }
 
-        return $this->unserializeString($sResponse);
+        return $this->unserializeResponse($sResponse);
     }
 
     /**
      * Calls service on local server.
      *
-     * @param $serviceName
-     * @return string
+     * @param string $serviceName
+     *
+     * @return mixed|null
      */
     protected function callLocalService($serviceName)
     {
-        require_once TEST_LIBRARY_PATH . '/Services/Library/ServiceConfig.php';
-        require_once TEST_LIBRARY_PATH . '/Services/Library/Request.php';
-        require_once TEST_LIBRARY_PATH .'/Services/ServiceFactory.php';
-
         define('TMP_PATH', $this->getTestConfig()->getTempDirectory());
 
-        $config = new \ServiceConfig();
+        $config = new ServiceConfig();
         $config->setShopDirectory($this->getTestConfig()->getShopPath());
         $config->setShopEdition($this->getTestConfig()->getShopEdition());
         $config->setTempDirectory($this->getTestConfig()->getTempDirectory());
 
-        $serviceCaller = new \ServiceFactory($config);
-        $request = new \Request($this->getParameters());
+        $serviceCaller = new ServiceFactory($config);
+        $request = new Request($this->getParameters());
         $service = $serviceCaller->createService($serviceName);
 
         return $service->init($request);
@@ -171,27 +174,27 @@ class ServiceCaller
      */
     protected function copyServicesToShop()
     {
-        $oFileCopier = new FileCopier();
-        $sTarget = $this->getTestConfig()->getRemoteDirectory() . '/Services';
-        $oFileCopier->copyFiles(TEST_LIBRARY_PATH.'/Services', $sTarget, true);
+        $fileCopier = new FileCopier();
+        $target = $this->getTestConfig()->getRemoteDirectory() . '/Services';
+        $fileCopier->copyFiles(TEST_LIBRARY_PATH.'/Services', $target, true);
     }
 
     /**
      * Unserializes given string. Throws exception if incorrect string is passed
      *
-     * @param string $sString
+     * @param string $response
      *
      * @throws \Exception
      *
      * @return mixed
      */
-    private function unserializeString($sString)
+    private function unserializeResponse($response)
     {
-        $mResult = unserialize($sString);
-        if ($sString !== 'b:0;' && $mResult === false) {
-            throw new \Exception(substr($sString, 0, 5000));
+        $result = unserialize($response);
+        if ($response !== 'b:0;' && $result === false) {
+            throw new \Exception(substr($response, 0, 5000));
         }
 
-        return $mResult;
+        return $result;
     }
 }

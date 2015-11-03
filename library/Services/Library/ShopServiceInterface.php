@@ -18,6 +18,7 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\Services\Library;
 
 /**
  * Interface ShopServiceInterface
@@ -34,9 +35,7 @@ interface ShopServiceInterface
     /**
      * Initiates service.
      *
-     * @param Request       $request
-     *
-     * @return mixed
+     * @param Request $request
      */
     public function init($request);
 }

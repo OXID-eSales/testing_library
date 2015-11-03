@@ -18,9 +18,13 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\Services\ShopPreparation;
 
-require_once LIBRARY_PATH .'/FileUploader.php';
-require_once LIBRARY_PATH .'/DbHandler.php';
+use OxConfigFile;
+use OxidEsales\TestingLibrary\Services\Library\DbHandler;
+use OxidEsales\TestingLibrary\Services\Library\Request;
+use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
+use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
 /**
  * Shop constructor class for modifying shop environment during testing
@@ -48,8 +52,6 @@ class ShopPreparation implements ShopServiceInterface
      * Handles request parameters.
      *
      * @param Request $request
-     *
-     * @return null
      */
     public function init($request)
     {

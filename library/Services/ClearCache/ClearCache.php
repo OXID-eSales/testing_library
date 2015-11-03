@@ -18,8 +18,12 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\Services\ClearCache;
 
-require_once LIBRARY_PATH .'/Cache.php';
+use OxidEsales\TestingLibrary\Services\Library\Cache;
+use OxidEsales\TestingLibrary\Services\Library\Request;
+use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
+use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
 /**
  * This script clears shop cache
@@ -29,14 +33,14 @@ class ClearCache implements ShopServiceInterface
     /**
      * @param ServiceConfig $config
      */
-    public function __construct($config) {}
+    public function __construct($config)
+    {
+    }
 
     /**
      * Clears shop cache
      *
      * @param Request $request
-     *
-     * @return null
      */
     public function init($request)
     {
@@ -46,5 +50,3 @@ class ClearCache implements ShopServiceInterface
         $cache->clearTemporaryDirectory();
     }
 }
-
-

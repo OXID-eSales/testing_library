@@ -18,12 +18,14 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\Services;
 
-define('LIBRARY_PATH', __DIR__ .'/Library/');
-require_once LIBRARY_PATH .'/ShopServiceInterface.php';
+use Exception;
+use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
+use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
 /**
- * Class ServiceFactory
+ * Services Factory class.
  */
 class ServiceFactory
 {
@@ -36,9 +38,8 @@ class ServiceFactory
     {
         $this->config = $config;
 
-        require_once $config->getShopDirectory() . '/bootstrap.php';
+        include_once $config->getShopDirectory() . '/bootstrap.php';
     }
-
 
     /**
      * Creates Service object. All services must implement ShopService interface
@@ -51,11 +52,11 @@ class ServiceFactory
      */
     public function createService($serviceClass)
     {
-        $this->includeServiceFile($serviceClass);
-        $service = new $serviceClass($this->getServiceConfig());
+        $className = $this->formClassName($serviceClass);
+        $service = new $className($this->getServiceConfig());
 
         if (!($service instanceof ShopServiceInterface)) {
-            throw new Exception("Service $serviceClass does not implement ShopServiceInterface interface!");
+            throw new Exception("Service $className does not implement ShopServiceInterface interface!");
         }
 
         return $service;
@@ -66,18 +67,11 @@ class ServiceFactory
      *
      * @param string $serviceClass
      *
-     * @throws Exception
+     * @return string
      */
-    protected function includeServiceFile($serviceClass)
+    protected function formClassName($serviceClass)
     {
-        $servicesDirectory = $this->getServiceConfig()->getServicesDirectory();
-        $file = "$servicesDirectory/$serviceClass/$serviceClass.php";
-
-        if (!file_exists($file)) {
-            throw new Exception("Service $serviceClass not found in path $file!");
-        }
-
-        include_once $file;
+        return "OxidEsales\\TestingLibrary\\Services\\$serviceClass\\$serviceClass";
     }
 
     /**

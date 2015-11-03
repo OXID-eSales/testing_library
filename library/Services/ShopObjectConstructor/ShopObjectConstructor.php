@@ -18,8 +18,14 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\Services\ShopObjectConstructor;
 
-require_once 'Constructors/ConstructorFactory.php';
+use Exception;
+use OxidEsales\TestingLibrary\Services\Library\Request;
+use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
+use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
+use OxidEsales\TestingLibrary\Services\ShopObjectConstructor\Constructor\ConstructorFactory;
+use oxRegistry;
 
 /**
  * Shop constructor class for modifying shop environment during testing
@@ -64,7 +70,7 @@ class ShopObjectConstructor implements ShopServiceInterface
 
         $mResult = '';
         if ($request->getParameter('classparams')) {
-            $mResult = $oConstructor->setClassParameters($request->getParameter('classparams') );
+            $mResult = $oConstructor->setClassParameters($request->getParameter('classparams'));
         }
 
         if ($request->getParameter('fnc')) {

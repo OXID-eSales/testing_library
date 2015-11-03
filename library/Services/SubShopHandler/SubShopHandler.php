@@ -18,6 +18,13 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
+namespace OxidEsales\TestingLibrary\Services\SubShopHandler;
+
+use oxBase;
+use oxElement2ShopRelations;
+use OxidEsales\TestingLibrary\Services\Library\Request;
+use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
+use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
 /**
  * Assigns items to subshop
@@ -33,8 +40,6 @@ class SubShopHandler implements ShopServiceInterface
      * Assigns element to subshop
      *
      * @param Request $request
-     *
-     * @return null
      */
     public function init($request)
     {
@@ -55,15 +60,13 @@ class SubShopHandler implements ShopServiceInterface
      * @param string  $sElementTable Name of element table
      * @param integer $sShopId       Subshop id
      * @param integer $sElementId    Element id
-     *
-     * @return null
      */
     public function assignElementToSubShop($sElementTable, $sShopId, $sElementId)
     {
         /** @var oxBase $oBase */
         $oBase = oxNew('oxBase');
         $oBase->init($sElementTable);
-        if ( $oBase->load($sElementId) ) {
+        if ($oBase->load($sElementId)) {
             /** @var oxElement2ShopRelations $oElement2ShopRelations */
             $oElement2ShopRelations = oxNew('oxElement2ShopRelations', $sElementTable);
             $oElement2ShopRelations->setShopIds($sShopId);
@@ -77,8 +80,6 @@ class SubShopHandler implements ShopServiceInterface
      * @param string  $sElementTable Name of element table
      * @param integer $sShopId       Subshop id
      * @param integer $sParentShopId Parent subshop id
-     *
-     * @return null
      */
     public function assignAllElementsToSubShop($sElementTable, $sShopId, $sParentShopId = 1)
     {
@@ -87,8 +88,4 @@ class SubShopHandler implements ShopServiceInterface
         $oElement2ShopRelations->setShopIds($sShopId);
         $oElement2ShopRelations->inheritFromShop($sParentShopId);
     }
-
-
 }
-
-

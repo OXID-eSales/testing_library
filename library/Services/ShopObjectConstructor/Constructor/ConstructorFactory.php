@@ -18,8 +18,7 @@
  * @link http://www.oxid-esales.com
  * @copyright (C) OXID eSales AG 2003-2014
  */
-
-require_once 'ObjectConstructor.php';
+namespace OxidEsales\TestingLibrary\Services\ShopObjectConstructor\Constructor;
 
 /**
  * Class CallerFactory
@@ -28,29 +27,27 @@ class ConstructorFactory
 {
     /**
      * @param string $sClassName
+     *
      * @return ObjectConstructor
      */
     public function getConstructor($sClassName)
     {
-        $sConstructorClass = $this->_getConstructorClass($sClassName)?: 'ObjectConstructor';
+        $constructorClassName = $this->formConstructorClass($sClassName);
+        if (!class_exists($constructorClassName)) {
+            $constructorClassName = $this->formConstructorClass('Object');
+        }
 
-        return new $sConstructorClass($sClassName);
+        return new $constructorClassName($sClassName);
     }
 
     /**
-     * @param $sClassName
+     * @param string $className
+     *
      * @return bool|string
      */
-    protected function _getConstructorClass($sClassName)
+    protected function formConstructorClass($className)
     {
-        $sConstructorClass = $sClassName . "Constructor";
-        $sFile = realpath(__DIR__.'/'.$sConstructorClass.".php");
-
-        if (file_exists($sFile)) {
-            include_once($sFile);
-            return $sConstructorClass;
-        }
-
-        return false;
+        $sConstructorClass = $className . "Constructor";
+        return "OxidEsales\\TestingLibrary\\Services\\ShopObjectConstructor\\Constructor\\$sConstructorClass";
     }
 }
