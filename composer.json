@@ -19,7 +19,8 @@
         "behat/mink-goutte-driver": "*",
         "behat/mink-selenium-driver": "*",
         "symfony/yaml": "~2.0",
-        "incenteev/composer-parameter-handler": "~2.0"
+        "incenteev/composer-parameter-handler": "~2.0",
+        "phpunit/phpcov": "*"
     },
     "bin": [
         "bin/reset-shop",
