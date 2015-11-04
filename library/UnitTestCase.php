@@ -36,7 +36,6 @@ use PHPUnit_Framework_Exception;
 
 use oxTestsStaticCleaner;
 use oxTestModules;
-use modInstances;
 use modOxid;
 use modOxUtilsDate;
 
@@ -188,7 +187,6 @@ abstract class UnitTestCase extends BaseTestCase
             oxTestsStaticCleaner::clean('oxUtilsObject', '_aInstanceCache');
             oxTestsStaticCleaner::clean('oxArticle', '_aLoadedParents');
 
-            modInstances::cleanup();
             oxTestModules::cleanUp();
             modOxid::globalCleanup();
 
@@ -641,7 +639,6 @@ abstract class UnitTestCase extends BaseTestCase
         $proxyClassName = "{$escapedSuperClassName}Proxy";
 
         if (!class_exists($proxyClassName, false)) {
-
             $class = "
                 class $proxyClassName extends $superClassName
                 {
@@ -770,6 +767,49 @@ abstract class UnitTestCase extends BaseTestCase
     public function evalFunction($value)
     {
         return new MockStubFunc($value);
+    }
+
+    /**
+     * @param string $extension
+     * @param string $class
+     */
+    public function addClassExtension($extension, $class)
+    {
+        $utilsObject = new oxUtilsObject();
+        $extensions = $utilsObject->getModuleVar("aModules");
+
+        oxRegistry::set($class, null);
+
+        if ($extensions[strtolower($class)]) {
+            $extension = $extensions[strtolower($class)] . '&' . $extension;
+        }
+        $extensions[strtolower($class)] = $extension;
+        $utilsObject->setModuleVar("aModules", $extensions);
+    }
+
+    /**
+     * @param string $extension
+     * @param string $class
+     */
+    public function removeClassExtension($extension, $class = '')
+    {
+        oxRegistry::set($class, null);
+
+        $utilsObject = new oxUtilsObject();
+        $extensions = $utilsObject->getModuleVar("aModules");
+
+        if (!$extensions) {
+            $extensions = array();
+        }
+
+        if ($class) {
+            unset($extensions[$class]);
+        } else {
+            while (($key = array_search($extension, $extensions)) !== false) {
+                unset($extensions[$key]);
+            }
+        }
+        $utilsObject->setModuleVar("aModules", $extensions);
     }
 
     /**

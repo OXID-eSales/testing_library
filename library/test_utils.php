@@ -37,30 +37,7 @@
  *     oxAddClassModule('modUtils', 'oxutils');
  *  - and after doing some ...
  *     oxRemClassModule('modUtils');
- *
- *  - now one can provide his/her own oxClassCacheKey
- *    found it usefull while testing getInstance method, when I needed to know
- *    that my object is really really created, and not taken from cache.
  */
-function oxClassCacheKey($reset = false, $sProvide = null)
-{
-    static $key = null;
-    if ($key === null || $reset) {
-        if ($sProvide) {
-            $key = $sProvide;
-        } else {
-            $config = oxRegistry::getConfig();
-            if (is_array($config->getConfigParam('aModules'))) {
-                $key = md5('cc|' . implode('|', $config->getConfigParam('aModules')));
-            } else {
-                $key = md5('cc|');
-            }
-        }
-    }
-
-    return $key;
-}
-
 function oxAddClassModule($sModuleClass, $sClass)
 {
     $oFactory = new oxUtilsObject();
@@ -74,15 +51,11 @@ function oxAddClassModule($sModuleClass, $sClass)
     }
     $aModules[strtolower($sClass)] = $sModuleClass;
 
-    //$myConfig->setConfigParam( 'aModules', $aModules );
     $oFactory->setModuleVar("aModules", $aModules);
-
-    oxClassCacheKey(true);
 }
 
 function oxRemClassModule($sModuleClass, $sClass = '')
 {
-    //unset _possible_ registry instance
     oxRegistry::set($sClass, null);
 
     $oFactory = new oxUtilsObject();
@@ -100,8 +73,6 @@ function oxRemClassModule($sModuleClass, $sClass = '')
         }
     }
     $oFactory->setModuleVar("aModules", $aModules);
-
-    oxClassCacheKey(true);
 }
 
 /**
@@ -312,7 +283,6 @@ class oxTestModules
     public static function cleanAllModules()
     {
         oxRegistry::getConfig()->setConfigParam('aModules', array());
-        oxClassCacheKey(true, "empty");
     }
 }
 
@@ -552,35 +522,6 @@ class modDB extends modOXID
         $this->remClassFunction('getDB');
         self::$unitMOD = null;
         parent::cleanup();
-    }
-}
-
-// Stores added objects instances in array
-// On cleanup clears all stored instances
-// Add modInstances->getInstance()->cleanup() when testing in tearDown()
-// to force recreate added objects
-
-//-----------------
-
-class modInstances
-{
-
-    protected static $_aInst = array();
-
-    public static function addMod($sModId, $oObject)
-    {
-        self::$_aInst[strtolower($sModId) . oxClassCacheKey()] = $oObject;
-    }
-
-    public static function getMod($sModId)
-    {
-        //print_r(array_keys(self::$_aInst));
-        return self::$_aInst[strtolower($sModId) . oxClassCacheKey()];
-    }
-
-    public static function cleanup()
-    {
-        self::$_aInst = array();
     }
 }
 
