@@ -157,7 +157,7 @@ class ObjectConstructor
      */
     protected function _createObject($className)
     {
-        return new $className();
+        return oxNew($className);
     }
 
     /**
