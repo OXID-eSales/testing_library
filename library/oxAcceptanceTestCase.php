@@ -23,6 +23,7 @@ require_once TEST_LIBRARY_PATH . 'oxMinkWrapper.php';
 require_once TEST_LIBRARY_PATH . 'oxObjectValidator.php';
 require_once TEST_LIBRARY_PATH . 'oxTranslator.php';
 require_once TEST_LIBRARY_PATH . 'oxRetryTestException.php';
+require_once TEST_LIBRARY_PATH . "oxTestModuleLoader.php";
 
 /**
  * Base class for Selenium tests.
