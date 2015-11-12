@@ -86,6 +86,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     /** @var \Behat\Mink\Session Mink session */
     private static $minkSession = null;
 
+    /** @var oxTestModuleLoader Module loader. */
+    private static $moduleLoader = null;
+
     /**
      * Constructs a test case with the given name.
      *
@@ -112,6 +115,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $currentTestsSuitePath = $this->getSuitePath();
         if (self::$testsSuitePath !== $currentTestsSuitePath) {
             self::$testsSuitePath = $currentTestsSuitePath;
+            $this->setUpBeforeTestSuite();
             $this->setUpTestsSuite($currentTestsSuitePath);
         }
         $this->getTranslator()->setLanguage(1);
@@ -119,6 +123,19 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $this->clearTemp();
         if ($this->isMinkSessionStarted()) {
             $this->clearCookies();
+        }
+    }
+
+    /**
+     * Runs necessary things before running tests suite.
+     */
+    public function setUpBeforeTestSuite()
+    {
+        $testConfig = $this->getTestConfig();
+        $modulesToActivate = $testConfig->getModulesToActivate();
+        if ($modulesToActivate) {
+            $oTestModuleLoader = $this->_getModuleLoader();
+            $oTestModuleLoader->activateModules($modulesToActivate);
         }
     }
 
@@ -2118,6 +2135,21 @@ class oxAcceptanceTestCase extends oxMinkWrapper
 
         return $newException;
     }
+
+    /**
+     * Returns database restorer object.
+     *
+     * @return oxTestModuleLoader
+     */
+    protected static function _getModuleLoader()
+    {
+        if (is_null(self::$moduleLoader)) {
+            self::$moduleLoader = new oxTestModuleLoader();
+        }
+
+        return self::$moduleLoader;
+    }
+
 }
 
 /**
