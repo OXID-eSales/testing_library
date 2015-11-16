@@ -42,28 +42,26 @@ class ModuleInstaller implements ShopServiceInterface
         $modulesToActivate = $request->getParameter("modulestoactivate");
 
         $this->prepareModulesForActivation($moduleDirectory);
-        foreach ($modulesToActivate as $sModulePath) {
-            $this->installModule($sModulePath);
+        foreach ($modulesToActivate as $modulePath) {
+            $this->installModule($modulePath);
         }
     }
 
     /**
      * Activates module.
      *
-     * @param string $sModulePath The path to the module.
+     * @param string $modulePath The path to the module.
      *
      * @throws Exception
      */
-    public function installModule($sModulePath)
+    public function installModule($modulePath)
     {
-        $oModule = $this->loadModule($sModulePath);
+        $module = $this->loadModule($modulePath);
 
-        /** @var oxModuleCache $oModuleCache */
-        $oModuleCache = oxNew('oxModuleCache', $oModule);
-        /** @var oxModuleInstaller $oModuleInstaller */
-        $oModuleInstaller = oxNew('oxModuleInstaller', $oModuleCache);
-        if (!$oModuleInstaller->activate($oModule)) {
-            throw new Exception("Error on module installation: " . $oModule->getId());
+        $moduleCache = oxNew('oxModuleCache', $module);
+        $moduleInstaller = oxNew('oxModuleInstaller', $moduleCache);
+        if (!$moduleInstaller->activate($module)) {
+            throw new Exception("Error on module installation: " . $module->getId());
         }
     }
 
@@ -74,25 +72,24 @@ class ModuleInstaller implements ShopServiceInterface
      */
     private function prepareModulesForActivation($moduleDirectory)
     {
-        $oModuleList = oxNew("oxModuleList");
-        $oModuleList->getModulesFromDir($moduleDirectory);
+        $moduleList = oxNew("oxModuleList");
+        $moduleList->getModulesFromDir($moduleDirectory);
     }
 
     /**
      * Loads module object from given directory.
      *
-     * @param string $sModulePath The path to the module.
+     * @param string $modulePath The path to the module.
      *
      * @return oxModule
      * @throws Exception
      */
-    private function loadModule($sModulePath)
+    private function loadModule($modulePath)
     {
-        /** @var oxModule $oModule */
-        $oModule = oxNew('oxModule');
-        if (!$oModule->loadByDir($sModulePath)) {
+        $module = oxNew('oxModule');
+        if (!$module->loadByDir($modulePath)) {
             throw new Exception("Module not found");
         }
-        return $oModule;
+        return $module;
     }
 }

@@ -135,8 +135,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $testConfig = $this->getTestConfig();
         $modulesToActivate = $testConfig->getModulesToActivate();
         if ($modulesToActivate) {
-            $oTestModuleLoader = $this->_getModuleLoader();
-            $oTestModuleLoader->activateModules($modulesToActivate);
+            $testModuleLoader = $this->_getModuleLoader();
+            $testModuleLoader->activateModules($modulesToActivate);
         }
     }
 

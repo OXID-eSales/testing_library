@@ -77,11 +77,7 @@ class oxTestModuleLoader
         $serviceCaller = new oxServiceCaller();
         $serviceCaller->setParameter('moduledirectory', $moduleDirectory);
         $serviceCaller->setParameter('modulestoactivate', $modulesToActivate);
-        $mResponse = $serviceCaller->callService('ModuleInstaller', 1);
-
-        if (is_string($mResponse) && strpos($mResponse, 'EXCEPTION:') === 0) {
-            die("Exception caught calling ModuleInstaller with message: '$mResponse'\n\n");
-        }
+        $serviceCaller->callService('ModuleInstaller', 1);
     }
 
     /**
