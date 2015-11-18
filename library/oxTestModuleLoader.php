@@ -73,9 +73,7 @@ class oxTestModuleLoader
      */
     public function activateModules($modulesToActivate)
     {
-        $moduleDirectory = oxRegistry::getConfig()->getModulesDir();
         $serviceCaller = new oxServiceCaller();
-        $serviceCaller->setParameter('moduledirectory', $moduleDirectory);
         $serviceCaller->setParameter('modulestoactivate', $modulesToActivate);
         $serviceCaller->callService('ModuleInstaller', 1);
     }

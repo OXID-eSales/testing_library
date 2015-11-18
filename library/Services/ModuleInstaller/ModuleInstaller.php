@@ -38,8 +38,8 @@ class ModuleInstaller implements ShopServiceInterface
      */
     public function init($request)
     {
-        $moduleDirectory   = $request->getParameter("moduledirectory");
         $modulesToActivate = $request->getParameter("modulestoactivate");
+        $moduleDirectory = oxRegistry::getConfig()->getModulesDir();
 
         $this->prepareModulesForActivation($moduleDirectory);
         foreach ($modulesToActivate as $modulePath) {

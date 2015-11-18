@@ -116,7 +116,6 @@ class oxAcceptanceTestCase extends oxMinkWrapper
         $currentTestsSuitePath = $this->getSuitePath();
         if (self::$testsSuitePath !== $currentTestsSuitePath) {
             self::$testsSuitePath = $currentTestsSuitePath;
-            $this->setUpBeforeTestSuite();
             $this->setUpTestsSuite($currentTestsSuitePath);
         }
         $this->getTranslator()->setLanguage(1);
@@ -128,9 +127,9 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     }
 
     /**
-     * Runs necessary things before running tests suite.
+     * Activates modules before tests are run.
      */
-    public function setUpBeforeTestSuite()
+    public function activateModules()
     {
         $testConfig = $this->getTestConfig();
         $modulesToActivate = $testConfig->getModulesToActivate();
@@ -155,6 +154,7 @@ class oxAcceptanceTestCase extends oxMinkWrapper
             $this->restoreDb('reset_suite_db_dump');
         }
 
+        $this->activateModules();
         $this->addTestData($testSuitePath);
 
         $this->dumpDb('reset_test_db_dump');
