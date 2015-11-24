@@ -33,7 +33,7 @@ optional_parameters:
 
     # eShop setup directory. After setting up the shop, setup directory will be deleted.
     # For shop installation to work during tests run, path to this directory must be specified.
-    # Uses shop/directory/setup/ if not set.
+    # Uses shop/directory/Setup/ if not set.
     shop_setup_path:
 
     # Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it.

@@ -144,8 +144,7 @@ abstract class BootstrapBase
             $fileCopier = new FileCopier();
             $remoteDirectory = $config->getRemoteDirectory();
             $shopDirectory = $remoteDirectory ? $remoteDirectory : $config->getShopPath();
-
-            $fileCopier->copyFiles($setupPath, $shopDirectory.'/setup/');
+            $fileCopier->copyFiles($setupPath, $shopDirectory.'/Setup/');
         }
 
         try {

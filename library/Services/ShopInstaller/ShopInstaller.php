@@ -22,6 +22,9 @@
 namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
 
     use OxConfigFile;
+    use OxidEsales\Eshop\Core\Edition\EditionPathProvider;
+    use OxidEsales\Eshop\Core\Edition\EditionRootPathProvider;
+    use OxidEsales\Eshop\Core\Edition\EditionSelector;
     use OxidEsales\TestingLibrary\Services\Library\Cache;
     use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
     use OxidEsales\TestingLibrary\Services\Library\Request;
@@ -46,6 +49,9 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
 
         /** @var oxConfigFile */
         private $shopConfig;
+
+        /** @var EditionPathProvider */
+        private $editionPathProvider;
 
         /**
          * Includes configuration files.
@@ -118,20 +124,6 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
         }
 
         /**
-         * Returns shop setup directory.
-         *
-         * @return string
-         */
-        public function getSetupDirectory()
-        {
-            if ($this->setupDirectory === null) {
-                $this->setupDirectory = $this->getServiceConfig()->getShopDirectory() . '/setup';
-            }
-
-            return $this->setupDirectory;
-        }
-
-        /**
          * Sets up database.
          */
         public function setupDatabase()
@@ -142,9 +134,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
 
             $dbHandler->query('drop database `' . $dbHandler->getDbName() . '`');
             $dbHandler->query('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
-            $sSetupPath = $this->getSetupDirectory();
-            $suffix = $this->getServiceConfig()->getEditionSufix();
-            $dbHandler->import($sSetupPath . "/sql$suffix/database.sql", 'latin1');
+            $dbHandler->import($this->getEditionPathProvider()->getDatabaseSqlDirectoryPath() . "/database.sql", 'latin1');
         }
 
         /**
@@ -152,9 +142,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
          */
         public function insertDemoData()
         {
-            $sSetupPath = $this->getSetupDirectory();
-            $suffix = $this->getServiceConfig()->getEditionSufix();
-            $this->getDbHandler()->import($sSetupPath . "/sql$suffix/demodata.sql", 'latin1');
+            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectoryPath() . "/demodata.sql", 'latin1');
         }
 
         /**
@@ -162,9 +150,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
          */
         public function convertToInternational()
         {
-            $sSetupPath = $this->getSetupDirectory();
-            $suffix = $this->getServiceConfig()->getEditionSufix();
-            $this->getDbHandler()->import($sSetupPath . "/sql$suffix/en.sql", 'latin1');
+            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectoryPath() . "/en.sql", 'latin1');
         }
 
         /**
@@ -296,11 +282,24 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
         protected function getDefaultSerial()
         {
             if ($this->getServiceConfig()->getShopEdition() != 'CE') {
-                include_once $this->getServiceConfig()->getShopDirectory() . "setup/oxsetup.php";
+                include_once $this->getServiceConfig()->getShopDirectory() . "Setup/oxsetup.php";
 
                 $setup = new oxSetup();
                 return $setup->getDefaultSerial();
             }
+        }
+
+        /**
+         * @return EditionPathProvider
+         */
+        protected function getEditionPathProvider()
+        {
+            if (is_null($this->editionPathProvider)) {
+                $editionPathSelector = new EditionRootPathProvider(new EditionSelector());
+                $this->editionPathProvider = new EditionPathProvider($editionPathSelector);
+            }
+
+            return $this->editionPathProvider;
         }
 
         /**
