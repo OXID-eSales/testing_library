@@ -383,6 +383,11 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
 namespace {
 
     /** These classes is used to stop autoloading in oxsetup as it breaks shop installation. */
-    class Conf{}
+    class Conf {
+        public function __construct()
+        {
+            include getShopBasePath() . "core/oxconfk.php";
+        }
+    }
     class Config{}
 }
