@@ -378,7 +378,7 @@ namespace {
     class Conf {
         public function __construct()
         {
-            include getShopBasePath() . "core/oxconfk.php";
+            include getShopBasePath() . "Core/oxconfk.php";
         }
     }
     class Config{}
