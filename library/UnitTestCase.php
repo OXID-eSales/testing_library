@@ -381,11 +381,10 @@ class UnitTestCase extends BaseTestCase
             ->method('setFetchMode')
             ->will($this->returnValue(true));
 
-
         $dbStub->expects($this->any())
             ->method('quote')
             ->will($this->returnCallback(function ($s) {
-                return "'" . mysql_real_escape_string($s) . "'";
+                return "'$s'";
             }));
 
         return $dbStub;
