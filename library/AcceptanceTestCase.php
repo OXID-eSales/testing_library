@@ -854,6 +854,45 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
+     * Types text to admins wysiwyg editor. If wysiwyg is not present, sets value to textarea.
+     *
+     * @param string $selector Field name
+     * @param string $text     Text to enter
+     */
+    protected function typeToEditor($selector, $text)
+    {
+        if ($this->getTestConfig()->getShopEdition() == 'CE') {
+            $this->type("editor_$selector", $text);
+        } else {
+            $currentFrame = $this->getSelectedFrame();
+            $this->frame("{$selector}_editFrame");
+            $this->type("//body", $text);
+            $this->frame($currentFrame);
+        }
+    }
+
+    /**
+     * Returns value of admins wysiwyg editor. If wysiwyg is not present, returns value of textarea.
+     *
+     * @param string $selector
+     *
+     * @return string
+     */
+    protected function getEditorValue($selector)
+    {
+        if ($this->getTestConfig()->getShopEdition() == 'CE') {
+            $value = $this->getValue("editor_$selector");
+        } else {
+            $currentFrame = $this->getSelectedFrame();
+            $this->frame("{$selector}_editFrame");
+            $value = $this->getText("//body");
+            $this->frame($currentFrame);
+        }
+
+        return $value;
+    }
+
+    /**
      * Asserts that two variables are equal.
      *
      * @param mixed  $expected
