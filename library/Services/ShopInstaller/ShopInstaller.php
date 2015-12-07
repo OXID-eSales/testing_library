@@ -134,7 +134,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
 
             $dbHandler->query('drop database `' . $dbHandler->getDbName() . '`');
             $dbHandler->query('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
-            $dbHandler->import($this->getEditionPathProvider()->getDatabaseSqlDirectoryPath() . "/database.sql", 'latin1');
+            $dbHandler->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/database.sql", 'latin1');
         }
 
         /**
@@ -142,7 +142,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
          */
         public function insertDemoData()
         {
-            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectoryPath() . "/demodata.sql", 'latin1');
+            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/demodata.sql", 'latin1');
         }
 
         /**
@@ -150,7 +150,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
          */
         public function convertToInternational()
         {
-            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectoryPath() . "/en.sql", 'latin1');
+            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/en.sql", 'latin1');
         }
 
         /**
