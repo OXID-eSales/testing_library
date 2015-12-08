@@ -1781,7 +1781,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
             "does not exist or is not accessible!" => "Warning about not existing function is in the page ",
             "ERROR: Tran" => "Missing translation for constant (ERROR: Translation for...)",
             "EXCEPTION_" => "Exception - component not found (EXCEPTION_)",
-            "oxException" => "Exception is in page"
+            "oxException" => "Exception is in page",
+            "Smarty error:" => "Smarty error is in page"
         );
 
         foreach ($aErrorTexts as $sError => $sMessage) {
