@@ -31,7 +31,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
     use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
     use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
     use OxidEsales\EshopProfessional\Core\Serial;
-    use Setup;
+    use OxidEsales\Eshop\Setup\Setup;
 
     /**
      * Class for shop installation.
@@ -282,9 +282,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
         protected function getDefaultSerial()
         {
             if ($this->getServiceConfig()->getShopEdition() != 'CE') {
-                include_once $this->getServiceConfig()->getShopDirectory() . "Setup/oxsetup.php";
-
-                $setup = new oxSetup();
+                $setup = new Setup();
                 return $setup->getDefaultSerial();
             }
         }
