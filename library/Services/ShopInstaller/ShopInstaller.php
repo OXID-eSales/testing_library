@@ -31,7 +31,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
     use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
     use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
     use OxidEsales\EshopProfessional\Core\Serial;
-    use oxSetup;
+    use Setup;
 
     /**
      * Class for shop installation.
