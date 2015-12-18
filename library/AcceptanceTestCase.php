@@ -34,7 +34,7 @@ use PHPUnit_Util_Filter;
 /**
  * Base class for Selenium tests.
  */
-class AcceptanceTestCase extends MinkWrapper
+abstract class AcceptanceTestCase extends MinkWrapper
 {
     /** @var int How much time to wait for pages to load. Wait time is multiplied by this value. */
     protected $_iWaitTimeMultiplier = 1;

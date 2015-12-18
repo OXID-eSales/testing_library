@@ -27,7 +27,7 @@ use PHPUnit_Framework_SkippedTestError as SkippedTestError;
 /**
  * Base tests class. Most tests should extend this class.
  */
-class BaseTestCase extends \PHPUnit_Framework_TestCase
+abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
     /** @var TestConfig */
     private static $testConfig;

@@ -26,7 +26,7 @@ use Behat\Mink\Exception\ElementException;
 use Exception;
 use InvalidArgumentException;
 
-class MinkWrapper extends BaseTestCase
+abstract class MinkWrapper extends BaseTestCase
 {
 
     /** @var \Selenium\Client Selenium client. Used only with selenium driver. */

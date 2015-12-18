@@ -45,7 +45,7 @@ require_once TEST_LIBRARY_HELPERS_PATH . 'modOxUtilsDate.php';
 /**
  * Base tests class. Most tests should extend this class.
  */
-class UnitTestCase extends BaseTestCase
+abstract class UnitTestCase extends BaseTestCase
 {
     /** @var bool Registry cache. */
     private static $setupBeforeTestSuiteDone = false;
