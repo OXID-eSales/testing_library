@@ -20,7 +20,8 @@
         "behat/mink-selenium-driver": "*",
         "symfony/yaml": "~2.0",
         "incenteev/composer-parameter-handler": "~2.0",
-        "phpunit/phpcov": "*"
+        "phpunit/phpcov": "*",
+        "symfony/dom-crawler": "v2.7.*"
     },
     "bin": [
         "bin/reset-shop",
