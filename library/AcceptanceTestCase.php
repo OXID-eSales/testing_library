@@ -643,9 +643,9 @@ abstract class AcceptanceTestCase extends MinkWrapper
 
         $this->waitForFrameToLoad('basefrm', 10000);
 
-        if (OXID_VERSION_PE_CE) :
+        if ($this->getTestConfig()->getShopEdition() === 'CE') {
             $this->openTab('Interface');
-        endif;
+        }
 
         //testing edit frame for errors
         $this->frame("edit");
