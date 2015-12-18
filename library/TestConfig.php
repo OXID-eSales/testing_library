@@ -21,6 +21,7 @@
 
 namespace OxidEsales\TestingLibrary;
 
+use OxidEsales\Eshop\Core\Edition\EditionSelector;
 use Symfony\Component\Yaml\Yaml;
 
 class TestConfig
@@ -98,17 +99,8 @@ class TestConfig
     public function getShopEdition()
     {
         if (is_null($this->shopEdition)) {
-            $shopPath = $this->getShopPath();
-            if (file_exists($shopPath . '/_version_define.php')) {
-                include_once $shopPath . '/_version_define.php';
-                $this->shopEdition = OXID_VERSION_EE ? 'EE' : (OXID_VERSION_PE_PE ? 'PE' : 'CE');
-            } else {
-                include_once $shopPath . 'Core/oxsupercfg.php';
-                include_once $shopPath . 'Core/oxutilsobject.php';
-                $config = new \oxConfig();
-                $shopEdition = $config->getEdition();
-                $this->shopEdition = strtoupper($shopEdition);
-            }
+            $editionSelector = new EditionSelector();
+            $this->shopEdition = $editionSelector->getEdition();
         }
 
         return $this->shopEdition;
