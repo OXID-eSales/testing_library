@@ -25,6 +25,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
     use OxidEsales\Eshop\Core\Edition\EditionPathProvider;
     use OxidEsales\Eshop\Core\Edition\EditionRootPathProvider;
     use OxidEsales\Eshop\Core\Edition\EditionSelector;
+    use OxidEsales\Eshop\Setup\Core;
     use OxidEsales\TestingLibrary\Services\Library\Cache;
     use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
     use OxidEsales\TestingLibrary\Services\Library\Request;
@@ -282,7 +283,9 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
         protected function getDefaultSerial()
         {
             if ($this->getServiceConfig()->getShopEdition() != 'CE') {
-                $setup = new Setup();
+                $core = new Core();
+                /** @var Setup $setup */
+                $setup = $core->getInstance('Setup');
                 return $setup->getDefaultSerial();
             }
         }
