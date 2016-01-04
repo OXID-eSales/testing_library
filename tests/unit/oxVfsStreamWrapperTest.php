@@ -19,20 +19,20 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-require_once ROOT_DIRECTORY .'library/oxVfsStreamWrapper.php';
+use OxidEsales\TestingLibrary\VfsStreamWrapper;
 
 class oxVfsStreamWrapperTest extends PHPUnit_Framework_TestCase
 {
     public function testCreationOfRoot()
     {
-        $vfsStreamWrapper = new oxVfsStreamWrapper();
+        $vfsStreamWrapper = new VfsStreamWrapper();
 
         $this->assertInstanceOf('\org\bovigo\vfs\vfsStreamDirectory', $vfsStreamWrapper->getRoot());
     }
 
     public function testReturningTheSameRootOnEveryCall()
     {
-        $vfsStreamWrapper = new oxVfsStreamWrapper();
+        $vfsStreamWrapper = new VfsStreamWrapper();
         $root = $vfsStreamWrapper->getRoot();
 
         $this->assertSame($root, $vfsStreamWrapper->getRoot());
@@ -40,14 +40,14 @@ class oxVfsStreamWrapperTest extends PHPUnit_Framework_TestCase
 
     public function testReturningCorrectRootPath()
     {
-        $vfsStreamWrapper = new oxVfsStreamWrapper();
+        $vfsStreamWrapper = new VfsStreamWrapper();
 
         $this->assertEquals('vfs://root/', $vfsStreamWrapper->getRootPath());
     }
 
     public function testFileCreation()
     {
-        $vfsStreamWrapper = new oxVfsStreamWrapper();
+        $vfsStreamWrapper = new VfsStreamWrapper();
         $filePath = $vfsStreamWrapper->createFile('testFile.txt', 'content');
 
         $this->assertTrue(file_exists($filePath));
@@ -70,7 +70,7 @@ class oxVfsStreamWrapperTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateFile($directory)
     {
-        $vfsStream = new oxVfsStreamWrapper();
+        $vfsStream = new VfsStreamWrapper();
         $file = $vfsStream->createFile($directory .'/testFile.txt', 'content');
         $rootPath = $vfsStream->getRootPath();
 
@@ -81,7 +81,7 @@ class oxVfsStreamWrapperTest extends PHPUnit_Framework_TestCase
 
     public function testCreatingMultipleFiles()
     {
-        $vfsStreamWrapper = new oxVfsStreamWrapper();
+        $vfsStreamWrapper = new VfsStreamWrapper();
         $file1 = $vfsStreamWrapper->createFile('testFile1.txt', 'content1');
         $file2 = $vfsStreamWrapper->createFile('testFile2.txt', 'content2');
 
@@ -101,7 +101,7 @@ class oxVfsStreamWrapperTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $vfsStreamWrapper = new oxVfsStreamWrapper();
+        $vfsStreamWrapper = new VfsStreamWrapper();
 
         $vfsStreamWrapper->createStructure($structure);
         $rootPath = $vfsStreamWrapper->getRootPath();
@@ -115,7 +115,7 @@ class oxVfsStreamWrapperTest extends PHPUnit_Framework_TestCase
     {
         $structure = array();
 
-        $vfsStreamWrapper = new oxVfsStreamWrapper();
+        $vfsStreamWrapper = new VfsStreamWrapper();
 
         $returnedPath = $vfsStreamWrapper->createStructure($structure);
         $expectedPath = $vfsStreamWrapper->getRootPath();

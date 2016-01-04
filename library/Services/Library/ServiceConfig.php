@@ -106,23 +106,6 @@ class ServiceConfig
     }
 
     /**
-     * Returns shop edition suffix
-     *
-     * @return string
-     */
-    public function getEditionSufix()
-    {
-        if (is_null($this->editionSuffix)) {
-            $versionDefinePath = $this->getShopDirectory() ."_version_define.php";
-            if (!defined('OXID_VERSION_SUFIX') && file_exists($versionDefinePath)) {
-                include $versionDefinePath;
-            }
-            $this->editionSuffix = defined('OXID_VERSION_SUFIX') ? OXID_VERSION_SUFIX : '';
-        }
-        return $this->editionSuffix;
-    }
-
-    /**
      * Returns temp path.
      *
      * @return string

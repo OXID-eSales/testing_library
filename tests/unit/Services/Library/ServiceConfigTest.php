@@ -19,9 +19,7 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-use org\bovigo\vfs\vfsStream;
-
-require_once ROOT_DIRECTORY .'library/Services/Library/ServiceConfig.php';
+use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 
 class ServiceConfigTest extends PHPUnit_Framework_TestCase
 {
@@ -32,16 +30,5 @@ class ServiceConfigTest extends PHPUnit_Framework_TestCase
         $directory = dirname((new ReflectionClass($config))->getFileName());
 
         $this->assertEquals($directory . '/../../', $config->getShopDirectory());
-    }
-
-    public function testReturningEditionSufixWhenVersionDefineExists()
-    {
-        $content = "<?php define('OXID_VERSION_SUFIX', '_ee');";
-        vfsStream::setup('root', 777, array('_version_define.php' => $content));
-
-        $config = new ServiceConfig();
-        $config->setShopDirectory(vfsStream::url('root') .'/');
-
-        $this->assertEquals('_ee', $config->getEditionSufix());
     }
 }

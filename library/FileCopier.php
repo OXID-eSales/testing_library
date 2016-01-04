@@ -52,7 +52,7 @@ class FileCopier
                 $command .= " && chmod 777 " . escapeshellarg($target);
             }
         }
-        $this->_executeCommand($command);
+        $this->executeCommand($command);
     }
 
     /**
@@ -75,7 +75,7 @@ class FileCopier
      * @param string $directory       Path to directory.
      * @param bool   $removeBaseDir Whether to delete base directory.
      */
-    private function deleteTree($directory, $removeBaseDir = false)
+    protected function deleteTree($directory, $removeBaseDir = false)
     {
         $files = array_diff(scandir($directory), array('.', '..'));
         foreach ($files as $file) {
@@ -96,7 +96,7 @@ class FileCopier
      *
      * @return string Output of command.
      */
-    private function _executeCommand($command)
+    protected function executeCommand($command)
     {
         $result = @exec($command, $output, $code);
         $output = implode("\n", $output);

@@ -21,53 +21,24 @@
 
 use org\bovigo\vfs\vfsStream;
 
-require_once ROOT_DIRECTORY .'library/Services/Library/ServiceConfig.php';
-require_once ROOT_DIRECTORY .'library/Services/Library/Request.php';
-require_once ROOT_DIRECTORY .'library/Services/ServiceFactory.php';
+use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
+use OxidEsales\TestingLibrary\Services\ServiceFactory;
 
 class ServiceFactoryTest extends PHPUnit_Framework_TestCase
 {
-    public function testCreationOfService()
-    {
-        $structure = array(
-            'Services' => array(
-                'TestService' => array(
-                    'TestService.php' => '<?php
-                    class TestService implements ShopServiceInterface {
-                        public function __construct($config) {}
-                        public function init($request) {}
-                    }'
-                )
-            )
-        );
-
-        vfsStream::setup('root', 777, $structure);
-
-        /** @var ServiceConfig|PHPUnit_Framework_MockObject_MockObject $config */
-        $config = $this->getMock('ServiceConfig', array('getServicesDirectory', 'getShopDirectory'));
-        $config->expects($this->any())->method('getServicesDirectory')->will($this->returnValue(vfsStream::url('root/Services')));
-        $config->expects($this->any())->method('getShopDirectory')->will($this->returnValue(vfsStream::url('root')));
-
-        $serviceFactory = new ServiceFactory($config);
-        $service = $serviceFactory->createService('TestService');
-
-        $this->assertInstanceOf('TestService', $service);
-    }
-
     public function testThrowingExceptionWhenServiceNotFound()
     {
-        $message = "Service TestService not found in path vfs://root/TestService/TestService.php!";
+        $message = "Service 'TestService' was not found!";
         $this->setExpectedException('Exception', $message);
 
-        vfsStream::setup('root', 777);
+        vfsStream::setup('root', 777, array('bootstrap.php' => ''));
 
         /** @var ServiceConfig|PHPUnit_Framework_MockObject_MockObject $config */
-        $config = $this->getMock('ServiceConfig', array('getServicesDirectory', 'getShopDirectory'));
+        $config = $this->getMock('OxidEsales\TestingLibrary\Services\Library\ServiceConfig', array('getServicesDirectory', 'getShopDirectory'));
         $config->expects($this->any())->method('getServicesDirectory')->will($this->returnValue(vfsStream::url('root')));
         $config->expects($this->any())->method('getShopDirectory')->will($this->returnValue(vfsStream::url('root')));
 
         $serviceFactory = new ServiceFactory($config);
         $serviceFactory->createService('TestService');
     }
-
 }

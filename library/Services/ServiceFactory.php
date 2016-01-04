@@ -53,10 +53,13 @@ class ServiceFactory
     public function createService($serviceClass)
     {
         $className = $this->formClassName($serviceClass);
+        if (!class_exists($className)) {
+            throw new Exception("Service '$serviceClass' was not found!");
+        }
         $service = new $className($this->getServiceConfig());
 
         if (!($service instanceof ShopServiceInterface)) {
-            throw new Exception("Service $className does not implement ShopServiceInterface interface!");
+            throw new Exception("Service '$className' does not implement ShopServiceInterface interface!");
         }
 
         return $service;
