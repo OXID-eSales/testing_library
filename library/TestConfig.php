@@ -99,6 +99,7 @@ class TestConfig
     public function getShopEdition()
     {
         if (is_null($this->shopEdition)) {
+            require_once $this->getShopPath() . 'bootstrap.php';
             $editionSelector = new EditionSelector();
             $this->shopEdition = $editionSelector->getEdition();
         }
