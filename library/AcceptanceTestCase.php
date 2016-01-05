@@ -78,6 +78,9 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /** @var ObjectValidator Object validator object */
     private $validator = null;
 
+    /** @var ModuleLoader Module loader. */
+    private static $moduleLoader = null;
+
     /**
      * Constructs a test case with the given name.
      *
@@ -115,6 +118,19 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
+     * Activates modules before tests are run.
+     */
+    public function activateModules()
+    {
+        $testConfig = $this->getTestConfig();
+        $modulesToActivate = $testConfig->getModulesToActivate();
+        if ($modulesToActivate) {
+            $testModuleLoader = $this->_getModuleLoader();
+            $testModuleLoader->activateModules($modulesToActivate);
+        }
+    }
+
+    /**
      * Sets up shop before running test case.
      * Does not use setUpBeforeClass to keep this method non-static.
      *
@@ -129,6 +145,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
             $this->restoreDb('reset_suite_db_dump');
         }
 
+        $this->activateModules();
         $this->addTestData($testSuitePath);
 
         $this->dumpDb('reset_test_db_dump');
@@ -2098,5 +2115,20 @@ abstract class AcceptanceTestCase extends MinkWrapper
 
         return $newException;
     }
+
+    /**
+     * Returns module loader object.
+     *
+     * @return ModuleLoader
+     */
+    protected static function _getModuleLoader()
+    {
+        if (is_null(self::$moduleLoader)) {
+            self::$moduleLoader = new ModuleLoader();
+        }
+
+        return self::$moduleLoader;
+    }
+
 }
 

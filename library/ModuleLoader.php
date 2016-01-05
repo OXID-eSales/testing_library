@@ -71,6 +71,18 @@ class ModuleLoader
     }
 
     /**
+     * Calls ModuleInstaller Service and activates all given modules in shop.
+     *
+     * @param array $modulesToActivate Array of modules to activate.
+     */
+    public function activateModules($modulesToActivate)
+    {
+        $serviceCaller = new ServiceCaller();
+        $serviceCaller->setParameter('modulestoactivate', $modulesToActivate);
+        $serviceCaller->callService('ModuleInstaller', 1);
+    }
+
+    /**
      * Loads the module from metadata file
      * If no metadata found and the module chain is empty, then does nothing.
      *
