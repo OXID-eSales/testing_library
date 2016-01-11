@@ -111,10 +111,6 @@ abstract class BootstrapBase
     {
         $testConfig = $this->getTestConfig();
 
-        if (!defined('OXID_VERSION_SUFIX')) {
-            define('OXID_VERSION_SUFIX', '');
-        }
-
         if (!defined('oxPATH')) {
             /** @deprecated use TestConfig::getShopPath() */
             define('oxPATH', $testConfig->getShopPath());
