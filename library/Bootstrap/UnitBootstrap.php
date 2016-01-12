@@ -41,6 +41,15 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
 
             require_once TEST_LIBRARY_PATH .'OxidTestCase.php';
         }
+
+        public function prepareShop()
+        {
+            parent::prepareShop();
+            $shopConfig = \oxRegistry::get("oxConfigFile");
+            $shopConfig->setVar('iUtfMode', 1);
+            \oxRegistry::getConfig()->init();
+            \oxRegistry::getConfig()->setConfigParam('iUtfMode', 1);
+        }
     }
 }
 

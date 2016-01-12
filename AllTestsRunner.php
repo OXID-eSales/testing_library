@@ -28,13 +28,16 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
 {
 
     /** @var array Default test suites */
-    protected static $_aTestSuites = array();
+    protected static $testSuites = array();
 
     /** @var array Run these tests before any other */
-    protected static $_aPriorityTests = array();
+    protected static $priorityTests = array();
 
     /** @var OxidEsales\TestingLibrary\TestConfig */
     protected static $testConfig;
+
+    /** @var string Filter for test files. */
+    protected static $fileFilter = '*Test\.php';
 
     /**
      * Forms test suite
@@ -47,10 +50,10 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
 
         $oSuite = new PHPUnit_Framework_TestSuite('PHPUnit');
 
-        static::_addPriorityTests($oSuite, static::$_aPriorityTests, $aTestDirectories);
+        static::_addPriorityTests($oSuite, static::$priorityTests, $aTestDirectories);
 
         foreach ($aTestDirectories as $sDirectory) {
-            $sFilesSelector = "$sDirectory/" . static::_getTestFileFilter();
+            $sFilesSelector = "$sDirectory/" . static::$fileFilter;
             $aTestFiles = glob($sFilesSelector);
 
             if (empty($aTestFiles)) {
@@ -59,7 +62,7 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
 
             echo "Adding unit tests from $sFilesSelector\n";
 
-            $aTestFiles = array_diff($aTestFiles, static::$_aPriorityTests);
+            $aTestFiles = array_diff($aTestFiles, static::$priorityTests);
             $oSuite = static::_addFilesToSuite($oSuite, $aTestFiles);
         }
 
@@ -99,7 +102,7 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     protected static function _getTestDirectories()
     {
         $aTestDirectories = array();
-        $aTestSuites = getenv('TEST_DIRS')? explode(',', getenv('TEST_DIRS')) : static::$_aTestSuites;
+        $aTestSuites = getenv('TEST_DIRS')? explode(',', getenv('TEST_DIRS')) : static::$testSuites;
 
         $testConfig = static::getTestConfig();
         foreach ($aTestSuites as $sSuite) {
@@ -132,23 +135,6 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Returns test files filter
-     *
-     * @return string
-     */
-    protected static function _getTestFileFilter()
-    {
-        $testConfig = static::getTestConfig();
-        $sTestFileNameEnd = '*[^8]Test.php';
-        $isForShopTests = $testConfig->getCurrentTestSuite() == $testConfig->getShopTestsPath();
-        if ($isForShopTests && $testConfig->getShopCharset() == 'utf8') {
-            $sTestFileNameEnd = '*utf8Test.php';
-        }
-
-        return $sTestFileNameEnd;
-    }
-
-    /**
      * Adds files to test suite
      *
      * @param PHPUnit_Framework_TestSuite $oSuite
@@ -166,18 +152,6 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
         }
 
         return $oSuite;
-    }
-
-    /**
-     * Forms class name from file name.
-     *
-     * @param string $sFilename
-     *
-     * @return string
-     */
-    protected static function _formClassNameFromFileName($sFilename)
-    {
-        return str_replace(array("/", ".php"), array("_", ""), $sFilename);
     }
 
     /**

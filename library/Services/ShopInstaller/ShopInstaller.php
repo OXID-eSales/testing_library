@@ -58,9 +58,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
 
             $shopPath = $config->getShopDirectory();
 
-            include_once $shopPath . "core/oxconfigfile.php";
-            $this->shopConfig = new oxConfigFile($shopPath . "config.inc.php");
-
+            $this->shopConfig = \oxRegistry::get("oxConfigFile");
             $this->dbHandler = new DatabaseHandler($this->shopConfig);
 
             include $shopPath ."core/oxconfk.php";

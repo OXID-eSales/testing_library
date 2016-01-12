@@ -149,10 +149,7 @@ class TestConfig
         if (is_null($this->shopUrl)) {
             $shopUrl = $this->getValue('shop_url');
             if (!$shopUrl) {
-                $shopPath = $this->getShopPath();
-                include_once $shopPath . 'core/oxconfigfile.php';
-                $configFile = new \oxConfigFile($shopPath . "config.inc.php");
-                $shopUrl = $shopUrl ? $shopUrl : $configFile->sShopURL;
+                $shopUrl = $shopUrl ? $shopUrl : $this->getConfigFile()->sShopURL;
             }
             $this->shopUrl = rtrim($shopUrl, '/') . '/';
         }
@@ -168,10 +165,7 @@ class TestConfig
     public function getShopCharset()
     {
         if (is_null($this->charsetMode)) {
-            $shopPath = $this->getShopPath();
-            include_once $shopPath . 'core/oxconfigfile.php';
-            $configFile = new \oxConfigFile($shopPath . "config.inc.php");
-            $this->charsetMode = $configFile->iUtfMode ? 'utf8' : 'latin1';
+            $this->charsetMode = $this->getConfigFile()->iUtfMode ? 'utf8' : 'latin1';
         }
 
         return $this->charsetMode;
@@ -462,6 +456,24 @@ class TestConfig
         }
 
         return $testSuites;
+    }
+
+    /**
+     * Returns oxConfigFile from registry or creates new object
+     *
+     * @return \OxConfigFile
+     */
+    protected function getConfigFile()
+    {
+        if (class_exists('oxRegistry')) {
+            $configFile = \oxRegistry::get('oxConfigFile');
+        } else {
+            $shopPath = $this->getShopPath();
+            include_once $shopPath . 'core/oxconfigfile.php';
+            $configFile = new \oxConfigFile($shopPath . "config.inc.php");
+        }
+
+        return $configFile;
     }
 
     /**
