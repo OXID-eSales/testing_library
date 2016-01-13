@@ -39,6 +39,9 @@ optional_parameters:
     # Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it.
     restore_shop_after_tests_suite: false
 
+    # If specified, this database is used instead of real one for unit and integration tests.
+    test_database_name:
+
     # If php has no write access to /tmp folder, provide alternative temp folder for tests.
     tmp_path: /tmp/oxid_test_library/
 

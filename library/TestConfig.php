@@ -297,7 +297,12 @@ class TestConfig
      */
     public function shouldActivateAllModules()
     {
-        return (bool)$this->getValue('activate_all_modules');
+        return (bool) $this->getValue('activate_all_modules');
+    }
+
+    public function getTestDatabaseName()
+    {
+        return $this->getValue('test_database_name');
     }
 
     /**

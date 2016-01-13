@@ -26,15 +26,21 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
         protected $addDemoData = 0;
 
         /**
-         * Initiates shop before testing.
+         * Initiates shop before testing. Force UTF8 mode, compile directory and database name to be used during testing.
          */
         public function init()
         {
             parent::init();
 
-            $config = $this->getTestConfig();
+            $config = \oxRegistry::getConfig();
+            $config->init();
+            $config->setConfigParam('iUtfMode', 1);
+            $config->setConfigParam('sCompileDir', $this->getTestConfig()->getTempDirectory());
+            if ($testDatabase = $this->getTestConfig()->getTestDatabaseName()) {
+                $config->setConfigParam('dbName', $testDatabase);
+            }
 
-            $currentTestSuite = $config->getCurrentTestSuite();
+            $currentTestSuite = $this->getTestConfig()->getCurrentTestSuite();
             if (file_exists($currentTestSuite .'/additional.inc.php')) {
                 include_once $currentTestSuite .'/additional.inc.php';
             }
@@ -42,13 +48,19 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
             require_once TEST_LIBRARY_PATH .'OxidTestCase.php';
         }
 
+        /**
+         * Prepare shop configuration. Force UTF8 mode, compile directory and database name to be used during testing.
+         */
         public function prepareShop()
         {
             parent::prepareShop();
+
             $shopConfig = \oxRegistry::get("oxConfigFile");
             $shopConfig->setVar('iUtfMode', 1);
-            \oxRegistry::getConfig()->init();
-            \oxRegistry::getConfig()->setConfigParam('iUtfMode', 1);
+            $shopConfig->setVar('sCompileDir', $this->getTestConfig()->getTempDirectory());
+            if ($testDatabase = $this->getTestConfig()->getTestDatabaseName()) {
+                $shopConfig->setVar('dbName', $testDatabase);
+            }
         }
     }
 }
