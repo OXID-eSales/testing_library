@@ -20,25 +20,22 @@
  */
 
 namespace OxidEsales\TestingLibrary\Bootstrap {
+
+    use OxidEsales\TestingLibrary\FileCopier;
+
     class UnitBootstrap extends BootstrapBase
     {
         /** @var int Whether to add demo data. */
         protected $addDemoData = 0;
 
         /**
-         * Initiates shop before testing. Force UTF8 mode, compile directory and database name to be used during testing.
+         * Initiates shop before testing.
+         * Loads additional.inc and OxidTestCase classes.
          */
         public function init()
         {
             parent::init();
-
-            $config = \oxRegistry::getConfig();
-            $config->init();
-            $config->setConfigParam('iUtfMode', 1);
-            $config->setConfigParam('sCompileDir', $this->getTestConfig()->getTempDirectory());
-            if ($testDatabase = $this->getTestConfig()->getTestDatabaseName()) {
-                $config->setConfigParam('dbName', $testDatabase);
-            }
+            $this->initializeConfig();
 
             $currentTestSuite = $this->getTestConfig()->getCurrentTestSuite();
             if (file_exists($currentTestSuite .'/additional.inc.php')) {
@@ -57,10 +54,29 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
 
             $shopConfig = \oxRegistry::get("oxConfigFile");
             $shopConfig->setVar('iUtfMode', 1);
-            $shopConfig->setVar('sCompileDir', $this->getTestConfig()->getTempDirectory());
+//            $tempDirectory = $this->getTestConfig()->getTempDirectory();
+//            if ($tempDirectory && $tempDirectory != '/') {
+//                $fileCopier = new FileCopier();
+//                $fileCopier->createEmptyDirectory($tempDirectory.'shop_temp');
+//                $shopConfig->setVar('sCompileDir', $tempDirectory.'shop_temp/');
+//            }
             if ($testDatabase = $this->getTestConfig()->getTestDatabaseName()) {
                 $shopConfig->setVar('dbName', $testDatabase);
             }
+        }
+
+        /**
+         * Forces configuration values from oxConfigFile object to oxConfig.
+         */
+        public function initializeConfig()
+        {
+            $config = \oxRegistry::getConfig();
+            $configFile = \oxRegistry::get("oxConfigFile");
+            $config->init();
+            $config->setConfigParam('iUtfMode', $configFile->getVar('iUtfMode'));
+            $config->setConfigParam('sCompileDir', $configFile->getVar('sCompileDir'));
+            $config->setConfigParam('dbName', $configFile->getVar('dbName'));
+            var_dump($configFile->getVar('sCompileDir'));
         }
     }
 }
