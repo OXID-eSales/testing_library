@@ -74,7 +74,7 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
             $configFile = \oxRegistry::get("oxConfigFile");
             $config->init();
             $config->setConfigParam('iUtfMode', $configFile->getVar('iUtfMode'));
-            $config->setConfigParam('sCompileDir', $configFile->getVar('sCompileDir'));
+//            $config->setConfigParam('sCompileDir', $configFile->getVar('sCompileDir'));
             $config->setConfigParam('dbName', $configFile->getVar('dbName'));
         }
     }
