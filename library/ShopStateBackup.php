@@ -74,7 +74,7 @@ class ShopStateBackup
     {
         $aRegKeys = oxRegistry::getKeys();
 
-        $aSkippedClasses = array("oxconfigfile");
+        $aSkippedClasses = array();
 
         foreach ($aRegKeys as $sKey) {
             if (!in_array($sKey, $aSkippedClasses)) {
