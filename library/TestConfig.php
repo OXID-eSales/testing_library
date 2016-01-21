@@ -211,7 +211,10 @@ class TestConfig
         $testsPaths = array();
         $parsedConfigOptionValue = $this->parseMultipleValues('additional_test_paths');
         foreach ($parsedConfigOptionValue as $partialTestsPath) {
-            $testsPaths[] = $this->formFullPath($partialTestsPath);
+            $fullPath = $this->formFullPath($partialTestsPath);
+            if ($fullPath) {
+                $testsPaths[] = $fullPath;
+            }
         }
 
         return $testsPaths;
