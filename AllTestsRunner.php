@@ -39,6 +39,9 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     /** @var string Filter for test files. */
     protected static $fileFilter = '*Test\.php';
 
+    /** @var string Lower cased test paths. Used to check if test file was not already added. */
+    protected static $testFiles = array();
+
     /**
      * Forms test suite
      *
@@ -147,7 +150,11 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
         foreach ($aTestFiles as $sFilename) {
             $sFilter = getenv('PREG_FILTER');
             if (!$sFilter || preg_match("&$sFilter&i", $sFilename)) {
-                $oSuite->addTestFile($sFilename);
+                $loweredFilename = strtolower($sFilename);
+                if (!in_array($loweredFilename, self::$testFiles)) {
+                    $oSuite->addTestFile($sFilename);
+                    self::$testFiles[] = $loweredFilename;
+                }
             }
         }
 
