@@ -223,7 +223,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
                     $aRow['oxvarvalue'] = unserialize($aRow['oxvarvalue']);
                 }
                 if (!empty($aRow['oxvarvalue']) && !is_int($aRow['oxvarvalue'])) {
-                    $this->updateConfigValue($aRow['oxvarname'], $this->stringToUtf($aRow['oxvarvalue']));
+                    $this->updateConfigValue($aRow['oxid'], $this->stringToUtf($aRow['oxvarvalue']));
                 }
             }
 
@@ -337,16 +337,16 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
         /**
          * Updates configuration value.
          *
-         * @param string $name
+         * @param string $id
          * @param string $value
          */
-        private function updateConfigValue($name, $value)
+        private function updateConfigValue($id, $value)
         {
             $dbHandler = $this->getDbHandler();
 
             $value = is_array($value) ? serialize($value) : $value;
             $value = $dbHandler->escape($value);
-            $dbHandler->query("update oxconfig set oxvarvalue = ENCODE( '{$value}','{$this->sConfigKey}') where oxvarname = '{$name}';");
+            $dbHandler->query("update oxconfig set oxvarvalue = ENCODE( '{$value}','{$this->sConfigKey}') where oxvarname = '{$id}';");
         }
 
         /**
