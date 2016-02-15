@@ -456,7 +456,8 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function isVisible($sSelector)
     {
-        return $this->getElement($sSelector)->isVisible();
+        $element = $this->getElement($sSelector, false);
+        return $element && $element->isVisible();
     }
 
     /**
