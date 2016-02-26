@@ -68,7 +68,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @var string
      */
-    protected $languageId = '1';
+    protected $translateLanguageId = '1';
 
     /** @var bool Tracks the start of tests run. */
     protected static $testsSuiteStarted = false;
@@ -116,7 +116,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
             self::$testsSuitePath = $currentTestsSuitePath;
             $this->setUpTestsSuite($currentTestsSuitePath);
         }
-        $this->getTranslator()->setLanguage($this->languageId);
+        $this->getTranslator()->setLanguage($this->translateLanguageId);
 
         $this->clearTemp();
         if ($this->isMinkSessionStarted()) {
@@ -1849,7 +1849,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
             $this->stopMinkSession();
         }
 
-        $this->getTranslator()->setLanguage($this->languageId);
+        $this->getTranslator()->setLanguage($this->translateLanguageId);
     }
 
     /**
