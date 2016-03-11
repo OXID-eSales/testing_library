@@ -164,7 +164,7 @@ class oxTestModuleLoader
     {
         include $sPath;
 
-        // including all filles from ["files"]
+        // including all files from ["files"]
         if (isset($aModule["files"]) && count($aModule["files"])) {
             $this->_includeModuleFiles($aModule["id"], $aModule["files"]);
         }
