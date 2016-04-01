@@ -158,10 +158,10 @@ class ModuleLoader
     private function _includeModuleFiles($files)
     {
         foreach ($files as $filePath) {
-            $className = basename($filePath);
-            $className = substr($className, 0, strlen($className) - 4);
+            $name = basename($filePath);
+            $name = substr($name, 0, strlen($name) - 4);
 
-            if (!class_exists($className, false)) {
+            if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false)) {
                 require oxRegistry::getConfig()->getConfigParam("sShopDir") . "/modules/" . $filePath;
             }
         }
