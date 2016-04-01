@@ -71,10 +71,16 @@ class ShopInstaller implements ShopServiceInterface
      *
      * @param Request $request
      *
+     * @throws Exception
+     *
      * @return null
      */
     public function init($request)
     {
+        if (!file_exists($this->getSetupDirectory() . "/oxsetup.php")) {
+            throw new Exception("Shop Setup directory has to be present!");
+        }
+
         $serialNumber = $request->getParameter('serial', false);
         $serialNumber = $serialNumber ? $serialNumber : $this->getDefaultSerial();
 
@@ -298,7 +304,7 @@ class ShopInstaller implements ShopServiceInterface
     protected function getDefaultSerial()
     {
         if ($this->getServiceConfig()->getShopEdition() != 'CE') {
-            include_once $this->getServiceConfig()->getShopDirectory() . "setup/oxsetup.php";
+            include_once $this->getSetupDirectory() . "/oxsetup.php";
 
             $setup = new oxSetup();
             return $setup->getDefaultSerial();
