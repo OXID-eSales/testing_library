@@ -137,7 +137,7 @@ class oxTestModuleLoader
                     $className = basename($filePath);
                     $className = substr($className, 0, strlen($className) - 4);
 
-                    if (!class_exists($className, false)) {
+                    if (!class_exists($className, false) && !interface_exists($className, false)) {
                         require oxRegistry::getConfig()->getConfigParam("sShopDir") . "/modules/" . $filePath;
                     }
                 }
