@@ -39,9 +39,6 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
      */
     class ShopInstaller implements ShopServiceInterface
     {
-        /** @var string Shop setup directory path */
-        private $setupDirectory = null;
-
         /** @var DatabaseHandler */
         private $dbHandler;
 
@@ -75,15 +72,17 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
          * Starts installation of the shop.
          *
          * @param Request $request
+         *
+         * @throws \Exception
          */
         public function init($request)
         {
+            if (!class_exists('\OxidEsales\Eshop\Setup\Setup')) {
+                throw new \Exception("Shop Setup directory has to be present!");
+            }
+
             $serialNumber = $request->getParameter('serial', false);
             $serialNumber = $serialNumber ? $serialNumber : $this->getDefaultSerial();
-
-            if ($setupPath = $request->getParameter('setupPath', null)) {
-                $this->setSetupDirectory($setupPath);
-            }
 
             $this->setupDatabase();
 
@@ -112,16 +111,6 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller {
 
             $cache = new Cache();
             $cache->clearTemporaryDirectory();
-        }
-
-        /**
-         * Sets shop setup directory.
-         *
-         * @param string $sSetupPath Path to setup files to use instead of shop ones.
-         */
-        public function setSetupDirectory($sSetupPath)
-        {
-            $this->setupDirectory = $sSetupPath;
         }
 
         /**
