@@ -253,9 +253,9 @@ abstract class MinkWrapper extends BaseTestCase
     public function click($sSelector)
     {
         try {
-            $this->getElement($sSelector)->click();
+            $this->getElementLazy($sSelector)->click();
         } catch (ElementException $e) {
-            $this->getElement($sSelector)->click();
+            $this->getElementLazy($sSelector)->click();
         }
     }
 
@@ -268,9 +268,9 @@ abstract class MinkWrapper extends BaseTestCase
     public function type($sSelector, $sText)
     {
         try {
-            $this->getElement($sSelector)->setValue($sText);
+            $this->getElementLazy($sSelector)->setValue($sText);
         } catch (ElementException $e) {
-            $this->getElement($sSelector)->setValue($sText);
+            $this->getElementLazy($sSelector)->setValue($sText);
         }
     }
 
@@ -292,7 +292,7 @@ abstract class MinkWrapper extends BaseTestCase
         }
 
         if (is_null($oSelect)) {
-            $oSelect = $this->getElement($sSelector);
+            $oSelect = $this->getElementLazy($sSelector);
         }
 
         if (strpos($sOptionSelector, 'index=') === 0) {
@@ -330,7 +330,7 @@ abstract class MinkWrapper extends BaseTestCase
     public function addSelection($sSelector, $sOptionSelector)
     {
         $sOptionSelector = str_replace('label=', '', $sOptionSelector);
-        $this->getElement($sSelector)->selectOption($sOptionSelector, true);
+        $this->getElementLazy($sSelector)->selectOption($sOptionSelector, true);
     }
 
     /**
@@ -340,7 +340,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function check($sSelector)
     {
-        $this->getElement($sSelector)->check();
+        $this->getElementLazy($sSelector)->check();
     }
 
     /**
@@ -350,7 +350,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function uncheck($sSelector)
     {
-        $this->getElement($sSelector)->uncheck();
+        $this->getElementLazy($sSelector)->uncheck();
     }
 
     /**
@@ -359,7 +359,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function isChecked($sSelector)
     {
-        return $this->getElement($sSelector)->isChecked();
+        return $this->getElementLazy($sSelector)->isChecked();
     }
 
     /**
@@ -370,7 +370,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function keyUp($sSelector, $sChar)
     {
-        $this->getElement($sSelector)->keyUp($sChar);
+        $this->getElementLazy($sSelector)->keyUp($sChar);
     }
 
     /**
@@ -381,7 +381,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function keyDown($sSelector, $sChar)
     {
-        $this->getElement($sSelector)->keyDown($sChar);
+        $this->getElementLazy($sSelector)->keyDown($sChar);
     }
 
     /**
@@ -392,7 +392,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function keyPress($sSelector, $sChar)
     {
-        $this->getElement($sSelector)->keyPress($sChar);
+        $this->getElementLazy($sSelector)->keyPress($sChar);
     }
 
     /**
@@ -419,8 +419,8 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function dragAndDropToObject($sSelector, $sContainer)
     {
-        $oElement = $this->getElement($sSelector);
-        $oContainer = $this->getElement($sContainer);
+        $oElement = $this->getElementLazy($sSelector);
+        $oContainer = $this->getElementLazy($sContainer);
 
         $oElement->dragTo($oContainer);
     }
@@ -480,7 +480,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function getText($sSelector)
     {
-        $oElement = $this->getElement($sSelector);
+        $oElement = $this->getElementLazy($sSelector);
         try {
             $sText = $oElement->getText();
         } catch (Exception $e) {
@@ -499,12 +499,13 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function getValue($sSelector)
     {
-        $mValue = $this->_getValue($this->getElement($sSelector)->getXpath());
+        $element = $this->getElementLazy($sSelector);
+        $mValue = $this->_getValue($element->getXpath());
 
         try {
-            $sType = $this->getElement($sSelector)->getAttribute('type');
+            $sType = $element->getAttribute('type');
         } catch (InvalidArgumentException $e) {
-            $sType = $this->getElement($sSelector)->getAttribute('type');
+            $sType = $element->getAttribute('type');
         }
         if ($sType == 'checkbox') {
             $mValue = $mValue ? 'on' : 'off';
@@ -534,7 +535,7 @@ abstract class MinkWrapper extends BaseTestCase
                 $this->fail("Element '$sSelector' was not found! ");
             }
         } else {
-            $oSelect = $this->getElement($sSelector);
+            $oSelect = $this->getElementLazy($sSelector);
         }
 
         $aOptions = $oSelect->findAll('xpath', '//option[@selected]');
@@ -558,7 +559,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function getSelectedIndex($sSelector)
     {
-        $oSelect = $this->getElement($sSelector);
+        $oSelect = $this->getElementLazy($sSelector);
         $sValue = $oSelect->getValue();
         $oOptions = $oSelect->findAll('css', "option");
         foreach ($oOptions as $iKey => $oOption) {
@@ -649,6 +650,27 @@ abstract class MinkWrapper extends BaseTestCase
     }
 
     /**
+     * Returns element. If element is not found, tries to wait for it.
+     *
+     * @param           $selector
+     * @param bool|true $failOnError
+     * @param int       $waitTime
+     *
+     * @return NodeElement|null
+     */
+    public function getElementLazy($selector, $failOnError = true, $waitTime = 10)
+    {
+        $element = $this->getElement($selector, false);
+        while (!$element && $waitTime > 0) {
+            $element = $this->getElement($selector, false);
+            $waitTime -= 0.5;
+            usleep(500000);
+        }
+
+        return $element ?: $this->getElement($selector, $failOnError);
+    }
+
+    /**
      * Get attribute from selector with attribute
      *
      * @param string $sSelectorWithAttribute
@@ -665,7 +687,7 @@ abstract class MinkWrapper extends BaseTestCase
             $sSelector = $this->_getSelectorWithoutAttribute($sSelectorWithAttribute, $iSeparatorPosition);
             $sAttributeName = $this->_getAttributeWithoutSelector($sSelectorWithAttribute, $iSeparatorPosition);
 
-            $oElement = $this->getElement($sSelector);
+            $oElement = $this->getElementLazy($sSelector);
             $mAttribute = $oElement->getAttribute($sAttributeName);
         }
 
@@ -806,23 +828,17 @@ abstract class MinkWrapper extends BaseTestCase
      */
     protected function _getElement($sSelector)
     {
-        $oElement = null;
-
         if (strpos($sSelector, 'link=') === 0) {
-            $oElement = $this->_getElementByLink($sSelector);
-        } else {
-            if (strpos($sSelector, 'css=') === 0) {
-                $oElement = $this->_getElementByCss($sSelector);
-            } else {
-                if (strpos($sSelector, '/') === false) {
-                    $oElement = $this->_getElementByIdOrName($sSelector);
-                } else {
-                    $oElement = $this->getMinkSession()->getPage()->find('xpath', $sSelector);
-                }
-            }
+            return $this->_getElementByLink($sSelector);
+        }
+        if (strpos($sSelector, 'css=') === 0) {
+            return $this->_getElementByCss($sSelector);
+        }
+        if (strpos($sSelector, '/') === false) {
+            return $this->_getElementByIdOrName($sSelector);
         }
 
-        return $oElement;
+        return $this->getMinkSession()->getPage()->find('xpath', $sSelector);
     }
 
     /**
@@ -949,14 +965,14 @@ abstract class MinkWrapper extends BaseTestCase
             }
         }
 
-        return $oOption->getValue();
+        return $oOption ? $oOption->getValue() : "";
     }
 
     /**
      * @param array[NodeElement] $aElements
      * @param string             $sValue
      *
-     * @return mixed
+     * @return NodeElement|null
      */
     protected function _getExactMatch($aElements, $sValue)
     {
@@ -966,8 +982,6 @@ abstract class MinkWrapper extends BaseTestCase
                 return $oElement;
             }
         }
-
-        return null;
     }
 
     /**

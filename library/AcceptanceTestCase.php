@@ -443,7 +443,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     public function mouseOverAndClick($element1, $element2)
     {
         $this->mouseOver($element1);
-        $this->waitForItemAppear($element2);
         $this->clickAndWait($element2);
     }
 
@@ -473,7 +472,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
             $sLink = "Display cart";
         }
         $this->click("//div[@id='miniBasket']/img");
-        $this->waitForItemAppear("//div[@id='basketFlyout']//a[text()='" . $sLink . "']");
         $this->clickAndWait("//div[@id='basketFlyout']//a[text()='" . $sLink . "']");
     }
 
@@ -486,17 +484,11 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function selectDropDown($elementId, $itemValue = '', $extraIdent = '')
     {
-        $this->assertElementPresent($elementId);
-        $this->assertFalse($this->isVisible("//div[@id='" . $elementId . "']//ul"));
-        $this->click("//div[@id='" . $elementId . "']//p");
-        $this->waitForItemAppear("//div[@id='" . $elementId . "']//ul");
-        if ('' == $itemValue) {
-            $this->clickAndWait("//div[@id='" . $elementId . "']//ul/" . $extraIdent . "/a");
-        } else {
-            $this->clickAndWait(
-                "//div[@id='" . $elementId . "']//ul/" . $extraIdent . "/a[text()='" . $itemValue . "']"
-            );
+        if (!$this->isVisible("//div[@id='$elementId']//ul")) {
+            $this->click("//div[@id='$elementId']//p");
         }
+        $itemValue = $itemValue ? "[text()='$itemValue']" : "";
+        $this->clickAndWait("//div[@id='$elementId']//ul/$extraIdent/a$itemValue");
     }
 
     /**
@@ -509,14 +501,13 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function selectVariant($elementId, $elementNr, $itemValue, $sSelectedCombination = '')
     {
-        $this->assertElementPresent($elementId);
-        $this->assertFalse($this->isVisible("//div[@id='" . $elementId . "']/div[" . $elementNr . "]//ul"));
-        $this->click("//div[@id='" . $elementId . "']/div[" . $elementNr . "]//p");
+        if (!$this->isVisible("//div[@id='$elementId']/div[$elementNr]//ul")) {
+            $this->click("//div[@id='$elementId']/div[$elementNr]//p");
+        }
 
-        $this->waitForItemAppear("//div[@id='" . $elementId . "']/div[" . $elementNr . "]//ul");
-        $this->click("//div[@id='" . $elementId . "']/div[" . $elementNr . "]//ul//a[text()='" . $itemValue . "']");
+        $this->click("//div[@id='$elementId']/div[$elementNr]//ul//a[text()='$itemValue']");
 
-        if (!empty($sSelectedCombination)) {
+        if ($sSelectedCombination) {
             $this->waitForText("%SELECTED_COMBINATION%: $sSelectedCombination");
         }
     }
@@ -542,8 +533,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $language = "English"
     ) {
         $this->openNewWindow(shopURL . "admin");
-        $this->waitForElement('usr');
-        $this->waitForElement('pwd');
         $this->type("usr", $user);
         $this->type("pwd", $pass);
         $this->select("lng", "$language");
@@ -599,8 +588,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     public function loginSubshopAdmin($menuLink1, $menuLink2, $user = "admin@myoxideshop.com", $pass = "admin0303")
     {
         $this->openNewWindow(shopURL . "admin");
-        $this->waitForElement('user');
-        $this->waitForElement('pwd');
         $this->type("user", $user);
         $this->type("pwd", $pass);
         $this->select("chlanguage", "label=English");
@@ -628,7 +615,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $user = "admin@myoxideshop.com",
         $pass = "admin0303"
     ) {
-        oxDb::getInstance()->getDb()->Execute(
+        oxDb::getInstance()->getDb()->execute(
             "UPDATE `oxconfig` SET `OXVARVALUE` = 0xce92 WHERE `OXVARNAME` = 'sShopCountry';"
         );
 
@@ -644,7 +631,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
         if ($this->getTestConfig()->isSubShop()) {
             $this->selectAndWaitFrame("selectshop", "label=subshop", "edit");
         }
-        $this->waitForElement($link1);
         $this->click($link1);
         $this->click($link2);
 
@@ -669,8 +655,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $this->selectWindow(null);
 
         $this->frame('navigation');
-
-        $this->waitForElement("link=" . $menuLink1);
         $this->click("link=" . $menuLink1);
         $this->click("link=" . $menuLink2);
 
@@ -695,7 +679,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     public function logoutAdmin($sLocator = "link=Logout")
     {
         $this->frame("header");
-        $this->waitForElement($sLocator);
         $this->click($sLocator);
 
         try {
@@ -988,9 +971,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function usePopUp($popUpElement = "//div[@id='container1_c']/table/tbody[2]/tr[1]/td[1]")
     {
-        $this->waitForPopUp("ajaxpopup", 15000);
         $this->selectWindow("ajaxpopup");
-        $this->windowMaximize("ajaxpopup");
+        $this->windowMaximize();
         $this->waitForElement($popUpElement);
         $this->checkForErrors();
     }
@@ -1085,7 +1067,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
             return;
         }
 
-        $this->waitForElement($locator);
         $this->select($locator, $selection);
         $this->waitForPageToLoad(10000);
 
@@ -1138,7 +1119,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function clickAndConfirm($locator, $frame = "")
     {
-        $this->waitForElement($locator);
         $this->click($locator);
         $this->getConfirmation();
         $this->waitForFrameAfterAction($frame);
@@ -1325,22 +1305,22 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * Waits for specified method with given message to return true.
      *
      * @param string $sMethod
-     * @param string $sMessage
+     * @param string $locator
      * @param int    $sTimeToWait
      */
-    protected function _waitForDisappear($sMethod, $sMessage, $sTimeToWait = 30)
+    protected function _waitForDisappear($sMethod, $locator, $sTimeToWait = 30)
     {
         $sTimeToWait = $sTimeToWait * 2 * $this->_iWaitTimeMultiplier;
         for ($iSecond = 0; $iSecond <= $sTimeToWait; $iSecond++) {
             try {
-                if (!$this->$sMethod($sMessage)) {
+                if (!$this->$sMethod($locator)) {
                     return;
                 }
             } catch (Exception $e) {
             }
 
             if ($iSecond >= $sTimeToWait) {
-                $this->fail("Timeout waiting for '$sMessage'");
+                $this->fail("Timeout waiting for '$locator' to disappear");
             }
             usleep(500000);
         }
@@ -1354,9 +1334,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function getText($sLocator)
     {
-        $sLocator = $this->translate($sLocator);
-        $this->waitForElement($sLocator);
-        return parent::getText($sLocator);
+        return parent::getText($this->translate($sLocator));
     }
 
     /**
@@ -1367,9 +1345,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function click($sLocator)
     {
-        $sLocator = $this->translate($sLocator);
-        $this->waitForElement($sLocator, 5);
-        return parent::click($sLocator);
+        parent::click($this->translate($sLocator));
     }
 
     /**
@@ -1380,7 +1356,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     {
         $sSelector = $this->translate($sSelector);
         $sOptionSelector = $this->translate($sOptionSelector);
-        return parent::select($sSelector, $sOptionSelector);
+        parent::select($sSelector, $sOptionSelector);
     }
 
     /**
@@ -1391,8 +1367,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function isVisible($sLocator)
     {
-        $sLocator = $this->translate($sLocator);
-        return parent::isVisible($sLocator);
+        return parent::isVisible($this->translate($sLocator));
     }
 
     /**
@@ -1404,12 +1379,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function skipTestBlockUntil($sDate)
     {
-        $blSkip = false;
         $oDate = DateTime::createFromFormat('Y-m-d', $sDate);
-        if (time() >= $oDate->getTimestamp()) {
-            $blSkip = true;
-        }
-        return $blSkip;
+        return time() < $oDate->getTimestamp();
     }
 
     /**
@@ -1422,12 +1393,10 @@ abstract class AcceptanceTestCase extends MinkWrapper
     public function assertElementPresent($sLocator, $sMessage = '')
     {
         $sLocator = $this->translate($sLocator);
-        $sFailMessage = "Element $sLocator was not found! " . $sMessage;
+        $this->_waitForAppear('isElementPresent', $sLocator, 5, true);
         $isElementPresent = $this->isElementPresent($sLocator);
-        if (!$isElementPresent) {
-            $this->waitForItemAppear($sLocator, 5);
-            $isElementPresent = $this->isElementPresent($sLocator);
-        }
+
+        $sFailMessage = "Element $sLocator was not found! " . $sMessage;
         $this->assertTrue($isElementPresent, $sFailMessage);
     }
 
@@ -1440,12 +1409,11 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function assertElementNotPresent($sLocator, $sMessage = '')
     {
-        $sFailMessage = "Element $sLocator was found though it should not be present! " . $sMessage;
+        $sLocator = $this->translate($sLocator);
+        $this->_waitForDisappear('isElementPresent', $sLocator, 5);
         $isElementPresent = $this->isElementPresent($sLocator);
-        if ($isElementPresent) {
-            $this->waitForItemDisappear($sLocator, 5);
-            $isElementPresent = $this->isElementPresent($sLocator);
-        }
+
+        $sFailMessage = "Element $sLocator was found though it should not be present! " . $sMessage;
         $this->assertFalse($isElementPresent, $sFailMessage);
     }
 
@@ -1459,12 +1427,10 @@ abstract class AcceptanceTestCase extends MinkWrapper
     public function assertTextPresent($sText, $sMessage = '')
     {
         $sText = $this->translate($sText);
-        $sFailMessage = "Text '$sText' was not found! " . $sMessage;
+        $this->_waitForAppear('isTextPresent', $sText, 5, false);
         $isTextPresent = $this->isTextPresent($sText);
-        if (!$isTextPresent) {
-            $this->waitForText($sText, false, 5);
-            $isTextPresent = $this->isTextPresent($sText);
-        }
+
+        $sFailMessage = "Text '$sText' was not found! " . $sMessage;
         $this->assertTrue($isTextPresent, $sFailMessage);
     }
 
@@ -1478,12 +1444,10 @@ abstract class AcceptanceTestCase extends MinkWrapper
     public function assertTextNotPresent($sText, $sMessage = '')
     {
         $sText = $this->translate($sText);
-        $sFailMessage = "Text '$sText' should not be found! " . $sMessage;
+        $this->_waitForDisappear('isTextPresent', $sText, 5);
         $isTextPresent = $this->isTextPresent($sText);
-        if ($isTextPresent) {
-            $this->waitForTextDisappear($sText, 5);
-            $isTextPresent = $this->isTextPresent($sText);
-        }
+
+        $sFailMessage = "Text '$sText' should not be found! " . $sMessage;
         $this->assertFalse($isTextPresent, $sFailMessage);
     }
 
