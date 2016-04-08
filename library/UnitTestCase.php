@@ -712,7 +712,7 @@ abstract class UnitTestCase extends BaseTestCase
      *
      * @return string path to file
      */
-    public function createFile($fileName, $fileContent)
+    public function createFile($fileName, $fileContent = '')
     {
         return $this->getVfsStreamWrapper()->createFile($fileName, $fileContent);
     }
