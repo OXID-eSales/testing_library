@@ -68,8 +68,11 @@ class Cache
      */
     private function removeDirectory($dir, $rmBaseDir = false)
     {
-        $files = array_diff(scandir($dir), array('.', '..'));
+        $itemsToIgnore = array('.', '..', '.htaccess');
+
+        $files = array_diff(scandir($dir), $itemsToIgnore);
         foreach ($files as $file) {
+
             (is_dir("$dir/$file")) ? $this->removeDirectory("$dir/$file", true) : @unlink("$dir/$file");
         }
         if ($rmBaseDir) {
