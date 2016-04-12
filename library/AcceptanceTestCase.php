@@ -1890,7 +1890,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     protected function onNotSuccessfulTest(Exception $exception)
     {
-        if ($this->retryTimesLeft > 0 && $this->shouldRetryTest($exception)) {
+        if ($this->retryTimesLeft > 0) {
             $this->retryTimesLeft--;
             $this->stopMinkSession();
             $this->runBare();
@@ -1903,26 +1903,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
 
         $this->stopMinkSession();
         throw $exception;
-    }
-
-    /**
-     * Checks whether test should be retried.
-     *
-     * @param Exception $e
-     *
-     * @return bool
-     */
-    protected function shouldRetryTest(Exception $e)
-    {
-        $isForcedRetry = $e instanceof RetryTestException;
-        $isSeleniumServerError = $e instanceof \Selenium\Exception;
-
-        $isServerProblems = false;
-        if ($this->isMinkSessionStarted()) {
-            $isServerProblems = $this->isInternalServerError() || $this->isServiceUnavailable();
-        }
-
-        return $isForcedRetry || $isServerProblems || $isSeleniumServerError;
     }
 
     /**
