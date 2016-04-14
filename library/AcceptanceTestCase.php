@@ -24,6 +24,7 @@ namespace OxidEsales\TestingLibrary;
 use oxDb;
 use Exception;
 use DateTime;
+use OxidEsales\Eshop\Core\Registry;
 use ReflectionClass;
 use PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
 use PHPUnit_Framework_AssertionFailedError as AssertionFailedError;
@@ -63,11 +64,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
         "dynexport_do" => "basefrm/dynexport_do",
     );
 
-    /**
-     * Language id.
-     *
-     * @var string
-     */
+    /** @var string Language id. */
     protected $translateLanguageId = '1';
 
     /** @var bool Tracks the start of tests run. */
@@ -154,6 +151,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
 
         $this->activateModules();
         $this->addTestData($testSuitePath);
+        Registry::getConfig()->reinitialize();
 
         $this->dumpDb('reset_test_db_dump');
     }
