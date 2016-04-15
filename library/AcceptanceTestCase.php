@@ -152,6 +152,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $this->activateModules();
         $this->addTestData($testSuitePath);
         Registry::getConfig()->reinitialize();
+        Registry::set('oxLang', oxNew('oxLang'));
 
         $this->dumpDb('reset_test_db_dump');
     }
