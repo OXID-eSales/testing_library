@@ -182,7 +182,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
         foreach ($tables as $table) {
             $data[$table] = array();
 
-            $result = $db->query("SELECT * FROM " . $table);
+            $result = $db->execute("SELECT * FROM " . $table);
             if ($result && $result->recordCount() > 0) {
 
                 $rows = array();
@@ -235,7 +235,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
     private function executeQuery($sQuery)
     {
         $oDB = oxDb::getDb();
-        $oDB->query($sQuery);
+        $oDB->execute($sQuery);
     }
 
     /**

@@ -90,7 +90,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
             }
 
             $query = "SELECT * INTO OUTFILE '" . $file . "' FROM $table";
-            $db->query($query);
+            $db->execute($query);
         }
 
         $this->checksum[$dumpName] = $this->getTableChecksum($tables);
@@ -145,10 +145,10 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
 
         if (file_exists($file)) {
             $database = oxDb::getDb();
-            $database->query("TRUNCATE TABLE `$table`");
+            $database->execute("TRUNCATE TABLE `$table`");
 
             $query = "LOAD DATA INFILE '$file' INTO TABLE `$table`";
-            $database->Query($query);
+            $database->execute($query);
         }
     }
 
@@ -160,7 +160,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
     private function dropTable($table)
     {
         $database = oxDb::getDb();
-        $database->query("DROP TABLE `$table`");
+        $database->execute("DROP TABLE `$table`");
     }
 
     /**
