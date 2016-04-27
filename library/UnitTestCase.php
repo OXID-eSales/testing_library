@@ -506,7 +506,7 @@ abstract class UnitTestCase extends BaseTestCase
         oxDb::getDb()->execute($sql);
 
         if ($this->getTestConfig()->getShopEdition() == 'EE' && in_array($table, $this->getMultiShopTables())) {
-            $mapId = !is_null($mapId) ? $mapId : oxDb::getDb()->Insert_ID();
+            $mapId = !is_null($mapId) ? $mapId : oxDb::getDb()->lastInsertId();
             $shopIds = (array)$shopIds;
 
             foreach ($shopIds as $iShopId) {
