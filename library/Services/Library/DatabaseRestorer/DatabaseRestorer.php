@@ -148,19 +148,24 @@ class DatabaseRestorer implements DatabaseRestorerInterface
     /**
      * Returns columns array for given tables.
      *
-     * @param array $aTables
+     * @param array $tables
      * @return array
      */
-    private function getTableColumns($aTables)
+    private function getTableColumns($tables)
     {
-        $oDb = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $database = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
 
-        $aColumns = array();
-        foreach ($aTables as $sTable) {
-            $aColumns[$sTable] = $oDb->getAssoc("SHOW COLUMNS FROM `$sTable`", 'Field');
+        $columns = array();
+        foreach ($tables as $table) {
+            $tmp = $database->getAll("SHOW COLUMNS FROM `$table`");
+            foreach ($tmp as $sub) {
+                $key = $sub['Field'];
+                unset($sub['Field']);
+                $columns[$table][$key] = $sub;
+            }
         }
 
-        return $aColumns;
+        return $columns;
     }
 
     /**
@@ -210,7 +215,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
     {
         $db = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
 
-        $currentColumns = $db->getAssoc("SHOW COLUMNS FROM `$sTable`", 'Field');
+        $currentColumns = $db->getAll("SHOW COLUMNS FROM `$sTable`", 'Field');
         $dumpColumns = $this->getDumpColumns();
         $dumpColumns = $dumpColumns[$sTable];
 
