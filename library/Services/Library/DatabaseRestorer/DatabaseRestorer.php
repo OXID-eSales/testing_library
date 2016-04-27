@@ -308,7 +308,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
         $aTables = is_array($aTables) ? $aTables : array($aTables);
         $oDb = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
         $sSelect = 'CHECKSUM TABLE ' . implode(", ", $aTables);
-        $aResults = $oDb->getArray($sSelect);
+        $aResults = $oDb->getAll($sSelect);
 
         $sDbName = oxRegistry::getConfig()->getConfigParam('dbName');
         $aChecksum = array();

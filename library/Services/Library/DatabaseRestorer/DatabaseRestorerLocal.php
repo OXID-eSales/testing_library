@@ -203,7 +203,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
         $tables = is_array($tables) ? $tables : array($tables);
         $database = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
         $query = 'CHECKSUM TABLE ' . implode(", ", $tables);
-        $results = $database->getArray($query);
+        $results = $database->getAll($query);
 
         $databaseName = oxRegistry::getConfig()->getConfigParam('dbName');
         $checksum = array();
