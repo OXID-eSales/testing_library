@@ -56,16 +56,7 @@ class VfsStreamWrapper
      */
     public function createFile($filePath, $content = '')
     {
-        $fileName = basename($filePath);
-        $fileDirectory = ltrim(dirname($filePath), '/');
-
-        $directory = $this->getRoot();
-        if (!empty($fileDirectory) && $fileDirectory != '.') {
-            $directory = $this->createDirectoryStructure($fileDirectory);
-        }
-
-        vfsStream::create(array($fileName => "$content"), $directory);
-
+        $this->createStructure([ltrim($filePath, '/') => $content]);
         return $this->getRootPath() . $filePath;
     }
 
@@ -79,7 +70,7 @@ class VfsStreamWrapper
      */
     public function createStructure($structure)
     {
-        vfsStream::create($structure, $this->getRoot());
+        vfsStream::create($this->prepareStructure($structure), $this->getRoot());
 
         return $this->getRootPath();
     }
@@ -107,20 +98,23 @@ class VfsStreamWrapper
     }
 
     /**
-     * Creates directory structure. Returns the latest child element.
+     * @param array $structure
      *
-     * @param string $directory
-     *
-     * @return vfsStreamDirectory
+     * @return array
      */
-    private function createDirectoryStructure($directory)
+    private function prepareStructure($structure)
     {
-        $parent = $this->getRoot();
-        foreach (explode('/', $directory) as $part) {
-            $parent = vfsStream::newDirectory($part)->at($parent);
+        $newStructure = [];
+        foreach ($structure as $path => $element) {
+            $position = &$newStructure;
+            foreach (explode('/', $path) as $part) {
+                $position[$part] = [];
+                $position = &$position[$part];
+            }
+            $position = strpos($path, DIRECTORY_SEPARATOR) === false ? [] : $position;
+            $position = is_array($element) ? $this->prepareStructure($element) : $element;
         }
-
-        return $parent;
+        return $newStructure;
     }
 
 }
