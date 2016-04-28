@@ -79,6 +79,14 @@ class oxVfsStreamWrapperTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(file_exists($file));
     }
 
+    public function testCreateFileWithNumericContent()
+    {
+        $vfsStream = new oxVfsStreamWrapper();
+        $file = $vfsStream->createFile('testFile.txt', 1234);
+
+        $this->assertStringEqualsFile($file, '1234');
+    }
+
     public function testCreatingMultipleFiles()
     {
         $vfsStreamWrapper = new oxVfsStreamWrapper();
