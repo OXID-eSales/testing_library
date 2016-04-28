@@ -112,7 +112,7 @@ class VfsStreamWrapper
                 $position = &$position[$part];
             }
             $position = strpos($path, DIRECTORY_SEPARATOR) === false ? [] : $position;
-            $position = is_array($element) ? $this->prepareStructure($element) : $element;
+            $position = is_array($element) ? $this->prepareStructure($element) : (string) $element;
         }
         return $newStructure;
     }
