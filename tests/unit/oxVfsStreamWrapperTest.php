@@ -98,6 +98,11 @@ class oxVfsStreamWrapperTest extends PHPUnit_Framework_TestCase
                 'subdir' => array(
                     'testFile' => 'content'
                 )
+            ),
+            'dir2' => array(
+                'subdir2' => array(
+                    'testFile2' => 'content'
+                )
             )
         );
 
@@ -109,6 +114,28 @@ class oxVfsStreamWrapperTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(is_dir($rootPath .'dir'));
         $this->assertTrue(is_dir($rootPath .'dir/subdir'));
         $this->assertEquals('content', file_get_contents($rootPath .'dir/subdir/testFile'));
+    }
+
+    public function testStructureCreationWithPathsSpecified()
+    {
+        $structure = array(
+            'dir/subdir/testFile' => 'content',
+            'dir2/subdir/testFile' => 'content2',
+            'dir3/subdir3/testFile3' => 'content3',
+            'dir4' => [
+                'subdir4/testFile4' => 'content4',
+            ]
+        );
+
+        $vfsStreamWrapper = new oxVfsStreamWrapper();
+
+        $vfsStreamWrapper->createStructure($structure);
+        $rootPath = $vfsStreamWrapper->getRootPath();
+
+        $this->assertEquals('content', file_get_contents($rootPath .'dir/subdir/testFile'));
+        $this->assertEquals('content2', file_get_contents($rootPath .'dir2/subdir/testFile'));
+        $this->assertEquals('content3', file_get_contents($rootPath .'dir3/subdir3/testFile3'));
+        $this->assertEquals('content4', file_get_contents($rootPath .'dir4/subdir4/testFile4'));
     }
 
     public function testReturningRootDirectoryAfterStructureCreation()
