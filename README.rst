@@ -78,18 +78,8 @@ To install testing library within shop directory, update/create
             "GPL-3.0",
             "proprietary"
         ],
-        "repositories": {
-            "oxid-esales/testing-library": {
-                "type": "vcs",
-                "url": "https://github.com/OXID-eSales/testing_library.git"
-            },
-            "alexandresalome/php-selenium": {
-                "type": "vcs",
-                "url": "https://github.com/OXID-eSales/PHP-Selenium.git"
-            }
-        },
         "require-dev": {
-            "oxid-esales/testing-library": "^1.0.0-alpha1",
+            "oxid-esales/testing-library": "^1.0.1",
             "incenteev/composer-parameter-handler": "~2.0"
         },
         "minimum-stability": "dev",
