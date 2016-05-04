@@ -306,13 +306,19 @@ Writing acceptance tests
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Currently for acceptance testing Mink library and selenium/goutte
-drivers are used. Acceptance tests should be placed under
+drivers are used.
+
+Acceptance tests should be placed under
 ``tests/acceptance`` directory and extend
-``OxidEsales\TestingLibrary\AcceptanceTestCase``. Tested module will NOT
+``OxidEsales\TestingLibrary\AcceptanceTestCase``.
+
+Tested module will NOT
 be activated by default, but this can be done by extending
 ``AcceptanceTestCase::addTestData()`` method and activating module
 manually. This method will be run before any test and before database
-dump creation, but only once per tests suite. For acceptance testing
+dump creation, but only once per tests suite.
+
+For acceptance testing
 shop is installed with default demodata. Additional demodata can be
 added to ``testSql`` directory by the name of ``demodata_EE.sql``,
 ``demodata_PE_CE.sql`` or ``demodata_EE_mall.sql`` (when subshop
@@ -320,6 +326,9 @@ functionality is enabled in test\_config). These files will be loaded on
 top of the database depending on the shop edition. Any additional files,
 needed for testing can be placed under ``testData`` directory - all
 content will be copied onto the shop source before running tests.
+
+If you write tests with UTF-8 characters, be sure to set $this->iUtfMode
+to 1 in your config.inc.php.
 
 Changing database restoration mechanism
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
