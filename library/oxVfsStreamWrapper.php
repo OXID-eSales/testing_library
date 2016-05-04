@@ -54,7 +54,7 @@ class oxVfsStreamWrapper
      */
     public function createFile($filePath, $content = '')
     {
-        $this->createStructure([ltrim($filePath, '/') => $content]);
+        $this->createStructure(array(ltrim($filePath, '/') => $content));
         return $this->getRootPath() . $filePath;
     }
 
@@ -102,14 +102,14 @@ class oxVfsStreamWrapper
      */
     private function prepareStructure($structure)
     {
-        $newStructure = [];
+        $newStructure = array();
         foreach ($structure as $path => $element) {
             $position = &$newStructure;
             foreach (explode('/', $path) as $part) {
-                $position[$part] = [];
+                $position[$part] = array();
                 $position = &$position[$part];
             }
-            $position = strpos($path, DIRECTORY_SEPARATOR) === false ? [] : $position;
+            $position = strpos($path, DIRECTORY_SEPARATOR) === false ? array() : $position;
             $position = is_array($element) ? $this->prepareStructure($element) : (string) $element;
         }
         return $newStructure;
