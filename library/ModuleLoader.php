@@ -29,7 +29,11 @@ use oxRegistry;
 class ModuleLoader
 {
     /** @var array */
-    protected static $moduleData = array('chains' => array(), 'paths' => array());
+    protected static $moduleData = array(
+        'chains' => array(),
+        'paths' => array(),
+        'files' => array()
+    );
 
     /** @var bool Whether to use original chains. */
     protected static $original = false;
@@ -90,6 +94,16 @@ class ModuleLoader
      */
     public function setModuleInformation()
     {
+        $this->setExtendedFiles();
+        $this->setIncludedFiles();
+    }
+
+    /**
+     * Adds module chain to config parameter and for mocking.
+     * If the module chain is empty, then does nothing.
+     */
+    private function setExtendedFiles()
+    {
         if (count(self::$moduleData['chains'])) {
             $utilsObject = oxRegistry::get("oxUtilsObject");
             $config = oxRegistry::getConfig();
@@ -104,6 +118,33 @@ class ModuleLoader
             // Mocking of module classes does not work without calling oxNew first.
             foreach (self::$moduleData['chains'] as $parent => $chain) {
                 $utilsObject->getClassName($parent);
+            }
+        }
+    }
+
+    /**
+     * Includes defined modules files.
+     * If the module files array is empty, then does nothing.
+     */
+    private function setIncludedFiles()
+    {
+        if (count(self::$moduleData['files'])) {
+            $utilsObject = oxRegistry::get("oxUtilsObject");
+            $config = oxRegistry::getConfig();
+
+            $utilsObject->setModuleVar("aModuleFiles", self::$moduleData['files']);
+            $config->setConfigParam("aModuleFiles", self::$moduleData['files']);
+
+            // Try to include module files.
+            foreach (self::$moduleData['files'] as $moduleFiles) {
+                foreach ($moduleFiles as $filePath) {
+                    $className = basename($filePath);
+                    $className = substr($className, 0, strlen($className) - 4);
+
+                    if (!class_exists($className, false)) {
+                        require $this->_getModulesPath() . $filePath;
+                    }
+                }
             }
         }
     }
@@ -127,9 +168,9 @@ class ModuleLoader
     {
         include $sPath;
 
-        // including all filles from ["files"]
+        // including all files from ["files"]
         if (isset($aModule["files"]) && count($aModule["files"])) {
-            $this->_includeModuleFiles($aModule["files"]);
+            $this->_includeModuleFiles($aModule["id"], $aModule["files"]);
         }
 
         // adding and extending the module files
@@ -151,20 +192,13 @@ class ModuleLoader
     }
 
     /**
-     * Include module files.
+     * Appends included module files to other module files.
      *
      * @param array $files
      */
-    private function _includeModuleFiles($files)
+    private function _includeModuleFiles($id, $files)
     {
-        foreach ($files as $filePath) {
-            $name = basename($filePath);
-            $name = substr($name, 0, strlen($name) - 4);
-
-            if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false)) {
-                require oxRegistry::getConfig()->getConfigParam("sShopDir") . "/modules/" . $filePath;
-            }
-        }
+        self::$moduleData['files'][$id] = array_change_key_case($files, CASE_LOWER);
     }
 
     /**
