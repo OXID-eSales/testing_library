@@ -1,7 +1,7 @@
 # parameters for testing library
 mandatory_parameters:
     # Path to eShop source. Defaults to the same directory as to where vendor is located.
-    shop_path: ''
+    shop_path: 'source'
 
     # Path to eShop tests
     shop_tests_path: '../tests'
@@ -80,4 +80,4 @@ optional_parameters:
     selenium_server_port: '4444'
 
     # For running additional tests, please specify paths separated by commas.
-    additional_test_paths: 'Edition/Enterprise/Tests,Edition/Professional/Tests'
+    additional_test_paths: '../vendor/oxid-esales/oxideshop-ee/Tests,../vendor/oxid-esales/oxideshop-pe/Tests'

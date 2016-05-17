@@ -100,14 +100,14 @@ class TestSqlPathProvider
         $pathParts = explode(static::TESTS_DIRECTORY . '/' . static::ACCEPTANCE_DIRECTORY, $pathToTestSql);
         if (count($pathParts) > 1) {
             $testDirectoryName = $pathParts[count($pathParts) - 1];
-            $pathToEditionTestDirectory = $this->getShopPath()
-                . '/' . EditionRootPathProvider::EDITIONS_DIRECTORY
-                . '/' . EditionRootPathProvider::ENTERPRISE_DIRECTORY
+            $enterprisePathProvider = new EditionRootPathProvider($this->getEditionSelector());
+            $pathToEditionTestDirectory =
+                $enterprisePathProvider->getDirectoryPath()
                 . '/' . ucfirst(static::TESTS_DIRECTORY)
                 . '/' . ucfirst(static::ACCEPTANCE_DIRECTORY)
                 . '/' . $testDirectoryName;
 
-            $pathToTestSql = str_replace('//', '/', $pathToEditionTestDirectory);
+            $pathToTestSql = realpath($pathToEditionTestDirectory);
         }
 
         return $pathToTestSql;
