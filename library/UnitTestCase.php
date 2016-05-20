@@ -541,7 +541,7 @@ abstract class UnitTestCase extends BaseTestCase
     public function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = false, $callOriginalMethods = false, $proxyTarget = null)
     {
         // TODO: remove this condition when namespaces will be implemented fully.
-        if (strpos($originalClassName, 'OxidEsales\\') === false) {
+        if (strpos($originalClassName, '\\') === false) {
             $originalClassName = strtolower($originalClassName);
         }
         $originalClassName = oxRegistry::get('oxUtilsObject')->getClassName($originalClassName);
