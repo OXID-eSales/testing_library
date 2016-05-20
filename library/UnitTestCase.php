@@ -21,23 +21,24 @@
 
 namespace OxidEsales\TestingLibrary;
 
+use modOXID;
+use modOxUtilsDate;
+use oxConfig;
+use oxDb;
+use OxidEsales\Eshop\Core\Database\DatabaseInterface;
+use OxidEsales\EshopEnterprise\Core\Database;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
+use OxidEsales\Eshop\Core\Database\Doctrine as DatabaseAdapter;
 use oxRegistry;
-use oxDb;
-use oxUtilsObject;
-use oxConfig;
 use oxSession;
-use oxLegacyDb;
-use ReflectionClass;
-use PHPUnit_Framework_TestResult as TestResult;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
-use PHPUnit_Framework_Exception;
-
-use oxTestsStaticCleaner;
 use oxTestModules;
-use modOxid;
-use modOxUtilsDate;
+use oxTestsStaticCleaner;
+use oxUtilsObject;
+use PHPUnit_Framework_Exception;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit_Framework_TestResult as TestResult;
+use ReflectionClass;
 
 require_once TEST_LIBRARY_HELPERS_PATH . 'modOxUtilsDate.php';
 
@@ -143,7 +144,7 @@ abstract class UnitTestCase extends BaseTestCase
         $reportingLevel = (int) getenv('TRAVIS_ERROR_LEVEL');
         error_reporting($reportingLevel ? $reportingLevel : ((E_ALL ^ E_NOTICE) | E_STRICT));
 
-        $this->dbObjectBackup = oxDb::getDbObject();
+        $this->dbObjectBackup = $this->getProtectedClassProperty(Database::getInstance(), 'db');
         $this->dbQueryBuffer = array();
 
         $this->setShopId(null);
@@ -173,7 +174,10 @@ abstract class UnitTestCase extends BaseTestCase
      */
     protected function tearDown()
     {
-        oxDb::setDbObject($this->dbObjectBackup);
+        Database::getDb()->closeConnection();
+
+        $this->setProtectedClassProperty(Database::getInstance(), 'db', $this->dbObjectBackup);
+        Database::getDb()->closeConnection();
 
         if ($this->getResult() === null) {
             $this->cleanUpDatabase();
@@ -202,6 +206,7 @@ abstract class UnitTestCase extends BaseTestCase
         self::getShopStateBackup()->resetStaticVariables();
         $dbRestore = self::_getDbRestore();
         $dbRestore->restoreDB();
+        Database::getDb()->closeConnection();
     }
 
     /**
@@ -350,7 +355,7 @@ abstract class UnitTestCase extends BaseTestCase
      *
      * @param int $fetchMode
      *
-     * @return oxLegacyDb
+     * @return DatabaseInterface
      */
     public static function getDb($fetchMode = null)
     {
@@ -365,11 +370,11 @@ abstract class UnitTestCase extends BaseTestCase
     /**
      * Returns basic stub of database link object to use as mock for oxDb class
      *
-     * @return oxLegacyDb|MockObject
+     * @return DatabaseInterface|MockObject
      */
     public function getDbObjectMock()
     {
-        $dbStub = $this->getMockBuilder('oxLegacyDb')->getMock();
+        $dbStub = $this->getMockBuilder('OxidEsales\Eshop\Core\Database\Doctrine')->getMock();
         $dbStub->expects($this->any())
             ->method('setFetchMode')
             ->will($this->returnValue(true));
@@ -683,6 +688,61 @@ abstract class UnitTestCase extends BaseTestCase
         }
 
         return $instance;
+    }
+
+    /**
+     * Call a given protected method on an given instance of a class and return the result.
+     *
+     * @param object $classInstance Instance of the class on which the method will be called
+     * @param string $methodName    Name of the method to be called
+     * @param array  $params        Parameters of the method to be called
+     *
+     * @return mixed
+     */
+    protected function callProtectedClassMethod($classInstance, $methodName, array $params = array())
+    {
+        $className = get_class($classInstance);
+
+        $reflectionClass = new ReflectionClass($className);
+        $reflectionMethod = $reflectionClass->getMethod($methodName);
+        $reflectionMethod->setAccessible(true);
+
+        return $reflectionMethod->invokeArgs($classInstance, $params);
+    }
+
+    /**
+     * Set a given protected property of a given class instance to a given value.
+     *
+     * @param object $classInstance Instance of the class of which the property will be set
+     * @param string $property      Name of the property to be set
+     * @param mixed  $value         Value to which the property will be set
+     */
+    public function setProtectedClassProperty($classInstance, $property, $value)
+    {
+        $className = get_class($classInstance);
+
+        $reflectionClass = new ReflectionClass($className);
+
+        $reflectionProperty = $reflectionClass->getProperty($property);
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($classInstance, $value);
+    }
+
+    /**
+     * Get a given protected property of a given class instance.
+     *
+     * @param object $classInstance Instance of the class of which the property will be set
+     * @param string $property      Name of the property to be retrieved
+     */
+    public function getProtectedClassProperty($classInstance, $property)
+    {
+        $className = get_class($classInstance);
+
+        $reflectionClass = new ReflectionClass($className);
+
+        $reflectionProperty = $reflectionClass->getProperty($property);
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->getValue($classInstance);
     }
 
     /**
