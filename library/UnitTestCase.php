@@ -530,6 +530,7 @@ abstract class UnitTestCase extends BaseTestCase
      * @param bool       $callAutoload            Can be used to disable __autoload() during the generation of the test double class.
      * @param bool       $cloneArguments
      * @param bool       $callOriginalMethods
+     * @param null       $proxyTarget
      *
      * @return MockObject
      *
