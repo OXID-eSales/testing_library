@@ -41,11 +41,18 @@ class DatabaseHandler
      * Initiates class dependencies.
      *
      * @param oxConfigFile $configFile
+     *
+     * @throws Exception
      */
     public function __construct($configFile)
     {
         $this->configFile = $configFile;
-        $this->dbConnection = mysqli_connect($this->getDbHost(), $this->getDbUser(), $this->getDbPassword());
+        if (!function_exists('mysqli_connect')) {
+            throw new \Exception("MySQL is not installed!\n");
+        }
+        if (!$this->dbConnection = @mysqli_connect($this->getDbHost(), $this->getDbUser(), $this->getDbPassword())) {
+            throw new \Exception("Database '{$this->getDbHost()}.{$this->getDbName()}' is unreachable for user '{$this->getDbUser()}'!\n");
+        }
     }
 
     /**
