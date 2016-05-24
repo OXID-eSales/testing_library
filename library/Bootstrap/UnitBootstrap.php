@@ -43,6 +43,8 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
             }
 
             require_once TEST_LIBRARY_PATH .'OxidTestCase.php';
+
+            define('TEST_PREPARATION_FINISHED', true);
         }
 
         /**
@@ -54,12 +56,6 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
 
             $shopConfig = \oxRegistry::get("oxConfigFile");
             $shopConfig->setVar('iUtfMode', 1);
-//            $tempDirectory = $this->getTestConfig()->getTempDirectory();
-//            if ($tempDirectory && $tempDirectory != '/') {
-//                $fileCopier = new FileCopier();
-//                $fileCopier->createEmptyDirectory($tempDirectory.'shop_temp');
-//                $shopConfig->setVar('sCompileDir', $tempDirectory.'shop_temp/');
-//            }
             if ($testDatabase = $this->getTestConfig()->getTestDatabaseName()) {
                 $shopConfig->setVar('dbName', $testDatabase);
             }
@@ -74,13 +70,15 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
             $configFile = \oxRegistry::get("oxConfigFile");
             $config->init();
             $config->setConfigParam('iUtfMode', $configFile->getVar('iUtfMode'));
-//            $config->setConfigParam('sCompileDir', $configFile->getVar('sCompileDir'));
             $config->setConfigParam('dbName', $configFile->getVar('dbName'));
         }
     }
 }
 
 namespace {
+
+    use OxidEsales\Eshop\Core\Registry;
+
     /**
      * @deprecated Use TestConfig::getCurrentTestSuite() or TestConfig::getTempDirectory().
      *
@@ -103,15 +101,11 @@ namespace {
      */
     function getShopBasePath()
     {
-        $shopDirectory = OX_BASE_PATH;
-        if (class_exists('oxConfig', false)) {
-            $config = \oxRegistry::getConfig();
-            if (!empty($config->sConfigKey)) {
-                $configShopDir = $config->getConfigParam('sShopDir');
-                $shopDirectory = $configShopDir ? $configShopDir : $shopDirectory;
-            }
+        $shopDirectory = null;
+        if (defined('TEST_PREPARATION_FINISHED')) {
+            $config = Registry::getConfig();
+            $shopDirectory = $config->getConfigParam('sShopDir');
         }
-
-        return rtrim($shopDirectory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        return rtrim($shopDirectory ?: OX_BASE_PATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
 }
