@@ -22,6 +22,7 @@
 namespace OxidEsales\TestingLibrary\Services\ShopInstaller;
 
 use OxConfigFile;
+use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Edition\EditionPathProvider;
 use OxidEsales\Eshop\Core\Edition\EditionRootPathProvider;
 use OxidEsales\Eshop\Core\Edition\EditionSelector;
@@ -151,9 +152,9 @@ class ShopInstaller implements ShopServiceInterface
         $dbHandler->query("delete from oxconfig where oxvarname in ('iSetUtfMode','blLoadDynContents','sShopCountry');");
         $dbHandler->query(
             "insert into oxconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue) values " .
-            "('config1', '{$sShopId}', 'iSetUtfMode',       'str',  ENCODE('0', '{$this->sConfigKey}') )," .
-            "('config2', '{$sShopId}', 'blLoadDynContents', 'bool', ENCODE('1', '{$this->sConfigKey}') )," .
-            "('config3', '{$sShopId}', 'sShopCountry',      'str',  ENCODE('de','{$this->sConfigKey}') )"
+            "('config1', '{$sShopId}', 'iSetUtfMode',       'str',  ENCODE('0', '{$this->getConfigKey()}') )," .
+            "('config2', '{$sShopId}', 'blLoadDynContents', 'bool', ENCODE('1', '{$this->getConfigKey()}') )," .
+            "('config3', '{$sShopId}', 'sShopCountry',      'str',  ENCODE('de','{$this->getConfigKey()}') )"
         );
     }
 
@@ -182,11 +183,11 @@ class ShopInstaller implements ShopServiceInterface
             $dbHandler->query("delete from oxconfig where oxvarname in ('aSerials','sTagList','IMD','IMA','IMS')");
             $dbHandler->query(
                 "insert into oxconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue) values " .
-                "('serial1', '{$shopId}', 'aSerials', 'arr', ENCODE('" . serialize(array($serialNumber)) . "','{$this->sConfigKey}') )," .
-                "('serial2', '{$shopId}', 'sTagList', 'str', ENCODE('" . time() . "','{$this->sConfigKey}') )," .
-                "('serial3', '{$shopId}', 'IMD',      'str', ENCODE('" . $maxDays . "','{$this->sConfigKey}') )," .
-                "('serial4', '{$shopId}', 'IMA',      'str', ENCODE('" . $maxArticles . "','{$this->sConfigKey}') )," .
-                "('serial5', '{$shopId}', 'IMS',      'str', ENCODE('" . $maxShops . "','{$this->sConfigKey}') )"
+                "('serial1', '{$shopId}', 'aSerials', 'arr', ENCODE('" . serialize(array($serialNumber)) . "','{$this->getConfigKey()}') )," .
+                "('serial2', '{$shopId}', 'sTagList', 'str', ENCODE('" . time() . "','{$this->getConfigKey()}') )," .
+                "('serial3', '{$shopId}', 'IMD',      'str', ENCODE('" . $maxDays . "','{$this->getConfigKey()}') )," .
+                "('serial4', '{$shopId}', 'IMA',      'str', ENCODE('" . $maxArticles . "','{$this->getConfigKey()}') )," .
+                "('serial5', '{$shopId}', 'IMS',      'str', ENCODE('" . $maxShops . "','{$this->getConfigKey()}') )"
             );
         }
     }
@@ -199,7 +200,7 @@ class ShopInstaller implements ShopServiceInterface
         $dbHandler = $this->getDbHandler();
 
         $rs = $dbHandler->query(
-            "SELECT oxvarname, oxvartype, DECODE( oxvarvalue, '{$this->sConfigKey}') AS oxvarvalue
+            "SELECT oxvarname, oxvartype, DECODE( oxvarvalue, '{$this->getConfigKey()}') AS oxvarvalue
                        FROM oxconfig
                        WHERE oxvartype IN ('str', 'arr', 'aarr')"
         );
@@ -290,6 +291,15 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
+     * @return string
+     */
+    protected function getConfigKey()
+    {
+        $configKey = $this->getShopConfig()->getVar('sConfigKey');
+        return $configKey ?: Config::DEFAULT_CONFIG_KEY;
+    }
+
+    /**
      * Returns shop id.
      *
      * @return string
@@ -313,10 +323,10 @@ class ShopInstaller implements ShopServiceInterface
 
         $dbHandler->query("DELETE from oxconfig WHERE oxvarname = '$name';");
         $dbHandler->query("REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
-            ('$name', $shopId, '', '$name', '$type', ENCODE('{$value}','{$this->sConfigKey}'));");
+            ('$name', $shopId, '', '$name', '$type', ENCODE('{$value}','{$this->getConfigKey()}'));");
         if ($shopId === 1) {
             $dbHandler->query("REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
-                ('${name}_subshop', 2, '', '$name', '$type', ENCODE('{$value}','{$this->sConfigKey}'));");
+                ('${name}_subshop', 2, '', '$name', '$type', ENCODE('{$value}','{$this->getConfigKey()}'));");
         }
     }
 
@@ -332,7 +342,7 @@ class ShopInstaller implements ShopServiceInterface
 
         $value = is_array($value) ? serialize($value) : $value;
         $value = $dbHandler->escape($value);
-        $dbHandler->query("update oxconfig set oxvarvalue = ENCODE( '{$value}','{$this->sConfigKey}') where oxvarname = '{$id}';");
+        $dbHandler->query("update oxconfig set oxvarvalue = ENCODE( '{$value}','{$this->getConfigKey()}') where oxvarname = '{$id}';");
     }
 
     /**
