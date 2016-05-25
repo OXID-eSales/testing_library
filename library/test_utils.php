@@ -160,7 +160,7 @@ class oxTestModules
         $aFncParams = array();
         if (strpos($fncName, '(') !== false) {
             $aMatches = null;
-            preg_match("@(.*?)\((.*?)\)@", $fncName, $aMatches);
+            preg_match("@(.*?)\((.*?)\)$@", trim($fncName), $aMatches);
 
             $fncName = trim($aMatches[1]);
             if (trim($aMatches[2])) {
