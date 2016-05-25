@@ -852,7 +852,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     protected function typeToEditor($selector, $text)
     {
-        if ($this->getTestConfig()->getShopEdition() == 'CE') {
+        if ($this->isVisible("editor_$selector")) {
             $this->type("editor_$selector", $text);
         } else {
             $currentFrame = $this->getSelectedFrame();
@@ -871,7 +871,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     protected function getEditorValue($selector)
     {
-        if ($this->getTestConfig()->getShopEdition() == 'CE') {
+        if ($this->isVisible("editor_$selector")) {
             $value = $this->getValue("editor_$selector");
         } else {
             $currentFrame = $this->getSelectedFrame();
