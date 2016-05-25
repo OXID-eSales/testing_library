@@ -26,7 +26,7 @@ use modOxUtilsDate;
 use oxConfig;
 use oxDb;
 use OxidEsales\Eshop\Core\Database\DatabaseInterface;
-use OxidEsales\EshopEnterprise\Core\Database;
+use OxidEsales\Eshop\Core\Database;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
 use OxidEsales\Eshop\Core\Database\Doctrine as DatabaseAdapter;
