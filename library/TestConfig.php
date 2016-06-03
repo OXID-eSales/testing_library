@@ -418,7 +418,7 @@ class TestConfig
                 $testSuites = $this->getTestSuites();
                 $testFilePath = realpath(end($_SERVER['argv']));
                 foreach ($testSuites as $suite) {
-                    if (strpos($testFilePath, $suite) === 0) {
+                    if (strpos($testFilePath, realpath($suite)) === 0) {
                         $currentSuite = $suite;
                         break;
                     }
