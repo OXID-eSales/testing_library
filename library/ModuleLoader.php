@@ -21,7 +21,7 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use oxRegistry;
+use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Module loader class. Can imitate loaded moudle for testing.
@@ -32,11 +32,25 @@ class ModuleLoader
     protected static $moduleData = array(
         'chains' => array(),
         'paths' => array(),
-        'files' => array()
+        'files' => array(),
+        'classes' => array()
     );
 
     /** @var bool Whether to use original chains. */
-    protected static $original = false;
+    protected static $useOriginalChains = false;
+
+    /**
+     * Register autoloader for module files.
+     */
+    public function __construct()
+    {
+        spl_autoload_register(function($class) {
+            $class = strtolower($class);
+            if (array_key_exists($class, self::$moduleData['classes'])) {
+                require_once self::$moduleData['classes'][$class];
+            }
+        });
+    }
 
     /**
      * Sets the original chain loading command
@@ -45,32 +59,27 @@ class ModuleLoader
      */
     public function useOriginalChain($original)
     {
-        self::$original = $original;
+        self::$useOriginalChains = $original;
     }
 
     /**
-     * Tries to initiate the module classes and includes required files from metadata
+     * Tries to initiate the module classes and include required files from metadata
      *
      * @param array $modules Array of modules to load.
      */
     public function loadModules($modules)
     {
-        $errors = array();
         $modules = is_array($modules) ? $modules : array($modules);
 
-        $modulesDir = oxRegistry::getConfig()->getModulesDir();
+        $modulesDir = Registry::getConfig()->getModulesDir();
         foreach ($modules as $module) {
             $fullPath = $modulesDir . $module;
             if (file_exists($fullPath . "/metadata.php")) {
                 self::$moduleData['paths'][] = $module;
                 self::_initMetadata($fullPath . "/metadata.php");
             } else {
-                $errors[] = "Unable to find metadata file in directory: $fullPath" . PHP_EOL;
+                die("Unable to find metadata file in directory: $fullPath" . PHP_EOL);
             }
-        }
-
-        if ($errors) {
-            die(implode("\n\n", $errors));
         }
     }
 
@@ -87,15 +96,12 @@ class ModuleLoader
     }
 
     /**
-     * Loads the module from metadata file
-     * If no metadata found and the module chain is empty, then does nothing.
-     *
-     * On first load the data is saved and on consecutive calls the saved data is used
+     * Resets information about activated modules.
      */
     public function setModuleInformation()
     {
-        $utilsObject = oxRegistry::get("oxUtilsObject");
-        $config = oxRegistry::getConfig();
+        $utilsObject = Registry::get("oxUtilsObject");
+        $config = Registry::getConfig();
 
         $utilsObject->setModuleVar("aDisabledModules", array());
         $config->setConfigParam("aDisabledModules", array());
@@ -108,7 +114,7 @@ class ModuleLoader
         $config->setConfigParam("aModules", (array) self::$moduleData['chains']);
 
         if (!empty(self::$moduleData['chains'])) {
-            // Mocking of module classes does not work without calling oxNew first.
+            // getClassName creates aliases to extended classes. This fixes mocking.
             foreach (self::$moduleData['chains'] as $parent => $chain) {
                 $utilsObject->getClassName($parent);
             }
@@ -122,57 +128,53 @@ class ModuleLoader
      */
     protected function _getModulesPath()
     {
-        return oxRegistry::getConfig()->getConfigParam("sShopDir") . "/modules/";
+        return Registry::getConfig()->getConfigParam("sShopDir") . "/modules/";
     }
 
     /**
      * Loads the module files and extensions from the given metadata file
      *
-     * @param string $sPath path to the metadata file
+     * @param string $metadataPath path to the metadata file
      */
-    private function _initMetadata($sPath)
+    private function _initMetadata($metadataPath)
     {
-        include $sPath;
+        include $metadataPath;
 
         // including all files from ["files"]
         if (isset($aModule["files"]) && count($aModule["files"])) {
-            $this->_includeModuleFiles($aModule["id"], $aModule["files"]);
+            $this->registerModuleFiles($aModule["id"], $aModule["files"]);
         }
 
         // adding and extending the module files
         if (isset($aModule["extend"]) && count($aModule["extend"])) {
-            $this->_appendToChain($aModule["extend"]);
+            $this->appendToChain($aModule["extend"]);
         }
 
         // adding settings
         if (isset($aModule["settings"]) && count($aModule["settings"])) {
-            $this->_addSettings($aModule["settings"]);
+            $this->addSettings($aModule["settings"]);
         }
 
         // running onActivate method.
-        if (isset($aModule["events"]) && isset($aModule["events"]["onActivate"])) {
-            if (is_callable($aModule["events"]["onActivate"])) {
-                call_user_func($aModule["events"]["onActivate"]);
-            }
+        if (isset($aModule["events"]["onActivate"]) && is_callable($aModule["events"]["onActivate"])) {
+            call_user_func($aModule["events"]["onActivate"]);
         }
     }
 
     /**
-     * Appends included module files to other module files.
+     * Registers module files for autoload.
      *
-     * @param array $files
+     * @param string $moduleId
+     * @param array  $files
      */
-    private function _includeModuleFiles($id, $files)
+    private function registerModuleFiles($moduleId, $files)
     {
-        self::$moduleData['files'][$id] = array_change_key_case($files, CASE_LOWER);
+        self::$moduleData['files'][$moduleId] = array_change_key_case($files, CASE_LOWER);
 
+        $modulesDirectory = Registry::getConfig()->getConfigParam("sShopDir") ."/modules/";
         foreach ($files as $filePath) {
-            $name = basename($filePath);
-            $name = substr($name, 0, strlen($name) - 4);
-
-            if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false)) {
-                require oxRegistry::getConfig()->getConfigParam("sShopDir") . "/modules/" . $filePath;
-            }
+            $class = substr(basename($filePath), 0, -4);
+            self::$moduleData['classes'][$class] = $modulesDirectory . $filePath;
         }
     }
 
@@ -183,10 +185,10 @@ class ModuleLoader
      *
      * @param array $extend
      */
-    private function _appendToChain($extend)
+    private function appendToChain($extend)
     {
-        if (self::$original && !count(self::$moduleData['chains'])) {
-            self::$moduleData['chains'] = (array)oxRegistry::getConfig()->getConfigParam("aModules");
+        if (self::$useOriginalChains && !count(self::$moduleData['chains'])) {
+            self::$moduleData['chains'] = (array) Registry::getConfig()->getConfigParam("aModules");
         }
 
         foreach ($extend as $parent => $extends) {
@@ -203,9 +205,9 @@ class ModuleLoader
      *
      * @param array $settings
      */
-    private function _addSettings($settings)
+    private function addSettings($settings)
     {
-        $config = oxRegistry::getConfig();
+        $config = Registry::getConfig();
         foreach ($settings as $setting) {
             $config->saveShopConfVar($setting['type'], $setting['name'], $setting['value']);
         }
