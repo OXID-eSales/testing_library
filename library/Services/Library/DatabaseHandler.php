@@ -48,7 +48,7 @@ class DatabaseHandler
     {
         $this->configFile = $configFile;
         if (!function_exists('mysqli_connect')) {
-            throw new \Exception("MySQL is not installed!\n");
+            throw new \Exception("the php MySQLi extension is not installed!\n");
         }
         if (!$this->dbConnection = @mysqli_connect($this->getDbHost(), $this->getDbUser(), $this->getDbPassword())) {
             throw new \Exception("Database '{$this->getDbHost()}.{$this->getDbName()}' is unreachable for user '{$this->getDbUser()}'!\n");

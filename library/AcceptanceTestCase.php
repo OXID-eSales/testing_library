@@ -1745,7 +1745,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $sHTML = $this->getHtmlSource();
         $aErrorTexts = array(
             "Warning: " => "PHP Warning is in the page",
-            "ADODB_Exception" => "ADODB Exception is in the page",
             "Fatal error: " => "PHP Fatal error is in the page",
             "Catchable fatal error: " => " Catchable fatal error is in the page",
             "Notice: " => "PHP Notice is in the page",
