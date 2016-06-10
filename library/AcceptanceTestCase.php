@@ -1731,7 +1731,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function getShopVersionNumber()
     {
-        return '5';
+        return '6';
     }
 
     /**
