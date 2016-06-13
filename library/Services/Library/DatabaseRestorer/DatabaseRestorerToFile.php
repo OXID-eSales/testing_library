@@ -210,7 +210,7 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
         $select = 'CHECKSUM TABLE ' . implode(", ", $tables);
         $results = $database->getAll($select);
 
-        $sDbName = oxRegistry::getConfig()->getConfigParam('dbName');
+        $sDbName = oxRegistry::get('oxConfigFile')->getVar('dbName');
         $checksum = array();
         foreach ($results as $result) {
             $table = str_replace($sDbName . '.', '', $result['Table']);

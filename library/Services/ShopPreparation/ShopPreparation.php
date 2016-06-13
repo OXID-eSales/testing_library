@@ -23,6 +23,7 @@ namespace OxidEsales\TestingLibrary\Services\ShopPreparation;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
+use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerToFile;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
@@ -50,7 +51,7 @@ class ShopPreparation implements ShopServiceInterface
         $this->databaseHandler = new DatabaseHandler($configFile, $config->getTempDirectory());
 
         $factory = new DatabaseRestorerFactory();
-        $this->databaseRestorer = $factory->createRestorer('DatabaseRestorerToFile');
+        $this->databaseRestorer = $factory->createRestorer(DatabaseRestorerToFile::class);
     }
 
     /**
