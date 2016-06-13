@@ -576,7 +576,7 @@ class TestConfig
     {
         $testsPath = $partialPath;
         if (strpos($partialPath, '/') !== 0) {
-            $testsPath = $this->getShopPath() . $partialPath;
+            $testsPath = $this->getVendorDirectory() . '/../' . $partialPath;
         }
 
         return realpath($testsPath . '/');

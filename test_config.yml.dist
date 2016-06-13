@@ -4,7 +4,7 @@ mandatory_parameters:
     shop_path: 'source'
 
     # Path to eShop tests
-    shop_tests_path: '../tests'
+    shop_tests_path: 'tests'
 
     # When testing not activated module, specify module path in shop.
     # Module path in shop, e.g. if module is in 'shop/modules/oe/mymodule' directory, value here should be 'oe/mymodule'.
