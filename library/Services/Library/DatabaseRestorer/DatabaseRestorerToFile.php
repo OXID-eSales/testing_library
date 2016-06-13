@@ -133,7 +133,7 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
         }
 
         $database = oxDb::getDb();
-        $database->execute("TRUNCATE TABLE `$table`");
+        $database->execute("DROP TABLE `$table`");
 
         $databaseHandler = $this->getDatabaseHandler();
         $directory = $this->getDumpDirectory();

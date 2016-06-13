@@ -196,7 +196,6 @@ class DatabaseHandler
         }
         if (!empty($tables)) {
             array_map('escapeshellarg', $tables);
-            $command .= ' --no-create-info';
             $tables = ' ' . implode($tables);
         }
         $command .= ' ' . escapeshellarg($this->getDbName()) . $tables;
