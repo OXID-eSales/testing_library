@@ -173,7 +173,7 @@ class ModuleLoader
 
         $modulesDirectory = Registry::getConfig()->getConfigParam("sShopDir") ."/modules/";
         foreach ($files as $filePath) {
-            $class = substr(basename($filePath), 0, -4);
+            $class = strtolower(substr(basename($filePath), 0, -4));
             self::$moduleData['classes'][$class] = $modulesDirectory . $filePath;
         }
     }
