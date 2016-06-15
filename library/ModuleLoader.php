@@ -75,8 +75,7 @@ class ModuleLoader
         foreach ($modules as $module) {
             $fullPath = $modulesDir . $module;
             if (file_exists($fullPath . "/metadata.php")) {
-                self::$moduleData['paths'][] = $module;
-                self::_initMetadata($fullPath . "/metadata.php");
+                self::_initMetadata($module, $fullPath . "/metadata.php");
             } else {
                 die("Unable to find metadata file in directory: $fullPath" . PHP_EOL);
             }
@@ -136,9 +135,13 @@ class ModuleLoader
      *
      * @param string $metadataPath path to the metadata file
      */
-    private function _initMetadata($metadataPath)
+    private function _initMetadata($module, $metadataPath)
     {
         include $metadataPath;
+
+        if (isset($aModule["id"])) {
+            self::$moduleData['paths'][$aModule["id"]] = $module;
+        }
 
         // including all files from ["files"]
         if (isset($aModule["files"]) && count($aModule["files"])) {
