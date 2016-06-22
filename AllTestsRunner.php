@@ -89,8 +89,10 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
                     return (substr($sTestDirectory, -strlen($sFolder)) === $sFolder);
                 });
                 if (!empty($aDirectories)) {
-                    $fullPath = array_shift($aDirectories);
-                    $aTestsToInclude[] = $fullPath.'/'.basename($sTestFile);
+                    $fullPath = array_shift($aDirectories) .'/'. basename($sTestFile);
+                    if (file_exists($fullPath)) {
+                        $aTestsToInclude[] = $fullPath;
+                    }
                 }
             }
             static::_addFilesToSuite($oSuite, $aTestsToInclude);
