@@ -167,22 +167,29 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function addTestData($sTestSuitePath)
     {
+        $config = $this->getTestConfig();
         $testDataPath = realpath($sTestSuitePath . '/testData/');
         if ($testDataPath) {
-            $config = $this->getTestConfig();
             $target = $config->getRemoteDirectory() ? $config->getRemoteDirectory() : $config->getShopPath();
             $oFileCopier = new oxFileCopier();
             $oFileCopier->copyFiles($testDataPath, $target);
         }
 
         $sTestSuitePath = realpath($sTestSuitePath . '/testSql/');
+
+        $sFileName = $sTestSuitePath . '/demodata.sql';
+        if (file_exists($sFileName)) {
+            $this->importSql($sFileName);
+        }
+
         $sFileName = $sTestSuitePath . '/demodata_' . SHOP_EDITION . '.sql';
         if (file_exists($sFileName)) {
             $this->importSql($sFileName);
         }
 
-        if (SHOP_EDITION == 'EE' && isSUBSHOP && file_exists($sTestSuitePath . '/demodata_EE_mall.sql')) {
-            $this->importSql($sTestSuitePath . '/demodata_EE_mall.sql');
+        $sFileName = $sTestSuitePath . '/demodata_EE_mall.sql';
+        if ($config->getShopEdition() == 'EE' && $config->isSubShop() && file_exists($sFileName)) {
+            $this->importSql($sFileName);
         }
     }
 
