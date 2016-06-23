@@ -26,9 +26,8 @@ class ServiceConfigTest extends PHPUnit_Framework_TestCase
 
     public function testReturningDefaultShopPath()
     {
-        $config = new ServiceConfig();
-        $directory = dirname((new ReflectionClass($config))->getFileName());
+        $config = new ServiceConfig('/path/to/shop/');
 
-        $this->assertEquals($directory . '/../../', $config->getShopDirectory());
+        $this->assertEquals('/path/to/shop/', $config->getShopDirectory());
     }
 }

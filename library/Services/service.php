@@ -39,7 +39,7 @@ spl_autoload_register(function($className) {
 require_once __DIR__ ."/../bootstrap.php";
 
 $request = new Request();
-$config = new ServiceConfig();
+$config = new ServiceConfig(__DIR__ . '/../');
 $serviceFactory = new ServiceFactory($config);
 
 $service = $serviceFactory->createService($request->getParameter('service'));

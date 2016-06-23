@@ -42,16 +42,19 @@ class ServiceConfig
     /** @var string Temporary directory to store temp files. */
     private $tempDirectory;
 
-    /** @var string Shop edition suffix. */
-    private $editionSuffix;
-
     /**
      * Sets default values.
+     *
+     * @param string $shopDirectory
+     * @param string $tempDirectory
      */
-    public function __construct()
+    public function __construct($shopDirectory, $tempDirectory = '')
     {
-        $this->shopDirectory = __DIR__ . '/../../';
-        $this->tempDirectory = __DIR__ .'/../temp/';
+        $this->shopDirectory = $shopDirectory;
+        if (empty($tempDirectory)) {
+            $tempDirectory = $shopDirectory . '/temp';
+        }
+        $this->tempDirectory = $tempDirectory;
     }
 
     /**

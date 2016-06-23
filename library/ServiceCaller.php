@@ -147,10 +147,8 @@ class ServiceCaller
     {
         define('TMP_PATH', $this->getTestConfig()->getTempDirectory());
 
-        $config = new ServiceConfig();
-        $config->setShopDirectory($this->getTestConfig()->getShopPath());
+        $config = new ServiceConfig($this->getTestConfig()->getShopPath(), $this->getTestConfig()->getTempDirectory());
         $config->setShopEdition($this->getTestConfig()->getShopEdition());
-        $config->setTempDirectory($this->getTestConfig()->getTempDirectory());
 
         $serviceCaller = new ServiceFactory($config);
         $request = new Request($this->getParameters());
