@@ -1420,9 +1420,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function assertElementNotPresent($sLocator, $sMessage = '')
     {
-        $sFailMessage = "Element $sLocator was found though it should not be present! " . $sMessage;
-
         $sLocator = $this->translate($sLocator);
+        $sFailMessage = "Element $sLocator was found though it should not be present! " . $sMessage;
         $this->_waitForDisappear('isElementPresent', $sLocator, 5, $sFailMessage);
     }
 
@@ -1750,6 +1749,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     {
         $sHTML = $this->getHtmlSource();
         $aErrorTexts = array(
+            "<b>Warning</b>: " => "PHP Warning is in the page",
             "Warning: " => "PHP Warning is in the page",
             "Fatal error: " => "PHP Fatal error is in the page",
             "Catchable fatal error: " => " Catchable fatal error is in the page",
