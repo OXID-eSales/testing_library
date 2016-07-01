@@ -610,49 +610,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * login to trusted shops in admin.
-     *
-     * @param string $link1 Navigation group link.
-     * @param string $link2 Navigation link.
-     * @param string $user  shop admin username.
-     * @param string $pass  shop admin password.
-     */
-    public function loginAdminTs(
-        $link1 = "link=Seal of quality",
-        $link2 = "link=Trusted Shops",
-        $user = "admin@myoxideshop.com",
-        $pass = "admin0303"
-    ) {
-        oxDb::getInstance()->getDb()->execute(
-            "UPDATE `oxconfig` SET `OXVARVALUE` = 0xce92 WHERE `OXVARNAME` = 'sShopCountry';"
-        );
-
-        $this->openNewWindow(shopURL . "admin");
-        $this->type("user", $user);
-        $this->type("pwd", $pass);
-        $this->select("chlanguage", "label=English");
-        $this->select("profile", "label=Standard");
-        $this->clickAndWait("//input[@type='submit']");
-
-        $this->frame("navigation");
-
-        if ($this->getTestConfig()->isSubShop()) {
-            $this->selectAndWaitFrame("selectshop", "label=subshop", "edit");
-        }
-        $this->click($link1);
-        $this->click($link2);
-
-        $this->waitForFrameToLoad('basefrm', 10000);
-
-        if ($this->getTestConfig()->getShopEdition() === 'CE') {
-            $this->openTab('Interface');
-        }
-
-        //testing edit frame for errors
-        $this->frame("edit");
-    }
-
-    /**
      * selects other menu in admin interface.
      *
      * @param string $menuLink1 menu link (e.g. master settings, shop settings).
