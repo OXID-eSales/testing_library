@@ -189,7 +189,7 @@ class ObjectConstructor
         $query = 'SELECT OXID FROM '. $tableName .' ORDER BY OXTIMESTAMP DESC LIMIT 1';
         $result = $oDb->select($query);
 
-        if ($result != false && $result->recordCount() > 0) {
+        if ($result != false && $result->count() > 0) {
             $fields = $result->fields;
             $objectId = $fields['OXID'];
         }
