@@ -188,7 +188,8 @@ class DatabaseRestorer implements DatabaseRestorerInterface
                 $rows = array();
                 while (!$result->EOF) {
                     $rows[] = $result->fields;
-                    $result->moveNext();
+
+                    $result->fetchRow();
                 }
                 $data[$table]["_sql_"] = $this->getInsertString($rows, $table);
             }
