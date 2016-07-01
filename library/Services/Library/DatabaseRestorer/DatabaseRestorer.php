@@ -183,7 +183,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
             $data[$table] = array();
 
             $result = $db->select("SELECT * FROM " . $table);
-            if ($result && $result->recordCount() > 0) {
+            if ($result && $result->count() > 0) {
 
                 $rows = array();
                 while (!$result->EOF) {
