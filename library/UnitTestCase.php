@@ -25,11 +25,11 @@ use modOXID;
 use modOxUtilsDate;
 use oxConfig;
 use oxDb;
-use OxidEsales\Eshop\Core\Database\DatabaseInterface;
+use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\Database;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
-use OxidEsales\Eshop\Core\Database\Doctrine as DatabaseAdapter;
+use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database as DatabaseAdapter;
 use oxRegistry;
 use oxSession;
 use oxTestModules;
@@ -374,7 +374,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function getDbObjectMock()
     {
-        $dbStub = $this->getMockBuilder('OxidEsales\Eshop\Core\Database\Doctrine')->getMock();
+        $dbStub = $this->getMockBuilder('OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database')->getMock();
         $dbStub->expects($this->any())
             ->method('setFetchMode')
             ->will($this->returnValue(true));
