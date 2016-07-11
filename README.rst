@@ -312,11 +312,11 @@ Acceptance tests should be placed under
 ``tests/acceptance`` directory and extend
 ``OxidEsales\TestingLibrary\AcceptanceTestCase``.
 
-Tested module will NOT
-be activated by default, but this can be done by extending
+Tested module will be activated by default. 
+Some data might be also added by extending
 ``AcceptanceTestCase::addTestData()`` method and activating module
 manually. This method will be run before any test and before database
-dump creation, but only once per tests suite.
+dump creation, once per tests suite.
 
 For acceptance testing
 shop is installed with default demodata. Additional demodata can be
