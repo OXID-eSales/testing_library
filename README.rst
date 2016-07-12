@@ -312,7 +312,7 @@ Acceptance tests should be placed under
 ``tests/acceptance`` directory and extend
 ``OxidEsales\TestingLibrary\AcceptanceTestCase``.
 
-Tested module will be activated by default. 
+Tested module will be activated by default.
 Some data might be also added by extending
 ``AcceptanceTestCase::addTestData()`` method and activating module
 manually. This method will be run before any test and before database
@@ -341,3 +341,8 @@ implementing
 ``OxidEsales\TestingLibrary\DatabaseRestorer\DatabaseRestorerInterface``
 interface and registering new class in
 ``test_config.yml::database_restoration_class``.
+
+Tests running workflow
+----------------------
+
+Graphically visualized workflow can be found in workflow.puml. This file can be opened with tool called PlantUml (http://plantuml.com/).

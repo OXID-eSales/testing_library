@@ -1,0 +1,58 @@
+@startuml
+    start
+
+    if (            Configuration option
+    restore_shop_after_tests_suite
+                is set to true)
+        :Dump database: Dump-1;
+    else (no)
+    endif;
+
+    :Install Shop;
+
+    if (Is this acceptance tests?)
+        :Install demo data;
+    else (no, this is unit tests)
+        :Do not install demodata;
+    endif
+
+    :Dump database: Dump-2;
+
+    while (Run all test suits)
+
+        :Run suit;
+
+        :Add data for test suit:
+            testData
+            testSql;
+
+        :Dump database: Dump-3;
+
+        while (Run all tests)
+
+            :Run test;
+
+            if (Is this acceptance test suit?)
+                :Restore database to Dump-3;
+            else (no, this is unit test suit)
+            endif
+
+            if (This is the last test in test file?)
+                :Restore database to Dump-3;
+            else (no)
+            endif
+
+        endwhile
+
+        :Restore database to DB2;
+
+    endwhile
+
+    if (restore_shop_after_tests_suite is set to true)
+        :Restore database to Dump-1;
+    else (no)
+    endif;
+
+    stop
+
+@enduml
