@@ -29,7 +29,6 @@ use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\Database;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
-use OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database as DatabaseAdapter;
 use oxRegistry;
 use oxSession;
 use oxTestModules;
@@ -82,9 +81,6 @@ abstract class UnitTestCase extends BaseTestCase
 
     /** @var array Tables to be restored after test run. */
     private $tablesForCleanup = array();
-
-    /** @var mixed Backing up for earlier value of database link object */
-    private $dbObjectBackup = null;
 
     /** @var array Buffer variable of queries for feature testing */
     protected $dbQueryBuffer = array();
@@ -144,8 +140,6 @@ abstract class UnitTestCase extends BaseTestCase
         $reportingLevel = (int) getenv('TRAVIS_ERROR_LEVEL');
         error_reporting($reportingLevel ? $reportingLevel : ((E_ALL ^ E_NOTICE) | E_STRICT));
 
-        // skipping this part to find out, if the CI is failing cause of to many connections
-        //$this->dbObjectBackup = $this->getProtectedClassProperty(Database::getInstance(), 'db');
         $this->dbQueryBuffer = array();
 
         $this->setShopId(null);
@@ -175,15 +169,6 @@ abstract class UnitTestCase extends BaseTestCase
      */
     protected function tearDown()
     {
-        /*
-            // skipping this part to find out, if the CI is failing cause of to many connections
-    
-            Database::getDb()->closeConnection();
-    
-            $this->setProtectedClassProperty(Database::getInstance(), 'db', $this->dbObjectBackup);
-            Database::getDb()->closeConnection();
-         */
-
         if ($this->getResult() === null) {
             $this->cleanUpDatabase();
 
@@ -695,62 +680,7 @@ abstract class UnitTestCase extends BaseTestCase
 
         return $instance;
     }
-
-    /**
-     * Call a given protected method on an given instance of a class and return the result.
-     *
-     * @param object $classInstance Instance of the class on which the method will be called
-     * @param string $methodName    Name of the method to be called
-     * @param array  $params        Parameters of the method to be called
-     *
-     * @return mixed
-     */
-    protected function callProtectedClassMethod($classInstance, $methodName, array $params = array())
-    {
-        $className = get_class($classInstance);
-
-        $reflectionClass = new ReflectionClass($className);
-        $reflectionMethod = $reflectionClass->getMethod($methodName);
-        $reflectionMethod->setAccessible(true);
-
-        return $reflectionMethod->invokeArgs($classInstance, $params);
-    }
-
-    /**
-     * Set a given protected property of a given class instance to a given value.
-     *
-     * @param object $classInstance Instance of the class of which the property will be set
-     * @param string $property      Name of the property to be set
-     * @param mixed  $value         Value to which the property will be set
-     */
-    public function setProtectedClassProperty($classInstance, $property, $value)
-    {
-        $className = get_class($classInstance);
-
-        $reflectionClass = new ReflectionClass($className);
-
-        $reflectionProperty = $reflectionClass->getProperty($property);
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($classInstance, $value);
-    }
-
-    /**
-     * Get a given protected property of a given class instance.
-     *
-     * @param object $classInstance Instance of the class of which the property will be set
-     * @param string $property      Name of the property to be retrieved
-     */
-    public function getProtectedClassProperty($classInstance, $property)
-    {
-        $className = get_class($classInstance);
-
-        $reflectionClass = new ReflectionClass($className);
-
-        $reflectionProperty = $reflectionClass->getProperty($property);
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->getValue($classInstance);
-    }
-
+   
     /**
      * Cleans tmp dir.
      */
