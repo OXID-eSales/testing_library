@@ -186,7 +186,7 @@ class UnitTestCaseTest extends UnitTestCase
         $oldAdminMode = $unitTestCase->getConfig()->isAdmin();
         $oldSessionAdminMode = $_SESSION['blIsAdmin'];
 
-        $unitTestCase->setAdminMode(false);
+        $unitTestCase->setAdminMode(true);
 
         $setSessionAdminMode = $unitTestCase->getSessionParam('blIsAdmin');
         $setConfigAdminMode = $unitTestCase->getConfig()->isAdmin();
