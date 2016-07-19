@@ -114,13 +114,7 @@ class TestConfig
      */
     public function getShopId()
     {
-        $shopId = 'oxbaseshop';
-        if ($this->getShopEdition() == 'EE') {
-            $isSubShop = (bool)$this->getValue('is_subshop');
-            $shopId = $isSubShop ? 2 : 1;
-        }
-
-        return $shopId;
+        return $this->isSubShop() ? 2 : 1;
     }
 
     /**
@@ -130,8 +124,7 @@ class TestConfig
      */
     public function isSubShop()
     {
-        $shopId = $this->getShopId();
-        return is_int($shopId) ? $shopId > 1 : false;
+        return $this->getShopEdition() == 'EE' && $this->getValue('is_subshop');
     }
 
     /**

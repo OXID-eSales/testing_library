@@ -215,7 +215,7 @@ class ShopInstaller implements ShopServiceInterface
         }
 
         // Change currencies value to same as after 4.6 setup because previous encoding break it.
-        $shopId = $this->getServiceConfig()->getShopEdition() == 'EE' ? 1 : "'oxbaseshop'";
+        $shopId = 1;
 
         $query = "REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
             ('3c4f033dfb8fd4fe692715dda19ecd28', $shopId, '', 'aCurrencies', 'arr', 0x4dbace2972e14bf2cbd3a9a45157004422e928891572b281961cdebd1e0bbafe8b2444b15f2c7b1cfcbe6e5982d87434c3b19629dacd7728776b54d7caeace68b4b05c6ddeff2df9ff89b467b14df4dcc966c504477a9eaeadd5bdfa5195a97f46768ba236d658379ae6d371bfd53acd9902de08a1fd1eeab18779b191f3e31c258a87b58b9778f5636de2fab154fc0a51a2ecc3a4867db070f85852217e9d5e9aa60507);";
@@ -306,7 +306,7 @@ class ShopInstaller implements ShopServiceInterface
      */
     private function getShopId()
     {
-        return $this->getServiceConfig()->getShopEdition() == 'EE' ? '1' : 'oxbaseshop';
+        return '1';
     }
 
     /**
@@ -319,7 +319,7 @@ class ShopInstaller implements ShopServiceInterface
     private function insertConfigValue($type, $name, $value)
     {
         $dbHandler = $this->getDbHandler();
-        $shopId = $this->getServiceConfig()->getShopEdition() == 'EE' ? 1 : "'oxbaseshop'";
+        $shopId = 1;
 
         $dbHandler->query("DELETE from oxconfig WHERE oxvarname = '$name';");
         $dbHandler->query("REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
