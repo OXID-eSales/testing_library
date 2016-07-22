@@ -127,19 +127,6 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     }
 
     /**
-     * Activates modules before tests are run.
-     */
-    public function activateModules()
-    {
-        $testConfig = $this->getTestConfig();
-        $modulesToActivate = $testConfig->getModulesToActivate();
-        if ($modulesToActivate) {
-            $testModuleLoader = $this->_getModuleLoader();
-            $testModuleLoader->activateModules($modulesToActivate);
-        }
-    }
-
-    /**
      * Sets up shop before running test case.
      * Does not use setUpBeforeClass to keep this method non-static.
      *
@@ -1794,6 +1781,20 @@ class oxAcceptanceTestCase extends oxMinkWrapper
             $text = str_replace($search, "", $text);
         }
         return trim($text);
+    }
+
+    /**
+     * Calls ModuleInstaller Service and activates all given modules in shop before tests are run.
+     */
+    public function activateModules()
+    {
+        $testConfig = $this->getTestConfig();
+        $modulesToActivate = $testConfig->getModulesToActivate();
+        if ($modulesToActivate) {
+            $serviceCaller = new oxServiceCaller();
+            $serviceCaller->setParameter('modulestoactivate', $modulesToActivate);
+            $serviceCaller->callService('ModuleInstaller', 1);
+        }
     }
 
     /**

@@ -24,14 +24,9 @@
  */
 class oxTestModuleLoader
 {
-    /** @var array */
-    protected static $moduleData = array(
-        'chains' => array(),
-        'paths' => array(),
-        'files' => array()
-    );
-
-    /** @var bool Whether to use original chains. */
+    /**
+     * @var bool Whether to use original chains.
+     */
     protected static $original = false;
 
     /**
@@ -47,39 +42,13 @@ class oxTestModuleLoader
     /**
      * Tries to initiate the module classes and includes required files from metadata
      *
-     * @param array $modules Array of modules to load.
-     */
-    public function loadModules($modules)
-    {
-        $errors = array();
-        $modules = is_array($modules) ? $modules : array($modules);
-
-        $modulesDir = oxRegistry::getConfig()->getModulesDir();
-        foreach ($modules as $module) {
-            $fullPath = $modulesDir . $module;
-            if (file_exists($fullPath . "/metadata.php")) {
-                self::$moduleData['paths'][] = $module;
-                self::_initMetadata($fullPath . "/metadata.php");
-            } else {
-                $errors[] = "Unable to find metadata file in directory: $fullPath" . PHP_EOL;
-            }
-        }
-
-        if ($errors) {
-            die(implode("\n\n", $errors));
-        }
-    }
-
-    /**
-     * Calls ModuleInstaller Service and activates all given modules in shop.
+     * @deprecated since v1.0.2 (2016-07-22). Please use the method oxTestModuleLoader::activateModules();
      *
-     * @param array $modulesToActivate Array of modules to activate.
+     * @param array $modulesToActivate Array of modules to load.
      */
-    public function activateModules($modulesToActivate)
+    public function loadModules($modulesToActivate)
     {
-        $serviceCaller = new oxServiceCaller();
-        $serviceCaller->setParameter('modulestoactivate', $modulesToActivate);
-        $serviceCaller->callService('ModuleInstaller', 1);
+        $this->activateModules($modulesToActivate);
     }
 
     /**
@@ -87,148 +56,81 @@ class oxTestModuleLoader
      * If no metadata found and the module chain is empty, then does nothing.
      *
      * On first load the data is saved and on consecutive calls the saved data is used
+     *
+     * @deprecated since v1.0.2 (2016-07-22). Will be removed, for modules activation please use activateModules();
      */
     public function setModuleInformation()
     {
-        $this->setExtendedFiles();
-        $this->setIncludedFiles();
     }
 
     /**
-     * Adds module chain to config parameter and for mocking.
-     * If the module chain is empty, then does nothing.
-     */
-    private function setExtendedFiles()
-    {
-        if (count(self::$moduleData['chains'])) {
-            $utilsObject = oxRegistry::get("oxUtilsObject");
-            $config = oxRegistry::getConfig();
-
-            $utilsObject->setModuleVar("aModules", self::$moduleData['chains']);
-            $config->setConfigParam("aModules", self::$moduleData['chains']);
-            $utilsObject->setModuleVar("aDisabledModules", array());
-            $config->setConfigParam("aDisabledModules", array());
-            $utilsObject->setModuleVar("aModulePaths", self::$moduleData['paths']);
-            $config->setConfigParam("aModulePaths", self::$moduleData['paths']);
-
-            // Mocking of module classes does not work without calling oxNew first.
-            foreach (self::$moduleData['chains'] as $parent => $chain) {
-                $utilsObject->getClassName($parent);
-            }
-        }
-    }
-
-    /**
-     * Includes defined modules files.
-     * If the module files array is empty, then does nothing.
-     */
-    private function setIncludedFiles()
-    {
-        if (count(self::$moduleData['files'])) {
-            $utilsObject = oxRegistry::get("oxUtilsObject");
-            $config = oxRegistry::getConfig();
-
-            $utilsObject->setModuleVar("aModuleFiles", self::$moduleData['files']);
-            $config->setConfigParam("aModuleFiles", self::$moduleData['files']);
-
-            // Try to include module files.
-            foreach (self::$moduleData['files'] as $moduleFiles) {
-                foreach ($moduleFiles as $filePath) {
-                    $className = basename($filePath);
-                    $className = substr($className, 0, strlen($className) - 4);
-
-                    if (!class_exists($className, false) && !interface_exists($className, false)) {
-                        require oxRegistry::getConfig()->getConfigParam("sShopDir") . "/modules/" . $filePath;
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Returns modules path.
+     * Loads modules and activates them.
      *
-     * @return string
+     * @param array $modulesToActivate Array of modules to load.
      */
-    protected function _getModulesPath()
+    public function activateModules($modulesToActivate)
     {
-        return oxRegistry::getConfig()->getConfigParam("sShopDir") . "/modules/";
-    }
+        $this->clearModuleChain();
 
-    /**
-     * Loads the module files and extensions from the given metadata file
-     *
-     * @param string $sPath path to the metadata file
-     */
-    private function _initMetadata($sPath)
-    {
-        include $sPath;
-
-        // including all files from ["files"]
-        if (isset($aModule["files"]) && count($aModule["files"])) {
-            $this->_includeModuleFiles($aModule["id"], $aModule["files"]);
-        }
-
-        // adding and extending the module files
-        if (isset($aModule["extend"]) && count($aModule["extend"])) {
-            $this->_appendToChain($aModule["extend"]);
-        }
-
-        // adding settings
-        if (isset($aModule["settings"]) && count($aModule["settings"])) {
-            $this->_addSettings($aModule["settings"]);
-        }
-
-        // running onActivate method.
-        if (isset($aModule["events"]) && isset($aModule["events"]["onActivate"])) {
-            if (is_callable($aModule["events"]["onActivate"])) {
-                call_user_func($aModule["events"]["onActivate"]);
-            }
+        // First load all needed config options before the module will be installed.
+        $this->prepareModulesForActivation();
+        foreach ($modulesToActivate as $modulePath) {
+            $this->installModule($modulePath);
         }
     }
 
     /**
-     * Appends included module files to other module files.
-     *
-     * @param array $files
+     * Prepares modules for activation. Registers all modules that exist in the shop.
      */
-    private function _includeModuleFiles($id, $files)
+    private function prepareModulesForActivation()
     {
-        self::$moduleData['files'][$id] = array_change_key_case($files, CASE_LOWER);
+        $moduleDirectory = oxRegistry::getConfig()->getModulesDir();
+        $moduleList = new oxModuleList();
+        $moduleList->getModulesFromDir($moduleDirectory);
     }
 
     /**
-     * Appends extended files to module chain.
-     * Adds to "original" chain if needed.
-     * Adding the "extend" chain to the main chain.
+     * Activates module.
      *
-     * @param array $extend
+     * @param string $modulePath The path to the module.
+     *
+     * @throws Exception
      */
-    private function _appendToChain($extend)
+    public function installModule($modulePath)
     {
-        if (self::$original && !count(self::$moduleData['chains'])) {
-            self::$moduleData['chains'] = (array)oxRegistry::getConfig()->getConfigParam("aModules");
-        }
+        $module = $this->loadModule($modulePath);
 
-        foreach ($extend as $parent => $extends) {
-            if (isset(self::$moduleData['chains'][$parent])) {
-                $extends = trim(self::$moduleData['chains'][$parent], "& ") . "&"
-                    . trim($extends, "& ");
-            }
-            self::$moduleData['chains'][$parent] = $extends;
+        $moduleCache = new oxModuleCache($module);
+        $moduleInstaller = new oxModuleInstaller($moduleCache);
+        if (!$moduleInstaller->activate($module)) {
+            throw new Exception("Error on module installation: " . $module->getId());
         }
     }
 
     /**
-     * Adds settings to configuration.
+     * Loads module object from given directory.
      *
-     * @param array $settings
+     * @param string $modulePath The path to the module.
+     *
+     * @return oxModule
+     * @throws Exception
      */
-    private function _addSettings($settings)
+    private function loadModule($modulePath)
     {
-        $config = oxRegistry::getConfig();
-        foreach ($settings as $setting) {
-            $config->saveShopConfVar($setting['type'], $setting['name'], $setting['value']);
+        $module = new oxModule();
+        if (!$module->loadByDir($modulePath)) {
+            throw new Exception("Module not found");
+        }
+        return $module;
+    }
+
+    /**
+     * Checks if extended files have to be added to "original" module chain or to empty chain.
+     */
+    private function clearModuleChain()
+    {
+        if (!self::$original) {
+            oxRegistry::getConfig()->setConfigParam("aModules", '');
         }
     }
 }
