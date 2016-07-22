@@ -94,7 +94,6 @@ class oxUnitTestCase extends oxBaseTestCase
         if ($testConfig->getModulesToActivate()) {
             $oTestModuleLoader = $this->_getModuleLoader();
             $oTestModuleLoader->loadModules($testConfig->getModulesToActivate());
-            $oTestModuleLoader->setModuleInformation();
         }
         oxRegistry::set("oxUtilsDate", new modOxUtilsDate());
 
@@ -121,11 +120,6 @@ class oxUnitTestCase extends oxBaseTestCase
 
         // Initialize module variables. Only for backwards compatibility with older shops.
         oxUtilsObject::getInstance()->getModuleVar('aModules');
-
-        if ($this->getTestConfig()->getModulesToActivate()) {
-            $testModuleLoader = $this->_getModuleLoader();
-            $testModuleLoader->setModuleInformation();
-        }
 
         $reportingLevel = (int) getenv('TRAVIS_ERROR_LEVEL');
         error_reporting($reportingLevel ? $reportingLevel : ((E_ALL ^ E_NOTICE) | E_STRICT));
