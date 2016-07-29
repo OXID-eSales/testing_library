@@ -314,11 +314,9 @@ drivers are used. Acceptance tests should be placed under
 ``tests/acceptance`` directory and extend ``oxAcceptanceTestCase``.
 Tested module can be activated in few ways:
 
- * extending ``AcceptanceTestCase::addTestData()`` method and activating
-module manually. This method will be run before any test and before
-database dump creation, but only once per tests suite.
- * or using **activate\_all\_modules** configuration parameter in
- ``test_config.yml`` file.
+* extending ``AcceptanceTestCase::addTestData()`` method and activating module manually. This method will be run before
+any test and before database dump creation, but only once per tests suite.
+* or using **activate\_all\_modules** configuration parameter in ``test_config.yml`` file.
 
 For acceptance
 testing shop is installed with default demodata. Additional demodata can
