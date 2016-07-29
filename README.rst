@@ -316,6 +316,7 @@ Tested module can be activated in few ways:
 
 * extending ``AcceptanceTestCase::addTestData()`` method and activating module manually. This method will be run before
 any test and before database dump creation, but only once per tests suite.
+
 * or using **activate\_all\_modules** configuration parameter in ``test_config.yml`` file.
 
 For acceptance
