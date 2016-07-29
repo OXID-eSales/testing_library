@@ -312,10 +312,15 @@ Writing acceptance tests
 Currently for acceptance testing Mink library and selenium/goutte
 drivers are used. Acceptance tests should be placed under
 ``tests/acceptance`` directory and extend ``oxAcceptanceTestCase``.
-Tested module will NOT be activated by default, but this can be done by
-extending ``AcceptanceTestCase::addTestData()`` method and activating
+Tested module can be activated in few ways:
+
+ * extending ``AcceptanceTestCase::addTestData()`` method and activating
 module manually. This method will be run before any test and before
-database dump creation, but only once per tests suite. For acceptance
+database dump creation, but only once per tests suite.
+ * or using **activate\_all\_modules** configuration parameter in
+ ``test_config.yml`` file.
+
+For acceptance
 testing shop is installed with default demodata. Additional demodata can
 be added to ``testSql`` directory by the name of ``demodata_EE.sql``,
 ``demodata_PE_CE.sql`` or ``demodata_EE_mall.sql`` (when subshop
