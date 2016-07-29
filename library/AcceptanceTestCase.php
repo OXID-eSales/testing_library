@@ -122,19 +122,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * Activates modules before tests are run.
-     */
-    public function activateModules()
-    {
-        $testConfig = $this->getTestConfig();
-        $modulesToActivate = $testConfig->getModulesToActivate();
-        if ($modulesToActivate) {
-            $testModuleLoader = $this->_getModuleLoader();
-            $testModuleLoader->activateModules($modulesToActivate);
-        }
-    }
-
-    /**
      * Sets up shop before running test case.
      * Does not use setUpBeforeClass to keep this method non-static.
      *
@@ -321,7 +308,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @param bool        $blForceMainShop Opens main shop even if SubShop is being tested.
      * @param bool        $blClearCache    Whether to clear cache.
-     * @param bool|string $blForceSubShop  Opens sub shop even if man shop is being tested.
+     * @param bool|string $mForceSubShop   Opens sub shop even if man shop is being tested.
      *
      * @return null
      */
@@ -462,7 +449,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     public function searchFor($searchParam)
     {
         $this->type("//input[@id='searchParam']", $searchParam);
-        $this->keyPress("searchParam", "\\13"); //presing enter key
+        $this->keyPress("searchParam", "\\13"); //pressing enter key
         $this->waitForPageToLoad(10000);
         $this->checkForErrors();
     }
@@ -1587,7 +1574,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * Call shop seleniums connector to execute code in shop.
+     * Call shop selenium connector to execute code in shop.
      * @example call to update information to database.
      *
      * @param string $sClass          class name.
@@ -1740,6 +1727,20 @@ abstract class AcceptanceTestCase extends MinkWrapper
             $text = str_replace($search, "", $text);
         }
         return trim($text);
+    }
+
+    /**
+     * Calls ModuleInstaller Service and activates all given modules in shop before tests are run.
+     */
+    public function activateModules()
+    {
+        $testConfig = $this->getTestConfig();
+        $modulesToActivate = $testConfig->getModulesToActivate();
+        if ($modulesToActivate) {
+            $serviceCaller = new ServiceCaller();
+            $serviceCaller->setParameter('modulestoactivate', $modulesToActivate);
+            $serviceCaller->callService('ModuleInstaller', 1);
+        }
     }
 
     /**

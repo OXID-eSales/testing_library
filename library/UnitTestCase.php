@@ -114,7 +114,6 @@ abstract class UnitTestCase extends BaseTestCase
         if ($testConfig->getModulesToActivate()) {
             $oTestModuleLoader = $this->_getModuleLoader();
             $oTestModuleLoader->loadModules($testConfig->getModulesToActivate());
-            $oTestModuleLoader->setModuleInformation();
         }
         oxRegistry::set("oxUtilsDate", new modOxUtilsDate());
 
@@ -140,11 +139,6 @@ abstract class UnitTestCase extends BaseTestCase
         parent::setUp();
         oxRegistry::getUtils()->cleanStaticCache();
         oxRegistry::set('oxtableviewnamegenerator', null);
-
-        if ($this->getTestConfig()->getModulesToActivate()) {
-            $testModuleLoader = $this->_getModuleLoader();
-            $testModuleLoader->setModuleInformation();
-        }
 
         $reportingLevel = (int) getenv('TRAVIS_ERROR_LEVEL');
         error_reporting($reportingLevel ? $reportingLevel : ((E_ALL ^ E_NOTICE) | E_STRICT));
