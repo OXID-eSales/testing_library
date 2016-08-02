@@ -26,6 +26,7 @@ use OxidEsales\Eshop\Core\ModuleCache;
 use OxidEsales\Eshop\Core\ModuleInstaller;
 use OxidEsales\Eshop\Core\ModuleList;
 use OxidEsales\Eshop\Core\Module;
+use Exception;
 
 /**
  * Module loader class. Can imitate loaded module for testing.

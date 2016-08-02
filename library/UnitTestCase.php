@@ -113,7 +113,7 @@ abstract class UnitTestCase extends BaseTestCase
         $testConfig = $this->getTestConfig();
         if ($testConfig->getModulesToActivate()) {
             $oTestModuleLoader = $this->_getModuleLoader();
-            $oTestModuleLoader->loadModules($testConfig->getModulesToActivate());
+            $oTestModuleLoader->activateModules($testConfig->getModulesToActivate());
         }
         oxRegistry::set("oxUtilsDate", new modOxUtilsDate());
 
