@@ -21,12 +21,15 @@
 
 namespace OxidEsales\TestingLibrary;
 
+use Doctrine\DBAL\ConnectionException;
 use modOXID;
 use modOxUtilsDate;
 use oxConfig;
 use oxDb;
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\Database;
+use OxidEsales\Eshop\Core\Exception\DatabaseException;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
 use oxRegistry;
@@ -169,6 +172,17 @@ abstract class UnitTestCase extends BaseTestCase
      */
     protected function tearDown()
     {
+        try {
+            if (oxDb::getDb()->isRollbackOnly()) {
+                throw new \Exception('Asymmetrical transaction nesting. Transaction is marked rollbackOnly.');
+            }
+        /**
+         * Catch exceptions, which happen when isRollbackOnly on a connection without transaction
+         */
+        } catch (ConnectionException $exception) {
+            // Do nothing
+        }
+
         if ($this->getResult() === null) {
             $this->cleanUpDatabase();
 
