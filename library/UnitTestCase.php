@@ -172,12 +172,16 @@ abstract class UnitTestCase extends BaseTestCase
      */
     protected function tearDown()
     {
+        /**
+         * This try catch block fixes some issues with tests that do interfere with the transaction nesting and lead to
+         * transactions marked as rollback only, even when all the shop code has been executed.
+         */
         try {
-            if (oxDb::getDb()->isRollbackOnly()) {
-                throw new \Exception('Asymmetrical transaction nesting. Transaction is marked rollbackOnly.');
+            while (oxDb::getDb()->isRollbackOnly()) {
+                oxDb::getDb()->rollbackTransaction();
             }
         /**
-         * Catch exceptions, which happen when isRollbackOnly on a connection without transaction
+         * Catch exceptions, which happen when calling isRollbackOnly() on a connection which is not in a transaction.
          */
         } catch (ConnectionException $exception) {
             // Do nothing
