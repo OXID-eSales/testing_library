@@ -41,6 +41,7 @@ use PHPUnit_Framework_Exception;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestResult as TestResult;
 use ReflectionClass;
+use Exception;
 
 require_once TEST_LIBRARY_HELPERS_PATH . 'modOxUtilsDate.php';
 
@@ -177,13 +178,13 @@ abstract class UnitTestCase extends BaseTestCase
          * transactions marked as rollback only, even when all the shop code has been executed.
          */
         try {
-            while (oxDb::getDb()->isRollbackOnly()) {
+            while (oxDb::getDb()->isTransactionActive() && oxDb::getDb()->isRollbackOnly() ) {
                 oxDb::getDb()->rollbackTransaction();
             }
         /**
          * Catch exceptions, which happen when calling isRollbackOnly() on a connection which is not in a transaction.
          */
-        } catch (ConnectionException $exception) {
+        } catch (Exception $exception) {
             // Do nothing
         }
 
@@ -698,7 +699,7 @@ abstract class UnitTestCase extends BaseTestCase
 
         return $instance;
     }
-   
+
     /**
      * Cleans tmp dir.
      */
