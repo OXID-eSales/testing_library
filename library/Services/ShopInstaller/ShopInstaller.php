@@ -124,7 +124,7 @@ class ShopInstaller implements ShopServiceInterface
         $dbHandler->query('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
         if (!file_exists($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/database.sql")) {
             $dbHandler->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/database_schema.sql", 'latin1');
-            $dbHandler->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/initial_data.sql", 'utf8');
+            $dbHandler->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/initial_data.sql", 'latin1');
         } else {
             // Fallback. This is done because of backwards compatibility. This can be removed in near future.
             $dbHandler->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/database.sql", 'latin1');
