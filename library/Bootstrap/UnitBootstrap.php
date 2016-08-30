@@ -40,6 +40,9 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
             $currentTestSuite = $this->getTestConfig()->getCurrentTestSuite();
             if (file_exists($currentTestSuite .'/additional.inc.php')) {
                 include_once $currentTestSuite .'/additional.inc.php';
+                // There is a need to reinitialize config, otherwise configs from SQL file which can be imported via
+                // additional.inc.php will not be taken.
+                $this->initializeConfig();
             }
 
             require_once TEST_LIBRARY_PATH .'OxidTestCase.php';
@@ -68,7 +71,7 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
         {
             $config = \oxRegistry::getConfig();
             $configFile = \oxRegistry::get("oxConfigFile");
-            $config->init();
+            $config->reinitialize();
             $config->setConfigParam('iUtfMode', $configFile->getVar('iUtfMode'));
             $config->setConfigParam('dbName', $configFile->getVar('dbName'));
         }
