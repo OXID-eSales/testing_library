@@ -172,7 +172,12 @@ class ShopInstaller implements ShopServiceInterface
     {
         $sSetupPath = $this->getSetupDirectory();
         $suffix = $this->getServiceConfig()->getEditionSufix();
-        $this->getDbHandler()->import($sSetupPath . "/sql$suffix/demodata.sql", 'latin1');
+        if (file_exists($sSetupPath . "/sql$suffix/test_demodata.sql")) {
+            $this->getDbHandler()->import($sSetupPath . "/sql$suffix/test_demodata.sql", 'latin1');
+        } else {
+            // Otherwise fallback (older versions).
+            $this->getDbHandler()->import($sSetupPath . "/sql$suffix/demodata.sql", 'latin1');
+        }
     }
 
     /**
