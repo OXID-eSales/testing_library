@@ -796,25 +796,18 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * Types text to admins wysiwyg editor. If wysiwyg is not present, sets value to textarea.
+     * Types text to admin textarea.
      *
      * @param string $selector Field name
      * @param string $text     Text to enter
      */
     protected function typeToEditor($selector, $text)
     {
-        if ($this->isVisible("editor_$selector")) {
-            $this->type("editor_$selector", $text);
-        } else {
-            $currentFrame = $this->getSelectedFrame();
-            $this->frame("{$selector}_editFrame");
-            $this->type("//body", $text);
-            $this->frame($currentFrame);
-        }
+        $this->type("editor_$selector", $text);
     }
 
     /**
-     * Returns value of admins wysiwyg editor. If wysiwyg is not present, returns value of textarea.
+     * Returns value of admin textarea.
      *
      * @param string $selector
      *
@@ -822,16 +815,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     protected function getEditorValue($selector)
     {
-        if ($this->isVisible("editor_$selector")) {
-            $value = $this->getValue("editor_$selector");
-        } else {
-            $currentFrame = $this->getSelectedFrame();
-            $this->frame("{$selector}_editFrame");
-            $value = $this->getText("//body");
-            $this->frame($currentFrame);
-        }
-
-        return $value;
+        return $this->getValue("editor_$selector");
     }
 
     /**
