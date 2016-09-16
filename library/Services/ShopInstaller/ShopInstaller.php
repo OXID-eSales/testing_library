@@ -97,6 +97,8 @@ class ShopInstaller implements ShopServiceInterface
             $this->convertToInternational();
         }
 
+        $this->setConfigurationParameters();
+
         if ($this->getDbHandler()->getCharsetMode() == 'utf8') {
             $this->convertToUtf();
         }
