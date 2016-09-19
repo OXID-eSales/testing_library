@@ -23,11 +23,13 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller;
 
 use OxConfigFile;
 use OxidEsales\Eshop\Core\Config;
+use OxidEsales\Eshop\Core\DbMetaDataHandler;
 use OxidEsales\Eshop\Core\Edition\EditionPathProvider;
 use OxidEsales\Eshop\Core\Edition\EditionRootPathProvider;
 use OxidEsales\Eshop\Core\Edition\EditionSelector;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Setup\Core;
+use OxidEsales\TestingLibrary\ServiceCaller;
 use OxidEsales\TestingLibrary\Services\Library\Cache;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 use OxidEsales\TestingLibrary\Services\Library\Request;
@@ -35,6 +37,7 @@ use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use OxidEsales\EshopProfessional\Core\Serial;
 use OxidEsales\Eshop\Setup\Setup;
+use OxidEsales\TestingLibrary\TestConfig;
 
 /**
  * Class for shop installation.
@@ -124,9 +127,18 @@ class ShopInstaller implements ShopServiceInterface
 
         $dbHandler->query('drop database `' . $dbHandler->getDbName() . '`');
         $dbHandler->query('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
+
         if (!file_exists($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/database.sql")) {
-            $dbHandler->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/database_schema.sql", 'latin1');
-            $dbHandler->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/initial_data.sql", 'latin1');
+            $baseEditionPathProvider = new EditionPathProvider(new EditionRootPathProvider(new EditionSelector(EditionSelector::COMMUNITY)));
+
+            $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/database_schema.sql", 'latin1');
+            $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql", 'latin1');
+
+            $testConfig = new TestConfig();
+            $vendorDir = $testConfig->getVendorDirectory();
+
+            exec("{$vendorDir}/bin/oe-eshop-facts oe-eshop-db_migrate");
+            exec("{$vendorDir}/bin/oe-eshop-facts oe-eshop-db_views_regenerate");
         } else {
             // Fallback. This is done because of backwards compatibility. This can be removed in near future.
             $dbHandler->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/database.sql", 'latin1');
