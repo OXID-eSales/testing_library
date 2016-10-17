@@ -94,7 +94,7 @@ abstract class BootstrapBase
         $shopPath = $testConfig->getShopPath();
         require_once $shopPath .'bootstrap.php';
 
-        \oxRegistry::set("oxConfig", new \oxConfig());
+        #\oxRegistry::set("oxConfig", new \oxConfig());
 
         $tempDirectory = $testConfig->getTempDirectory();
         if ($tempDirectory && $tempDirectory != '/') {

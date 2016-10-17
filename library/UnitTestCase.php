@@ -21,23 +21,27 @@
 
 namespace OxidEsales\TestingLibrary;
 
+use Doctrine\DBAL\ConnectionException;
+use modOXID;
+use modOxUtilsDate;
+use oxConfig;
+use oxDb;
+use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
+use OxidEsales\Eshop\Core\Database;
+use OxidEsales\Eshop\Core\Exception\DatabaseException;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
 use oxRegistry;
-use oxDb;
-use oxUtilsObject;
-use oxConfig;
 use oxSession;
-use oxLegacyDb;
-use ReflectionClass;
-use PHPUnit_Framework_TestResult as TestResult;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
-use PHPUnit_Framework_Exception;
-
-use oxTestsStaticCleaner;
 use oxTestModules;
-use modOxid;
-use modOxUtilsDate;
+use oxTestsStaticCleaner;
+use oxUtilsObject;
+use PHPUnit_Framework_Exception;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit_Framework_TestResult as TestResult;
+use ReflectionClass;
+use Exception;
 
 require_once TEST_LIBRARY_HELPERS_PATH . 'modOxUtilsDate.php';
 
@@ -81,9 +85,6 @@ abstract class UnitTestCase extends BaseTestCase
 
     /** @var array Tables to be restored after test run. */
     private $tablesForCleanup = array();
-
-    /** @var mixed Backing up for earlier value of database link object */
-    private $dbObjectBackup = null;
 
     /** @var array Buffer variable of queries for feature testing */
     protected $dbQueryBuffer = array();
@@ -143,7 +144,6 @@ abstract class UnitTestCase extends BaseTestCase
         $reportingLevel = (int) getenv('TRAVIS_ERROR_LEVEL');
         error_reporting($reportingLevel ? $reportingLevel : ((E_ALL ^ E_NOTICE) | E_STRICT));
 
-        $this->dbObjectBackup = oxDb::getDbObject();
         $this->dbQueryBuffer = array();
 
         $this->setShopId(null);
@@ -173,7 +173,20 @@ abstract class UnitTestCase extends BaseTestCase
      */
     protected function tearDown()
     {
-        oxDb::setDbObject($this->dbObjectBackup);
+        /**
+         * This try catch block fixes some issues with tests that do interfere with the transaction nesting and lead to
+         * transactions marked as rollback only, even when all the shop code has been executed.
+         */
+        try {
+            while (oxDb::getDb()->isTransactionActive() && oxDb::getDb()->isRollbackOnly() ) {
+                oxDb::getDb()->rollbackTransaction();
+            }
+        /**
+         * Catch exceptions, which happen when calling isRollbackOnly() on a connection which is not in a transaction.
+         */
+        } catch (Exception $exception) {
+            // Do nothing
+        }
 
         if ($this->getResult() === null) {
             $this->cleanUpDatabase();
@@ -202,6 +215,7 @@ abstract class UnitTestCase extends BaseTestCase
         self::getShopStateBackup()->resetStaticVariables();
         $dbRestore = self::_getDbRestore();
         $dbRestore->restoreDB();
+        oxDb::getDb()->closeConnection();
     }
 
     /**
@@ -350,7 +364,7 @@ abstract class UnitTestCase extends BaseTestCase
      *
      * @param int $fetchMode
      *
-     * @return oxLegacyDb
+     * @return DatabaseInterface
      */
     public static function getDb($fetchMode = null)
     {
@@ -365,11 +379,11 @@ abstract class UnitTestCase extends BaseTestCase
     /**
      * Returns basic stub of database link object to use as mock for oxDb class
      *
-     * @return oxLegacyDb|MockObject
+     * @return DatabaseInterface|MockObject
      */
     public function getDbObjectMock()
     {
-        $dbStub = $this->getMockBuilder('oxLegacyDb')->getMock();
+        $dbStub = $this->getMockBuilder('OxidEsales\Eshop\Core\Database\Adapter\Doctrine\Database')->getMock();
         $dbStub->expects($this->any())
             ->method('setFetchMode')
             ->will($this->returnValue(true));
@@ -500,7 +514,7 @@ abstract class UnitTestCase extends BaseTestCase
         oxDb::getDb()->execute($sql);
 
         if ($this->getTestConfig()->getShopEdition() == 'EE' && in_array($table, $this->getMultiShopTables())) {
-            $mapId = !is_null($mapId) ? $mapId : oxDb::getDb()->lastInsertId();
+            $mapId = !is_null($mapId) ? $mapId : oxDb::getDb()->getLastInsertId();
             $shopIds = (array)$shopIds;
 
             foreach ($shopIds as $iShopId) {
@@ -525,6 +539,7 @@ abstract class UnitTestCase extends BaseTestCase
      * @param bool       $callAutoload            Can be used to disable __autoload() during the generation of the test double class.
      * @param bool       $cloneArguments
      * @param bool       $callOriginalMethods
+     * @param null       $proxyTarget
      *
      * @return MockObject
      *
@@ -804,6 +819,50 @@ abstract class UnitTestCase extends BaseTestCase
             }
         }
         $utilsObject->setModuleVar("aModules", $extensions);
+    }
+
+    /**
+     * Set a given protected property of a given class instance to a given value.
+     *
+     * Note: Please use this methods only for static 'mocking' or with other hard reasons!
+     *       For the most possible non static usages there exist other solutions.
+     *
+     * @param object $classInstance Instance of the class of which the property will be set
+     * @param string $property      Name of the property to be set
+     * @param mixed  $value         Value to which the property will be set
+     */
+    protected function setProtectedClassProperty($classInstance, $property, $value)
+    {
+        $className = get_class($classInstance);
+
+        $reflectionClass = new ReflectionClass($className);
+
+        $reflectionProperty = $reflectionClass->getProperty($property);
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($classInstance, $value);
+    }
+
+    /**
+     * Get a given protected property of a given class instance.
+     *
+     * Note: Please use this methods only for static 'mocking' or with other hard reasons!
+     *       For the most possible non static usages there exist other solutions.
+
+     * @param object $classInstance Instance of the class of which the property will be set
+     * @param string $property      Name of the property to be retrieved
+     *
+     * @return mixed
+     */
+    protected function getProtectedClassProperty($classInstance, $property)
+    {
+        $className = get_class($classInstance);
+
+        $reflectionClass = new ReflectionClass($className);
+
+        $reflectionProperty = $reflectionClass->getProperty($property);
+        $reflectionProperty->setAccessible(true);
+
+        return $reflectionProperty->getValue($classInstance);
     }
 
     /**

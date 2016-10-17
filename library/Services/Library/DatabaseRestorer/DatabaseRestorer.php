@@ -182,12 +182,14 @@ class DatabaseRestorer implements DatabaseRestorerInterface
         foreach ($tables as $table) {
             $data[$table] = array();
 
-            $result = $db->execute("SELECT * FROM " . $table);
-            if ($result && $result->recordCount() > 0) {
+            $result = $db->select("SELECT * FROM " . $table);
+            if ($result && $result->count() > 0) {
 
                 $rows = array();
-                while ($row = $result->fetchRow()) {
-                    $rows[] = $row;
+                while (!$result->EOF) {
+                    $rows[] = $result->fields;
+
+                    $result->fetchRow();
                 }
                 $data[$table]["_sql_"] = $this->getInsertString($rows, $table);
             }
