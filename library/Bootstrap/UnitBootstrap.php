@@ -80,7 +80,7 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
 
 namespace {
 
-    use OxidEsales\Eshop\Core\Registry;
+    use OxidEsales\EshopCommunity\Core\Registry;
 
     /**
      * @deprecated Use TestConfig::getCurrentTestSuite() or TestConfig::getTempDirectory().

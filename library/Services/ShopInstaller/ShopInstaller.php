@@ -22,13 +22,13 @@
 namespace OxidEsales\TestingLibrary\Services\ShopInstaller;
 
 use OxConfigFile;
-use OxidEsales\Eshop\Core\Config;
-use OxidEsales\Eshop\Core\DbMetaDataHandler;
-use OxidEsales\Eshop\Core\Edition\EditionPathProvider;
-use OxidEsales\Eshop\Core\Edition\EditionRootPathProvider;
-use OxidEsales\Eshop\Core\Edition\EditionSelector;
-use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Setup\Core;
+use OxidEsales\EshopCommunity\Core\Config;
+use OxidEsales\EshopCommunity\Core\DbMetaDataHandler;
+use OxidEsales\EshopCommunity\Core\Edition\EditionPathProvider;
+use OxidEsales\EshopCommunity\Core\Edition\EditionRootPathProvider;
+use OxidEsales\EshopCommunity\Core\Edition\EditionSelector;
+use OxidEsales\EshopCommunity\Core\Registry;
+use OxidEsales\EshopCommunity\Setup\Core;
 use OxidEsales\TestingLibrary\ServiceCaller;
 use OxidEsales\TestingLibrary\Services\Library\Cache;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
@@ -36,7 +36,7 @@ use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use OxidEsales\EshopProfessional\Core\Serial;
-use OxidEsales\Eshop\Setup\Setup;
+use OxidEsales\EshopCommunity\Setup\Setup;
 use OxidEsales\TestingLibrary\TestConfig;
 
 /**
@@ -78,7 +78,7 @@ class ShopInstaller implements ShopServiceInterface
      */
     public function init($request)
     {
-        if (!class_exists('\OxidEsales\Eshop\Setup\Setup')) {
+        if (!class_exists('\OxidEsales\EshopCommunity\Setup\Setup')) {
             throw new \Exception("Shop Setup directory has to be present!");
         }
 

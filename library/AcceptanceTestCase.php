@@ -24,7 +24,7 @@ namespace OxidEsales\TestingLibrary;
 use oxDb;
 use Exception;
 use DateTime;
-use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\EshopCommunity\Core\Registry;
 use ReflectionClass;
 use PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
 use PHPUnit_Framework_AssertionFailedError as AssertionFailedError;
