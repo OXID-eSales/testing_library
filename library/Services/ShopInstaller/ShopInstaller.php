@@ -340,13 +340,16 @@ class ShopInstaller implements ShopServiceInterface
     {
         $dbHandler = $this->getDbHandler();
         $shopId = 1;
+        $oxid = md5("${name}_1");
 
         $dbHandler->query("DELETE from oxconfig WHERE oxvarname = '$name';");
         $dbHandler->query("REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
-            ('$name', $shopId, '', '$name', '$type', ENCODE('{$value}','{$this->getConfigKey()}'));");
-        if ($shopId === 1) {
+            ('$oxid', $shopId, '', '$name', '$type', ENCODE('{$value}','{$this->getConfigKey()}'));");
+        if ($this->getServiceConfig()->getShopEdition() == EditionSelector::ENTERPRISE) {
+            $oxid = md5("${name}_subshop");
+            $shopId = 2;
             $dbHandler->query("REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
-                ('${name}_subshop', 2, '', '$name', '$type', ENCODE('{$value}','{$this->getConfigKey()}'));");
+                ('$oxid', $shopId, '', '$name', '$type', ENCODE('{$value}','{$this->getConfigKey()}'));");
         }
     }
 
