@@ -15,8 +15,7 @@
         "symfony/yaml": "~2.0",
         "incenteev/composer-parameter-handler": "~2.0",
         "phpunit/phpcov": "*",
-        "symfony/dom-crawler": "v2.7.*",
-        "oxid-esales/eshop-db-views-regenerator": "dev-master"
+        "symfony/dom-crawler": "v2.7.*"
     },
     "bin": [
         "bin/reset-shop",
