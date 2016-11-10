@@ -21,11 +21,11 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Core\ModuleCache;
-use OxidEsales\Eshop\Core\ModuleInstaller;
-use OxidEsales\Eshop\Core\ModuleList;
-use OxidEsales\Eshop\Core\Module;
+use OxidEsales\EshopCommunity\Core\Registry;
+use OxidEsales\EshopCommunity\Core\ModuleCache;
+use OxidEsales\EshopCommunity\Core\ModuleInstaller;
+use OxidEsales\EshopCommunity\Core\ModuleList;
+use OxidEsales\EshopCommunity\Core\Module;
 use Exception;
 
 /**

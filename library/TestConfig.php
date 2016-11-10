@@ -21,7 +21,7 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use OxidEsales\Eshop\Core\Edition\EditionSelector;
+use OxidEsales\EshopCommunity\Core\Edition\EditionSelector;
 use Symfony\Component\Yaml\Yaml;
 
 class TestConfig
