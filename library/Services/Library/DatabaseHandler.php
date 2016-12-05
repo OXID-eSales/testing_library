@@ -22,8 +22,9 @@
 namespace OxidEsales\TestingLibrary\Services\Library;
 
 use Exception;
-use mysqli;
-use mysqli_result;
+use PDO;
+use PDOStatement;
+use PDOException;
 use OxConfigFile;
 
 /**
@@ -34,7 +35,7 @@ class DatabaseHandler
     /** @var oxConfigFile */
     private $configFile;
 
-    /** @var mysqli Database connection. */
+    /** @var PDO Database connection. */
     private $dbConnection;
 
     /**
@@ -47,11 +48,23 @@ class DatabaseHandler
     public function __construct($configFile)
     {
         $this->configFile = $configFile;
-        if (!function_exists('mysqli_connect')) {
-            throw new \Exception("the php MySQLi extension is not installed!\n");
+        if (!extension_loaded('pdo_mysql')) {
+            throw new \Exception("the php pdo_mysql extension is not installed!\n");
         }
-        if (!$this->dbConnection = @mysqli_connect($this->getDbHost(), $this->getDbUser(), $this->getDbPassword())) {
-            throw new \Exception("Database '{$this->getDbHost()}.{$this->getDbName()}' is unreachable for user '{$this->getDbUser()}'!\n");
+
+        $dsn = 'mysql' .
+               ':host=' . $this->getDbHost() .
+               (empty($this->getDbPort()) ? '' : ';port=' . $this->getDbPort());
+
+        try{
+            $this->dbConnection = new PDO(
+                $dsn,
+                $this->getDbUser(),
+                $this->getDbPassword(),
+                array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8')
+            );
+        } catch (\PDOException $exception) {
+            throw new \Exception("Could not connect to '{$this->getDbHost()}' with user '{$this->getDbUser()}'\n");
         }
     }
 
@@ -87,12 +100,66 @@ class DatabaseHandler
      *
      * @param string $sql Sql query to execute.
      *
-     * @return mysqli_result
+     * @return PDOStatement|false
      */
     public function query($sql)
     {
-        mysqli_select_db($this->getDbConnection(), $this->getDbName());
-        return mysqli_query($this->getDbConnection(), $sql);
+        $this->useConfiguredDatabase();
+        return $this->getDbConnection()->query($sql);
+    }
+
+    /**
+     * This function is intended for write access to the database like INSERT, UPDATE
+     *
+     * @param string $sql Sql query to execute.
+     *
+     * @return int
+     */
+    public function exec($sql)
+    {
+        $this->useConfiguredDatabase();
+        $success = $this->getDbConnection()->exec($sql);
+        return $success;
+    }
+
+    /**
+     * Executes sql query. Returns query execution resource object
+     *
+     * @param string $sql query to execute
+     *
+     * @throws Exception exception is thrown if error occured during sql execution
+     *
+     * @return PDOStatement|false|int
+     */
+    public function execSql($sql)
+    {
+        try {
+            list ($statement) = explode(" ", ltrim($sql));
+            if (in_array(strtoupper($statement), array('SELECT', 'SHOW'))) {
+                $oStatement = $this->query($sql);
+            } else {
+                return $this->exec($sql);
+            }
+
+            return $oStatement;
+        } catch (PDOException $e) {
+            throw new Exception("Could not execute sql: " . $sql);
+        }
+    }
+
+    /**
+     * The database if not chosen when the connection is made because the database can be e.g. dropped afterwards
+     * and then the connection gets lost.
+     *
+     * @throws Exception
+     */
+    protected function useConfiguredDatabase()
+    {
+        try {
+            $this->getDbConnection()->exec("USE " . $this->getDbName());
+        } catch (Exception $e) {
+            throw new Exception("Could not connect to database " . $this->getDbName());
+        }
     }
 
     /**
@@ -101,7 +168,7 @@ class DatabaseHandler
      */
     public function escape($value)
     {
-        return mysqli_real_escape_string($this->getDbConnection(), $value);
+        return $this->getDbConnection()->quote($value);
     }
 
     /**
@@ -111,7 +178,7 @@ class DatabaseHandler
      */
     public function getCharsetMode()
     {
-        return $this->configFile->iUtfMode ? 'utf8' : 'latin1';
+        return 'utf8';
     }
 
     /**
@@ -147,9 +214,17 @@ class DatabaseHandler
     }
 
     /**
+     * @return string
+     */
+    public function getDbPort()
+    {
+        return $this->configFile->dbPort;
+    }
+
+    /**
      * Returns database resource
      *
-     * @return mysqli
+     * @return PDO
      */
     public function getDbConnection()
     {

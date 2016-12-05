@@ -153,7 +153,7 @@ class TestConfig
     public function getShopCharset()
     {
         if (is_null($this->charsetMode)) {
-            $this->charsetMode = $this->getConfigFile()->iUtfMode ? 'utf8' : 'latin1';
+            $this->charsetMode = 'utf8';
         }
 
         return $this->charsetMode;

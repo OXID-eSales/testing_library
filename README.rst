@@ -328,9 +328,6 @@ top of the database depending on the shop edition. Any additional files,
 needed for testing can be placed under ``testData`` directory - all
 content will be copied onto the shop source before running tests.
 
-If you write tests with UTF-8 characters, be sure to set $this->iUtfMode
-to 1 in your config.inc.php.
-
 Changing database restoration mechanism
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

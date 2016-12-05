@@ -102,10 +102,6 @@ class ShopInstaller implements ShopServiceInterface
 
         $this->setConfigurationParameters();
 
-        if ($this->getDbHandler()->getCharsetMode() == 'utf8') {
-            $this->convertToUtf();
-        }
-
         $this->setSerialNumber($serialNumber);
 
         if ($request->getParameter('turnOnVarnish', $this->getShopConfig()->turnOnVarnish)) {
@@ -122,27 +118,44 @@ class ShopInstaller implements ShopServiceInterface
     public function setupDatabase()
     {
         $dbHandler = $this->getDbHandler();
-        $dbHandler->query("alter schema character set latin1 collate latin1_general_ci");
-        $dbHandler->query("set character set latin1");
 
-        $dbHandler->query('drop database `' . $dbHandler->getDbName() . '`');
-        $dbHandler->query('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
+        $dbHandler->getDbConnection()->exec('drop database `' . $dbHandler->getDbName() . '`');
+        $dbHandler->getDbConnection()->exec('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
 
-        if (!file_exists($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/database.sql")) {
-            $baseEditionPathProvider = new EditionPathProvider(new EditionRootPathProvider(new EditionSelector(EditionSelector::COMMUNITY)));
+        $baseEditionPathProvider = new EditionPathProvider(new EditionRootPathProvider(new EditionSelector(EditionSelector::COMMUNITY)));
+        $encodingOfSqls = $this->detectEncodingOfFile($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql");
 
+        // ESDEV-4167 backwards compatiblity for v6.0-beta.1 release
+        if ($encodingOfSqls === 'ISO-8859-1') {
             $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/database_schema.sql", 'latin1');
             $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql", 'latin1');
-
-            $testConfig = new TestConfig();
-            $vendorDir = $testConfig->getVendorDirectory();
-
-            exec("{$vendorDir}/bin/oe-eshop-facts oe-eshop-db_migrate");
-            exec("{$vendorDir}/bin/oe-eshop-facts oe-eshop-db_views_regenerate");
+            $this->convertToUtf();
         } else {
-            // Fallback. This is done because of backwards compatibility. This can be removed in near future.
-            $dbHandler->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/database.sql", 'latin1');
+            $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/database_schema.sql");
+            $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql");
         }
+
+        $testConfig = new TestConfig();
+        $vendorDir = $testConfig->getVendorDirectory();
+
+        exec("{$vendorDir}/bin/oe-eshop-facts oe-eshop-db_migrate");
+        exec("{$vendorDir}/bin/oe-eshop-facts oe-eshop-db_views_regenerate");
+    }
+
+    /**
+     * @param string $filename
+     *
+     * @return string
+     */
+    protected function detectEncodingOfFile($filename)
+    {
+        $encoding = '';
+        $content = file_get_contents($filename);
+        if ($content !== false) {
+            $encoding = mb_detect_encoding($content, 'UTF-8, ISO-8859-1', true);
+        }
+
+        return $encoding;
     }
 
     /**
@@ -150,7 +163,13 @@ class ShopInstaller implements ShopServiceInterface
      */
     public function insertDemoData()
     {
-        $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/demodata.sql", 'latin1');
+        // ESDEV-4167 backwards compatiblity for v6.0-beta.1 release
+        $encodingOfSql = $this->detectEncodingOfFile($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/demodata.sql");
+        if ($encodingOfSql === 'ISO-8859-1') {
+            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/demodata.sql", 'latin1');
+        } else {
+            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/demodata.sql");
+        }
     }
 
     /**
@@ -158,7 +177,13 @@ class ShopInstaller implements ShopServiceInterface
      */
     public function convertToInternational()
     {
-        $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/en.sql", 'latin1');
+        // ESDEV-4167 backwards compatiblity for v6.0-beta.1 release
+        $encodingOfSql = $this->detectEncodingOfFile($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/en.sql");
+        if ($encodingOfSql === 'ISO-8859-1') {
+            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/en.sql");
+        } else {
+            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/en.sql", 'latin1');
+        }
     }
 
     /**
@@ -225,7 +250,7 @@ class ShopInstaller implements ShopServiceInterface
                        WHERE oxvartype IN ('str', 'arr', 'aarr')"
         );
 
-        while ($aRow = mysqli_fetch_assoc($rs)) {
+        while ( (false !== $rs) && ($aRow = $rs->fetch())) {
             if ($aRow['oxvartype'] == 'arr' || $aRow['oxvartype'] == 'aarr') {
                 $aRow['oxvarvalue'] = unserialize($aRow['oxvarvalue']);
             }
