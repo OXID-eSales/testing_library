@@ -30,7 +30,7 @@ class TestSqlPathProviderTest extends PHPUnit_Framework_TestCase
             [
                 '/var/www/oxideshop/tests/Acceptance/Admin',
                 EditionSelector::ENTERPRISE,
-                '/var/www/oxideshop/source/Edition/Enterprise/Tests/Acceptance/Admin/testSql'
+                '/var/www/oxideshop/vendor/oxid-esales/oxideshop-ee/Tests/Acceptance/Admin/testSql'
             ],
             [
                 '/var/www/oxideshop/source/Edition/Enterprise/Tests/Acceptance/Admin',
