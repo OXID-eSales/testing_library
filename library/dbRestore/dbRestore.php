@@ -174,7 +174,7 @@ class DbRestore implements DbRestoreInterface
         foreach ($tables as $table) {
             $data[$table] = array();
 
-            $result = $db->query("SELECT * FROM " . $table);
+            $result = $db->query("SELECT * FROM `${table}`");
             if ($result && $result->recordCount() > 0) {
 
                 $rows = array();
@@ -304,7 +304,7 @@ class DbRestore implements DbRestoreInterface
     {
         $aTables = is_array($aTables) ? $aTables : array($aTables);
         $oDb = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
-        $sSelect = 'CHECKSUM TABLE ' . implode(", ", $aTables);
+        $sSelect = 'CHECKSUM TABLE `' . implode("`, `", $aTables) . '`';
         $aResults = $oDb->getArray($sSelect);
 
         $sDbName = oxRegistry::getConfig()->getConfigParam('dbName');
