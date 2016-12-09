@@ -468,7 +468,7 @@ class TestConfig
             $configFile = \oxRegistry::get('oxConfigFile');
         } else {
             $shopPath = $this->getShopPath();
-            include_once $shopPath . 'Core/oxconfigfile.php';
+            include_once $shopPath . 'BackwardCompatibility/Core/oxconfigfile.php';
             $configFile = new \oxConfigFile($shopPath . "config.inc.php");
         }
 
