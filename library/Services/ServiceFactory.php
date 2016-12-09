@@ -52,7 +52,11 @@ class ServiceFactory
      */
     public function createService($serviceClass)
     {
-        $className = $this->formClassName($serviceClass);
+        $className = $serviceClass;
+        if (!class_exists($serviceClass)) {
+            // Used for backwards compatibility.
+            $className = $this->formClassName($serviceClass);
+        }
         if (!class_exists($className)) {
             throw new Exception("Service '$serviceClass' was not found!");
         }

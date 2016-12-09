@@ -15,7 +15,8 @@
         "symfony/yaml": "~2.0",
         "incenteev/composer-parameter-handler": "~2.0",
         "phpunit/phpcov": "~2.0.2",
-        "symfony/dom-crawler": "v2.7.*"
+        "symfony/dom-crawler": "v2.7.*",
+        "symfony/filesystem": "^3.0"
     },
     "bin": [
         "bin/reset-shop",
@@ -29,6 +30,11 @@
     ],
     "autoload": {
         "psr-4": {"OxidEsales\\TestingLibrary\\": "library/"}
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OxidEsales\\TestingLibrary\\Tests\\": "./tests"
+        }
     },
     "scripts": {
         "post-install-cmd": [
