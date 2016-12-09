@@ -38,6 +38,14 @@ spl_autoload_register(function($className) {
 
 require_once __DIR__ ."/../bootstrap.php";
 
+$vendorDirectory = __DIR__ . "/../../vendor/";
+if (!file_exists($vendorDirectory)) {
+    $vendorDirectory = __DIR__ .'/vendor/';
+}
+
+/** This constant should only be used in TestConfig class. Use TestConfig::getVendorPath() instead. */
+define('TEST_LIBRARY_VENDOR_DIRECTORY', $vendorDirectory);
+
 $request = new Request();
 $config = new ServiceConfig(__DIR__ . '/../');
 $serviceFactory = new ServiceFactory($config);
