@@ -156,13 +156,7 @@ class ShopInstaller implements ShopServiceInterface
      */
     public function insertDemoData()
     {
-        // ESDEV-4167 backwards compatiblity for v6.0-beta.1 release
-        $encodingOfSql = $this->detectEncodingOfFile($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/demodata.sql");
-        if ($encodingOfSql === 'ISO-8859-1') {
-            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/demodata.sql", 'latin1');
-        } else {
-            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/demodata.sql");
-        }
+        $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/demodata.sql");
     }
 
     /**
@@ -170,13 +164,7 @@ class ShopInstaller implements ShopServiceInterface
      */
     public function convertToInternational()
     {
-        // ESDEV-4167 backwards compatiblity for v6.0-beta.1 release
-        $encodingOfSql = $this->detectEncodingOfFile($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/en.sql");
-        if ($encodingOfSql === 'ISO-8859-1') {
-            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/en.sql");
-        } else {
-            $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/en.sql", 'latin1');
-        }
+        $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/en.sql", 'latin1');
     }
 
     /**
