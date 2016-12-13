@@ -125,7 +125,8 @@ class ShopInstaller implements ShopServiceInterface
         $baseEditionPathProvider = new EditionPathProvider(new EditionRootPathProvider(new EditionSelector(EditionSelector::COMMUNITY)));
         $encodingOfSqls = $this->detectEncodingOfFile($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql");
 
-        $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/en.sql", 'latin1');
+        $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/database_schema.sql");
+        $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql");
 
         $testConfig = new TestConfig();
         $vendorDir = $testConfig->getVendorDirectory();
