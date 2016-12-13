@@ -125,15 +125,7 @@ class ShopInstaller implements ShopServiceInterface
         $baseEditionPathProvider = new EditionPathProvider(new EditionRootPathProvider(new EditionSelector(EditionSelector::COMMUNITY)));
         $encodingOfSqls = $this->detectEncodingOfFile($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql");
 
-        // ESDEV-4167 backwards compatiblity for v6.0-beta.1 release
-        if ($encodingOfSqls === 'ISO-8859-1') {
-            $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/database_schema.sql", 'latin1');
-            $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql", 'latin1');
-            $this->convertToUtf();
-        } else {
-            $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/database_schema.sql");
-            $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql");
-        }
+        $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/en.sql", 'latin1');
 
         $testConfig = new TestConfig();
         $vendorDir = $testConfig->getVendorDirectory();
