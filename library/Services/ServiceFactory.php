@@ -53,7 +53,7 @@ class ServiceFactory
     public function createService($serviceClass)
     {
         $className = $serviceClass;
-        if (!class_exists($serviceClass)) {
+        if (!$this->isNamespacedClass($serviceClass)) {
             // Used for backwards compatibility.
             $className = $this->formClassName($serviceClass);
         }
@@ -87,5 +87,15 @@ class ServiceFactory
     protected function getServiceConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * @param string $className
+     *
+     * @return bool
+     */
+    private static function isNamespacedClass($className)
+    {
+        return strpos($className, '\\') !== false;
     }
 }
