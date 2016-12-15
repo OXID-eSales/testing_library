@@ -94,7 +94,7 @@ class ServiceFactory
      *
      * @return bool
      */
-    private static function isNamespacedClass($className)
+    private function isNamespacedClass($className)
     {
         return strpos($className, '\\') !== false;
     }
