@@ -21,7 +21,6 @@
 
 namespace OxidEsales\TestingLibrary\Tests\Integration\Services\Files;
 
-use org\bovigo\vfs\vfsStream;
 use OxidEsales\TestingLibrary\Services\Files\Remove;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
@@ -31,7 +30,7 @@ class RemoveTest extends PHPUnit_Framework_TestCase
 {
     public function testRemoveWhenNoFilesProvided()
     {
-        $rootPath = $this->prepareStructureAndReturnPath();
+        $rootPath = FilesHelper::prepareStructureAndReturnPath();
         $this->initializeFilesRemoval($rootPath, []);
         $this->assertTrue(file_exists($rootPath.'/testDirectory/someFile.php'), "$rootPath/testDirectory/someFile.php");
         $this->assertTrue(file_exists($rootPath.'/testDirectory/someFile2.php'), "$rootPath/testDirectory/someFile2.php");
@@ -39,26 +38,10 @@ class RemoveTest extends PHPUnit_Framework_TestCase
 
     public function testRemoveFile()
     {
-        $rootPath = $this->prepareStructureAndReturnPath();
+        $rootPath = FilesHelper::prepareStructureAndReturnPath();
         $this->initializeFilesRemoval($rootPath, [$rootPath.'/testDirectory/someFile.php']);
         $this->assertFalse(file_exists($rootPath.'/testDirectory/someFile.php'), "$rootPath/testDirectory/someFile.php");
         $this->assertTrue(file_exists($rootPath.'/testDirectory/someFile2.php'), "$rootPath/testDirectory/someFile2.php");
-    }
-
-    /**
-     * @return string
-     */
-    protected function prepareStructureAndReturnPath()
-    {
-        $structure = array(
-            'testDirectory' => [
-                'someFile.php' => 'content',
-                'someFile2.php' => 'content',
-            ]
-        );
-        $vfsStream = vfsStream::setup('root', 777, $structure);
-        $rootPath = $vfsStream->url();
-        return $rootPath;
     }
 
     /**
