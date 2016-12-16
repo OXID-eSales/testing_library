@@ -28,20 +28,18 @@ use PHPUnit_Framework_TestCase;
 
 class ChangeRightsTest extends PHPUnit_Framework_TestCase
 {
-    public function testChangeRightsLeaveSameRightsWhenNoRightsProvided()
-    {
-        $rootPath = FilesHelper::prepareStructureAndReturnPath();
-        $this->initializeFileRightsChange($rootPath, [], '111');
-        $this->assertTrue(is_writable($rootPath.'/testDirectory/someFile.php'), "$rootPath/testDirectory/someFile.php");
-        $this->assertTrue(is_writable($rootPath.'/testDirectory/someFile2.php'), "$rootPath/testDirectory/someFile2.php");
-    }
-
     public function testChangeRightsForOneFile()
     {
         $rootPath = FilesHelper::prepareStructureAndReturnPath();
         $this->initializeFileRightsChange($rootPath, ['/testDirectory/someFile.php'], '111');
         $this->assertFalse(is_writable($rootPath.'/testDirectory/someFile.php'), "$rootPath/testDirectory/someFile.php");
         $this->assertTrue(is_writable($rootPath.'/testDirectory/someFile2.php'), "$rootPath/testDirectory/someFile2.php");
+    }
+
+    public function testChangeRightsWhenFileDoesNotExistDoesNotThrowException()
+    {
+        $rootPath = FilesHelper::prepareStructureAndReturnPath();
+        $this->initializeFileRightsChange($rootPath, ['/testDirectory/someNotExistingFile.php'], '111');
     }
 
     /**
@@ -51,7 +49,13 @@ class ChangeRightsTest extends PHPUnit_Framework_TestCase
     protected function initializeFileRightsChange($rootPath, $files, $rights)
     {
         $changeRightsService = new ChangeRights(new ServiceConfig($rootPath));
-        $request = new Request([ChangeRights::FILES_PARAMETER_PATH => $rootPath, ChangeRights::FILES_PARAMETER_NAME => $files, ChangeRights::FILES_PARAMETER_RIGHTS => $rights]);
+        $request = new Request(
+            [
+                ChangeRights::FILES_PARAMETER_PATH => $rootPath,
+                ChangeRights::FILES_PARAMETER_NAME => $files,
+                ChangeRights::FILES_PARAMETER_RIGHTS => $rights
+            ]
+        );
         $changeRightsService->init($request);
     }
 }

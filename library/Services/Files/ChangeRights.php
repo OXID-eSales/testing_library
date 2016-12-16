@@ -61,7 +61,9 @@ class ChangeRights implements ShopServiceInterface
 
         $pathToShop = $this->getFilesRootPath($filesRootDirectory);
         $filesToUpdate = $this->addPathToFileNames($fileName, $pathToShop);
-        $this->fileSystem->chmod($filesToUpdate, $fileRights);
+        if ($this->fileSystem->exists($filesToUpdate)) {
+            $this->fileSystem->chmod($filesToUpdate, $fileRights);
+        }
     }
 
     /**
