@@ -156,7 +156,7 @@ class DatabaseHandler
     protected function useConfiguredDatabase()
     {
         try {
-            $this->getDbConnection()->exec("USE " . $this->getDbName());
+            $this->getDbConnection()->exec('USE `' . $this->getDbName() . '`');
         } catch (Exception $e) {
             throw new Exception("Could not connect to database " . $this->getDbName());
         }
