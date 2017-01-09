@@ -105,7 +105,9 @@ class DatabaseHandler
     public function query($sql)
     {
         $this->useConfiguredDatabase();
-        return $this->getDbConnection()->query($sql);
+        $return = $this->getDbConnection()->query($sql);
+        $this->checkForDatabaseError($sql, 'query');
+        return $return;
     }
 
     /**
@@ -119,6 +121,7 @@ class DatabaseHandler
     {
         $this->useConfiguredDatabase();
         $success = $this->getDbConnection()->exec($sql);
+        $this->checkForDatabaseError($sql, 'exec');
         return $success;
     }
 
@@ -298,6 +301,23 @@ class DatabaseHandler
                 $output = implode("\n", $output);
                 throw new Exception("Failed to execute command: '$command' with output: '$output' ");
             }
+        }
+    }
+
+    /**
+     * Check for error code in database connection.
+     *
+     * @param string $query
+     * @param string $callingFunctionName
+     *
+     * @throws Exception
+     */
+    protected function checkForDatabaseError($query, $callingFunctionName)
+    {
+        $dbCon = $this->getDbConnection();
+        if (is_a($dbCon, 'PDO') && ('00000' !== $dbCon->errorCode())) {
+            $errorInfo = $dbCon->errorInfo();
+            throw new Exception('PDO error code: ' . $dbCon->errorCode() . ' in function ' . $callingFunctionName . ' -- ' . $errorInfo[2] . ' -- ' . $query);
         }
     }
 }
