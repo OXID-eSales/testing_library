@@ -46,6 +46,6 @@ foreach ($testSuites as $suite) {
     $reportsDir = $suite .'/reports';
     $fileCopier->createEmptyDirectory($reportsDir);
 
-    passthru("$pDepend --summary-xml=$reportsDir/pdepend.xml --ignore=vendor,tests,out $suite/../ $arguments");
+    passthru("$pDepend --summary-xml=$reportsDir/pdepend.xml --ignore=vendor,tests,out $arguments $suite/../");
     passthru("$mcMetrics $reportsDir/pdepend.xml > $reportsDir/metrics.txt");
 }
