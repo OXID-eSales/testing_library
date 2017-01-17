@@ -27,7 +27,12 @@ $fileCopier = new OxidEsales\TestingLibrary\FileCopier();
 
 $arguments = array();
 array_shift($argv);
+$ignore = '--ignore=vendor,tests,out';
 foreach ($argv as $argument) {
+    if (strpos($argument, '--ignore') !== false) {
+        $ignore = $argument;
+        continue;
+    }
     $arguments[] = (strpos($argument, '-') === 0) ? $argument : escapeshellarg($argument);
 }
 $arguments = implode(' ', $arguments);
@@ -46,6 +51,6 @@ foreach ($testSuites as $suite) {
     $reportsDir = $suite .'/reports';
     $fileCopier->createEmptyDirectory($reportsDir);
 
-    passthru("$pDepend --summary-xml=$reportsDir/pdepend.xml --ignore=vendor,tests,out $arguments $suite/../");
+    passthru("$pDepend --summary-xml=$reportsDir/pdepend.xml $ignore $arguments $suite/../");
     passthru("$mcMetrics $reportsDir/pdepend.xml > $reportsDir/metrics.txt");
 }
