@@ -191,7 +191,7 @@ class ShopInstaller implements ShopServiceInterface
      */
     public function setSerialNumber($serialNumber = null)
     {
-        if ($this->getShopConfig()->getVar('edition') !== EditionSelector::COMMUNITY
+        if (strtolower($this->getShopConfig()->getVar('edition')) !== strtolower(EditionSelector::COMMUNITY)
             && class_exists(Serial::class))
         {
             $dbHandler = $this->getDbHandler();
