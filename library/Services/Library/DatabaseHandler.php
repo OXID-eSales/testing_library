@@ -291,16 +291,11 @@ class DatabaseHandler
      */
     protected function executeCommand($command)
     {
-        exec($command, $output, $resultCode);
-
-        if ($resultCode > 0) {
+        try {
+            CliExecutor::executeCommand($command);
+        } catch (Exception $e) {
             sleep(1);
-            exec($command, $output, $resultCode);
-
-            if ($resultCode > 0) {
-                $output = implode("\n", $output);
-                throw new Exception("Failed to execute command: '$command' with output: '$output' ");
-            }
+            CliExecutor::executeCommand($command);
         }
     }
 
