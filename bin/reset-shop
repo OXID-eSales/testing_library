@@ -30,11 +30,3 @@ $serviceCaller->setParameter('addDemoData', 1);
 $serviceCaller->setParameter('turnOnVarnish', $testConfig->shouldEnableVarnish());
 $serviceCaller->setParameter('setupPath', $testConfig->getShopSetupPath());
 $serviceCaller->callService('ShopInstaller');
-
-$serviceCaller = new OxidEsales\TestingLibrary\ServiceCaller($testConfig);
-$serviceCaller->setParameter(
-    OxidEsales\TestingLibrary\Services\Files\ChangeRights::FILES_PARAMETER_NAME,
-    [ 'log' . DIRECTORY_SEPARATOR . 'EXCEPTION_LOG.txt' ]
-);
-$serviceCaller->setParameter(OxidEsales\TestingLibrary\Services\Files\ChangeRights::FILES_PARAMETER_RIGHTS, '777');
-$serviceCaller->callService(OxidEsales\TestingLibrary\Services\Files\ChangeRights::class);
