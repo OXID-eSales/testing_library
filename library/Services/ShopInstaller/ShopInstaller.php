@@ -191,7 +191,9 @@ class ShopInstaller implements ShopServiceInterface
      */
     public function setSerialNumber($serialNumber = null)
     {
-        if (class_exists('OxidEsales\EshopProfessional\Core\Serial')) {
+        if ($this->getShopConfig()->getVar('edition') !== EditionSelector::COMMUNITY
+            && class_exists(Serial::class))
+        {
             $dbHandler = $this->getDbHandler();
 
             $shopId = $this->getShopId();
