@@ -35,6 +35,7 @@ use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
+use OxidEsales\TestingLibrary\Services\Library\CliExecutor;
 use OxidEsales\EshopProfessional\Core\Serial;
 use OxidEsales\EshopCommunity\Setup\Setup;
 use OxidEsales\TestingLibrary\TestConfig;
@@ -131,8 +132,8 @@ class ShopInstaller implements ShopServiceInterface
         $testConfig = new TestConfig();
         $vendorDir = $testConfig->getVendorDirectory();
 
-        exec("{$vendorDir}/bin/oe-eshop-facts oe-eshop-db_migrate");
-        exec("{$vendorDir}/bin/oe-eshop-facts oe-eshop-db_views_regenerate");
+        CliExecutor::executeCommand("{$vendorDir}/bin/oe-eshop-facts oe-eshop-db_migrate");
+        CliExecutor::executeCommand("{$vendorDir}/bin/oe-eshop-facts oe-eshop-db_views_regenerate");
     }
 
     /**
