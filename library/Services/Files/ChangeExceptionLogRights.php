@@ -26,19 +26,16 @@ use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use oxRegistry;
 
-class ChangeRights implements ShopServiceInterface
+class ChangeExceptionLogRights implements ShopServiceInterface
 {
-    const FILES_PARAMETER_PATH = 'filesRootPath';
-
-    const FILES_PARAMETER_NAME = 'files';
-
-    const FILES_PARAMETER_RIGHTS = 'rights';
-
     /** @var ServiceConfig */
     private $serviceConfig;
 
     /** @var Filesystem */
     private $fileSystem;
+
+    /** @var String partly path to exception log */
+    const EXCEPTION_LOG_PATH = 'log' . DIRECTORY_SEPARATOR . 'EXCEPTION_LOG.txt';
 
     /**
      * Remove constructor.
@@ -55,47 +52,14 @@ class ChangeRights implements ShopServiceInterface
      */
     public function init($request)
     {
-        $fileRights = $request->getParameter(static::FILES_PARAMETER_RIGHTS);
-        $fileName = $request->getParameter(static::FILES_PARAMETER_NAME);
-        $filesRootDirectory = $request->getParameter(static::FILES_PARAMETER_PATH);
+        $fileSystem = new Filesystem();
 
-        $pathToShop = $this->getFilesRootPath($filesRootDirectory);
-        $filesToUpdate = $this->addPathToFileNames($fileName, $pathToShop);
-        if ($this->fileSystem->exists($filesToUpdate)) {
-            $this->fileSystem->chmod($filesToUpdate, $fileRights);
+        $pathToExceptionLog = $this->serviceConfig->getShopDirectory()
+            . DIRECTORY_SEPARATOR . self::EXCEPTION_LOG_PATH;
+
+        if (!$fileSystem->exists([$pathToExceptionLog])) {
+            $fileSystem->touch($pathToExceptionLog);
         }
-    }
-
-    /**
-     * @param array $filesName
-     * @param string $filesRootPath
-     *
-     * @return array
-     */
-    private function addPathToFileNames($filesName, $filesRootPath)
-    {
-        $fileNameWithPath = [];
-
-        foreach ($filesName as $fileName) {
-            $fileNameWithPath[] = $filesRootPath . DIRECTORY_SEPARATOR . $fileName;
-        }
-
-        return $fileNameWithPath;
-    }
-
-    /**
-     * Return path to the directory where files are located.
-     *
-     * @param string $filesRootDirectory
-     *
-     * @return string
-     */
-    private function getFilesRootPath($filesRootDirectory)
-    {
-        if (!$filesRootDirectory) {
-            $filesRootDirectory = oxRegistry::get("oxConfigFile")->getVar('sShopDir');
-        }
-
-        return $filesRootDirectory;
+        $fileSystem->chmod($pathToExceptionLog, 0777);
     }
 }
