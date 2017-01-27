@@ -26,6 +26,12 @@ use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use oxRegistry;
 
+/**
+ * Calling service with different user might create exception log
+ * which is not writable for apache user.
+ * Update rights so apache user could always write to log.
+ * Create log as apache user would create it unwritable for CLI user.
+ */
 class ChangeExceptionLogRights implements ShopServiceInterface
 {
     /** @var ServiceConfig */

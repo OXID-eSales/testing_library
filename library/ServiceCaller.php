@@ -24,7 +24,7 @@ namespace OxidEsales\TestingLibrary;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\ServiceFactory;
-use Symfony\Component\Filesystem\Filesystem;
+use OxidEsales\TestingLibrary\Services\Files\ChangeExceptionLogRights;
 
 /**
  * Class for calling services. Services must already exist in shop.
@@ -98,12 +98,13 @@ class ServiceCaller
         if ($testConfig->getRemoteDirectory()) {
             $response = $this->callRemoteService($serviceName);
         } else {
-            $this->fixExceptionLogRights();
+            $this->callLocalService(ChangeExceptionLogRights::class);
 
             $response = $this->callLocalService($serviceName);
         }
 
         $this->parameters = array();
+
         return $response;
     }
 
@@ -159,7 +160,7 @@ class ServiceCaller
 
         return $service->init($request);
     }
-    
+
     /**
      * Returns tests config object.
      *
@@ -197,25 +198,5 @@ class ServiceCaller
         }
 
         return $result;
-    }
-
-    /**
-     * Calling service with different user might create exception log
-     * which is not writable for apache user.
-     * Update rights so apache user could always write to log.
-     * Create log as apache user would create it unwritable for CLI user.
-     */
-    private function fixExceptionLogRights()
-    {
-        $fileSystem = new Filesystem();
-
-        $pathToExceptionLog = $this->getTestConfig()->getShopPath()
-                              . DIRECTORY_SEPARATOR . 'log'
-                              . DIRECTORY_SEPARATOR . 'EXCEPTION_LOG.txt';
-
-        if (!$fileSystem->exists([$pathToExceptionLog])) {
-            $fileSystem->touch($pathToExceptionLog);
-        }
-        $fileSystem->chmod($pathToExceptionLog, 0777);
     }
 }
