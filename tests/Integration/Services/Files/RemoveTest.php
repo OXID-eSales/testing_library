@@ -30,7 +30,7 @@ class RemoveTest extends PHPUnit_Framework_TestCase
 {
     public function testRemoveWhenNoFilesProvided()
     {
-        $rootPath = FilesHelper::prepareStructureAndReturnPath();
+        $rootPath = FilesHelper::prepareStructureAndReturnPath($this->getDirectoryStructure());
         $this->initializeFilesRemoval($rootPath, []);
         $this->assertTrue(file_exists($rootPath.'/testDirectory/someFile.php'), "$rootPath/testDirectory/someFile.php");
         $this->assertTrue(file_exists($rootPath.'/testDirectory/someFile2.php'), "$rootPath/testDirectory/someFile2.php");
@@ -38,7 +38,7 @@ class RemoveTest extends PHPUnit_Framework_TestCase
 
     public function testRemoveFile()
     {
-        $rootPath = FilesHelper::prepareStructureAndReturnPath();
+        $rootPath = FilesHelper::prepareStructureAndReturnPath($this->getDirectoryStructure());
         $this->initializeFilesRemoval($rootPath, [$rootPath.'/testDirectory/someFile.php']);
         $this->assertFalse(file_exists($rootPath.'/testDirectory/someFile.php'), "$rootPath/testDirectory/someFile.php");
         $this->assertTrue(file_exists($rootPath.'/testDirectory/someFile2.php'), "$rootPath/testDirectory/someFile2.php");
@@ -53,5 +53,20 @@ class RemoveTest extends PHPUnit_Framework_TestCase
         $removeService = new Remove(new ServiceConfig($rootPath));
         $request = new Request([Remove::FILES_PARAMETER_NAME => $files]);
         $removeService->init($request);
+    }
+
+    /**
+     * Get directory structure to mock for the tests.
+     *
+     * @return array
+     */
+    private function getDirectoryStructure()
+    {
+        return [
+            'testDirectory' => [
+                'someFile.php' => 'content',
+                'someFile2.php' => 'content',
+            ]
+        ];
     }
 }
