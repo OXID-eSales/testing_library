@@ -885,7 +885,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
         if ($this->getSelectedLabel($sSelectLocator) != $sLanguage) {
             $this->selectAndWaitFrame($sSelectLocator, "label=$sLanguage", "edit");
         }
-        usleep(100000);
+        usleep(300000);
         $this->checkForErrors();
     }
 
