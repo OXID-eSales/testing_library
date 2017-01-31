@@ -1023,7 +1023,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     {
         $this->click($locator);
         $this->waitForFrameAfterAction($frame);
-        $this->waitForPageToLoad();
         $this->checkForErrors();
     }
 
