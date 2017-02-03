@@ -110,8 +110,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
 
         $currentTestsSuitePath = $this->getSuitePath();
         if (self::$testsSuitePath !== $currentTestsSuitePath) {
-            self::$testsSuitePath = $currentTestsSuitePath;
             $this->setUpTestsSuite($currentTestsSuitePath);
+            self::$testsSuitePath = $currentTestsSuitePath;
         }
         $this->getTranslator()->setLanguage($this->translateLanguageId);
 
