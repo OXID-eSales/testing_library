@@ -56,6 +56,7 @@ class Cache
     public function clearTemporaryDirectory()
     {
         if ($sCompileDir = oxRegistry::get('oxConfigFile')->getVar('sCompileDir')) {
+            CliExecutor::executeCommand("sudo chmod 777 -R $sCompileDir");
             $this->removeTemporaryDirectory($sCompileDir, false);
         }
     }
