@@ -882,6 +882,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     protected function _changeAdminLanguage($sLanguage, $sSelectLocator)
     {
         $this->selectAndWaitFrame($sSelectLocator, "label=$sLanguage", "edit");
+        $this->waitForElement($sSelectLocator);
         if ($this->getSelectedLabel($sSelectLocator) != $sLanguage) {
             $this->selectAndWaitFrame($sSelectLocator, "label=$sLanguage", "edit");
         }
