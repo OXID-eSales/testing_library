@@ -26,6 +26,11 @@
             testData
             testSql;
 
+        if (        partial_module_paths
+        has module configured?)
+            :Activate the module;
+        endif;
+
         :Dump database: Dump-3;
 
         while (Run all tests)
