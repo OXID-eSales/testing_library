@@ -282,7 +282,7 @@ tests directory and it will be executed.
 **Note:**
 
   Use addTestData() method and testSql directory to change environment for Acceptance tests.
-  Read more in a section [Writing acceptance tests.](#writing-acceptance-tests)
+  Read more in a section Writing acceptance tests.
 
 Writing Tests
 -------------
