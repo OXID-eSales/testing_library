@@ -272,12 +272,17 @@ Changing PHPUnit parameters
 To change PHPUnit parameters, add phpunit.xml file inside tests
 directory and it will be used.
 
-Execution before test run with additional.inc.php
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Execution before UNIT test run with additional.inc.php
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Testing library gives possibility to make some actions before test run.
+Testing library gives possibility to make some actions before UNIT test run.
 So if there is a need to to do that, add additional.inc.php file into
 tests directory and it will be executed.
+
+**Note:**
+
+  Use addTestData() method and testSql directory to change environment for Acceptance tests.
+  Read more in a section [Writing acceptance tests.](#writing-acceptance-tests)
 
 Writing Tests
 -------------
