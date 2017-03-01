@@ -153,11 +153,13 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
-     * Inserts demo data to shop.
+     * Inserts test demo data to shop.
      */
     public function insertDemoData()
     {
-        $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/demodata.sql");
+        $testConfig = new TestConfig();
+        $testDirectory = $testConfig->getEditionTestsPath($testConfig->getShopEdition());
+        $this->getDbHandler()->import($testDirectory . "/Fixtures/testdemodata.sql");
     }
 
     /**
