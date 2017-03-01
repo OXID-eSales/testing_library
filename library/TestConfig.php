@@ -183,6 +183,26 @@ class TestConfig
     }
 
     /**
+     * Returns specific edition tests directory path.
+     *
+     * @param string $edition
+     *
+     * @return string
+     */
+    public function getEditionTestsPath($edition)
+    {
+        $testsPath = $this->getShopTestsPath();
+
+        if ($edition === EditionSelector::PROFESSIONAL) {
+            $testsPath = $this->getVendorDirectory() . '/oxid-esales/oxideshop-pe/Tests/';
+        } elseif ($edition === EditionSelector::ENTERPRISE) {
+            $testsPath = $this->getVendorDirectory() . '/oxid-esales/oxideshop-ee/Tests/';
+        }
+
+        return $testsPath;
+    }
+
+    /**
      * Returns array of partial paths to all defined modules.
      * Paths starts from shop/dir/modules/ folder.
      * To get full path to module append shop/dir/modules/ to the start of each module path returned.
