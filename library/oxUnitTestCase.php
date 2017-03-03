@@ -312,6 +312,18 @@ class oxUnitTestCase extends oxBaseTestCase
     }
 
     /**
+     * Reset the shop configuration and reload it with new shop id
+     * @param integer $iShopId
+     */
+    public function setShopConfig($iShopId)
+    {
+        $oConfig = oxRegistry::getConfig();
+        $oConfig->setShopId($iShopid);
+        $oConfig->setConfigParam('_blInit', false);
+        $oConfig->init();
+    }
+
+    /**
      * Set static time value for testing.
      *
      * @param int $time
