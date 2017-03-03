@@ -91,6 +91,12 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     private static $moduleLoader = null;
 
     /**
+     * Configuation object for test parameters
+     * @var oxTestConfig
+     */
+    private $oTestConfig;
+
+    /**
      * Constructs a test case with the given name.
      *
      * @param string $name
@@ -1577,10 +1583,12 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function dumpDB($sTmpPrefix = null)
     {
-        $oServiceCaller = new oxServiceCaller($this->getTestConfig());
-        $oServiceCaller->setParameter('dumpDB', true);
-        $oServiceCaller->setParameter('dump-prefix', $sTmpPrefix);
-        $oServiceCaller->callService('ShopPreparation', 1);
+        if ($this->oTestConfig->shouldRestoreAfterAcceptanceTests()) {
+            $oServiceCaller = new oxServiceCaller($this->getTestConfig());
+            $oServiceCaller->setParameter('dumpDB', true);
+            $oServiceCaller->setParameter('dump-prefix', $sTmpPrefix);
+            $oServiceCaller->callService('ShopPreparation', 1);
+        }
     }
 
     /**
@@ -1594,10 +1602,13 @@ class oxAcceptanceTestCase extends oxMinkWrapper
      */
     public function restoreDB($sTmpPrefix = null)
     {
-        $oServiceCaller = new oxServiceCaller($this->getTestConfig());
-        $oServiceCaller->setParameter('restoreDB', true);
-        $oServiceCaller->setParameter('dump-prefix', $sTmpPrefix);
-        $oServiceCaller->callService('ShopPreparation', 1);
+
+        if ($this->oTestConfig->shouldRestoreAfterAcceptanceTests()) {
+            $oServiceCaller = new oxServiceCaller($this->getTestConfig());
+            $oServiceCaller->setParameter('restoreDB', true);
+            $oServiceCaller->setParameter('dump-prefix', $sTmpPrefix);
+            $oServiceCaller->callService('ShopPreparation', 1);
+        }
     }
 
     /**
