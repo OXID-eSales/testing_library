@@ -316,6 +316,24 @@ class oxTestConfig
     }
 
     /**
+     * Whether to dumb and restore the db when running the acceptance tests
+     * @return bool|null
+     */
+    public function shouldRestoreAfterAcceptanceTests()
+    {
+        return (bool)$this->getValue('restore_after_acceptance_tests');
+    }
+
+    /**
+     * Whether to dumb and restore the db after all tests finished in a test suite
+     * @return bool|null
+     */
+    public function shouldRestoreAfterTests()
+    {
+        return (bool)$this->getValue('restore_after_tests');
+    }
+
+    /**
      * Whether to activate all modules when running tests.
      *
      * @return bool
