@@ -42,6 +42,12 @@ optional_parameters:
     # If specified, this database is used instead of real one for unit and integration tests.
     test_database_name:
 
+    # Whether to dump and restore the database when running the acceptance tests.
+    restore_after_acceptance_tests: true
+
+    # Whether to dump and restore the database after all tests are finished in a testsuite
+    restore_after_tests: true
+
     # If php has no write access to /tmp folder, provide alternative temp folder for tests.
     tmp_path: /tmp/oxid_test_library/
 
