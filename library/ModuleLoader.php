@@ -62,6 +62,9 @@ class ModuleLoader
         foreach ($modulesToActivate as $modulePath) {
             $this->installModule($modulePath);
         }
+
+        // Reset reverse proxy backend as module activation sets it to flush mode.
+        Registry::set('oxReverseProxyBackend', null);
     }
 
     /**
