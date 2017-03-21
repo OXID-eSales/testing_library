@@ -133,7 +133,9 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
         }
 
         $database = oxDb::getDb();
-        $database->execute("DROP TABLE `$table`");
+        if ($database->getOne("SHOW TABLES LIKE '$table'")) {
+            $database->execute("DROP TABLE `$table`");
+        }
 
         $databaseHandler = $this->getDatabaseHandler();
         $directory = $this->getDumpDirectory();
