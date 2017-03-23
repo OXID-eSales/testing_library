@@ -73,6 +73,21 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /** @var string Tests suite path. */
     protected static $testsSuitePath = '';
 
+    /** @var  array All possible errors/warnings which might appear in the HTML due to some error */
+    protected $errorsInPage = array(
+        "<b>Warning</b>: " => "PHP Warning is in the page",
+        "Warning: " => "PHP Warning is in the page",
+        "Fatal error: " => "PHP Fatal error is in the page",
+        "Catchable fatal error: " => " Catchable fatal error is in the page",
+        "Notice: " => "PHP Notice is in the page",
+        "exception '" => "Uncaught exception is in the page",
+        "does not exist or is not accessible!" => "Warning about not existing function is in the page ",
+        "ERROR: Tran" => "Missing translation for constant (ERROR: Translation for...)",
+        "EXCEPTION_" => "Exception - component not found (EXCEPTION_)",
+        "oxException" => "Exception is in page",
+        "Smarty error:" => "Smarty error is in page"
+    );
+
     /** @var int How many retry times are left. */
     private $retryTimesLeft;
 
@@ -1677,19 +1692,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     public function checkForErrors()
     {
         $sHTML = $this->getHtmlSource();
-        $aErrorTexts = array(
-            "<b>Warning</b>: " => "PHP Warning is in the page",
-            "Warning: " => "PHP Warning is in the page",
-            "Fatal error: " => "PHP Fatal error is in the page",
-            "Catchable fatal error: " => " Catchable fatal error is in the page",
-            "Notice: " => "PHP Notice is in the page",
-            "exception '" => "Uncaught exception is in the page",
-            "does not exist or is not accessible!" => "Warning about not existing function is in the page ",
-            "ERROR: Tran" => "Missing translation for constant (ERROR: Translation for...)",
-            "EXCEPTION_" => "Exception - component not found (EXCEPTION_)",
-            "oxException" => "Exception is in page",
-            "Smarty error:" => "Smarty error is in page"
-        );
+        $aErrorTexts = $this->errorsInPage;
 
         foreach ($aErrorTexts as $sError => $sMessage) {
             if (strpos($sHTML, $sError) !== false) {
