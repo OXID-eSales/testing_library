@@ -38,7 +38,8 @@ class ServiceFactoryTest extends PHPUnit_Framework_TestCase
                         public function init($request) {}
                     }'
                 )
-            )
+            ),
+            'bootstrap.php' => ''
         );
 
         vfsStream::setup('root', 777, $structure);
@@ -59,7 +60,11 @@ class ServiceFactoryTest extends PHPUnit_Framework_TestCase
         $message = "Service TestService not found in path vfs://root/TestService/TestService.php!";
         $this->setExpectedException('Exception', $message);
 
-        vfsStream::setup('root', 777);
+        $structure = array(
+            'bootstrap.php' => ''
+        );
+
+        vfsStream::setup('root', 777, $structure);
 
         /** @var ServiceConfig|PHPUnit_Framework_MockObject_MockObject $config */
         $config = $this->getMock('ServiceConfig', array('getServicesDirectory', 'getShopDirectory'));
