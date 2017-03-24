@@ -328,9 +328,9 @@ class oxTestConfig
      * Whether to dumb and restore the db after all tests finished in a test suite
      * @return bool|null
      */
-    public function shouldRestoreAfterTests()
+    public function shouldRestoreAfterUnitTests()
     {
-        return (bool)$this->getValue('restore_after_tests');
+        return (bool)$this->getValue('restore_after_unit_tests');
     }
 
     /**

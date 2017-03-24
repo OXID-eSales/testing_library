@@ -97,7 +97,7 @@ class oxUnitTestCase extends oxBaseTestCase
         }
         oxRegistry::set("oxUtilsDate", new modOxUtilsDate());
 
-        if ($testConfig->shouldRestoreAfterTests()) {
+        if ($testConfig->shouldRestoreAfterUnitTests()) {
             $this->backupDatabase();
         }
 
@@ -182,7 +182,7 @@ class oxUnitTestCase extends oxBaseTestCase
     {
         self::getShopStateBackup()->resetStaticVariables();
         $testConfig = self::getStaticTestConfig();
-        if ($testConfig->shouldRestoreAfterTests()) {
+        if ($testConfig->shouldRestoreAfterUnitTests()) {
             $dbRestore = self::_getDbRestore();
             $dbRestore->restoreDB();
         }
@@ -503,7 +503,7 @@ class oxUnitTestCase extends oxBaseTestCase
             }
         }
 
-        if ($tablesForCleanup = $this->getTablesForCleanup() && $this->getTestConfig()->shouldRestoreAfterTests()) {
+        if ($tablesForCleanup = $this->getTablesForCleanup() && $this->getTestConfig()->shouldRestoreAfterUnitTests()) {
             $dbRestore = $this->_getDbRestore();
             foreach ($tablesForCleanup as $sTable) {
                 $dbRestore->restoreTable($sTable);

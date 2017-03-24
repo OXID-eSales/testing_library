@@ -39,11 +39,11 @@ optional_parameters:
     # Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it.
     restore_shop_after_tests_suite: false
 
-    # Whether to dump and restore the database when running the acceptance tests.
+    # Whether to dump and restore the database after a single acceptance test.
     restore_after_acceptance_tests: true
 
-    # Whether to dump and restore the database after all tests are finished in a testsuite
-    restore_after_tests: true
+    # Whether to dump and restore the database after all tests are finished in a single unit, integration test suite.
+    restore_after_unit_tests: true
 
     # If php has no write access to /tmp folder, provide alternative temp folder for tests.
     tmp_path: /tmp/oxid_test_library/
