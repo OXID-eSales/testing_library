@@ -107,6 +107,8 @@ class oxAcceptanceTestCase extends oxMinkWrapper
     {
         parent::__construct($name, $data, $dataName);
 
+        $this->oTestConfig = $this->getTestConfig();
+
         $this->retryTimesLeft = $this->retryTimes;
     }
 
