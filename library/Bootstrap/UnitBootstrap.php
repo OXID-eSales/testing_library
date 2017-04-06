@@ -57,7 +57,7 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
         {
             parent::prepareShop();
 
-            $shopConfig = \oxRegistry::get("oxConfigFile");
+            $shopConfig = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
             $shopConfig->setVar('iUtfMode', 1);
             if ($testDatabase = $this->getTestConfig()->getTestDatabaseName()) {
                 $shopConfig->setVar('dbName', $testDatabase);
@@ -69,8 +69,8 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
          */
         public function initializeConfig()
         {
-            $config = \oxRegistry::getConfig();
-            $configFile = \oxRegistry::get("oxConfigFile");
+            $config = \OxidEsales\Eshop\Core\Registry::getConfig();
+            $configFile = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
             $config->reinitialize();
             $config->setConfigParam('iUtfMode', $configFile->getVar('iUtfMode'));
             $config->setConfigParam('dbName', $configFile->getVar('dbName'));
@@ -106,7 +106,7 @@ namespace {
     {
         $shopDirectory = null;
         if (defined('TEST_PREPARATION_FINISHED')) {
-            $config = Registry::getConfig();
+            $config = \OxidEsales\Eshop\Core\Registry::getConfig();
             $shopDirectory = $config->getConfigParam('sShopDir');
         }
         return rtrim($shopDirectory ?: OX_BASE_PATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;

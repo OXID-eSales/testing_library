@@ -20,7 +20,7 @@
  */
 namespace OxidEsales\TestingLibrary\Services\ModuleInstaller;
 
-use oxRegistry;
+
 use oxModuleCache;
 use oxModuleInstaller;
 use oxModuleList;
@@ -50,7 +50,7 @@ class ModuleInstaller implements ShopServiceInterface
     public function init($request)
     {
         $modulesToActivate = $request->getParameter("modulestoactivate");
-        $moduleDirectory = oxRegistry::getConfig()->getModulesDir();
+        $moduleDirectory = \OxidEsales\Eshop\Core\Registry::getConfig()->getModulesDir();
 
         $this->prepareModulesForActivation($moduleDirectory);
         foreach ($modulesToActivate as $modulePath) {
@@ -69,8 +69,8 @@ class ModuleInstaller implements ShopServiceInterface
     {
         $module = $this->loadModule($modulePath);
 
-        $moduleCache = oxNew('oxModuleCache', $module);
-        $moduleInstaller = oxNew('oxModuleInstaller', $moduleCache);
+        $moduleCache = oxNew(\OxidEsales\Eshop\Core\Module\ModuleCache::class, $module);
+        $moduleInstaller = oxNew(\OxidEsales\Eshop\Core\Module\ModuleInstaller::class, $moduleCache);
         if (!$moduleInstaller->activate($module)) {
             throw new Exception("Error on module installation: " . $module->getId());
         }
@@ -83,7 +83,7 @@ class ModuleInstaller implements ShopServiceInterface
      */
     private function prepareModulesForActivation($moduleDirectory)
     {
-        $moduleList = oxNew("oxModuleList");
+        $moduleList = oxNew(\OxidEsales\Eshop\Core\Module\ModuleList::class);
         $moduleList->getModulesFromDir($moduleDirectory);
     }
 
@@ -97,7 +97,7 @@ class ModuleInstaller implements ShopServiceInterface
      */
     private function loadModule($modulePath)
     {
-        $module = oxNew('oxModule');
+        $module = oxNew(\OxidEsales\Eshop\Core\Module\Module::class);
         if (!$module->loadByDir($modulePath)) {
             throw new Exception("Module not found");
         }

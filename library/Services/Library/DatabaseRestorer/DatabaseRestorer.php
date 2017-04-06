@@ -21,7 +21,7 @@
 namespace OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer;
 
 use oxDb;
-use oxRegistry;
+
 use Exception;
 
 /**
@@ -49,7 +49,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
         $tables = $this->getDbTables();
 
         if (empty($tables)) {
-            $dbName = oxRegistry::getConfig()->getConfigParam('dbName');
+            $dbName = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('dbName');
             throw new Exception("no tables on '$dbName'' database");
         }
 
@@ -317,7 +317,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
         $sSelect = 'CHECKSUM TABLE `' . implode("`, `", $aTables) . '`';
         $aResults = $oDb->getAll($sSelect);
 
-        $sDbName = oxRegistry::getConfig()->getConfigParam('dbName');
+        $sDbName = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('dbName');
         $aChecksum = array();
         foreach ($aResults as $aResult) {
             $sTable = str_replace($sDbName . '.', '', $aResult['Table']);

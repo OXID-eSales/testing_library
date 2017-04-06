@@ -16,15 +16,15 @@
  * along with OXID eSales Testing Library. If not, see <http://www.gnu.org/licenses/>.
  *
  * @link http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2014
+ * @copyright (C) OXID eSales AG 2003-2017
  */
 
 namespace OxidEsales\TestingLibrary\Bootstrap;
 
 require_once TEST_LIBRARY_PATH .'test_utils.php';
 
-use oxConfig;
-use oxRegistry;
+
+
 use OxidEsales\TestingLibrary\TestConfig;
 use OxidEsales\TestingLibrary\FileCopier;
 use OxidEsales\TestingLibrary\ServiceCaller;
@@ -64,9 +64,9 @@ abstract class BootstrapBase
             $this->installShop();
         }
 
-        /** @var oxConfig $config */
-        $config = oxNew('oxConfig');
-        oxRegistry::set("oxConfig", $config);
+        /** @var \OxidEsales\Eshop\Core\Config $config */
+        $config = oxNew(\OxidEsales\Eshop\Core\Config::class);
+        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Config::class, $config);
 
         /** Reset static variable in oxSuperCfg class, which is base class for every class. */
         $config->setConfig($config);
@@ -93,8 +93,6 @@ abstract class BootstrapBase
 
         $shopPath = $testConfig->getShopPath();
         require_once $shopPath .'bootstrap.php';
-
-        #\oxRegistry::set("oxConfig", new \oxConfig());
 
         $tempDirectory = $testConfig->getTempDirectory();
         if ($tempDirectory && $tempDirectory != '/') {

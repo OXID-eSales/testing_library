@@ -24,7 +24,7 @@ namespace OxidEsales\TestingLibrary;
 use Doctrine\DBAL\ConnectionException;
 use modOXID;
 use modOxUtilsDate;
-use oxConfig;
+
 use oxDb;
 use OxidEsales\EshopCommunity\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\EshopCommunity\Core\Database;
@@ -32,7 +32,7 @@ use OxidEsales\EshopCommunity\Core\Exception\DatabaseException;
 use OxidEsales\EshopCommunity\Core\Exception\StandardException;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
-use oxRegistry;
+
 use oxSession;
 use oxTestModules;
 use oxTestsStaticCleaner;
@@ -116,15 +116,15 @@ abstract class UnitTestCase extends BaseTestCase
             $oTestModuleLoader = $this->_getModuleLoader();
             $oTestModuleLoader->activateModules($testConfig->getModulesToActivate());
         }
-        oxRegistry::set("oxUtilsDate", new modOxUtilsDate());
+        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\UtilsDate::class, new modOxUtilsDate());
 
         if ($testConfig->shouldRestoreAfterUnitTests()) {
             $this->backupDatabase();
         }
 
-        oxRegistry::getUtils()->commitFileCache();
+        \OxidEsales\Eshop\Core\Registry::getUtils()->commitFileCache();
 
-        $oxLang = oxRegistry::getLang();
+        $oxLang = \OxidEsales\Eshop\Core\Registry::getLang();
         $oxLang->resetBaseLanguage();
 
         $this->getShopStateBackup()->backupRegistry();
@@ -140,8 +140,8 @@ abstract class UnitTestCase extends BaseTestCase
     protected function setUp()
     {
         parent::setUp();
-        oxRegistry::getUtils()->cleanStaticCache();
-        oxRegistry::set('oxtableviewnamegenerator', null);
+        \OxidEsales\Eshop\Core\Registry::getUtils()->cleanStaticCache();
+        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\TableViewNameGenerator::class, null);
 
         $reportingLevel = (int) getenv('TRAVIS_ERROR_LEVEL');
         error_reporting($reportingLevel ? $reportingLevel : ((E_ALL ^ E_NOTICE) | E_STRICT));
@@ -289,7 +289,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function setConfigParam($parameterName, $value = null)
     {
-        $config = oxRegistry::getConfig();
+        $config = \OxidEsales\Eshop\Core\Registry::getConfig();
         $config->setConfigParam($parameterName, $value);
     }
 
@@ -331,7 +331,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function setTime($time = null)
     {
-        oxRegistry::get("oxUtilsDate")->setTime($time);
+        \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsDate::class)->setTime($time);
     }
 
     /**
@@ -341,7 +341,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function getTime()
     {
-        return oxRegistry::get("oxUtilsDate")->getTime();
+        return \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsDate::class)->getTime();
     }
 
     /**
@@ -351,7 +351,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public static function getSession()
     {
-        return oxRegistry::getSession();
+        return \OxidEsales\Eshop\Core\Registry::getSession();
     }
 
     /**
@@ -361,7 +361,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public static function getConfig()
     {
-        return oxRegistry::getConfig();
+        return \OxidEsales\Eshop\Core\Registry::getConfig();
     }
 
     /**
@@ -418,7 +418,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function getCacheBackend()
     {
-        return oxRegistry::get('oxCacheBackend');
+        return \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\Cache\Generic\Cache::class);
     }
 
     /**
@@ -428,7 +428,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function setLanguage($languageId)
     {
-        $oxLang = oxRegistry::getLang();
+        $oxLang = \OxidEsales\Eshop\Core\Registry::getLang();
         $oxLang->setBaseLanguage($languageId);
         $oxLang->setTplLanguage($languageId);
     }
@@ -440,7 +440,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function getLanguage()
     {
-        return oxRegistry::getLang()->getBaseLanguage();
+        return \OxidEsales\Eshop\Core\Registry::getLang()->getBaseLanguage();
     }
 
     /**
@@ -450,7 +450,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function setTplLanguage($languageId)
     {
-        oxRegistry::getLang()->setTplLanguage($languageId);
+        \OxidEsales\Eshop\Core\Registry::getLang()->setTplLanguage($languageId);
     }
 
     /**
@@ -460,7 +460,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function getTplLanguage()
     {
-        return oxRegistry::getLang()->getTplLanguage();
+        return \OxidEsales\Eshop\Core\Registry::getLang()->getTplLanguage();
     }
 
     /**
@@ -558,7 +558,7 @@ abstract class UnitTestCase extends BaseTestCase
         if (strpos($originalClassName, '\\') === false) {
             $originalClassName = strtolower($originalClassName);
         }
-        $originalClassName = oxRegistry::get('oxUtilsObject')->getClassName($originalClassName);
+        $originalClassName = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsObject::class)->getClassName($originalClassName);
         return parent::getMock($originalClassName, $methods, $arguments, $mockClassName, $callOriginalConstructor, $callOriginalClone, $callAutoload, $cloneArguments, $proxyTarget);
     }
 
@@ -648,7 +648,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function getProxyClassName($superClassName)
     {
-        $superClassName = oxRegistry::get('oxUtilsObject')->getClassName(strtolower($superClassName));
+        $superClassName = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsObject::class)->getClassName(strtolower($superClassName));
         $escapedSuperClassName = str_replace('\\', '_', $superClassName);
         $proxyClassName = "{$escapedSuperClassName}Proxy";
 
@@ -710,7 +710,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function cleanTmpDir()
     {
-        $directory = oxRegistry::getConfig()->getConfigParam('sCompileDir');
+        $directory = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sCompileDir');
         system("rm -f $directory/*.txt");
         system("rm -f $directory/ox*.tmp");
         system("rm -f $directory/*.tpl.php");
@@ -789,10 +789,10 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function addClassExtension($extension, $class)
     {
-        $utilsObject = new oxUtilsObject();
+        $utilsObject = new \OxidEsales\Eshop\Core\UtilsObject();
         $extensions = $utilsObject->getModuleVar("aModules");
 
-        oxRegistry::set($class, null);
+        \OxidEsales\Eshop\Core\Registry::set($class, null);
 
         if ($extensions[strtolower($class)]) {
             $extension = $extensions[strtolower($class)] . '&' . $extension;
@@ -807,9 +807,9 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function removeClassExtension($extension, $class = '')
     {
-        oxRegistry::set($class, null);
+        \OxidEsales\Eshop\Core\Registry::set($class, null);
 
-        $utilsObject = new oxUtilsObject();
+        $utilsObject = new \OxidEsales\Eshop\Core\UtilsObject();
         $extensions = $utilsObject->getModuleVar("aModules");
 
         if (!$extensions) {

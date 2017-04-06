@@ -25,14 +25,14 @@ use Exception;
 use PDO;
 use PDOStatement;
 use PDOException;
-use OxConfigFile;
+use OxidEsales\Eshop\Core\ConfigFile;
 
 /**
  * Simple database connector.
  */
 class DatabaseHandler
 {
-    /** @var oxConfigFile */
+    /** @var ConfigFile */
     private $configFile;
 
     /** @var PDO Database connection. */
@@ -41,7 +41,7 @@ class DatabaseHandler
     /**
      * Initiates class dependencies.
      *
-     * @param oxConfigFile $configFile
+     * @param ConfigFile $configFile
      *
      * @throws Exception
      */

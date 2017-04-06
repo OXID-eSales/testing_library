@@ -21,7 +21,7 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use oxRegistry;
+
 use oxSystemComponentException;
 
 require_once TEST_LIBRARY_HELPERS_PATH . 'oxArticleHelper.php';
@@ -61,8 +61,8 @@ class ShopStateBackup
     public function backupRegistry()
     {
         $this->registryCache = array();
-        foreach (oxRegistry::getKeys() as $class) {
-            $instance = oxRegistry::get($class);
+        foreach (\OxidEsales\Eshop\Core\Registry::getKeys() as $class) {
+            $instance = \OxidEsales\Eshop\Core\Registry::get($class);
             $this->registryCache[$class] = clone $instance;
         }
     }
@@ -72,7 +72,7 @@ class ShopStateBackup
      */
     public function resetRegistry()
     {
-        $aRegKeys = oxRegistry::getKeys();
+        $aRegKeys = \OxidEsales\Eshop\Core\Registry::getKeys();
 
         $aSkippedClasses = array();
 
@@ -84,12 +84,12 @@ class ShopStateBackup
                         $oNewInstance = oxNew($sKey);
                         $this->registryCache[$sKey] = $oNewInstance;
                     } catch (oxSystemComponentException $oException) {
-                        oxRegistry::set($sKey, null);
+                        \OxidEsales\Eshop\Core\Registry::set($sKey, null);
                         continue;
                     }
                 }
                 $oInstance = clone $this->registryCache[$sKey];
-                oxRegistry::set($sKey, $oInstance);
+                \OxidEsales\Eshop\Core\Registry::set($sKey, $oInstance);
             }
         }
     }

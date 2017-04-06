@@ -21,7 +21,7 @@
 
 namespace OxidEsales\TestingLibrary\Services\ShopInstaller;
 
-use OxConfigFile;
+use OxidEsales\Eshop\Core\ConfigFile;
 use OxidEsales\EshopCommunity\Core\Config;
 use OxidEsales\EshopCommunity\Core\DbMetaDataHandler;
 use OxidEsales\EshopCommunity\Core\Edition\EditionPathProvider;
@@ -51,7 +51,7 @@ class ShopInstaller implements ShopServiceInterface
     /** @var ServiceConfig */
     private $serviceConfig;
 
-    /** @var oxConfigFile */
+    /** @var ConfigFile */
     private $shopConfig;
 
     /** @var EditionPathProvider */
@@ -66,7 +66,7 @@ class ShopInstaller implements ShopServiceInterface
     {
         $this->serviceConfig = $config;
 
-        $this->shopConfig = Registry::get("oxConfigFile");
+        $this->shopConfig = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
         $this->dbHandler = new DatabaseHandler($this->shopConfig);
     }
 

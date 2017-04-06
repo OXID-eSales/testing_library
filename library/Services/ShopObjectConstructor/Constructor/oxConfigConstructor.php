@@ -20,7 +20,7 @@
  */
 namespace OxidEsales\TestingLibrary\Services\ShopObjectConstructor\Constructor;
 
-use oxConfig;
+
 
 /**
  * Class oxConfigCaller
@@ -70,7 +70,7 @@ class oxConfigConstructor extends ObjectConstructor
      */
     protected function _createObject($className)
     {
-        return oxNew('oxConfig');
+        return oxNew(\OxidEsales\Eshop\Core\Config::class);
     }
 
     /**

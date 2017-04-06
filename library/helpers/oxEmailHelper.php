@@ -19,6 +19,8 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+use OxidEsales\Eshop\Application\Model\Order;
+
 /**
  * Helper class for oxEmail.
  */
@@ -33,10 +35,10 @@ class oxEmailHelper extends oxEmail
     /** @var bool Whether email was sent to shop owner.  */
     public static $blSendToOwnerWasCalled = null;
 
-    /** @var oxOrder User order used during email sending. */
+    /** @var Order User order used during email sending. */
     public static $oUserOrder = null;
 
-    /** @var oxOrder Owner order used during email sending. */
+    /** @var Order Owner order used during email sending. */
     public static $oOwnerOrder = null;
 
     /**

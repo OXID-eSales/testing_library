@@ -41,7 +41,7 @@ class ViewsGenerator implements ShopServiceInterface
      */
     public function init($request)
     {
-        $oGenerator = oxNew('oxDbMetaDataHandler');
+        $oGenerator = oxNew(\OxidEsales\Eshop\Core\DbMetaDataHandler::class);
         $oGenerator->updateViews();
     }
 }

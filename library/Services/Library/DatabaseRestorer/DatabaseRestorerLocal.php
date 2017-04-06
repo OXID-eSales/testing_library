@@ -22,7 +22,7 @@ namespace OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer;
 
 use oxDb;
 use OxidEsales\TestingLibrary\Services\Library\FileHandler;
-use oxRegistry;
+
 
 /**
  * Database maintenance class responsible complete for backuping and restoration of test database.
@@ -172,7 +172,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
     {
         if (is_null($this->tmpFilePath)) {
             $dumpName = $this->getDumpName();
-            $databaseName = oxRegistry::getConfig()->getConfigParam('dbName');
+            $databaseName = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('dbName');
             $this->tmpFilePath = $this->tempDirectory . '/' . $databaseName . '_dbdump/'. $dumpName .'/';
             $this->getFileHandler()->createDirectory($this->tmpFilePath);
         }
@@ -205,7 +205,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
         $query = 'CHECKSUM TABLE ' . implode(", ", $tables);
         $results = $database->getAll($query);
 
-        $databaseName = oxRegistry::getConfig()->getConfigParam('dbName');
+        $databaseName = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('dbName');
         $checksum = array();
         foreach ($results as $result) {
             $table = str_replace($databaseName . '.', '', $result['Table']);

@@ -20,7 +20,7 @@
  */
 namespace OxidEsales\TestingLibrary\Services\Library;
 
-use oxRegistry;
+
 
 /**
  * Class used for uploading files in services.
@@ -33,7 +33,7 @@ class Cache
     public function clearCacheBackend()
     {
         if (class_exists('\OxidEsales\EshopEnterprise\Core\Cache\Generic\Cache')) {
-            $oCache = oxNew('oxCacheBackend');
+            $oCache = oxNew(\OxidEsales\Eshop\Core\Cache\Generic\Cache::class);
             $oCache->flush();
         }
     }
@@ -44,7 +44,7 @@ class Cache
     public function clearReverseProxyCache()
     {
         if (class_exists('\OxidEsales\EshopEnterprise\Core\Cache\ReverseProxy\ReverseProxyBackend')) {
-            $oReverseProxy = oxNew('oxReverseProxyBackend');
+            $oReverseProxy = oxNew(\OxidEsales\EshopEnterprise\Core\Cache\ReverseProxy\ReverseProxyBackend::class);
             $oReverseProxy->setFlush();
             $oReverseProxy->execute();
         }
@@ -55,7 +55,7 @@ class Cache
      */
     public function clearTemporaryDirectory()
     {
-        if ($sCompileDir = oxRegistry::get('oxConfigFile')->getVar('sCompileDir')) {
+        if ($sCompileDir = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class)->getVar('sCompileDir')) {
             CliExecutor::executeCommand("sudo chmod 777 -R $sCompileDir");
             $this->removeTemporaryDirectory($sCompileDir, false);
         }

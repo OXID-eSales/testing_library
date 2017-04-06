@@ -24,7 +24,7 @@ use Exception;
 use oxBase;
 use oxDb;
 use oxField;
-use oxRegistry;
+
 
 /**
  * Class ObjectCaller
@@ -125,7 +125,7 @@ class ObjectConstructor
                 if (is_string($paramValue)) {
                     $paramValue = html_entity_decode($paramValue);
                 }
-                $object->$fieldName = new oxField($paramValue);
+                $object->$fieldName = new \OxidEsales\Eshop\Core\Field($paramValue);
             }
         }
 

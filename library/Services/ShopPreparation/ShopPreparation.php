@@ -47,7 +47,7 @@ class ShopPreparation implements ShopServiceInterface
      */
     public function __construct($config)
     {
-        $configFile = \oxRegistry::get('oxConfigFile');
+        $configFile = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
         $this->databaseHandler = new DatabaseHandler($configFile, $config->getTempDirectory());
 
         $factory = new DatabaseRestorerFactory();

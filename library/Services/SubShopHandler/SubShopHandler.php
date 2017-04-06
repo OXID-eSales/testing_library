@@ -20,8 +20,8 @@
  */
 namespace OxidEsales\TestingLibrary\Services\SubShopHandler;
 
-use oxBase;
-use oxElement2ShopRelations;
+use OxidEsales\Eshop\Core\Model\BaseModel;
+use OxidEsales\Eshop\Application\Component\Service\Element2ShopRelationsService;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
@@ -63,12 +63,12 @@ class SubShopHandler implements ShopServiceInterface
      */
     public function assignElementToSubShop($sElementTable, $sShopId, $sElementId)
     {
-        /** @var oxBase $oBase */
-        $oBase = oxNew('oxBase');
+        /** @var BaseModel $oBase */
+        $oBase = oxNew(\OxidEsales\Eshop\Core\Model\BaseModel::class);
         $oBase->init($sElementTable);
         if ($oBase->load($sElementId)) {
-            /** @var oxElement2ShopRelations $oElement2ShopRelations */
-            $oElement2ShopRelations = oxNew('oxElement2ShopRelations', $sElementTable);
+            /** @var Element2ShopRelations $oElement2ShopRelations */
+            $oElement2ShopRelations = oxNew(\OxidEsales\Eshop\Application\Component\Service\Element2ShopRelationsService::class, $sElementTable);
             $oElement2ShopRelations->setShopIds($sShopId);
             $oElement2ShopRelations->addToShop($oBase->getId());
         }
@@ -83,8 +83,8 @@ class SubShopHandler implements ShopServiceInterface
      */
     public function assignAllElementsToSubShop($sElementTable, $sShopId, $sParentShopId = 1)
     {
-        /** @var oxElement2ShopRelations $oElement2ShopRelations */
-        $oElement2ShopRelations = oxNew('oxElement2ShopRelations', $sElementTable);
+        /** @var Element2ShopRelations $oElement2ShopRelations */
+        $oElement2ShopRelations = oxNew(\OxidEsales\Eshop\Application\Component\Service\Element2ShopRelationsService::class, $sElementTable);
         $oElement2ShopRelations->setShopIds($sShopId);
         $oElement2ShopRelations->inheritFromShop($sParentShopId);
     }

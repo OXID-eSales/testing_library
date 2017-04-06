@@ -64,7 +64,7 @@ class ModuleLoader
         }
 
         // Reset reverse proxy backend as module activation sets it to flush mode.
-        Registry::set('oxReverseProxyBackend', null);
+        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Cache\ReverseProxy\ReverseProxyBackend::class, null);
     }
 
     /**
@@ -72,7 +72,7 @@ class ModuleLoader
      */
     private function prepareModulesForActivation()
     {
-        $moduleDirectory = Registry::getConfig()->getModulesDir();
+        $moduleDirectory = \OxidEsales\Eshop\Core\Registry::getConfig()->getModulesDir();
         $moduleList = new ModuleList();
         $moduleList->getModulesFromDir($moduleDirectory);
     }
@@ -118,7 +118,7 @@ class ModuleLoader
     private function clearModuleChain()
     {
         if (!self::$useOriginalChains) {
-            Registry::getConfig()->setConfigParam("aModules", '');
+            \OxidEsales\Eshop\Core\Registry::getConfig()->setConfigParam("aModules", '');
         }
     }
 }

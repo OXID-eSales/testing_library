@@ -24,7 +24,7 @@ namespace OxidEsales\TestingLibrary\Services\Files;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use oxRegistry;
+
 
 /**
  * Calling service with different user might create exception log

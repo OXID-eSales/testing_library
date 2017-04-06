@@ -518,12 +518,12 @@ class TestConfig
      */
     protected function getConfigFile()
     {
-        if (class_exists('oxRegistry')) {
-            $configFile = \oxRegistry::get('oxConfigFile');
+        if (class_exists('oxRegistry') || class_exists(\OxidEsales\Eshop\Core\Registry::Class)) {
+            $configFile = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
         } else {
             $shopPath = $this->getShopPath();
             include_once $shopPath . 'BackwardCompatibility/Core/oxconfigfile.php';
-            $configFile = new \oxConfigFile($shopPath . "config.inc.php");
+            $configFile = new \OxidEsales\Eshop\Core\ConfigFile($shopPath . "config.inc.php");
         }
 
         return $configFile;

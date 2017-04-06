@@ -41,11 +41,11 @@ class SeleniumBootstrap extends BootstrapBase
         $this->prepareScreenShots();
         $this->copyTestFilesToShop();
 
-        /** @var \oxConfig $config */
-        $config = oxNew('oxConfig');
-        \oxRegistry::set("oxConfig", $config);
+        /** @var \OxidEsales\Eshop\Core\Config $config */
+        $config = oxNew(\OxidEsales\Eshop\Core\Config::class);
+        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Config::class, $config);
 
-        /** Reset static variable in oxSuperCfg class, which is base class for every class. */
+        /** Reset static variable in \OxidEsales\Eshop\Core\Base class, which is base class for every class. */
         $config->setConfig($config);
 
         register_shutdown_function(function () {

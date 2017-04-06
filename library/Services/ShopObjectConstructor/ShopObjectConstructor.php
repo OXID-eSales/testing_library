@@ -25,7 +25,7 @@ use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use OxidEsales\TestingLibrary\Services\ShopObjectConstructor\Constructor\ConstructorFactory;
-use oxRegistry;
+
 
 /**
  * Shop constructor class for modifying shop environment during testing
@@ -96,7 +96,7 @@ class ShopObjectConstructor implements ShopServiceInterface
     protected function setActiveShop($shopId)
     {
         if ($shopId && $this->getServiceConfig()->getShopEdition() == 'EE') {
-            oxRegistry::getConfig()->setShopId($shopId);
+            \OxidEsales\Eshop\Core\Registry::getConfig()->setShopId($shopId);
         }
     }
 
@@ -109,11 +109,11 @@ class ShopObjectConstructor implements ShopServiceInterface
      */
     protected function setActiveLanguage($language)
     {
-        $languages = oxRegistry::getLang()->getLanguageIds();
+        $languages = \OxidEsales\Eshop\Core\Registry::getLang()->getLanguageIds();
         $languageId = array_search($language, $languages);
         if ($languageId === false) {
             throw new Exception("Language $language was not found or is not active in shop");
         }
-        oxRegistry::getLang()->setBaseLanguage($languageId);
+        \OxidEsales\Eshop\Core\Registry::getLang()->setBaseLanguage($languageId);
     }
 }

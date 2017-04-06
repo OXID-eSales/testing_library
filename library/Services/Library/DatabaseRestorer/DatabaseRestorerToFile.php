@@ -22,7 +22,7 @@ namespace OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer;
 
 use oxDb;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
-use oxRegistry;
+
 
 /**
  * Database maintenance class responsible complete for backuping and restoration of test database.
@@ -46,7 +46,7 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
      */
     public function __construct()
     {
-        $configFile = oxRegistry::get("oxConfigFile");
+        $configFile = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
         $this->databaseHandler = new DatabaseHandler($configFile);
     }
 
@@ -212,7 +212,7 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
         $select = 'CHECKSUM TABLE ' . implode(", ", $tables);
         $results = $database->getAll($select);
 
-        $sDbName = oxRegistry::get('oxConfigFile')->getVar('dbName');
+        $sDbName = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class)->getVar('dbName');
         $checksum = array();
         foreach ($results as $result) {
             $table = str_replace($sDbName . '.', '', $result['Table']);

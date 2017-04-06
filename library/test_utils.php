@@ -19,6 +19,9 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
+use \OxidEsales\Eshop\Core\Registry;
+use \OxidEsales\Eshop\Core\UtilsObject;
+
 /**
  * adds new module to specified class
  * Usable if you want to check how many calls of class AA method BB
@@ -40,11 +43,11 @@
  */
 function oxAddClassModule($sModuleClass, $sClass)
 {
-    $oFactory = new oxUtilsObject();
+    $oFactory = new \OxidEsales\Eshop\Core\UtilsObject();
     $aModules = $oFactory->getModuleVar("aModules");
 
     //unset _possible_ registry instance
-    oxRegistry::set($sClass, null);
+    \OxidEsales\Eshop\Core\Registry::set($sClass, null);
 
     if ($aModules[strtolower($sClass)]) {
         $sModuleClass = $aModules[strtolower($sClass)] . '&' . $sModuleClass;
@@ -56,9 +59,9 @@ function oxAddClassModule($sModuleClass, $sClass)
 
 function oxRemClassModule($sModuleClass, $sClass = '')
 {
-    oxRegistry::set($sClass, null);
+    \OxidEsales\Eshop\Core\Registry::set($sClass, null);
 
-    $oFactory = new oxUtilsObject();
+    $oFactory = new \OxidEsales\Eshop\Core\UtilsObject();
     $aModules = $oFactory->getModuleVar("aModules");
 
     if (!$aModules) {
@@ -115,7 +118,7 @@ class oxTestModules
         if ($cnt = count(self::$_addedmods[$class])) {
             $last = self::$_addedmods[$class][$cnt - 1];
         } else {
-            $last = oxRegistry::get('oxUtilsObject')->getClassName(strtolower($class));
+            $last = \OxidEsales\Eshop\Core\Registry::getUtilsObject()->getClassName(strtolower($class));
         }
         eval ("class $name extends $last { $access \$$varName = $default;}");
         oxAddClassModule($name, $class);
@@ -141,7 +144,7 @@ class oxTestModules
         if ($cnt = count(self::$_addedmods[$class])) {
             $last = self::$_addedmods[$class][$cnt - 1];
         } else {
-            $last = oxRegistry::get('oxUtilsObject')->getClassName(strtolower($class));
+            $last = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsObject::class)->getClassName(strtolower($class));
         }
         $sCode = '';
         if (preg_match('/^{.*}$/ms', $func)) {
@@ -241,8 +244,8 @@ class oxTestModules
      */
     public static function addModuleObject($sClassName, $oObject)
     {
-        oxRegistry::set($sClassName, null);
-        oxUtilsObject::setClassInstance($sClassName, $oObject);
+        \OxidEsales\Eshop\Core\Registry::set($sClassName, null);
+        UtilsObject::setClassInstance($sClassName, $oObject);
     }
 
     /**
@@ -282,7 +285,7 @@ class oxTestModules
      */
     public static function cleanAllModules()
     {
-        oxRegistry::getConfig()->setConfigParam('aModules', array());
+        \OxidEsales\Eshop\Core\Registry::getConfig()->setConfigParam('aModules', array());
     }
 }
 
@@ -381,7 +384,7 @@ abstract class modOXID
     public static function globalCleanup()
     {
         // cleaning up core info
-        $oConfig = new oxsupercfg();
+        $oConfig = new \OxidEsales\Eshop\Core\Base();
         $oConfig->setConfig(null);
         $oConfig->setSession(null);
         $oConfig->setUser(null);

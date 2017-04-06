@@ -161,8 +161,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
 
         $this->activateModules();
         $this->addTestData($testSuitePath);
-        Registry::getConfig()->reinitialize();
-        Registry::set('oxLang', oxNew('oxLang'));
+        \OxidEsales\Eshop\Core\Registry::getConfig()->reinitialize();
+        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Language::class, oxNew(\OxidEsales\Eshop\Core\Language::class));
         $oServiceCaller = new ServiceCaller($this->getTestConfig());
         $oServiceCaller->callService('ViewsGenerator');
 

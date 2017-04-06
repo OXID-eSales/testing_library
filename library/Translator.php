@@ -21,7 +21,7 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use oxRegistry;
+
 
 class Translator
 {
@@ -186,7 +186,7 @@ class Translator
         $aTranslations = array();
         $aKeys = $this->_getKeys();
         foreach ($aKeys as $sKey) {
-            $aTranslations[$sKey] = oxRegistry::getLang()->translateString($sKey, $iLang, $blAdmin);
+            $aTranslations[$sKey] = \OxidEsales\Eshop\Core\Registry::getLang()->translateString($sKey, $iLang, $blAdmin);
 
             if ($aTranslations[$sKey] == $sKey) {
                 $aUntranslated[] = $sKey;
@@ -236,6 +236,6 @@ class Translator
      */
     public function getLanguageIdByName($sName)
     {
-        return array_search($sName, oxRegistry::getLang()->getLanguageNames());
+        return array_search($sName, \OxidEsales\Eshop\Core\Registry::getLang()->getLanguageNames());
     }
 }

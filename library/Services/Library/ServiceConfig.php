@@ -20,7 +20,7 @@
  */
 namespace OxidEsales\TestingLibrary\Services\Library;
 
-use oxConfig;
+
 
 /**
  * Class used for uploading files in services.
@@ -90,7 +90,7 @@ class ServiceConfig
             $shopPath = $this->getShopDirectory();
             include_once $shopPath . 'BackwardCompatibility/Core/oxsupercfg.php';
             include_once $shopPath . 'BackwardCompatibility/Core/oxconfig.php';
-            $config = new oxConfig();
+            $config = new \OxidEsales\Eshop\Core\Config();
             $shopEdition = $config->getEdition();
 
             $this->shopEdition = strtoupper($shopEdition);
