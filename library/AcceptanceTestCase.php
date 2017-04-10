@@ -102,7 +102,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
 
     /**
      * Configuation object for test parameters
-     * @var oxTestConfig
+     * @var TestConfig
      */
     private $oTestConfig;
 
