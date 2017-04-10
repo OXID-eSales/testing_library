@@ -574,7 +574,7 @@ abstract class UnitTestCase extends BaseTestCase
             }
         }
 
-        if ($tablesForCleanup = $this->getTablesForCleanup() && $this->getTestConfig()->shouldRestoreAfterUnitTests()) {
+        if ($this->getTestConfig()->shouldRestoreAfterUnitTests() && ($tablesForCleanup = $this->getTablesForCleanup())) {
             $dbRestore = $this->_getDbRestore();
             foreach ($tablesForCleanup as $sTable) {
                 $dbRestore->restoreTable($sTable);
