@@ -118,7 +118,9 @@ abstract class UnitTestCase extends BaseTestCase
         }
         oxRegistry::set("oxUtilsDate", new modOxUtilsDate());
 
-        $this->backupDatabase();
+        if ($testConfig->shouldRestoreShopAfterTestsSuite()) {
+            $this->backupDatabase();
+        }
 
         oxRegistry::getUtils()->commitFileCache();
 
@@ -213,9 +215,12 @@ abstract class UnitTestCase extends BaseTestCase
     public static function tearDownAfterClass()
     {
         self::getShopStateBackup()->resetStaticVariables();
-        $dbRestore = self::_getDbRestore();
-        $dbRestore->restoreDB();
-        oxDb::getDb()->closeConnection();
+        $testConfig = self::getStaticTestConfig();
+        if ($testConfig->shouldRestoreShopAfterTestsSuite()) {
+            $dbRestore = self::_getDbRestore();
+            $dbRestore->restoreDB();
+            oxDb::getDb()->closeConnection();
+        }
     }
 
     /**

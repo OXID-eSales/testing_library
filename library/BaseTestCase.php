@@ -37,11 +37,22 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
      *
      * @return TestConfig
      */
-    public static function getTestConfig()
+    public function getTestConfig()
+    {
+        return self::getStaticTestConfig();
+    }
+
+    /**
+     * Returns test configuration.
+     *
+     * @return oxTestConfig
+     */
+    public static function getStaticTestConfig()
     {
         if (is_null(self::$testConfig)) {
-            self::$testConfig = new TestConfig();
+            self::$testConfig = new oxTestConfig();
         }
+
         return self::$testConfig;
     }
 
