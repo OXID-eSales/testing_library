@@ -311,20 +311,36 @@ class TestConfig
 
     /**
      * Whether to dumb and restore the db when running the acceptance tests
+     * By default restore database to keep backward compatibility.
+     *
      * @return bool|null
      */
     public function shouldRestoreAfterAcceptanceTests()
     {
-        return (bool)$this->getValue('restore_after_acceptance_tests');
+        $restoreDB = true;
+
+        if (!is_null($this->getValue('restore_after_acceptance_tests'))) {
+            $restoreDB = (bool)$this->getValue('restore_after_acceptance_tests');
+        }
+
+        return $restoreDB;
     }
 
     /**
      * Whether to dumb and restore the db after all tests finished in a test suite
+     * By default restore database to keep backward compatibility.
+     *
      * @return bool|null
      */
     public function shouldRestoreAfterUnitTests()
     {
-        return (bool)$this->getValue('restore_after_unit_tests');
+        $restoreDB = true;
+
+        if (!is_null($this->getValue('restore_after_unit_tests'))) {
+            $restoreDB = (bool)$this->getValue('restore_after_unit_tests');
+        }
+
+        return $restoreDB;
     }
 
     /**
