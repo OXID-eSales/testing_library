@@ -117,6 +117,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
     {
         parent::__construct($name, $data, $dataName);
 
+        $this->oTestConfig = $this->getTestConfig();
+
         $this->retryTimesLeft = $this->retryTimes;
     }
 
