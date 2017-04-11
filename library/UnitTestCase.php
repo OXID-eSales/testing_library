@@ -892,7 +892,7 @@ abstract class UnitTestCase extends BaseTestCase
     {
         if (is_null(self::$dbRestore)) {
             $factory = new DatabaseRestorerFactory();
-            self::$dbRestore = $factory->createRestorer(self::getTestConfig()->getDatabaseRestorationClass());
+            self::$dbRestore = $factory->createRestorer(self::getStaticTestConfig()->getDatabaseRestorationClass());
         }
 
         return self::$dbRestore;
