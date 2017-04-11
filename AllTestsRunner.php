@@ -109,7 +109,7 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
         $aTestDirectories = array();
         $aTestSuites = getenv('TEST_DIRS')? explode(',', getenv('TEST_DIRS')) : static::$testSuites;
 
-        $testConfig = static::getStaticTestConfig();
+        $testConfig = static::getTestConfig();
         foreach ($aTestSuites as $sSuite) {
             $aTestDirectories[] = $testConfig->getCurrentTestSuite() ."/$sSuite";
         }
