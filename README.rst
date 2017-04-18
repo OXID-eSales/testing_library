@@ -343,6 +343,11 @@ top of the database depending on the shop edition. Any additional files,
 needed for testing can be placed under ``testData`` directory - all
 content will be copied onto the shop source before running tests.
 
+A useful method for preparing the shop is
+``AcceptanceTestCase::callShopSC()``. With this method
+you can e.g. insert a new article or modify config variables. For detailed
+usage examples have a look at the OXID eShop acceptance tests.
+
 Changing database restoration mechanism
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
