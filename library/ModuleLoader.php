@@ -22,7 +22,6 @@
 namespace OxidEsales\TestingLibrary;
 
 use OxidEsales\Eshop\Core\Module\ModuleList;
-use OxidEsales\EshopCommunity\Core\Registry;
 use OxidEsales\Eshop\Core\Module\ModuleCache;
 use OxidEsales\Eshop\Core\Module\ModuleInstaller;
 use OxidEsales\Eshop\Core\Module\Module;

@@ -103,7 +103,6 @@ class Curl
      *
      * @param string $sUrl URL to call.
      *
-     * @return null
      */
     public function setUrl($sUrl)
     {
@@ -126,6 +125,8 @@ class Curl
 
     /**
      * Set query like "param1=value1&param2=values2.."
+     *
+     * @param null $sQuery
      */
     public function setQuery($sQuery = null)
     {
@@ -179,7 +180,6 @@ class Curl
      *
      * @param string $sHost
      *
-     * @return null
      */
     public function setHost($sHost)
     {
@@ -201,7 +201,6 @@ class Curl
      *
      * @param array $aHeader
      *
-     * @return null
      */
     public function setHeader($aHeader = null)
     {
@@ -237,7 +236,6 @@ class Curl
      *
      * @param string $sMethod method to send (POST/GET)
      *
-     * @return null
      */
     public function setMethod($sMethod)
     {
@@ -262,7 +260,6 @@ class Curl
      *
      * @throws Exception on curl errors
      *
-     * @return null
      */
     public function setOption($sName, $sValue)
     {
@@ -444,7 +441,6 @@ class Curl
     /**
      * Wrapper function to be mocked for testing.
      *
-     * @return null
      */
     protected function _close()
     {

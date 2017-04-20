@@ -19,7 +19,6 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-use \OxidEsales\Eshop\Core\Registry;
 use \OxidEsales\Eshop\Core\UtilsObject;
 
 /**
@@ -32,7 +31,7 @@ use \OxidEsales\Eshop\Core\UtilsObject;
  *    check module parent module
  *
  * e.g.
- *  - we need to disable oxUtils::showMessageAndDie
+ *  - we need to disable \OxidEsales\Eshop\Core\Utils::showMessageAndDie
  *     class modUtils extends oxutils {
  *        function showMessageAndDie (){}
  *     };
@@ -40,6 +39,9 @@ use \OxidEsales\Eshop\Core\UtilsObject;
  *     oxAddClassModule('modUtils', 'oxutils');
  *  - and after doing some ...
  *     oxRemClassModule('modUtils');
+ *
+ * @param $sModuleClass
+ * @param $sClass
  */
 function oxAddClassModule($sModuleClass, $sClass)
 {
@@ -146,7 +148,6 @@ class oxTestModules
         } else {
             $last = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsObject::class)->getClassName(strtolower($class));
         }
-        $sCode = '';
         if (preg_match('/^{.*}$/ms', $func)) {
             $sCode = "\$aA = func_get_args(); " . trim($func, '{}');
         } else {
@@ -240,7 +241,6 @@ class oxTestModules
      * @param string $sClassName
      * @param object $oObject
      *
-     * @return null
      */
     public static function addModuleObject($sClassName, $oObject)
     {
@@ -313,7 +313,6 @@ class oxTestsStaticCleaner
      * @param string $sClass
      * @param string $sProperty
      *
-     * @return null
      */
     public static function clean($sClass, $sProperty)
     {
@@ -500,7 +499,7 @@ class modDB extends modOXID
     function modAttach($oObj = null)
     {
         parent::modAttach();
-        $this->_oRealInstance = oxDb::getDb();
+        $this->_oRealInstance = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
         if (!$oObj) {
             $oObj = $this;
         }

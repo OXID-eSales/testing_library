@@ -22,14 +22,11 @@
 namespace OxidEsales\TestingLibrary\Services\ShopInstaller;
 
 use OxidEsales\Eshop\Core\ConfigFile;
-use OxidEsales\EshopCommunity\Core\Config;
-use OxidEsales\EshopCommunity\Core\DbMetaDataHandler;
+use OxidEsales\Eshop\Core\Config;
 use OxidEsales\EshopCommunity\Core\Edition\EditionPathProvider;
 use OxidEsales\EshopCommunity\Core\Edition\EditionRootPathProvider;
 use OxidEsales\EshopCommunity\Core\Edition\EditionSelector;
-use OxidEsales\EshopCommunity\Core\Registry;
 use OxidEsales\EshopCommunity\Setup\Core;
-use OxidEsales\TestingLibrary\ServiceCaller;
 use OxidEsales\TestingLibrary\Services\Library\Cache;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 use OxidEsales\TestingLibrary\Services\Library\Request;
@@ -37,7 +34,6 @@ use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use OxidEsales\TestingLibrary\Services\Library\CliExecutor;
 use OxidEsales\EshopProfessional\Core\Serial;
-use OxidEsales\EshopCommunity\Setup\Setup;
 use OxidEsales\TestingLibrary\TestConfig;
 
 /**
@@ -124,7 +120,6 @@ class ShopInstaller implements ShopServiceInterface
         $dbHandler->getDbConnection()->exec('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
 
         $baseEditionPathProvider = new EditionPathProvider(new EditionRootPathProvider(new EditionSelector(EditionSelector::COMMUNITY)));
-        $encodingOfSqls = $this->detectEncodingOfFile($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql");
 
         $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/database_schema.sql");
         $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql");
@@ -270,7 +265,7 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
-     * @return oxConfigFile
+     * @return ConfigFile
      */
     protected function getShopConfig()
     {
@@ -296,16 +291,18 @@ class ShopInstaller implements ShopServiceInterface
     /**
      * Returns default demo serial number for testing.
      *
-     * @return string|null
+     * @return string
      */
     protected function getDefaultSerial()
     {
         if ($this->getServiceConfig()->getShopEdition() != 'CE') {
             $core = new Core();
-            /** @var Setup $setup */
+            /** @var \OxidEsales\EshopProfessional\Setup\Setup|\OxidEsales\EshopEnterprise\Setup\Setup $setup */
             $setup = $core->getInstance('Setup');
             return $setup->getDefaultSerial();
         }
+
+        return null;
     }
 
     /**

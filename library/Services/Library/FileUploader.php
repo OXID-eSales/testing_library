@@ -72,7 +72,6 @@ class FileUploader
      *
      * @param string $fileIndex
      *
-     * @return null
      */
     private function _getFileInfo($fileIndex)
     {

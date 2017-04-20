@@ -21,8 +21,6 @@
 namespace OxidEsales\TestingLibrary\Services\ShopObjectConstructor\Constructor;
 
 use Iterator;
-use oxBase;
-use oxList;
 
 /**
  * Class oxConfigCaller
@@ -43,7 +41,7 @@ class oxListConstructor extends ObjectConstructor
      * Calls object function with given parameters
      *
      * @param string $functionName
-     * @param string $parameters
+     * @param array $parameters
      * @return mixed
      */
     public function callFunction($functionName, $parameters)
@@ -61,7 +59,7 @@ class oxListConstructor extends ObjectConstructor
     /**
      * Returns formed array with data from given list
      *
-     * @param oxList|Iterator $oList
+     * @param \OxidEsales\Eshop\Core\Model\ListModel|Iterator $oList
      * @return array
      */
     protected function _formArrayFromList($oList)
@@ -77,7 +75,7 @@ class oxListConstructor extends ObjectConstructor
     /**
      * Returns object field values
      *
-     * @param oxBase|object $object
+     * @param \OxidEsales\Eshop\Core\Model\BaseModel|object $object
      *
      * @return array
      */

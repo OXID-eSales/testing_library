@@ -20,7 +20,6 @@
  */
 namespace OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer;
 
-use oxDb;
 use OxidEsales\TestingLibrary\Services\Library\FileHandler;
 
 
@@ -81,7 +80,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
     {
         $this->setDumpName($dumpName);
         $tables = $this->getDbTables();
-        $db = oxDb::getDb();
+        $db = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
 
         foreach ($tables as $table) {
             $file = $this->getDumpFolderPath() . '/' . $table . '_dump.sql';
@@ -131,7 +130,6 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
      * @param string $table          Table to restore.
      * @param bool   $restoreColumns Whether to restore table columns.
      *
-     * @return null
      */
     public function restoreTable($table, $restoreColumns = false)
     {
@@ -144,7 +142,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
         $file = $this->getDumpFolderPath() .'/'. $table ."_dump.sql";
 
         if (file_exists($file)) {
-            $database = oxDb::getDb();
+            $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
             $database->execute("TRUNCATE TABLE `$table`");
 
             $query = "LOAD DATA INFILE '$file' INTO TABLE `$table`";
@@ -159,7 +157,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
      */
     private function dropTable($table)
     {
-        $database = oxDb::getDb();
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
         $database->execute("DROP TABLE `$table`");
     }
 
@@ -194,14 +192,14 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
     /**
      * Returns given tables checksum values.
      *
-     * @param array $tables Tables for which checksum will be generated.
+     * @param array|string $tables Tables for which checksum will be generated.
      *
      * @return array
      */
     private function getTableChecksum($tables)
     {
         $tables = is_array($tables) ? $tables : array($tables);
-        $database = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
         $query = 'CHECKSUM TABLE ' . implode(", ", $tables);
         $results = $database->getAll($query);
 
@@ -222,7 +220,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
      */
     private function getDbTables()
     {
-        $database = oxDb::getDb(oxDb::FETCH_MODE_NUM);
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_NUM);
         $tables = $database->getCol("SHOW TABLES");
 
         foreach ($tables as $key => $table) {

@@ -28,6 +28,8 @@ use InvalidArgumentException;
 
 abstract class MinkWrapper extends BaseTestCase
 {
+    /** @var int How much time to wait for pages to load. Wait time is multiplied by this value. */
+    protected $_iWaitTimeMultiplier = 1;
 
     /** @var \Selenium\Client Selenium client. Used only with selenium driver. */
     protected $client = null;
@@ -158,7 +160,6 @@ abstract class MinkWrapper extends BaseTestCase
      *
      * @param string $sId
      *
-     * @return null
      */
     public function selectWindow($sId)
     {
@@ -184,7 +185,6 @@ abstract class MinkWrapper extends BaseTestCase
      *
      * @param string $sFrame
      *
-     * @return null
      */
     public function selectFrame($sFrame)
     {
@@ -982,6 +982,8 @@ abstract class MinkWrapper extends BaseTestCase
                 return $oElement;
             }
         }
+
+        return null;
     }
 
     /**

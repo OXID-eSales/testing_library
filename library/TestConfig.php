@@ -514,7 +514,7 @@ class TestConfig
     /**
      * Returns oxConfigFile from registry or creates new object
      *
-     * @return \oxConfigFile
+     * @return \OxidEsales\Eshop\Core\ConfigFile
      */
     protected function getConfigFile()
     {
@@ -522,7 +522,6 @@ class TestConfig
             $configFile = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
         } else {
             $shopPath = $this->getShopPath();
-            include_once $shopPath . 'BackwardCompatibility/Core/oxconfigfile.php';
             $configFile = new \OxidEsales\Eshop\Core\ConfigFile($shopPath . "config.inc.php");
         }
 

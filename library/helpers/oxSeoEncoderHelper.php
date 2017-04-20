@@ -20,9 +20,9 @@
  */
 
 /**
- * Helper class for oxSeoEncoder.
+ * Helper class for \OxidEsales\Eshop\Core\SeoEncoder
  */
-class oxSeoEncoderHelper extends oxSeoEncoder
+class oxSeoEncoderHelper extends \OxidEsales\Eshop\Core\SeoEncoder
 {
 
     /**

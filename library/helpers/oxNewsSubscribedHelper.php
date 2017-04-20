@@ -20,9 +20,9 @@
  */
 
 /**
- * Helper class for oxNewsSubscribed.
+ * Helper class for \OxidEsales\Eshop\Application\Model\NewsSubscribed
  */
-class oxNewsSubscribedHelper extends oxNewsSubscribed
+class oxNewsSubscribedHelper extends \OxidEsales\Eshop\Application\Model\NewsSubscribed
 {
 
     /**

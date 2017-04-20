@@ -87,9 +87,6 @@ class ServiceConfig
     public function getShopEdition()
     {
         if (is_null($this->shopEdition)) {
-            $shopPath = $this->getShopDirectory();
-            include_once $shopPath . 'BackwardCompatibility/Core/oxsupercfg.php';
-            include_once $shopPath . 'BackwardCompatibility/Core/oxconfig.php';
             $config = new \OxidEsales\Eshop\Core\Config();
             $shopEdition = $config->getEdition();
 

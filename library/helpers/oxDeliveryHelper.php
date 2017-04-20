@@ -20,9 +20,9 @@
  */
 
 /**
- * Helper class for oxDelivery.
+ * Helper class for \OxidEsales\Eshop\Application\Model\Delivery
  */
-class oxDeliveryHelper extends oxDelivery
+class oxDeliveryHelper extends \OxidEsales\Eshop\Application\Model\Delivery
 {
     /**
      * Cleans oxDelivery static parameters.

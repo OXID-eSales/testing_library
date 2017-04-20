@@ -22,7 +22,7 @@
 /**
  * Useful for defining custom time
  */
-class modOxUtilsDate extends oxUtilsDate
+class modOxUtilsDate extends \OxidEsales\Eshop\Core\UtilsDate
 {
     /** @var string */
     protected $_sTime = null;

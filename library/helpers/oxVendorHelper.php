@@ -20,9 +20,9 @@
  */
 
 /**
- * Helper class for oxVendor.
+ * Helper class for \OxidEsales\Eshop\Application\Model\Vendor
  */
-class oxVendorHelper extends oxVendor
+class oxVendorHelper extends \OxidEsales\Eshop\Application\Model\Vendor
 {
     /**
      * Cleans classes static variables.

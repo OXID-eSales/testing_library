@@ -20,9 +20,9 @@
  */
 
 /**
- * Helper class for oxBasket.
+ * Helper class for \OxidEsales\Eshop\Application\Model\Basket
  */
-class oxBasketHelper extends oxBasket
+class oxBasketHelper extends \OxidEsales\Eshop\Application\Model\Basket
 {
 
 }

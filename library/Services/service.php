@@ -36,7 +36,7 @@ spl_autoload_register(function($className) {
     }
 });
 
-require_once __DIR__ ."/../bootstrap.php";
+require_once __DIR__ ."../../bootstrap.php";
 
 $vendorDirectory = __DIR__ . "/../../vendor/";
 if (!file_exists($vendorDirectory)) {

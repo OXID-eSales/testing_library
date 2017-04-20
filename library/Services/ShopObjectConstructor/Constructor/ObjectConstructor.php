@@ -21,10 +21,6 @@
 namespace OxidEsales\TestingLibrary\Services\ShopObjectConstructor\Constructor;
 
 use Exception;
-use oxBase;
-use oxDb;
-use oxField;
-
 
 /**
  * Class ObjectCaller
@@ -47,7 +43,7 @@ class ObjectConstructor
     /**
      * Returns constructed object
      *
-     * @return oxBase|object
+     * @return \OxidEsales\Eshop\Core\Model\BaseModel|object
      */
     public function getObject()
     {
@@ -183,7 +179,7 @@ class ObjectConstructor
     protected function _getLastInsertedId()
     {
         $objectId = null;
-        $oDb = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $oDb = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
 
         $tableName = $this->getObject()->getCoreTableName();
         $query = 'SELECT OXID FROM '. $tableName .' ORDER BY OXTIMESTAMP DESC LIMIT 1';

@@ -21,8 +21,6 @@
 
 namespace OxidEsales\TestingLibrary\Bootstrap {
 
-    use OxidEsales\TestingLibrary\FileCopier;
-
     class UnitBootstrap extends BootstrapBase
     {
         /** @var int Whether to add demo data. */
@@ -79,8 +77,6 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
 }
 
 namespace {
-
-    use OxidEsales\EshopCommunity\Core\Registry;
 
     /**
      * @deprecated Use TestConfig::getCurrentTestSuite() or TestConfig::getTempDirectory().

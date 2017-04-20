@@ -39,7 +39,7 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     /** @var string Filter for test files. */
     protected static $fileFilter = '*Test\.php';
 
-    /** @var string Lower cased test paths. Used to check if test file was not already added. */
+    /** @var array Lower cased test paths. Used to check if test file was not already added. */
     protected static $testFiles = array();
 
     /**

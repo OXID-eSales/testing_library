@@ -116,7 +116,6 @@ class Translator
      *
      * @param $blAdmin
      *
-     * @return null
      */
     public function setAdmin($blAdmin)
     {

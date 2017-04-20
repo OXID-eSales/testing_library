@@ -20,9 +20,9 @@
  */
 
 /**
- * Helper class for oxArticle.
+ * Helper class for \OxidEsales\Eshop\Application\Model\Article
  */
-class oxArticleHelper extends oxArticle
+class oxArticleHelper extends \OxidEsales\Eshop\Application\Model\Article
 {
     /**
      * Constructor

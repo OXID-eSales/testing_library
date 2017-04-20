@@ -66,7 +66,7 @@ class oxConfigConstructor extends ObjectConstructor
      *
      * @param string $className
      *
-     * @return oxConfig
+     * @return \OxidEsales\Eshop\Core\Config
      */
     protected function _createObject($className)
     {

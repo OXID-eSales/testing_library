@@ -21,10 +21,8 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use oxDb;
 use Exception;
 use DateTime;
-use OxidEsales\EshopCommunity\Core\Registry;
 use ReflectionClass;
 use PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
 use PHPUnit_Framework_AssertionFailedError as AssertionFailedError;
@@ -37,9 +35,6 @@ use PHPUnit_Util_Filter;
  */
 abstract class AcceptanceTestCase extends MinkWrapper
 {
-    /** @var int How much time to wait for pages to load. Wait time is multiplied by this value. */
-    protected $_iWaitTimeMultiplier = 1;
-
     /** @var int How many times to retry after server error. */
     protected $retryTimes = 2;
 
@@ -204,8 +199,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
 
     /**
      * Restores database after every test.
-     *
-     * @return null
      */
     protected function tearDown()
     {
@@ -241,7 +234,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
                 $this->onNotSuccessfulTest($oErrorException);
             } catch (Exception $oE) {
                 if ($oE instanceof ExpectationFailedException) {
-                    $sErrorMsg .= "\n\n---\n" . $oE->getCustomMessage();
+                    $sErrorMsg .= "\n\n---\n" . $oE->getMessage();
                 }
             }
         }
@@ -312,7 +305,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @param string $sString
      *
-     * @return null
      */
     public static function translate($sString)
     {
@@ -333,7 +325,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * @param bool        $blClearCache    Whether to clear cache.
      * @param bool|string $mForceSubShop   Opens sub shop even if man shop is being tested.
      *
-     * @return null
      */
     public function openShop($blForceMainShop = false, $blClearCache = false, $mForceSubShop = false)
     {
@@ -575,8 +566,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @param string $menuLink1     Menu link (e.g. master settings, shop settings).
      * @param string $menuLink2     Sub menu link (e.g. administer products, discounts, vat).
-     * @param string $editElement   Element to check in edit frame (optional).
-     * @param string $listElement   Element to check in list frame (optional).
+     * @param string $editElement   @deprecated Has no effect any more (Was: Element to check in edit frame (optional).)
+     * @param string $listElement   @deprecated Has no effect (Was:Element to check in list frame (optional).)
      * @param bool   $forceMainShop Force main shop.
      * @param string $user          Shop admin username.
      * @param string $pass          Shop admin password.
@@ -690,7 +681,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * @param bool   $blForceReselect Switches frame even if it is currently selected
      * @param bool   $blFollowPath    If path to frame is defined, it selects all frames in path
      *
-     * @return null
      */
     public function frame($sFrame, $blForceReselect = false, $blFollowPath = true)
     {
@@ -713,7 +703,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @param string $sFrame
      *
-     * @return null
      */
     public function selectFrame($sFrame)
     {
@@ -991,7 +980,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * @param string $locator  Link/button locator in the page.
      * @param int    $iSeconds How much time to wait for element.
      *
-     * @return null
      */
     public function clickAndWait($locator, $iSeconds = 10)
     {
@@ -1018,7 +1006,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * @param string $selection option to select.
      * @param string $element   element locator for additional check if page is fully loaded (optional).
      *
-     * @return null
      */
     public function selectAndWait($locator, $selection, $element = null)
     {
@@ -1041,7 +1028,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @param string $locator select list locator.
      * @param string $frame   frame which should be also loaded (this frame will be loaded after current frame is loaded).
-     * @return null
      */
     public function clickAndWaitFrame($locator, $frame = '')
     {
@@ -1056,7 +1042,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * @param string $locator   select list locator.
      * @param string $selection option to select.
      * @param string $frame     frame which should be also loaded (this frame will be loaded after current frame is loaded).
-     * @return null
      */
     public function selectAndWaitFrame($locator, $selection, $frame = '')
     {
@@ -1075,7 +1060,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @param string $locator locator for delete button.
      * @param string $frame   frame which should be also loaded (this frame will be loaded after current frame is loaded).
-     * @return null
      */
     public function clickAndConfirm($locator, $frame = "")
     {
@@ -1109,7 +1093,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * @param string $sLocator       element locator.
      * @param int    $iSeconds       How much time to wait for element.
      * @param bool   $blIgnoreResult whether not to fail if element will not appear in given time.
-     * @return null
      */
     public function waitForElement($sLocator, $iSeconds = 10, $blIgnoreResult = false)
     {
@@ -1122,7 +1105,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * @param string $sLocator       element locator.
      * @param int    $iTimeToWait    How much time to wait for element.
      * @param bool   $blIgnoreResult whether not to fail if element will not appear in given time.
-     * @return null
      */
     public function waitForEditable($sLocator, $iTimeToWait = 10, $blIgnoreResult = false)
     {
@@ -1135,7 +1117,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * @param string $sLocator       element locator.
      * @param int    $iTimeToWait    time to wait for element.
      * @param bool   $blIgnoreResult whether not to fail if element will not appear in given time.
-     * @return null
      */
     public function waitForItemAppear($sLocator, $iTimeToWait = 10, $blIgnoreResult = false)
     {
@@ -1149,7 +1130,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @param string $sLocator    element locator.
      * @param int    $iTimeToWait time to wait for element
-     * @return null
      */
     public function waitForItemDisappear($sLocator, $iTimeToWait = 10)
     {
@@ -1163,7 +1143,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * @param string|array $mTextMsg    If Array of Messages is passed, returns when either of given texts if found
      * @param bool         $printSource print source (default false).
      * @param int          $iTimeToWait timeout (default 10).
-     * @return null
      */
     public function waitForText($mTextMsg, $printSource = false, $iTimeToWait = 10)
     {
@@ -1197,7 +1176,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @param string $textLine    text.
      * @param int    $iTimeToWait timeout (default 10).
-     * @return null
      */
     public function waitForTextDisappear($textLine, $iTimeToWait = 10)
     {
@@ -1267,6 +1245,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * @param string $sMethod
      * @param string $locator
      * @param int    $sTimeToWait
+     * @param string $sFailMessage
      */
     protected function _waitForDisappear($sMethod, $locator, $sTimeToWait = 30, $sFailMessage = '')
     {
@@ -1304,7 +1283,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * selects element and waits till needed frame will be loaded. same frame as before will be selected.
      *
      * @param string $sLocator select list locator.
-     * @return null
      */
     public function click($sLocator)
     {
@@ -1526,7 +1504,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @param string $sTmpPrefix temp file name.
      * @throws Exception on error while dumping.
-     * @return null
      */
     public function dumpDB($sTmpPrefix = null)
     {
@@ -1545,7 +1522,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @param string $sTmpPrefix temp file name
      * @throws Exception on error while restoring db
-     * @return null
      */
     public function restoreDB($sTmpPrefix = null)
     {
@@ -1563,7 +1539,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @param string $sFilePath
      *
-     * @return null
      */
     public function importSql($sFilePath)
     {
@@ -1580,9 +1555,9 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function executeSql($sql)
     {
-        oxDb::getDb()->execute($sql);
+        \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->execute($sql);
         if ($this->getTestConfig()->getShopEdition() == 'EE') {
-            oxDb::getDb()->execute("delete from oxcache");
+            \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->execute("delete from oxcache");
         }
     }
 
@@ -1609,6 +1584,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $sShopId = null,
         $sLang = 'en'
     ) {
+        $mResponse = '';
+
         $oServiceCaller = new ServiceCaller($this->getTestConfig());
         $oServiceCaller->setParameter('cl', $sClass);
         $oServiceCaller->setParameter('fnc', $sFnc);
@@ -1700,7 +1677,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * tests if none of php possible errors are displayed into shop frontend page.
      *
-     * @return null
      */
     public function checkForErrors()
     {
@@ -1767,7 +1743,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * Clears browser cookies, (with _cc file).
      *
-     * @return null
      */
     public function clearCookies()
     {
@@ -1784,7 +1759,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * Clears shop cache.
      *
-     * @return null
      */
     public function clearTemp()
     {
@@ -1972,7 +1946,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * Forms trace message from given array.
      *
-     * @param array $aTrace
+     * @param array|mixed $aTrace
      * @return string
      */
     protected function _formTrace($aTrace)

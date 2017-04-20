@@ -21,22 +21,16 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use Doctrine\DBAL\ConnectionException;
 use modOXID;
 use modOxUtilsDate;
 
-use oxDb;
 use OxidEsales\EshopCommunity\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\EshopCommunity\Core\Database;
-use OxidEsales\EshopCommunity\Core\Exception\DatabaseException;
-use OxidEsales\EshopCommunity\Core\Exception\StandardException;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
 
-use oxSession;
 use oxTestModules;
 use oxTestsStaticCleaner;
-use oxUtilsObject;
 use PHPUnit_Framework_Exception;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestResult as TestResult;
@@ -135,7 +129,6 @@ abstract class UnitTestCase extends BaseTestCase
     /**
      * Initialize the fixture.
      *
-     * @return null
      */
     protected function setUp()
     {
@@ -180,8 +173,8 @@ abstract class UnitTestCase extends BaseTestCase
          * transactions marked as rollback only, even when all the shop code has been executed.
          */
         try {
-            while (oxDb::getDb()->isTransactionActive() && oxDb::getDb()->isRollbackOnly() ) {
-                oxDb::getDb()->rollbackTransaction();
+            while (\OxidEsales\Eshop\Core\DatabaseProvider::getDb()->isTransactionActive() && \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->isRollbackOnly() ) {
+                \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->rollbackTransaction();
             }
         /**
          * Catch exceptions, which happen when calling isRollbackOnly() on a connection which is not in a transaction.
@@ -202,8 +195,8 @@ abstract class UnitTestCase extends BaseTestCase
             $this->getShopStateBackup()->resetRequestVariables();
             $this->getShopStateBackup()->resetRegistry();
 
-            oxUtilsObject::resetClassInstances();
-            oxUtilsObject::resetModuleVars();
+            \OxidEsales\Eshop\Core\UtilsObject::resetClassInstances();
+            \OxidEsales\Eshop\Core\UtilsObject::resetModuleVars();
 
             parent::tearDown();
         }
@@ -219,7 +212,7 @@ abstract class UnitTestCase extends BaseTestCase
         if ($testConfig->shouldRestoreAfterUnitTests()) {
             $dbRestore = self::_getDbRestore();
             $dbRestore->restoreDB();
-            oxDb::getDb()->closeConnection();
+            \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->closeConnection();
         }
     }
 
@@ -347,7 +340,7 @@ abstract class UnitTestCase extends BaseTestCase
     /**
      * Returns session object
      *
-     * @return oxSession
+     * @return \OxidEsales\Eshop\Core\Session
      */
     public static function getSession()
     {
@@ -357,7 +350,7 @@ abstract class UnitTestCase extends BaseTestCase
     /**
      * Returns config object
      *
-     * @return oxConfig
+     * @return \OxidEsales\Eshop\Core\Config
      */
     public static function getConfig()
     {
@@ -373,7 +366,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public static function getDb($fetchMode = null)
     {
-        $oDB = oxDb::getDb();
+        $oDB = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
         if ($fetchMode !== null) {
             $oDB->setFetchMode($fetchMode);
         }
@@ -516,15 +509,15 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function addToDatabase($sql, $table, $shopIds = 1, $mapId = null)
     {
-        oxDb::getDb()->execute($sql);
+        \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->execute($sql);
 
         if ($this->getTestConfig()->getShopEdition() == 'EE' && in_array($table, $this->getMultiShopTables())) {
-            $mapId = !is_null($mapId) ? $mapId : oxDb::getDb()->getLastInsertId();
+            $mapId = !is_null($mapId) ? $mapId : \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->getLastInsertId();
             $shopIds = (array)$shopIds;
 
             foreach ($shopIds as $iShopId) {
                 $sql = "REPLACE INTO `{$table}2shop` SET `oxmapobjectid` = ?, `oxshopid` = ?";
-                oxDb::getDb()->execute($sql, array($mapId, $iShopId));
+                \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->execute($sql, array($mapId, $iShopId));
             }
         }
     }
@@ -570,7 +563,7 @@ abstract class UnitTestCase extends BaseTestCase
     {
         if ($tearDownQueries = $this->getTeardownSqls()) {
             foreach ($tearDownQueries as $query) {
-                oxDb::getDb()->execute($query);
+                \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->execute($query);
             }
         }
 

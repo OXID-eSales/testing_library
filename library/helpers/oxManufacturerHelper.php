@@ -20,9 +20,9 @@
  */
 
 /**
- * Helper class for oxManufacturer.
+ * Helper class for \OxidEsales\Eshop\Application\Model\Manufacturer
  */
-class oxManufacturerHelper extends oxManufacturer
+class oxManufacturerHelper extends \OxidEsales\Eshop\Application\Model\Manufacturer
 {
 
     /**

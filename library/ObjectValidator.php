@@ -70,7 +70,7 @@ class ObjectValidator
     /**
      * Sets error message to error stack
      *
-     * @param array $sMessage
+     * @param string $sMessage
      */
     protected function _setError($sMessage)
     {
@@ -95,7 +95,7 @@ class ObjectValidator
      * @param string $sOxId
      * @param string $sShopId
      *
-     * @return array
+     * @return mixed
      */
     protected function _getObjectParameters($sClass, $aObjectParams, $sOxId = null, $sShopId = null)
     {

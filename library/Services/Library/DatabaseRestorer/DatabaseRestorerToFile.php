@@ -20,7 +20,6 @@
  */
 namespace OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer;
 
-use oxDb;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 
 
@@ -122,7 +121,6 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
      * @param string $table          Table to restore.
      * @param bool   $restoreColumns Whether to restore table columns.
      *
-     * @return null
      */
     public function restoreTable($table, $restoreColumns = false)
     {
@@ -132,7 +130,7 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
             return;
         }
 
-        $database = oxDb::getDb();
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
         if ($database->getOne("SHOW TABLES LIKE '$table'")) {
             $database->execute("DROP TABLE `$table`");
         }
@@ -149,7 +147,7 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
      */
     private function dropTable($sTable)
     {
-        $oDB = oxDb::getDb();
+        $oDB = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
         $oDB->execute("DROP TABLE `$sTable`");
     }
 
@@ -201,14 +199,14 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
     /**
      * Returns given tables checksum values.
      *
-     * @param array $tables Tables for which checksum will be generated.
+     * @param array|string $tables Tables for which checksum will be generated.
      *
      * @return array
      */
     private function getTableChecksum($tables)
     {
         $tables = is_array($tables) ? $tables : array($tables);
-        $database = oxDb::getDb(oxDb::FETCH_MODE_ASSOC);
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
         $select = 'CHECKSUM TABLE ' . implode(", ", $tables);
         $results = $database->getAll($select);
 
@@ -229,7 +227,7 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
      */
     private function getDbTables()
     {
-        $database = oxDb::getDb(oxDb::FETCH_MODE_NUM);
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_NUM);
         $tables = $database->getCol("SHOW TABLES");
 
         foreach ($tables as $key => $table) {

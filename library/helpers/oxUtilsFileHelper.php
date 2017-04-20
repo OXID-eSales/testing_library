@@ -20,9 +20,9 @@
  */
 
 /**
- * Helper class for oxUtilsFile.
+ * Helper class for \OxidEsales\Eshop\Core\UtilsFile
  */
-class oxUtilsFileHelper extends oxUtilsFile
+class oxUtilsFileHelper extends \OxidEsales\Eshop\Core\UtilsFile
 {
     /** @var string Value of read file */
     public static $ret = "UNLICENSED";

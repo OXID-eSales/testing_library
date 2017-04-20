@@ -20,12 +20,14 @@
  */
 
 /**
- * Helper class for oxCache.
+ * Helper class for \OxidEsales\EshopEnterprise\Core\Cache\DynamicContent\ContentCache
  */
-class oxCacheHelper extends OxidEsales\EshopEnterprise\Core\Cache\DynamicContent\ContentCache
+class oxCacheHelper extends \OxidEsales\EshopEnterprise\Core\Cache\DynamicContent\ContentCache
 {
     /**
      * Throw an exception on reset.
+     *
+     * @param bool $blResetFileCache
      *
      * @throws Exception
      */

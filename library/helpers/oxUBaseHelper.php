@@ -20,9 +20,9 @@
  */
 
 /**
- * Helper class for oxUBase.
+ * Helper class for \OxidEsales\Eshop\Application\Controller\FrontendController
  */
-class oxUBaseHelper extends oxUBase
+class oxUBaseHelper extends \OxidEsales\Eshop\Application\Controller\FrontendController
 {
 
     /** @var bool Was init function called. */

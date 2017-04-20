@@ -20,9 +20,9 @@
  */
 
 /**
- * Helper class for oxVoucher.
+ * Helper class for \OxidEsales\Eshop\Application\Model\Voucher
  */
-class oxVoucherHelper extends oxVoucher
+class oxVoucherHelper extends  \OxidEsales\Eshop\Application\Model\Voucher
 {
     /** @var bool Whether any of the checks were performed. */
     public static $blCheckWasPerformed = false;
@@ -32,8 +32,6 @@ class oxVoucherHelper extends oxVoucher
      *
      * @param array  $aVouchers array of vouchers
      * @param double $dPrice    current sum (price)
-     *
-     * @return array
      */
     public function checkVoucherAvailability($aVouchers, $dPrice)
     {
@@ -46,8 +44,6 @@ class oxVoucherHelper extends oxVoucher
      *
      * @param array  $aVouchers array of vouchers
      * @param double $dPrice    current sum (price)
-     *
-     * @return array
      */
     public function checkBasketVoucherAvailability($aVouchers, $dPrice)
     {
@@ -58,8 +54,6 @@ class oxVoucherHelper extends oxVoucher
      * Checks availability for the given user. Returns array with errors.
      *
      * @param object $oUser user object
-     *
-     * @return array
      */
     public function checkUserAvailability($oUser)
     {

@@ -22,7 +22,7 @@
 /**
  * Class oxTestCacheConnector
  */
-class oxTestCacheConnector implements oxiCacheConnector
+class oxTestCacheConnector implements \OxidEsales\Eshop\Application\Model\Contract\CacheConnectorInterface
 {
     /** @var array Cached items. */
     public $aCache = array();
@@ -54,7 +54,6 @@ class oxTestCacheConnector implements oxiCacheConnector
      * @param mixed        $mValue
      * @param int          $iTTL
      *
-     * @return null
      */
     public function set($mKey, $mValue = null, $iTTL = null)
     {
@@ -85,7 +84,6 @@ class oxTestCacheConnector implements oxiCacheConnector
      *
      * @param array|string $mKey
      *
-     * @return null
      */
     public function invalidate($mKey)
     {

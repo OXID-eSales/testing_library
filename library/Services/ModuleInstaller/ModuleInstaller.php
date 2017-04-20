@@ -21,10 +21,6 @@
 namespace OxidEsales\TestingLibrary\Services\ModuleInstaller;
 
 
-use oxModuleCache;
-use oxModuleInstaller;
-use oxModuleList;
-use oxModule;
 use Exception;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
@@ -45,7 +41,6 @@ class ModuleInstaller implements ShopServiceInterface
      *
      * @param Request $request
      *
-     * @return null
      */
     public function init($request)
     {
@@ -92,7 +87,7 @@ class ModuleInstaller implements ShopServiceInterface
      *
      * @param string $modulePath The path to the module.
      *
-     * @return oxModule
+     * @return \OxidEsales\Eshop\Core\Module\Module
      * @throws Exception
      */
     private function loadModule($modulePath)

@@ -20,9 +20,9 @@
  */
 
 /**
- * Helper class for oxAdminView.
+ * Helper class for \OxidEsales\Eshop\Application\Controller\Admin\AdminController
  */
-class oxAdminViewHelper extends oxAdminView
+class oxAdminViewHelper extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController
 {
 
     /**

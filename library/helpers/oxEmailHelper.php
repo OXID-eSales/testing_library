@@ -19,12 +19,10 @@
  * @copyright (C) OXID eSales AG 2003-2014
  */
 
-use OxidEsales\Eshop\Application\Model\Order;
-
 /**
- * Helper class for oxEmail.
+ * Helper class for \OxidEsales\Eshop\Core\Email
  */
-class oxEmailHelper extends oxEmail
+class oxEmailHelper extends \OxidEsales\Eshop\Core\Email
 {
     /** @var bool Return value of any defined function. */
     public static $blRetValue = null;
@@ -35,16 +33,16 @@ class oxEmailHelper extends oxEmail
     /** @var bool Whether email was sent to shop owner.  */
     public static $blSendToOwnerWasCalled = null;
 
-    /** @var Order User order used during email sending. */
+    /** @var \OxidEsales\Eshop\Application\Model\Order User order used during email sending. */
     public static $oUserOrder = null;
 
-    /** @var Order Owner order used during email sending. */
+    /** @var \OxidEsales\Eshop\Application\Model\Order Owner order used during email sending. */
     public static $oOwnerOrder = null;
 
     /**
      * Mocked method for testing.
      *
-     * @param oxOrder $oOrder
+     * @param \OxidEsales\Eshop\Application\Model\Order $oOrder
      * @param string  $sSubject
      *
      * @return bool
@@ -60,10 +58,9 @@ class oxEmailHelper extends oxEmail
     /**
      * Mocked method for testing.
      *
-     * @param oxOrder $order
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
      * @param string    $subject
      *
-     * @return null
      */
     public function sendOrderEmailToOwner($order, $subject = null)
     {
@@ -76,7 +73,7 @@ class oxEmailHelper extends oxEmail
     /**
      * Mocked method for testing.
      *
-     * @param oxUser $oUser
+     * @param \OxidEsales\Eshop\Application\Model\User $oUser
      * @param string $sSubject
      *
      * @return bool

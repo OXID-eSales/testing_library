@@ -20,9 +20,9 @@
  */
 
 /**
- * Helper class for oxUtils.
+ * Helper class for \OxidEsales\Eshop\Core\Utils
  */
-class oxUtilsHelper extends oxUtils
+class oxUtilsHelper extends \OxidEsales\Eshop\Core\Utils
 {
     /** @var null Redirect url. */
     public static $sRedirectUrl = null;
@@ -40,7 +40,6 @@ class oxUtilsHelper extends oxUtils
      * @param bool   $blAddRedirectParam
      * @param int    $iHeaderCode
      *
-     * @return null
      */
     public function redirect($sUrl, $blAddRedirectParam = true, $iHeaderCode = 301)
     {

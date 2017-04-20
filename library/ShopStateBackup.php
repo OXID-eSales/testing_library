@@ -22,8 +22,6 @@
 namespace OxidEsales\TestingLibrary;
 
 
-use oxSystemComponentException;
-
 require_once TEST_LIBRARY_HELPERS_PATH . 'oxArticleHelper.php';
 require_once TEST_LIBRARY_HELPERS_PATH . 'oxSeoEncoderHelper.php';
 require_once TEST_LIBRARY_HELPERS_PATH . 'oxDeliveryHelper.php';
@@ -83,7 +81,7 @@ class ShopStateBackup
                     try {
                         $oNewInstance = oxNew($sKey);
                         $this->registryCache[$sKey] = $oNewInstance;
-                    } catch (oxSystemComponentException $oException) {
+                    } catch (\OxidEsales\Eshop\Core\Exception\SystemComponentException $oException) {
                         \OxidEsales\Eshop\Core\Registry::set($sKey, null);
                         continue;
                     }

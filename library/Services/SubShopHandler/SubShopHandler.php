@@ -21,7 +21,6 @@
 namespace OxidEsales\TestingLibrary\Services\SubShopHandler;
 
 use OxidEsales\Eshop\Core\Model\BaseModel;
-use OxidEsales\Eshop\Application\Component\Service\Element2ShopRelationsService;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
@@ -67,8 +66,8 @@ class SubShopHandler implements ShopServiceInterface
         $oBase = oxNew(\OxidEsales\Eshop\Core\Model\BaseModel::class);
         $oBase->init($sElementTable);
         if ($oBase->load($sElementId)) {
-            /** @var Element2ShopRelations $oElement2ShopRelations */
-            $oElement2ShopRelations = oxNew(\OxidEsales\Eshop\Application\Component\Service\Element2ShopRelationsService::class, $sElementTable);
+            /** @var \OxidEsales\Eshop\Core\Element2ShopRelations $oElement2ShopRelations */
+            $oElement2ShopRelations = oxNew(\OxidEsales\Eshop\Core\Element2ShopRelations::class, $sElementTable);
             $oElement2ShopRelations->setShopIds($sShopId);
             $oElement2ShopRelations->addToShop($oBase->getId());
         }
@@ -83,8 +82,8 @@ class SubShopHandler implements ShopServiceInterface
      */
     public function assignAllElementsToSubShop($sElementTable, $sShopId, $sParentShopId = 1)
     {
-        /** @var Element2ShopRelations $oElement2ShopRelations */
-        $oElement2ShopRelations = oxNew(\OxidEsales\Eshop\Application\Component\Service\Element2ShopRelationsService::class, $sElementTable);
+        /** @var \OxidEsales\Eshop\Core\Element2ShopRelations $oElement2ShopRelations */
+        $oElement2ShopRelations = oxNew(\OxidEsales\Eshop\Core\Element2ShopRelations::class, $sElementTable);
         $oElement2ShopRelations->setShopIds($sShopId);
         $oElement2ShopRelations->inheritFromShop($sParentShopId);
     }

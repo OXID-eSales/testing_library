@@ -20,9 +20,9 @@
  */
 
 /**
- * Helper class for oxCategory.
+ * Helper class for \OxidEsales\Eshop\Application\Model\Category
  */
-class oxCategoryHelper extends oxCategory
+class oxCategoryHelper extends \OxidEsales\Eshop\Application\Model\Category
 {
 
     /**

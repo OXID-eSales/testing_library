@@ -99,7 +99,6 @@ class Metrics
     /**
      * To start generated metrics xml file analysis for CCN, Crap index and NPath
      *
-     * @return null
      */
     public function read()
     {
@@ -178,7 +177,6 @@ class Metrics
     /**
      * To reset total values
      *
-     * @return null
      */
     protected function _resetTotalValues()
     {
