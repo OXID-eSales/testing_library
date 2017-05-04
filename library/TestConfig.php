@@ -498,17 +498,38 @@ class TestConfig
      */
     public function getModuleTestSuites()
     {
-        $testSuites = array();
+        $testSuitePaths = array();
         if ($this->shouldRunModuleTests()) {
-            $modulesDir = $this->getShopPath() .'modules/';
             foreach ($this->getPartialModulePaths() as $module) {
-                if ($suitePath = $modulesDir . $module .'/tests/') {
-                    $testSuites[] = $suitePath;
+                $testSuitePath = $this->getTestSuitePath($module);
+                if ($testSuitePath) {
+                    $testSuitePaths[] = $testSuitePath;
                 }
             }
         }
 
-        return $testSuites;
+        return $testSuitePaths;
+    }
+
+    /**
+     * In namespaced modules, the directory containing tests should be named "Tests", otherwise "tests"
+     *
+     * @param string $moduleName
+     *
+     * @return string
+     */
+    private function getTestSuitePath($moduleName)
+    {
+        $testSuitePathForModule = '';
+        $moduleDir = $this->getShopPath() . 'modules/' . $moduleName;
+
+        if (is_dir($moduleDir . '/tests/')) {
+            $testSuitePathForModule = $moduleDir . '/tests/';
+        } elseif (is_dir($moduleDir . '/Tests/')) {
+            $testSuitePathForModule = $moduleDir . '/Tests/';
+        }
+
+        return $testSuitePathForModule;
     }
 
     /**
