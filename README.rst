@@ -321,8 +321,11 @@ etc. For unit testing shop is installed without default demodata added.
 Writing acceptance tests
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Currently for acceptance testing Mink library and selenium/goutte
+Currently for acceptance testing Mink library and selenium 1 or goutte
 drivers are used.
+
+**Note:** selenium-server-standalone-jar 2.47.1 is used for testing.
+          There might be some issues with older versions #13
 
 Acceptance tests should be placed under
 ``tests/acceptance`` directory and extend
