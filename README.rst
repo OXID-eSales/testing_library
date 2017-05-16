@@ -327,7 +327,7 @@ drivers are used.
 **Note:**
 
   selenium-server-standalone-jar 2.47.1 is used for testing.
-  There might be some issues with older versions #13
+  There might be some issues with older versions `issue #13 <https://github.com/OXID-eSales/testing_library/issues/13>`__
 
 Acceptance tests should be placed under
 ``tests/acceptance`` directory and extend
