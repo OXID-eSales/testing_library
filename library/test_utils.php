@@ -42,8 +42,9 @@ use \OxidEsales\Eshop\Core\UtilsObject;
  *
  * @param $sModuleClass
  * @param $sClass
+ * @param bool $prependStrategy
  */
-function oxAddClassModule($sModuleClass, $sClass)
+function oxAddClassModule($sModuleClass, $sClass, $prependStrategy = false)
 {
     $oFactory = new \OxidEsales\Eshop\Core\UtilsObject();
     $aModules = $oFactory->getModuleVar("aModules");
@@ -51,8 +52,10 @@ function oxAddClassModule($sModuleClass, $sClass)
     //unset _possible_ registry instance
     \OxidEsales\Eshop\Core\Registry::set($sClass, null);
 
-    if ($aModules[strtolower($sClass)]) {
-        $sModuleClass = $aModules[strtolower($sClass)] . '&' . $sModuleClass;
+    if ($aModules[$sClass]) {
+        $sModuleClass = $prependStrategy
+            ? $sModuleClass . '&' . $aModules[$sClass]
+            : $aModules[$sClass] . '&' . $sModuleClass;
     }
     $aModules[strtolower($sClass)] = $sModuleClass;
 
