@@ -127,7 +127,7 @@ class ShopInstaller implements ShopServiceInterface
         $testConfig = new TestConfig();
         $vendorDir = $testConfig->getVendorDirectory();
 
-        CliExecutor::executeCommand("{$vendorDir}/bin/oe-eshop-facts oe-eshop-db_migrate");
+        CliExecutor::executeCommand("{$vendorDir}/bin/oe-eshop-doctrine_migration migrations:migrate");
         CliExecutor::executeCommand("{$vendorDir}/bin/oe-eshop-db_views_regenerate");
     }
 
