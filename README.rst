@@ -1,7 +1,7 @@
 OXID eShop Testing Library
 ==========================
 
-.. image:: https://img.shields.io/packagist/v/oxid-esales/testing-library.svg?maxAge=600 
+.. image:: https://img.shields.io/packagist/v/oxid-esales/testing-library.svg?maxAge=3600 
     :target: https://packagist.org/packages/oxid-esales/testing-library
 
 The OXID eShop testing library can be used to test OXID eShop with
