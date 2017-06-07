@@ -21,7 +21,7 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use OxidEsales\EshopCommunity\Core\Edition\EditionSelector;
+use OxidEsales\Eshop\Core\Edition\EditionSelector;
 use Symfony\Component\Yaml\Yaml;
 
 class TestConfig
@@ -61,6 +61,18 @@ class TestConfig
         }
         $yaml = Yaml::parse(file_get_contents($yamlFile));
         $this->configuration = array_merge($yaml['mandatory_parameters'], $yaml['optional_parameters']);
+    }
+
+    /**
+     * Ensure that the edition specific unified namespace classes are properly generated.
+     */
+    static public function prepareUnifiedNamespaceClasses()
+    {
+        $facts = new \OxidEsales\Facts\Facts();
+        $unifiedNameSpaceClassMapProvider = new \OxidEsales\UnifiedNameSpaceGenerator\UnifiedNameSpaceClassMapProvider($facts);
+        $generator = new \OxidEsales\UnifiedNameSpaceGenerator\Generator($facts, $unifiedNameSpaceClassMapProvider);
+        $generator->cleanupOutputDirectory();
+        $generator->generate();
     }
 
     /**

@@ -19,7 +19,7 @@
  * @copyright (C) OXID eSales AG 2003-2016
  */
 
-use OxidEsales\EshopCommunity\Core\Edition\EditionSelector;
+use OxidEsales\Eshop\Core\Edition\EditionSelector;
 use OxidEsales\TestingLibrary\TestSqlPathProvider;
 
 class TestSqlPathProviderTest extends PHPUnit_Framework_TestCase

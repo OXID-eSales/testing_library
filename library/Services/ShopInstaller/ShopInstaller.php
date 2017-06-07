@@ -23,9 +23,9 @@ namespace OxidEsales\TestingLibrary\Services\ShopInstaller;
 
 use OxidEsales\Eshop\Core\ConfigFile;
 use OxidEsales\Eshop\Core\Config;
-use OxidEsales\EshopCommunity\Core\Edition\EditionPathProvider;
-use OxidEsales\EshopCommunity\Core\Edition\EditionRootPathProvider;
-use OxidEsales\EshopCommunity\Core\Edition\EditionSelector;
+use OxidEsales\Eshop\Core\Edition\EditionPathProvider;
+use OxidEsales\Eshop\Core\Edition\EditionRootPathProvider;
+use OxidEsales\Eshop\Core\Edition\EditionSelector;
 use OxidEsales\EshopCommunity\Setup\Core;
 use OxidEsales\TestingLibrary\Services\Library\Cache;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;

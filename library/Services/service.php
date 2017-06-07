@@ -36,12 +36,16 @@ spl_autoload_register(function($className) {
     }
 });
 
-require_once __DIR__ ."../../bootstrap.php";
+// We need the composer autoloader.
+$installationRootPath =  dirname(dirname(dirname(__FILE__)));
+$vendorDirectory = $installationRootPath . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR;
+require_once $vendorDirectory . 'autoload.php';
 
-$vendorDirectory = __DIR__ . "/../../vendor/";
-if (!file_exists($vendorDirectory)) {
-    $vendorDirectory = __DIR__ .'/vendor/';
-}
+// Generate UNC classes before bootstrapping the shop
+\OxidEsales\TestingLibrary\TestConfig::prepareUnifiedNamespaceClasses();
+
+// Bootstrap the shop framework
+require_once __DIR__ ."../../bootstrap.php";
 
 /** This constant should only be used in TestConfig class. Use TestConfig::getVendorPath() instead. */
 define('TEST_LIBRARY_VENDOR_DIRECTORY', $vendorDirectory);

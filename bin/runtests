@@ -22,6 +22,9 @@
 
 require_once __DIR__ .'/../base.php';
 
+// NOTE: Presence of the correct UNC classes needs to be ensured before any shop classes can be used.
+\OxidEsales\TestingLibrary\TestConfig::prepareUnifiedNamespaceClasses();
+
 $testConfig = new OxidEsales\TestingLibrary\TestConfig();
 
 $arguments = array();

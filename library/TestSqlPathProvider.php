@@ -21,8 +21,8 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use OxidEsales\EshopCommunity\Core\Edition\EditionRootPathProvider;
-use OxidEsales\EshopCommunity\Core\Edition\EditionSelector;
+use OxidEsales\Eshop\Core\Edition\EditionRootPathProvider;
+use OxidEsales\Eshop\Core\Edition\EditionSelector;
 
 /**
  * Class responsible for providing path to testData directory.
