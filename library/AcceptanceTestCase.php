@@ -155,13 +155,12 @@ abstract class AcceptanceTestCase extends MinkWrapper
             $this->restoreDb('reset_suite_db_dump');
         }
 
+        $this->activateModules();
         $this->addTestData($testSuitePath);
         \OxidEsales\Eshop\Core\Registry::getConfig()->reinitialize();
         \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Language::class, oxNew(\OxidEsales\Eshop\Core\Language::class));
         $oServiceCaller = new ServiceCaller($this->getTestConfig());
         $oServiceCaller->callService('ViewsGenerator');
-
-        $this->activateModules();
 
         $this->dumpDb('reset_test_db_dump');
     }
