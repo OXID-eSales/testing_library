@@ -1,7 +1,7 @@
 OXID eShop Testing Library
 ==========================
 
-.. image:: https://img.shields.io/packagist/v/oxid-esales/testing-library.svg?maxAge=3600 
+.. image:: https://img.shields.io/packagist/v/oxid-esales/testing-library.svg?maxAge=3600
     :target: https://packagist.org/packages/oxid-esales/testing-library
 
 The OXID eShop testing library can be used to test OXID eShop with
@@ -355,6 +355,33 @@ A useful method for preparing the shop is
 ``AcceptanceTestCase::callShopSC()``. With this method
 you can e.g. insert a new article or modify config variables. For detailed
 usage examples have a look at the OXID eShop acceptance tests.
+
+Methods usage
+^^^^^^^^^^^^^
+
+Testing library provides methods which allows write tests easier. Some methods usages are described bellow:
+
+Activating theme:
+
+.. code:: php
+
+    // This will activate azure theme.
+    $this->activateTheme('azure');
+
+Add article to basket:
+
+.. code:: php
+
+    // This will add article with ID 1001 to basket.
+    $this->addToBasket("1001");
+
+Login user in front end side:
+
+.. code:: php
+
+    $this->loginInFrontend("example_test@oxid-esales.dev", "useruser");
+
+Rest of the methods can be found in class: ``OxidEsales\TestingLibrary\AcceptanceTestCase``.
 
 Changing database restoration mechanism
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
