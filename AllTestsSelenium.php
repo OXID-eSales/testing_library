@@ -28,8 +28,8 @@ class AllTestsSelenium extends AllTestsRunner
 {
 
     /** @var array Default test suites */
-    protected static $testSuites = array('acceptance', 'Acceptance');
+    protected static $testSuites = array('Acceptance', 'acceptance');
 
     /** @var array Run these tests before any other */
-    protected static $priorityTests = array('acceptance/Frontend/shopSetUpTest.php');
+    protected static $priorityTests = array('Acceptance/Frontend/shopSetUpTest.php');
 }
