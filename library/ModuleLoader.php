@@ -26,6 +26,7 @@ use OxidEsales\Eshop\Core\Module\ModuleCache;
 use OxidEsales\Eshop\Core\Module\ModuleInstaller;
 use OxidEsales\Eshop\Core\Module\Module;
 use Exception;
+use OxidEsales\TestingLibrary\Services\Library\Cache;
 
 /**
  * Module loader class. Can imitate loaded module for testing.
@@ -74,6 +75,7 @@ class ModuleLoader
         $moduleDirectory = \OxidEsales\Eshop\Core\Registry::getConfig()->getModulesDir();
         $moduleList = new ModuleList();
         $moduleList->getModulesFromDir($moduleDirectory);
+        $this->clearShopTmpFolder();
     }
 
     /**
@@ -89,9 +91,12 @@ class ModuleLoader
 
         $moduleCache = new ModuleCache($module);
         $moduleInstaller = new ModuleInstaller($moduleCache);
+
         if (!$moduleInstaller->activate($module)) {
             throw new Exception("Error on module installation: " . $module->getId());
         }
+
+        $this->clearShopTmpFolder();
     }
 
     /**
@@ -119,5 +124,16 @@ class ModuleLoader
         if (!self::$useOriginalChains) {
             \OxidEsales\Eshop\Core\Registry::getConfig()->setConfigParam("aModules", '');
         }
+    }
+
+    /**
+     * Shop cache should be deleted as some modules might try to clean cache on top.
+     * This creates problems if CI and Apache user is different.
+     * Some modules might not clean cache which would also lead to a random errors/failures.
+     */
+    private function clearShopTmpFolder()
+    {
+        $cache = new Cache();
+        $cache->clearTemporaryDirectory();
     }
 }
