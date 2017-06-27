@@ -73,8 +73,14 @@ class Cache
 
         $files = array_diff(scandir($dir), $itemsToIgnore);
         foreach ($files as $file) {
-
-            (is_dir("$dir/$file")) ? $this->removeTemporaryDirectory("$dir/$file", true) : @unlink("$dir/$file");
+            if (is_dir("$dir/$file")) {
+                $this->removeTemporaryDirectory(
+                    "$dir/$file",
+                    $file == 'smarty' ? $rmBaseDir : true
+                );
+            } else {
+                @unlink("$dir/$file");
+            }
         }
         if ($rmBaseDir) {
             @rmdir($dir);
