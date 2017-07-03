@@ -101,7 +101,9 @@ class ShopInstaller implements ShopServiceInterface
 
         $this->setSerialNumber($serialNumber);
 
-        if ($request->getParameter('turnOnVarnish', $this->getShopConfig()->turnOnVarnish)) {
+        $config = $this->getShopConfig();
+        $default = property_exists($config, 'turnOnVarnish') ? $config->turnOnVarnish : false;
+        if ($request->getParameter('turnOnVarnish', $default)) {
             $this->turnVarnishOn();
         }
 

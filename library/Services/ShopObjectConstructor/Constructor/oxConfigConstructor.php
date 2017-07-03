@@ -82,9 +82,20 @@ class oxConfigConstructor extends ObjectConstructor
      */
     private function _formSaveConfigParameters($configKey, $configParameters)
     {
-        $type = $configParameters['type'] ? $configParameters['type'] : null;
-        $value = $configParameters['value'] ? $configParameters['value'] : null;
-        $module = $configParameters['module'] ? $configParameters['module'] : null;
+        $type = null;
+        if (isset($configParameters['type'])) {
+            $type = $configParameters['type'];
+        }
+
+        $value = null;
+        if (isset($configParameters['value'])) {
+            $value = $configParameters['value'];
+        }
+
+        $module = null;
+        if (isset($configParameters['module'])) {
+            $module = $configParameters['module'];
+        }
 
         if (($type == "arr" || $type == 'aarr') && !is_array($value)) {
             $value = unserialize(htmlspecialchars_decode($value));

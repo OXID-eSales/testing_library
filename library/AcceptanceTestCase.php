@@ -857,8 +857,12 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $expected = self::translate($expected);
         $actual = self::translate($actual);
 
-        $expected = self::_clearString($expected);
-        $sMessage = "'$expected' != '$actual' with message: " . $message;
+        if (!is_array($expected) && !is_array($actual)) {
+            $expected = self::_clearString($expected);
+            $sMessage = "'$expected' != '$actual' with message: " . $message;
+        } else {
+            $sMessage = "Expected is not equal to actual parameter.";
+        }
 
         parent::assertEquals($expected, $actual, $sMessage, $delta, $maxDepth, $canonicalize, $ignoreCase);
     }

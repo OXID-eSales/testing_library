@@ -149,7 +149,9 @@ class ServiceCaller
      */
     protected function callLocalService($serviceName)
     {
-        define('TMP_PATH', $this->getTestConfig()->getTempDirectory());
+        if (!defined('TMP_PATH')) {
+            define('TMP_PATH', $this->getTestConfig()->getTempDirectory());
+        }
 
         $config = new ServiceConfig($this->getTestConfig()->getShopPath(), $this->getTestConfig()->getTempDirectory());
         $config->setShopEdition($this->getTestConfig()->getShopEdition());
