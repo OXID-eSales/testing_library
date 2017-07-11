@@ -154,11 +154,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
         } else {
             $this->restoreDb('reset_suite_db_dump');
 
-            \OxidEsales\Eshop\Core\Registry::set('oxConfig', null);
-            $baseModel = new \OxidEsales\Eshop\Core\Base();
-            $baseModel->setConfig(null);
-
-            \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Language::class, oxNew(\OxidEsales\Eshop\Core\Language::class));
+            $this->resetCachedObjects();
         }
 
         $oServiceCaller = new ServiceCaller($this->getTestConfig());
@@ -2083,6 +2079,20 @@ abstract class AcceptanceTestCase extends MinkWrapper
         }
 
         return self::$moduleLoader;
+    }
+
+    /**
+     * Config object relies on database, so it must be reset if DB changes during request.
+     * Language object relies on configuration, it must be reset if config changes during request.
+     * Config object is stored in Registry and also static cache of Basic object. So both places must be cleaned.
+     */
+    private function resetCachedObjects()
+    {
+        \OxidEsales\Eshop\Core\Registry::set('oxConfig', null);
+        $baseModel = new \OxidEsales\Eshop\Core\Base();
+        $baseModel->setConfig(null);
+
+        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Language::class, oxNew(\OxidEsales\Eshop\Core\Language::class));
     }
 
 }
