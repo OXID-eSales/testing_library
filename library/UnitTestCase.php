@@ -109,6 +109,9 @@ abstract class UnitTestCase extends BaseTestCase
         if ($testConfig->getModulesToActivate()) {
             $oTestModuleLoader = $this->_getModuleLoader();
             $oTestModuleLoader->activateModules($testConfig->getModulesToActivate());
+
+            // Modules might add new translations, and language object has a static cache which must be flushed
+            \OxidEsales\Eshop\Core\Registry::set('oxLang', null);
         }
         \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\UtilsDate::class, new modOxUtilsDate());
 
