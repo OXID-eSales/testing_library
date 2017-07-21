@@ -692,7 +692,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
             return;
         }
 
-        if ($blFollowPath && $this->_aFramePaths[$sFrame]) {
+        if ($blFollowPath && isset($this->_aFramePaths[$sFrame])) {
             $aPath = explode("/", $this->_aFramePaths[$sFrame]);
             $this->_selectFrameByPath($aPath);
         } else {
