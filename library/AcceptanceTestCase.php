@@ -1981,6 +1981,9 @@ abstract class AcceptanceTestCase extends MinkWrapper
             if (strpos($aCall['file'], '/usr') === 0 || strpos($aCall['file'], '/tmp') === 0) {
                 continue;
             }
+            if (!isset($aCall['function'])) {
+                $aCall['function'] = "Exceptional case: index 'function' not set in exception!";
+            }
             $sResult .= (!in_array($aCall['function'], $aSkipMethods)) ? $this->_parseTraceCall($aCall) : '';
         }
         return $sResult;
