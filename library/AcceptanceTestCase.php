@@ -448,6 +448,42 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
+     * Update basket with new amount for the product.
+     * Add needed amount or 0 to delete item from the basket.
+     *
+     * @param string $productId oxid of the product.
+     * @param int $itemsAmount amount of the product.
+     */
+    public function updateProductAmountInBasket($productId, $itemsAmount)
+    {
+        $this->openBasket();
+        $this->getHtmlSource();
+
+        $basket = new \OxidEsales\Eshop\Application\Model\Basket();
+        $itemId = $basket->getItemKey($productId);
+
+        // There is a bug in goutte while clicking on button in a form with more than one button:
+        // only first button is available. In this case the third button is needed.
+        // Bug is in BrowserKitDriver->click($xpath) where $this->getCrawler()->filterXPath($xpath) is called.
+        // It returns a form which later on throws an exception.
+        // This code gets a form and push it without need to click a button.
+        if ($this->currentMinkDriver === "goutte") {
+            $updateButton = $this->getElement("//button[@id='basketRemove']");
+            $client = $updateButton->getSession()->getDriver()->getClient();
+            $updateItemsForm = $client->getCrawler()->filterXPath("//form[@name='basket']")->form();
+            $client->submit($updateItemsForm, ['aproducts[' . $itemId . '][am]' => $itemsAmount]);
+        } else {
+            $amountInput = $this->getElement("//input[@name='aproducts[$itemId][am]']");
+            $amountInput->setValue($itemsAmount);
+
+            $productSelector = $this->getElement("//input[@name='aproducts[$itemId][remove]']");
+            $productSelector->check();
+
+            $this->clickAndWait("//button[@id='basketUpdate']");
+        }
+    }
+
+    /**
      * mouseOver element and then click specified link.
      *
      * @param string $element1 MouseOver element.
@@ -484,8 +520,14 @@ abstract class AcceptanceTestCase extends MinkWrapper
         } else {
             $sLink = "Display cart";
         }
-        $this->click("//div[@id='miniBasket']/img");
-        $this->clickAndWait("//div[@id='basketFlyout']//a[text()='" . $sLink . "']");
+
+        if ($this->currentMinkDriver === "goutte") {
+            $link = $this->getElement("//div[@id='basketFlyout']//a[text()='" . $sLink . "']");
+            $link->click();
+        } else {
+            $this->click("//div[@id='miniBasket']/img");
+            $this->clickAndWait("//div[@id='basketFlyout']//a[text()='" . $sLink . "']");
+        }
     }
 
     /**

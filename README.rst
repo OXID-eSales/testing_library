@@ -351,6 +351,13 @@ Add article to basket:
     // This will add article with ID 1001 to basket.
     $this->addToBasket("1001");
 
+Update items amount in basket:
+
+.. code:: php
+
+    // This will update article with ID 1001 in basket to have 2 items.
+    $this->updateProductAmountInBasket("1001", 2);
+
 Login user in front end side:
 
 .. code:: php
