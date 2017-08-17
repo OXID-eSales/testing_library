@@ -465,6 +465,23 @@ class TestConfig
     }
 
     /**
+     * Return how many times to try test before marking it as failure.
+     * Could be used with unstable tests.
+     *
+     * @return int
+     */
+    public function getRetryTimes()
+    {
+        $retryTimes = 0;
+
+        if (!is_null($this->getValue('retry_times_after_test_fail'))) {
+            $retryTimes = (int)$this->getValue('retry_times_after_test_fail');
+        }
+
+        return $retryTimes;
+    }
+
+    /**
      * Returns current test suite.
      *
      * @return null|string

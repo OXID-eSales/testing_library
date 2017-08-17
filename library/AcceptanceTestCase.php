@@ -37,7 +37,7 @@ use PHPUnit_Util_Filter;
 abstract class AcceptanceTestCase extends MinkWrapper
 {
     /** @var int How many times to retry after server error. */
-    protected $retryTimes = 2;
+    protected $retryTimes = null;
 
     /** @var bool Whether to start mink session before test run. New tests can start session in runtime. */
     protected $_blStartMinkSession = false;
@@ -114,6 +114,10 @@ abstract class AcceptanceTestCase extends MinkWrapper
         parent::__construct($name, $data, $dataName);
 
         $this->oTestConfig = $this->getTestConfig();
+
+        if (is_null($this->retryTimes)) {
+            $this->retryTimes = $this->oTestConfig->getRetryTimes();
+        }
 
         $this->retryTimesLeft = $this->retryTimes;
     }
