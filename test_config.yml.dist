@@ -91,3 +91,7 @@ optional_parameters:
     # How many times to try test before marking it as failure.
     # Could be used for unstable tests which fails randomly.
     retry_times_after_test_fail: 2
+
+    # Testing library regenerates Unified Namespace classes to make sure that Shop is workable.
+    # In some cases it should not be needed as composer plugin does it already.
+    generate_unified_namespace_classes: true

@@ -482,6 +482,22 @@ class TestConfig
     }
 
     /**
+     * Return if generate Unified Namespace classes.
+     *
+     * @return bool
+     */
+    public function shouldGenerateUnifiedNamespaceClasses()
+    {
+        $generate = true;
+
+        if (!is_null($this->getValue('generate_unified_namespace_classes'))) {
+            $generate = (bool)$this->getValue('generate_unified_namespace_classes');
+        }
+
+        return $generate;
+    }
+
+    /**
      * Returns current test suite.
      *
      * @return null|string
