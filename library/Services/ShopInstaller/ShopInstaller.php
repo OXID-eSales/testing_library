@@ -79,6 +79,11 @@ class ShopInstaller implements ShopServiceInterface
             throw new \Exception("Shop Setup directory has to be present!");
         }
 
+        $testConfig = new TestConfig();
+        if ($testConfig->shouldGenerateUnifiedNamespaceClasses()) {
+            \OxidEsales\TestingLibrary\TestConfig::prepareUnifiedNamespaceClasses();
+        }
+
         $serialNumber = $request->getParameter('serial', false);
         $serialNumber = $serialNumber ? $serialNumber : $this->getDefaultSerial();
 
