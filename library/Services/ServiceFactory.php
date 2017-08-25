@@ -37,8 +37,6 @@ class ServiceFactory
     public function __construct($config)
     {
         $this->config = $config;
-
-        include_once $config->getShopDirectory() . '/bootstrap.php';
     }
 
     /**
@@ -52,6 +50,12 @@ class ServiceFactory
      */
     public function createService($serviceClass)
     {
+        // Services use Shop functionality so they need bootstrap.
+        // ShopInstaller my run even when bootstrap is not yet available.
+        if (strtolower($serviceClass) !== strtolower('ShopInstaller')) {
+            include_once $this->config->getShopDirectory() . '/bootstrap.php';
+        }
+
         $className = $serviceClass;
         if (!$this->isNamespacedClass($serviceClass)) {
             // Used for backwards compatibility.
