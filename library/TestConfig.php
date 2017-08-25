@@ -21,7 +21,7 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use OxidEsales\Eshop\Core\Edition\EditionSelector;
+use \OxidEsales\Facts\Edition\EditionSelector;
 use Symfony\Component\Yaml\Yaml;
 
 class TestConfig
@@ -111,7 +111,6 @@ class TestConfig
     public function getShopEdition()
     {
         if (is_null($this->shopEdition)) {
-            require_once $this->getShopPath() . 'bootstrap.php';
             $editionSelector = new EditionSelector();
             $this->shopEdition = $editionSelector->getEdition();
         }
