@@ -44,4 +44,14 @@ class ViewsGenerator implements ShopServiceInterface
         $oGenerator = oxNew(\OxidEsales\Eshop\Core\DbMetaDataHandler::class);
         $oGenerator->updateViews();
     }
+
+    /**
+     * Defines if service require Shop bootstrap.
+     *
+     * @return bool
+     */
+    public function needBootstrap()
+    {
+        return true;
+    }
 }

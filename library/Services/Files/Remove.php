@@ -52,4 +52,14 @@ class Remove implements ShopServiceInterface
     {
         $this->fileSystem->remove($request->getParameter(static::FILES_PARAMETER_NAME));
     }
+
+    /**
+     * Defines if service require Shop bootstrap.
+     *
+     * @return bool
+     */
+    public function needBootstrap()
+    {
+        return false;
+    }
 }

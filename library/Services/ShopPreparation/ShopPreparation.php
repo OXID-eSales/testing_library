@@ -78,6 +78,16 @@ class ShopPreparation implements ShopServiceInterface
     }
 
     /**
+     * Defines if service require Shop bootstrap.
+     *
+     * @return bool
+     */
+    public function needBootstrap()
+    {
+        return true;
+    }
+
+    /**
      * @return DatabaseHandler
      */
     protected function getDatabaseHandler()

@@ -38,4 +38,11 @@ interface ShopServiceInterface
      * @param Request $request
      */
     public function init($request);
+
+    /**
+     * Defines if service require Shop bootstrap.
+     *
+     * @return bool
+     */
+    public function needBootstrap();
 }

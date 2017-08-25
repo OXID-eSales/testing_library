@@ -54,6 +54,16 @@ class ModuleInstaller implements ShopServiceInterface
     }
 
     /**
+     * Defines if service require Shop bootstrap.
+     *
+     * @return bool
+     */
+    public function needBootstrap()
+    {
+        return true;
+    }
+
+    /**
      * Activates module.
      *
      * @param string $modulePath The path to the module.

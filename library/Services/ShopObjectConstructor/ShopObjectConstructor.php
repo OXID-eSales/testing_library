@@ -81,6 +81,16 @@ class ShopObjectConstructor implements ShopServiceInterface
     }
 
     /**
+     * Defines if service require Shop bootstrap.
+     *
+     * @return bool
+     */
+    public function needBootstrap()
+    {
+        return true;
+    }
+
+    /**
      * @return ServiceConfig
      */
     protected function getServiceConfig()

@@ -54,6 +54,16 @@ class SubShopHandler implements ShopServiceInterface
     }
 
     /**
+     * Defines if service require Shop bootstrap.
+     *
+     * @return bool
+     */
+    public function needBootstrap()
+    {
+        return true;
+    }
+
+    /**
      * Assigns element to subshop
      *
      * @param string  $sElementTable Name of element table

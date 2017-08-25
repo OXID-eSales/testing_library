@@ -65,4 +65,14 @@ class ClearCache implements ShopServiceInterface
     {
         return $this->serviceConfig;
     }
+
+    /**
+     * Defines if service require Shop bootstrap.
+     *
+     * @return bool
+     */
+    public function needBootstrap()
+    {
+        return false;
+    }
 }

@@ -68,4 +68,14 @@ class ChangeExceptionLogRights implements ShopServiceInterface
         }
         $fileSystem->chmod($pathToExceptionLog, 0777);
     }
+
+    /**
+     * Defines if service require Shop bootstrap.
+     *
+     * @return bool
+     */
+    public function needBootstrap()
+    {
+        return false;
+    }
 }

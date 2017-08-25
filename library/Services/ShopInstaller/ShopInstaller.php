@@ -119,6 +119,16 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
+     * Defines if service require Shop bootstrap.
+     *
+     * @return bool
+     */
+    public function needBootstrap()
+    {
+        return false;
+    }
+
+    /**
      * Sets up database.
      */
     public function setupDatabase()

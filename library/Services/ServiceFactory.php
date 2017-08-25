@@ -50,12 +50,6 @@ class ServiceFactory
      */
     public function createService($serviceClass)
     {
-        // Services use Shop functionality so they need bootstrap.
-        // ShopInstaller my run even when bootstrap is not yet available.
-        if (strtolower($serviceClass) !== strtolower('ShopInstaller')) {
-            include_once $this->config->getShopDirectory() . '/bootstrap.php';
-        }
-
         $className = $serviceClass;
         if (!$this->isNamespacedClass($serviceClass)) {
             // Used for backwards compatibility.
@@ -68,6 +62,10 @@ class ServiceFactory
 
         if (!($service instanceof ShopServiceInterface)) {
             throw new Exception("Service '$className' does not implement ShopServiceInterface interface!");
+        }
+
+        if ($service->needBootstrap()) {
+            include_once $this->config->getShopDirectory() . '/bootstrap.php';
         }
 
         return $service;
