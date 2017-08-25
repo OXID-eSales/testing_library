@@ -61,9 +61,6 @@ class ShopInstaller implements ShopServiceInterface
     public function __construct($config)
     {
         $this->serviceConfig = $config;
-
-        $this->shopConfig = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
-        $this->dbHandler = new DatabaseHandler($this->shopConfig);
     }
 
     /**
@@ -75,13 +72,18 @@ class ShopInstaller implements ShopServiceInterface
      */
     public function init($request)
     {
-        if (!class_exists('\OxidEsales\EshopCommunity\Setup\Setup')) {
-            throw new \Exception("Shop Setup directory has to be present!");
-        }
-
         $testConfig = new TestConfig();
         if ($testConfig->shouldGenerateUnifiedNamespaceClasses()) {
             \OxidEsales\TestingLibrary\TestConfig::prepareUnifiedNamespaceClasses();
+        }
+
+        include_once $this->serviceConfig->getShopDirectory() . '/bootstrap.php';
+
+        $this->shopConfig = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
+        $this->dbHandler = new DatabaseHandler($this->shopConfig);
+
+        if (!class_exists('\OxidEsales\EshopCommunity\Setup\Setup')) {
+            throw new \Exception("Shop Setup directory has to be present!");
         }
 
         $serialNumber = $request->getParameter('serial', false);
