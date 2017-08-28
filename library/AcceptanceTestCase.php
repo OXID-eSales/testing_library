@@ -436,19 +436,9 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $additionalParams = array(),
         $shopId = null
     ) {
-        $oInput = $this->getElement('stoken', false);
-        if ($oInput) {
-            $aParams['stoken'] = $oInput->getValue();
-        }
-        $aParams['cl'] = $controller;
-        $aParams['fnc'] = 'tobasket';
-        $aParams['aid'] = $articleId;
-        $aParams['am'] = $amount;
-        $aParams['anid'] = $articleId;
+        $actionName = 'tobasket';
 
-        $aParams = array_merge($aParams, $additionalParams);
-
-        $this->openNewWindow($this->_getShopUrl($aParams, $shopId), false);
+        $this->callBasketAction($actionName, $articleId, $amount, $controller, $additionalParams, $shopId);
     }
 
 
@@ -468,19 +458,9 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $additionalParams = array(),
         $shopId = null
     ) {
-        $input = $this->getElement('stoken', false);
-        if ($input) {
-            $params['stoken'] = $input->getValue();
-        }
-        $params['cl'] = $controller;
-        $params['fnc'] = 'changebasket';
-        $params['aid'] = $articleId;
-        $params['am'] = $amount;
-        $params['anid'] = $articleId;
+        $actionName = 'changebasket';
 
-        $params = array_merge($params, $additionalParams);
-
-        $this->openNewWindow($this->_getShopUrl($params, $shopId), false);
+        $this->callBasketAction($actionName, $articleId, $amount, $controller, $additionalParams, $shopId);
     }
 
     /**
@@ -1779,6 +1759,11 @@ abstract class AcceptanceTestCase extends MinkWrapper
     {
         $theme = oxNew(Theme::class);
         $theme->load($themeName);
+
+        $testConfig = new TestConfig();
+        $shopId = $testConfig->getShopId();
+        \OxidEsales\Eshop\Core\Registry::getConfig()->setShopId($shopId);
+
         $theme->activate();
     }
 
@@ -2140,5 +2125,37 @@ abstract class AcceptanceTestCase extends MinkWrapper
         \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Language::class, oxNew(\OxidEsales\Eshop\Core\Language::class));
     }
 
+    /**
+     * addToBasket and changeBasket has same logic which is extracted.
+     *
+     * @param string $actionName       addToBasket or changeBasket
+     * @param string $articleId        Article id
+     * @param int    $amount           Amount of items to add
+     * @param string $controller       Controller name which should be opened after article is added
+     * @param array  $additionalParams Additional parameters (like persparam[details] for label)
+     * @param int    $shopId           Shop id
+     */
+    private function callBasketAction($actionName, $articleId, $amount, $controller, $additionalParams, $shopId = null)
+    {
+        if (is_null($shopId)) {
+            $testConfig = new TestConfig();
+            $shopId = $testConfig->getShopId();
+        }
+
+        $input = $this->getElement('stoken', false);
+        if ($input) {
+            $params['stoken'] = $input->getValue();
+        }
+
+        $params['cl'] = $controller;
+        $params['fnc'] = $actionName;
+        $params['aid'] = $articleId;
+        $params['am'] = $amount;
+        $params['anid'] = $articleId;
+
+        $params = array_merge($params, $additionalParams);
+
+        $this->openNewWindow($this->_getShopUrl($params, $shopId), true);
+    }
 }
 
