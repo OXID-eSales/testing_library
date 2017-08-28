@@ -27,7 +27,7 @@ use OxidEsales\TestingLibrary\Services\ServiceFactory;
 use OxidEsales\TestingLibrary\Services\Files\ChangeExceptionLogRights;
 
 /**
- * Class for calling services. Services must already exist in shop.
+ * Class for calling services. Services must already exist in OXID eShop.
  */
 class ServiceCaller
 {
@@ -37,7 +37,7 @@ class ServiceCaller
     /** @var TestConfig */
     private $config;
 
-    /** @var bool Whether services was copied to the shop. */
+    /** @var bool Whether services was copied to the OXID eShop. */
     private static $servicesCopied = false;
 
     /**
@@ -75,7 +75,7 @@ class ServiceCaller
     }
 
     /**
-     * Call shop service to execute code in shop.
+     * Call OXID eShop service to execute code in shop.
      *
      * @param string $serviceName
      * @param string $shopId
@@ -174,7 +174,7 @@ class ServiceCaller
     }
 
     /**
-     * Copies services directory to shop.
+     * Copies services directory to OXID eShop.
      */
     protected function copyServicesToShop()
     {

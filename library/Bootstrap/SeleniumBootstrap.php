@@ -26,11 +26,11 @@ use OxidEsales\TestingLibrary\FileCopier;
 
 class SeleniumBootstrap extends BootstrapBase
 {
-    /** @var int Whether to add demo data when installing the shop. */
+    /** @var int Whether to add demo data when installing the OXID eShop. */
     protected $addDemoData = 1;
 
     /**
-     * Initiates shop before testing.
+     * Initiates OXID eShop before testing.
      */
     public function init()
     {

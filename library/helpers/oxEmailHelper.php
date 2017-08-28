@@ -30,7 +30,7 @@ class oxEmailHelper extends \OxidEsales\Eshop\Core\Email
     /** @var bool Whether email was sent to user. */
     public static $blSendToUserWasCalled = null;
 
-    /** @var bool Whether email was sent to shop owner.  */
+    /** @var bool Whether email was sent to OXID eShop owner.  */
     public static $blSendToOwnerWasCalled = null;
 
     /** @var \OxidEsales\Eshop\Application\Model\Order User order used during email sending. */

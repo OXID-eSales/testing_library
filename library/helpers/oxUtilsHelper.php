@@ -30,7 +30,7 @@ class oxUtilsHelper extends \OxidEsales\Eshop\Core\Utils
     /** @var bool Should SEO engine be active during testing. */
     public static $sSeoIsActive = false;
 
-    /** @var bool Should shop act as a search engine during testing. */
+    /** @var bool Should OXID eShop act as a search engine during testing. */
     public static $blIsSearchEngine = false;
 
     /**

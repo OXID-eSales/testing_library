@@ -37,7 +37,7 @@ class ModuleInstaller implements ShopServiceInterface
     public function __construct($config) {}
 
     /**
-     * Starts installation of the shop.
+     * Starts installation of the OXID eShop.
      *
      * @param Request $request
      *
@@ -54,7 +54,7 @@ class ModuleInstaller implements ShopServiceInterface
     }
 
     /**
-     * Defines if service require Shop bootstrap.
+     * Defines if service require OXID eShop bootstrap.
      *
      * @return bool
      */
@@ -82,7 +82,7 @@ class ModuleInstaller implements ShopServiceInterface
     }
 
     /**
-     * Prepares modules for activation. Registers all modules that exist in the shop.
+     * Prepares modules for activation. Registers all modules that exist in the OXID eShop.
      *
      * @param string $moduleDirectory The base directory of modules.
      */

@@ -26,7 +26,7 @@ use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
 /**
- * This script clears shop cache
+ * This script clears OXID eShop cache
  */
 class ClearCache implements ShopServiceInterface
 {
@@ -42,7 +42,7 @@ class ClearCache implements ShopServiceInterface
     }
 
     /**
-     * Clears shop cache.
+     * Clears OXID eShop cache.
      *
      * @param Request $request
      */
@@ -67,7 +67,7 @@ class ClearCache implements ShopServiceInterface
     }
 
     /**
-     * Defines if service require Shop bootstrap.
+     * Defines if service require OXID eShop bootstrap.
      *
      * @return bool
      */

@@ -28,7 +28,7 @@ use OxidEsales\TestingLibrary\Services\ShopObjectConstructor\Constructor\Constru
 
 
 /**
- * Shop constructor class for modifying shop environment during testing
+ * OXID eShop constructor class for modifying shop environment during testing
  * Class ShopConstructor
  */
 class ShopObjectConstructor implements ShopServiceInterface
@@ -81,7 +81,7 @@ class ShopObjectConstructor implements ShopServiceInterface
     }
 
     /**
-     * Defines if service require Shop bootstrap.
+     * Defines if service require OXID eShop bootstrap.
      *
      * @return bool
      */
@@ -99,7 +99,7 @@ class ShopObjectConstructor implements ShopServiceInterface
     }
 
     /**
-     * Switches active shop
+     * Switches active OXID eShop shop
      *
      * @param string $shopId
      */
@@ -122,7 +122,7 @@ class ShopObjectConstructor implements ShopServiceInterface
         $languages = \OxidEsales\Eshop\Core\Registry::getLang()->getLanguageIds();
         $languageId = array_search($language, $languages);
         if ($languageId === false) {
-            throw new Exception("Language $language was not found or is not active in shop");
+            throw new Exception("Language $language was not found or is not active in OXID eShop");
         }
         \OxidEsales\Eshop\Core\Registry::getLang()->setBaseLanguage($languageId);
     }

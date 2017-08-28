@@ -29,7 +29,7 @@ use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
 /**
- * Shop constructor class for modifying shop environment during testing
+ * OXID eShop constructor class for modifying OXID eShop environment during testing
  * Class ShopConstructor
  */
 class ShopPreparation implements ShopServiceInterface
@@ -78,7 +78,7 @@ class ShopPreparation implements ShopServiceInterface
     }
 
     /**
-     * Defines if service require Shop bootstrap.
+     * Defines if service require OXID eShop bootstrap.
      *
      * @return bool
      */

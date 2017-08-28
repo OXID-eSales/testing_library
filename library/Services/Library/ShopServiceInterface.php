@@ -40,7 +40,7 @@ interface ShopServiceInterface
     public function init($request);
 
     /**
-     * Defines if service require Shop bootstrap.
+     * Defines if service require OXID eShop bootstrap.
      *
      * @return bool
      */

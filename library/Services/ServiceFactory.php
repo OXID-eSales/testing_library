@@ -30,7 +30,7 @@ use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 class ServiceFactory
 {
     /**
-     * Loads the shop.
+     * Loads the OXID eShop.
      *
      * @param ServiceConfig $config
      */

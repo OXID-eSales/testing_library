@@ -34,7 +34,7 @@ abstract class BootstrapBase
     /** @var TestConfig */
     private $testConfig;
 
-    /** @var int Whether to add demo data when installing the shop. */
+    /** @var int Whether to add demo data when installing the OXID eShop. */
     protected $addDemoData = 1;
 
     /**
@@ -85,7 +85,7 @@ abstract class BootstrapBase
     }
 
     /**
-     * Prepares shop config object.
+     * Prepares OXID eShop config object.
      */
     protected function prepareShop()
     {
@@ -118,7 +118,7 @@ abstract class BootstrapBase
     }
 
     /**
-     * Installs the shop.
+     * Installs the OXID eShop.
      *
      * @throws \Exception
      */

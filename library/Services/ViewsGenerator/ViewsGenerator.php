@@ -25,7 +25,7 @@ use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
 /**
- * Regenerates shop views
+ * Regenerates OXID eShop views
  */
 class ViewsGenerator implements ShopServiceInterface
 {
@@ -35,7 +35,7 @@ class ViewsGenerator implements ShopServiceInterface
     public function __construct($config) {}
 
     /**
-     * Clears shop cache
+     * Clears OXID eShop cache
      *
      * @param Request $request
      */
@@ -46,7 +46,7 @@ class ViewsGenerator implements ShopServiceInterface
     }
 
     /**
-     * Defines if service require Shop bootstrap.
+     * Defines if service require OXID eShop bootstrap.
      *
      * @return bool
      */

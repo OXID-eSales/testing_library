@@ -33,10 +33,10 @@ class ServiceConfig
 
     const EDITION_COMMUNITY = 'CE';
 
-    /** @var string Tested shop directory. */
+    /** @var string Tested OXID eShop directory. */
     private $shopDirectory;
 
-    /** @var string Shop edition. */
+    /** @var string The OXID eShop edition. */
     private $shopEdition;
 
     /** @var string Temporary directory to store temp files. */
@@ -58,8 +58,8 @@ class ServiceConfig
     }
 
     /**
-     * Returns path to shop source directory.
-     * If shop path was not set, it assumes that services was copied to shop root directory.
+     * Returns path to OXID eShop source directory.
+     * If OXID eShop path was not set, it assumes that services was copied to OXID eShop root directory.
      *
      * @return string
      */
@@ -69,7 +69,7 @@ class ServiceConfig
     }
 
     /**
-     * Sets shop path.
+     * Sets OXID eShop path.
      *
      * @param string $shopDirectory
      */
@@ -80,7 +80,7 @@ class ServiceConfig
 
 
     /**
-     * Returns shop edition
+     * Returns OXID eShop edition
      *
      * @return array|null|string
      */
@@ -93,7 +93,7 @@ class ServiceConfig
     }
 
     /**
-     * Sets shop path.
+     * Sets OXID eShop path.
      *
      * @param string $shopEdition
      */

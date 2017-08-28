@@ -37,7 +37,7 @@ use OxidEsales\EshopProfessional\Core\Serial;
 use OxidEsales\TestingLibrary\TestConfig;
 
 /**
- * Class for shop installation.
+ * Class for OXID eShop installation.
  */
 class ShopInstaller implements ShopServiceInterface
 {
@@ -64,7 +64,7 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
-     * Starts installation of the shop.
+     * Starts installation of the OXID eShop.
      *
      * @param Request $request
      *
@@ -83,7 +83,7 @@ class ShopInstaller implements ShopServiceInterface
         $this->dbHandler = new DatabaseHandler($this->shopConfig);
 
         if (!class_exists('\OxidEsales\EshopCommunity\Setup\Setup')) {
-            throw new \Exception("Shop Setup directory has to be present!");
+            throw new \Exception("OXID eShop Setup directory has to be present!");
         }
 
         $serialNumber = $request->getParameter('serial', false);
@@ -119,7 +119,7 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
-     * Defines if service require Shop bootstrap.
+     * Defines if service require OXID eShop bootstrap.
      *
      * @return bool
      */
@@ -167,7 +167,7 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
-     * Inserts test demo data to shop.
+     * Inserts test demo data to OXID eShop.
      */
     public function insertDemoData()
     {
@@ -177,7 +177,7 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
-     * Convert shop to international.
+     * Convert OXID eShop to an international shop.
      */
     public function convertToInternational()
     {
@@ -202,7 +202,7 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
-     * Adds serial number to shop.
+     * Adds a serial number to the OXID eShop.
      *
      * @param string $serialNumber
      */
@@ -238,7 +238,7 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
-     * Converts shop to utf8.
+     * Converts OXID eShop to utf8.
      */
     public function convertToUtf()
     {
@@ -347,7 +347,7 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
-     * Returns shop id.
+     * Returns OXID eShop shop id.
      *
      * @return string
      */
