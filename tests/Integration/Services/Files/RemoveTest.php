@@ -30,8 +30,6 @@ class RemoveTest extends PHPUnit_Framework_TestCase
 {
     public function testRemoveWhenNoFilesProvided()
     {
-        $this->markTestSkipped('Not running at the moment - skipped while investigating.');
-
         $rootPath = FilesHelper::prepareStructureAndReturnPath($this->getDirectoryStructure());
         $this->initializeFilesRemoval($rootPath, []);
         $this->assertTrue(file_exists($rootPath.'/testDirectory/someFile.php'), "$rootPath/testDirectory/someFile.php");
@@ -40,8 +38,6 @@ class RemoveTest extends PHPUnit_Framework_TestCase
 
     public function testRemoveFile()
     {
-        $this->markTestSkipped('Not running at the moment - skipped while investigating.');
-
         $rootPath = FilesHelper::prepareStructureAndReturnPath($this->getDirectoryStructure());
         $this->initializeFilesRemoval($rootPath, [$rootPath.'/testDirectory/someFile.php']);
         $this->assertFalse(file_exists($rootPath.'/testDirectory/someFile.php'), "$rootPath/testDirectory/someFile.php");
