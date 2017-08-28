@@ -87,7 +87,9 @@ class ServiceConfig
     public function getShopEdition()
     {
         if (is_null($this->shopEdition)) {
-            $this->shopEdition = strtoupper((new \OxidEsales\Facts\Edition\EditionSelector())->getEdition());
+            $editionSelector = new \OxidEsales\Facts\Edition\EditionSelector();
+
+            $this->shopEdition = strtoupper($editionSelector->getEdition());
         }
         return $this->shopEdition;
     }
