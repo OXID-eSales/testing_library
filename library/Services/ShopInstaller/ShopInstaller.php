@@ -27,6 +27,7 @@ use OxidEsales\Eshop\Core\Edition\EditionPathProvider;
 use OxidEsales\Eshop\Core\Edition\EditionRootPathProvider;
 use OxidEsales\Eshop\Core\Edition\EditionSelector;
 use OxidEsales\EshopCommunity\Setup\Core;
+use OxidEsales\TestingLibrary\Services\BaseService;
 use OxidEsales\TestingLibrary\Services\Library\Cache;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 use OxidEsales\TestingLibrary\Services\Library\Request;
@@ -39,29 +40,13 @@ use OxidEsales\TestingLibrary\TestConfig;
 /**
  * Class for OXID eShop installation.
  */
-class ShopInstaller implements ShopServiceInterface
+class ShopInstaller extends BaseService implements ShopServiceInterface
 {
     /** @var DatabaseHandler */
     private $dbHandler;
 
-    /** @var ServiceConfig */
-    private $serviceConfig;
-
-    /** @var ConfigFile */
-    private $shopConfig;
-
     /** @var EditionPathProvider */
     private $editionPathProvider;
-
-    /**
-     * Includes configuration files.
-     *
-     * @param ServiceConfig $config
-     */
-    public function __construct($config)
-    {
-        $this->serviceConfig = $config;
-    }
 
     /**
      * Starts installation of the OXID eShop.
@@ -116,16 +101,6 @@ class ShopInstaller implements ShopServiceInterface
 
         $cache = new Cache();
         $cache->clearTemporaryDirectory();
-    }
-
-    /**
-     * Defines if service require OXID eShop bootstrap.
-     *
-     * @return bool
-     */
-    public function needBootstrap()
-    {
-        return false;
     }
 
     /**
@@ -289,14 +264,6 @@ class ShopInstaller implements ShopServiceInterface
     protected function getShopConfig()
     {
         return $this->shopConfig;
-    }
-
-    /**
-     * @return ServiceConfig
-     */
-    protected function getServiceConfig()
-    {
-        return $this->serviceConfig;
     }
 
     /**

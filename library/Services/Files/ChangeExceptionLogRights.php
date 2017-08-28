@@ -21,10 +21,10 @@
 
 namespace OxidEsales\TestingLibrary\Services\Files;
 
+use OxidEsales\TestingLibrary\Services\BaseService;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use Symfony\Component\Filesystem\Filesystem;
-
 
 /**
  * Calling service with different user might create exception log
@@ -32,11 +32,8 @@ use Symfony\Component\Filesystem\Filesystem;
  * Update rights so apache user could always write to log.
  * Create log as apache user would create it unwritable for CLI user.
  */
-class ChangeExceptionLogRights implements ShopServiceInterface
+class ChangeExceptionLogRights extends BaseService implements ShopServiceInterface
 {
-    /** @var ServiceConfig */
-    private $serviceConfig;
-
     /** @var Filesystem */
     private $fileSystem;
 
@@ -45,11 +42,13 @@ class ChangeExceptionLogRights implements ShopServiceInterface
 
     /**
      * Remove constructor.
+     *
      * @param ServiceConfig $config
      */
     public function __construct($config)
     {
-        $this->serviceConfig = $config;
+        parent::__construct($config);
+
         $this->fileSystem = new Filesystem();
     }
 
@@ -67,15 +66,5 @@ class ChangeExceptionLogRights implements ShopServiceInterface
             $fileSystem->touch($pathToExceptionLog);
         }
         $fileSystem->chmod($pathToExceptionLog, 0777);
-    }
-
-    /**
-     * Defines if service require OXID eShop bootstrap.
-     *
-     * @return bool
-     */
-    public function needBootstrap()
-    {
-        return false;
     }
 }

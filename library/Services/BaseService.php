@@ -16,39 +16,44 @@
  * along with OXID eSales Testing Library. If not, see <http://www.gnu.org/licenses/>.
  *
  * @link http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2016
+ * @copyright (C) OXID eSales AG 2003-2017
  */
 
-namespace OxidEsales\TestingLibrary\Services\Files;
+namespace OxidEsales\TestingLibrary\Services;
 
-use OxidEsales\TestingLibrary\Services\BaseService;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
-class Remove extends BaseService implements ShopServiceInterface
+abstract class BaseService implements ShopServiceInterface
 {
-    const FILES_PARAMETER_NAME = 'files';
-
-    /** @var Filesystem */
-    private $fileSystem;
+    /** @var ServiceConfig */
+    protected $serviceConfig;
 
     /**
-     * Remove constructor.
+     * @todo: rename parameter to $serviceConfig
+     *
      * @param ServiceConfig $config
      */
     public function __construct($config)
     {
-        parent::__construct($config);
-
-        $this->fileSystem = new Filesystem();
+        $this->serviceConfig = $config;
     }
 
     /**
-     * @param \OxidEsales\TestingLibrary\Services\Library\Request $request
+     * @return ServiceConfig
      */
-    public function init($request)
+    protected function getServiceConfig()
     {
-        $this->fileSystem->remove($request->getParameter(static::FILES_PARAMETER_NAME));
+        return $this->serviceConfig;
+    }
+
+    /**
+     * Defines if service require OXID eShop bootstrap.
+     *
+     * @return bool
+     */
+    public function needBootstrap()
+    {
+        return false;
     }
 }
