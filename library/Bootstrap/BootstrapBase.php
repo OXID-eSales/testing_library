@@ -91,10 +91,6 @@ abstract class BootstrapBase
     {
         $testConfig = $this->getTestConfig();
 
-//        $shopPath = $testConfig->getShopPath();
-//
-//        require_once $shopPath .'bootstrap.php';
-
         $tempDirectory = $testConfig->getTempDirectory();
         if ($tempDirectory && $tempDirectory != '/') {
             $fileCopier = new FileCopier();
