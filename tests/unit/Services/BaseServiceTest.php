@@ -19,46 +19,37 @@
  * @copyright (C) OXID eSales AG 2003-2017
  */
 
-namespace OxidEsales\TestingLibrary\Services;
+namespace OxidEsales\TestingLibrary\Unit\Services;
 
+use PHPUnit_Framework_TestCase;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
+use OxidEsales\TestingLibrary\Services\ClearCache\ClearCache;
+use OxidEsales\TestingLibrary\Services\ModuleInstaller\ModuleInstaller;
 
-abstract class BaseService implements ShopServiceInterface
+/**
+ * Tests for the abstract service classes.
+ */
+class BaseServiceTest extends PHPUnit_Framework_TestCase
 {
-    /** @var ServiceConfig */
-    protected $serviceConfig;
-
-    /**
-     * @var bool Is the bootstrap needed for this service?
-     */
-    protected $bootstrapNeeded = false;
-
-    /**
-     * @todo: rename parameter to $serviceConfig
-     *
-     * @param ServiceConfig $config
-     */
-    public function __construct($config)
+    public function testNeedBootstrapCaseFalse()
     {
-        $this->serviceConfig = $config;
+        $exampleService = new ClearCache($this->createExampleServiceConfig());
+
+        $this->assertFalse($exampleService->needBootstrap());
+    }
+
+    public function testNeedBootstrapCaseTrue()
+    {
+        $exampleService = new ModuleInstaller($this->createExampleServiceConfig());
+
+        $this->assertTrue($exampleService->needBootstrap());
     }
 
     /**
-     * @return ServiceConfig
+     * @return ServiceConfig An example service configuration object.
      */
-    protected function getServiceConfig()
+    protected function createExampleServiceConfig(): ServiceConfig
     {
-        return $this->serviceConfig;
-    }
-
-    /**
-     * Defines if service require OXID eShop bootstrap.
-     *
-     * @return bool
-     */
-    public function needBootstrap()
-    {
-        return $this->bootstrapNeeded;
+        return new ServiceConfig('/path/to/shop/');
     }
 }
