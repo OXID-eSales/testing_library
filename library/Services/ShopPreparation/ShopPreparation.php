@@ -43,12 +43,12 @@ class ShopPreparation implements ShopServiceInterface
     /**
      * Initiates class dependencies.
      *
-     * @param ServiceConfig $config
+     * @param ServiceConfig $serviceConfiguration
      */
-    public function __construct($config)
+    public function __construct($serviceConfiguration)
     {
         $configFile = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
-        $this->databaseHandler = new DatabaseHandler($configFile, $config->getTempDirectory());
+        $this->databaseHandler = new DatabaseHandler($configFile, $serviceConfiguration->getTempDirectory());
 
         $factory = new DatabaseRestorerFactory();
         $this->databaseRestorer = $factory->createRestorer(DatabaseRestorerToFile::class);

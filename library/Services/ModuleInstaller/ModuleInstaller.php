@@ -32,9 +32,9 @@ use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 class ModuleInstaller implements ShopServiceInterface
 {
     /**
-     * @param ServiceConfig $config
+     * @param ServiceConfig $serviceConfiguration
      */
-    public function __construct($config) {}
+    public function __construct($serviceConfiguration) {}
 
     /**
      * Starts installation of the OXID eShop.

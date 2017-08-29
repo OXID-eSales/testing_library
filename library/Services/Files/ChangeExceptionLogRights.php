@@ -43,11 +43,11 @@ class ChangeExceptionLogRights extends BaseService implements ShopServiceInterfa
     /**
      * Remove constructor.
      *
-     * @param ServiceConfig $config
+     * @param ServiceConfig $serviceConfiguration
      */
-    public function __construct($config)
+    public function __construct($serviceConfiguration)
     {
-        parent::__construct($config);
+        parent::__construct($serviceConfiguration);
 
         $this->fileSystem = new Filesystem();
     }

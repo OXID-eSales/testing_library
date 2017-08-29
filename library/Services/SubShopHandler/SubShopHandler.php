@@ -31,9 +31,9 @@ use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 class SubShopHandler implements ShopServiceInterface
 {
     /**
-     * @param ServiceConfig $config
+     * @param ServiceConfig $serviceConfiguration
      */
-    public function __construct($config) {}
+    public function __construct($serviceConfiguration) {}
 
     /**
      * Assigns element to subshop

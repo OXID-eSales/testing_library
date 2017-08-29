@@ -35,13 +35,11 @@ abstract class BaseService implements ShopServiceInterface
     protected $bootstrapNeeded = false;
 
     /**
-     * @todo: rename parameter to $serviceConfig
-     *
-     * @param ServiceConfig $config
+     * @param ServiceConfig $serviceConfiguration
      */
-    public function __construct($config)
+    public function __construct($serviceConfiguration)
     {
-        $this->serviceConfig = $config;
+        $this->serviceConfig = $serviceConfiguration;
     }
 
     /**

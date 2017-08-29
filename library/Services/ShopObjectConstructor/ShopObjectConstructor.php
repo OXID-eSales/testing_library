@@ -37,11 +37,11 @@ class ShopObjectConstructor implements ShopServiceInterface
     private $serviceConfig;
 
     /**
-     * @param ServiceConfig $config
+     * @param ServiceConfig $serviceConfiguration
      */
-    public function __construct($config)
+    public function __construct($serviceConfiguration)
     {
-        $this->serviceConfig = $config;
+        $this->serviceConfig = $serviceConfiguration;
     }
 
     /**

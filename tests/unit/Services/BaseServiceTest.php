@@ -48,7 +48,7 @@ class BaseServiceTest extends PHPUnit_Framework_TestCase
     /**
      * @return ServiceConfig An example service configuration object.
      */
-    protected function createExampleServiceConfig(): ServiceConfig
+    protected function createExampleServiceConfig()
     {
         return new ServiceConfig('/path/to/shop/');
     }
