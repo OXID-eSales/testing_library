@@ -16,7 +16,7 @@
  * along with OXID eSales Testing Library. If not, see <http://www.gnu.org/licenses/>.
  *
  * @link http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2014
+ * @copyright (C) OXID eSales AG 2003-2017
  */
 
 namespace OxidEsales\TestingLibrary\Services\ShopInstaller;
@@ -27,20 +27,18 @@ use OxidEsales\Eshop\Core\Edition\EditionPathProvider;
 use OxidEsales\Eshop\Core\Edition\EditionRootPathProvider;
 use OxidEsales\Eshop\Core\Edition\EditionSelector;
 use OxidEsales\EshopCommunity\Setup\Core;
-use OxidEsales\TestingLibrary\Services\BaseService;
 use OxidEsales\TestingLibrary\Services\Library\Cache;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 use OxidEsales\TestingLibrary\Services\Library\Request;
-use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use OxidEsales\TestingLibrary\Services\Library\CliExecutor;
 use OxidEsales\EshopProfessional\Core\Serial;
+use OxidEsales\TestingLibrary\Services\NoBootstrapNeededService;
 use OxidEsales\TestingLibrary\TestConfig;
 
 /**
  * Class for OXID eShop installation.
  */
-class ShopInstaller extends BaseService implements ShopServiceInterface
+class ShopInstaller extends NoBootstrapNeededService
 {
     /** @var DatabaseHandler */
     private $dbHandler;

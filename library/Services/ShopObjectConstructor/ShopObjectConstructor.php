@@ -16,14 +16,14 @@
  * along with OXID eSales Testing Library. If not, see <http://www.gnu.org/licenses/>.
  *
  * @link http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2014
+ * @copyright (C) OXID eSales AG 2003-2017
  */
 namespace OxidEsales\TestingLibrary\Services\ShopObjectConstructor;
 
 use Exception;
+use OxidEsales\TestingLibrary\Services\BootstrapNeededService;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use OxidEsales\TestingLibrary\Services\ShopObjectConstructor\Constructor\ConstructorFactory;
 
 
@@ -31,19 +31,8 @@ use OxidEsales\TestingLibrary\Services\ShopObjectConstructor\Constructor\Constru
  * OXID eShop constructor class for modifying shop environment during testing
  * Class ShopConstructor
  */
-class ShopObjectConstructor implements ShopServiceInterface
+class ShopObjectConstructor extends BootstrapNeededService
 {
-    /** @var ServiceConfig */
-    private $serviceConfig;
-
-    /**
-     * @param ServiceConfig $serviceConfiguration
-     */
-    public function __construct($serviceConfiguration)
-    {
-        $this->serviceConfig = $serviceConfiguration;
-    }
-
     /**
      * Loads object, sets class parameters and calls function with parameters.
      * classParams can act two ways - if array('param' => 'value') is given, it sets the values to given keys
@@ -78,16 +67,6 @@ class ShopObjectConstructor implements ShopServiceInterface
         }
 
         return $mResult;
-    }
-
-    /**
-     * Defines if service require OXID eShop bootstrap.
-     *
-     * @return bool
-     */
-    public function needBootstrap()
-    {
-        return true;
     }
 
     /**

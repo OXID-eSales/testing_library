@@ -24,6 +24,9 @@ namespace OxidEsales\TestingLibrary\Services;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
+/**
+ * Abstract base class for every service. This should be the root of every service inheritance tree.
+ */
 abstract class BaseService implements ShopServiceInterface
 {
     /** @var ServiceConfig */

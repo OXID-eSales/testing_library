@@ -21,9 +21,8 @@
 
 namespace OxidEsales\TestingLibrary\Services\Files;
 
-use OxidEsales\TestingLibrary\Services\BaseService;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
+use OxidEsales\TestingLibrary\Services\NoBootstrapNeededService;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -32,7 +31,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * Update rights so apache user could always write to log.
  * Create log as apache user would create it unwritable for CLI user.
  */
-class ChangeExceptionLogRights extends BaseService implements ShopServiceInterface
+class ChangeExceptionLogRights extends NoBootstrapNeededService
 {
     /** @var Filesystem */
     private $fileSystem;

@@ -22,20 +22,14 @@ namespace OxidEsales\TestingLibrary\Services\ModuleInstaller;
 
 
 use Exception;
+use OxidEsales\TestingLibrary\Services\BootstrapNeededService;
 use OxidEsales\TestingLibrary\Services\Library\Request;
-use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
 /**
  * Class for module installation.
  */
-class ModuleInstaller implements ShopServiceInterface
+class ModuleInstaller extends BootstrapNeededService
 {
-    /**
-     * @param ServiceConfig $serviceConfiguration
-     */
-    public function __construct($serviceConfiguration) {}
-
     /**
      * Starts installation of the OXID eShop.
      *
@@ -51,16 +45,6 @@ class ModuleInstaller implements ShopServiceInterface
         foreach ($modulesToActivate as $modulePath) {
             $this->installModule($modulePath);
         }
-    }
-
-    /**
-     * Defines if service require OXID eShop bootstrap.
-     *
-     * @return bool
-     */
-    public function needBootstrap()
-    {
-        return true;
     }
 
     /**
