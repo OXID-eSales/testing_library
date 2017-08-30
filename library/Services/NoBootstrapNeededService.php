@@ -21,8 +21,6 @@
 
 namespace OxidEsales\TestingLibrary\Services;
 
-use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
-
 /**
  * Abstract base class for every service, which doesn't needs the OXID eShop bootstrap.
  */
