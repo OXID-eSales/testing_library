@@ -21,6 +21,7 @@
 
 namespace OxidEsales\TestingLibrary\Unit\Services;
 
+use OxidEsales\TestingLibrary\Services\BaseService;
 use PHPUnit_Framework_TestCase;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\ClearCache\ClearCache;
@@ -45,11 +46,73 @@ class ServicesBootstrapHandlingTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($exampleService->needBootstrap());
     }
 
+    public function dataProviderTestNoBootstrapNeededServicesReactCorrect()
+    {
+        return [
+            ['serviceClassName' => 'ClearCache\ClearCache'],
+            ['serviceClassName' => 'Files\ChangeExceptionLogRights'],
+            ['serviceClassName' => 'Files\Remove'],
+            ['serviceClassName' => 'ShopInstaller\ShopInstaller']
+        ];
+    }
+
+    /**
+     * Test, that all existing services, which need no bootstrap, return the correct value, if we ask them "needBootstrap".
+     *
+     * @param string $serviceClassName The name of the service class to check.
+     *
+     * @dataProvider dataProviderTestNoBootstrapNeededServicesReactCorrect
+     */
+    public function testNoBootstrapNeededServicesReactCorrect($serviceClassName)
+    {
+        $service = $this->createServiceClass($serviceClassName);
+
+        $this->assertFalse($service->needBootstrap());
+    }
+
+    public function dataProviderTestBootstrapNeededServicesReactCorrect()
+    {
+        return [
+            ['serviceClassName' => 'ShopObjectConstructor\ShopObjectConstructor'],
+            ['serviceClassName' => 'ShopPreparation\ShopPreparation'],
+            ['serviceClassName' => 'ViewsGenerator\ViewsGenerator'],
+            ['serviceClassName' => 'ModuleInstaller\ModuleInstaller'],
+            ['serviceClassName' => 'SubShopHandler\SubShopHandler'],
+        ];
+    }
+
+    /**
+     * Test, that all existing services, which need the OXID eShop bootstrap, return the correct value, if we ask them "needBootstrap".
+     *
+     * @param string $serviceClassName The name of the service class to check.
+     *
+     * @dataProvider dataProviderTestBootstrapNeededServicesReactCorrect
+     */
+    public function testBootstrapNeededServicesReactCorrect($serviceClassName)
+    {
+        $service = $this->createServiceClass($serviceClassName);
+
+        $this->assertTrue($service->needBootstrap());
+    }
+
     /**
      * @return ServiceConfig An example service configuration object.
      */
     protected function createExampleServiceConfig()
     {
-        return new ServiceConfig('/path/to/shop/');
+        return new ServiceConfig('/path/to/shop/', '/tmp');
+    }
+
+    /**
+     * @param string $serviceClassName The class name relative to the testing library root namespace.
+     *
+     * @return BaseService|object The service object, corresponding to the given class name.
+     */
+    protected function createServiceClass($serviceClassName)
+    {
+        $rootNamespace = "\OxidEsales\TestingLibrary\Services\\";
+        $fullClassName = $rootNamespace . $serviceClassName;
+
+        return oxNew($fullClassName, $this->createExampleServiceConfig());
     }
 }
