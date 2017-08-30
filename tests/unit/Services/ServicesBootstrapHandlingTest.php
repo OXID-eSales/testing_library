@@ -29,7 +29,7 @@ use OxidEsales\TestingLibrary\Services\ModuleInstaller\ModuleInstaller;
 /**
  * Tests for the abstract service classes.
  */
-class BaseServiceTest extends PHPUnit_Framework_TestCase
+class ServicesBootstrapHandlingTest extends PHPUnit_Framework_TestCase
 {
     public function testNeedBootstrapCaseFalse()
     {
