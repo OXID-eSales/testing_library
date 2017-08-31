@@ -16,34 +16,23 @@
  * along with OXID eSales Testing Library. If not, see <http://www.gnu.org/licenses/>.
  *
  * @link http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2014
+ * @copyright (C) OXID eSales AG 2003-2017
  */
 namespace OxidEsales\TestingLibrary\Services\ShopObjectConstructor;
 
 use Exception;
+use OxidEsales\TestingLibrary\Services\BootstrapNeededService;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use OxidEsales\TestingLibrary\Services\ShopObjectConstructor\Constructor\ConstructorFactory;
 
 
 /**
- * Shop constructor class for modifying shop environment during testing
+ * OXID eShop constructor class for modifying shop environment during testing
  * Class ShopConstructor
  */
-class ShopObjectConstructor implements ShopServiceInterface
+class ShopObjectConstructor extends BootstrapNeededService
 {
-    /** @var ServiceConfig */
-    private $serviceConfig;
-
-    /**
-     * @param ServiceConfig $config
-     */
-    public function __construct($config)
-    {
-        $this->serviceConfig = $config;
-    }
-
     /**
      * Loads object, sets class parameters and calls function with parameters.
      * classParams can act two ways - if array('param' => 'value') is given, it sets the values to given keys
@@ -89,7 +78,7 @@ class ShopObjectConstructor implements ShopServiceInterface
     }
 
     /**
-     * Switches active shop
+     * Switches active OXID eShop shop
      *
      * @param string $shopId
      */
@@ -112,7 +101,7 @@ class ShopObjectConstructor implements ShopServiceInterface
         $languages = \OxidEsales\Eshop\Core\Registry::getLang()->getLanguageIds();
         $languageId = array_search($language, $languages);
         if ($languageId === false) {
-            throw new Exception("Language $language was not found or is not active in shop");
+            throw new Exception("Language $language was not found or is not active in OXID eShop");
         }
         \OxidEsales\Eshop\Core\Registry::getLang()->setBaseLanguage($languageId);
     }

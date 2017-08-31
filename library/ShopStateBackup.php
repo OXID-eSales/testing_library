@@ -30,7 +30,7 @@ require_once TEST_LIBRARY_HELPERS_PATH . 'oxVendorHelper.php';
 require_once TEST_LIBRARY_HELPERS_PATH . 'oxAdminViewHelper.php';
 
 /**
- * This class is used to backup and restore shop state during testing.
+ * This class is used to backup and restore OXID eShop state during testing.
  */
 class ShopStateBackup
 {

@@ -34,7 +34,7 @@ abstract class BootstrapBase
     /** @var TestConfig */
     private $testConfig;
 
-    /** @var int Whether to add demo data when installing the shop. */
+    /** @var int Whether to add demo data when installing the OXID eShop. */
     protected $addDemoData = 1;
 
     /**
@@ -52,16 +52,16 @@ abstract class BootstrapBase
     {
         $testConfig = $this->getTestConfig();
 
+        if ($testConfig->shouldInstallShop()) {
+            $this->installShop();
+        }
+
         $this->prepareShop();
 
         $this->setGlobalConstants();
 
         if ($testConfig->shouldRestoreShopAfterTestsSuite()) {
             $this->registerResetDbAfterSuite();
-        }
-
-        if ($testConfig->shouldInstallShop()) {
-            $this->installShop();
         }
 
         /** @var \OxidEsales\Eshop\Core\Config $config */
@@ -85,14 +85,11 @@ abstract class BootstrapBase
     }
 
     /**
-     * Prepares shop config object.
+     * Prepares OXID eShop config object.
      */
     protected function prepareShop()
     {
         $testConfig = $this->getTestConfig();
-
-        $shopPath = $testConfig->getShopPath();
-        require_once $shopPath .'bootstrap.php';
 
         $tempDirectory = $testConfig->getTempDirectory();
         if ($tempDirectory && $tempDirectory != '/') {
@@ -121,7 +118,7 @@ abstract class BootstrapBase
     }
 
     /**
-     * Installs the shop.
+     * Installs the OXID eShop.
      *
      * @throws \Exception
      */

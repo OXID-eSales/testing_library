@@ -21,20 +21,14 @@
 namespace OxidEsales\TestingLibrary\Services\SubShopHandler;
 
 use OxidEsales\Eshop\Core\Model\BaseModel;
+use OxidEsales\TestingLibrary\Services\BootstrapNeededService;
 use OxidEsales\TestingLibrary\Services\Library\Request;
-use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
 /**
  * Assigns items to subshop
  */
-class SubShopHandler implements ShopServiceInterface
+class SubShopHandler extends BootstrapNeededService
 {
-    /**
-     * @param ServiceConfig $config
-     */
-    public function __construct($config) {}
-
     /**
      * Assigns element to subshop
      *

@@ -28,9 +28,9 @@ interface ShopServiceInterface
     /**
      * Initiates service requirements.
      *
-     * @param ServiceConfig $config
+     * @param ServiceConfig $serviceConfiguration
      */
-    public function __construct($config);
+    public function __construct($serviceConfiguration);
 
     /**
      * Initiates service.
@@ -38,4 +38,11 @@ interface ShopServiceInterface
      * @param Request $request
      */
     public function init($request);
+
+    /**
+     * Defines if service require OXID eShop bootstrap.
+     *
+     * @return bool
+     */
+    public function needBootstrap();
 }

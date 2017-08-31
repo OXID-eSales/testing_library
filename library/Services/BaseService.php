@@ -19,35 +19,47 @@
  * @copyright (C) OXID eSales AG 2003-2017
  */
 
-namespace OxidEsales\TestingLibrary\Services\Files;
+namespace OxidEsales\TestingLibrary\Services;
 
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use OxidEsales\TestingLibrary\Services\NoBootstrapNeededService;
-use Symfony\Component\Filesystem\Filesystem;
+use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
-class Remove extends NoBootstrapNeededService
+/**
+ * Abstract base class for every service. This should be the root of every service inheritance tree.
+ */
+abstract class BaseService implements ShopServiceInterface
 {
-    const FILES_PARAMETER_NAME = 'files';
-
-    /** @var Filesystem */
-    private $fileSystem;
+    /** @var ServiceConfig */
+    protected $serviceConfig;
 
     /**
-     * Remove constructor.
+     * @var bool Is the bootstrap needed for this service?
+     */
+    protected $bootstrapNeeded = false;
+
+    /**
      * @param ServiceConfig $serviceConfiguration
      */
     public function __construct($serviceConfiguration)
     {
-        parent::__construct($serviceConfiguration);
-
-        $this->fileSystem = new Filesystem();
+        $this->serviceConfig = $serviceConfiguration;
     }
 
     /**
-     * @param \OxidEsales\TestingLibrary\Services\Library\Request $request
+     * @return ServiceConfig
      */
-    public function init($request)
+    protected function getServiceConfig()
     {
-        $this->fileSystem->remove($request->getParameter(static::FILES_PARAMETER_NAME));
+        return $this->serviceConfig;
+    }
+
+    /**
+     * Defines if service require OXID eShop bootstrap.
+     *
+     * @return bool
+     */
+    public function needBootstrap()
+    {
+        return $this->bootstrapNeeded;
     }
 }

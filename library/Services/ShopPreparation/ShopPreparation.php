@@ -16,23 +16,23 @@
  * along with OXID eSales Testing Library. If not, see <http://www.gnu.org/licenses/>.
  *
  * @link http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2014
+ * @copyright (C) OXID eSales AG 2003-2017
  */
 namespace OxidEsales\TestingLibrary\Services\ShopPreparation;
 
+use OxidEsales\TestingLibrary\Services\BootstrapNeededService;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerToFile;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
 /**
- * Shop constructor class for modifying shop environment during testing
+ * OXID eShop constructor class for modifying OXID eShop environment during testing
  * Class ShopConstructor
  */
-class ShopPreparation implements ShopServiceInterface
+class ShopPreparation extends BootstrapNeededService
 {
     /** @var DatabaseHandler Database communicator object */
     private $databaseHandler = null;
@@ -43,12 +43,14 @@ class ShopPreparation implements ShopServiceInterface
     /**
      * Initiates class dependencies.
      *
-     * @param ServiceConfig $config
+     * @param ServiceConfig $serviceConfiguration
      */
-    public function __construct($config)
+    public function __construct($serviceConfiguration)
     {
+        parent::__construct($serviceConfiguration);
+
         $configFile = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
-        $this->databaseHandler = new DatabaseHandler($configFile, $config->getTempDirectory());
+        $this->databaseHandler = new DatabaseHandler($configFile, $serviceConfiguration->getTempDirectory());
 
         $factory = new DatabaseRestorerFactory();
         $this->databaseRestorer = $factory->createRestorer(DatabaseRestorerToFile::class);

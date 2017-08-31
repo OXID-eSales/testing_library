@@ -22,9 +22,8 @@
 namespace OxidEsales\TestingLibrary\Services\Files;
 
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
+use OxidEsales\TestingLibrary\Services\NoBootstrapNeededService;
 use Symfony\Component\Filesystem\Filesystem;
-
 
 /**
  * Calling service with different user might create exception log
@@ -32,11 +31,8 @@ use Symfony\Component\Filesystem\Filesystem;
  * Update rights so apache user could always write to log.
  * Create log as apache user would create it unwritable for CLI user.
  */
-class ChangeExceptionLogRights implements ShopServiceInterface
+class ChangeExceptionLogRights extends NoBootstrapNeededService
 {
-    /** @var ServiceConfig */
-    private $serviceConfig;
-
     /** @var Filesystem */
     private $fileSystem;
 
@@ -45,11 +41,13 @@ class ChangeExceptionLogRights implements ShopServiceInterface
 
     /**
      * Remove constructor.
-     * @param ServiceConfig $config
+     *
+     * @param ServiceConfig $serviceConfiguration
      */
-    public function __construct($config)
+    public function __construct($serviceConfiguration)
     {
-        $this->serviceConfig = $config;
+        parent::__construct($serviceConfiguration);
+
         $this->fileSystem = new Filesystem();
     }
 

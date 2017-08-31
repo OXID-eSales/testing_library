@@ -21,7 +21,7 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use OxidEsales\Eshop\Core\Edition\EditionSelector;
+use \OxidEsales\Facts\Edition\EditionSelector;
 use Symfony\Component\Yaml\Yaml;
 
 class TestConfig
@@ -35,10 +35,10 @@ class TestConfig
     /** @var string */
     private $charsetMode;
 
-    /** @var string Shop edition. Either EE, PE or CE. */
+    /** @var string OXID eShop edition. Either EE, PE or CE. */
     private $shopEdition;
 
-    /** @var string Shop url. */
+    /** @var string OXID eShop url. */
     private $shopUrl;
 
     /** @var string Currently running test suite path. */
@@ -86,7 +86,7 @@ class TestConfig
     }
 
     /**
-     * Returns path to shop source directory.
+     * Returns path to OXID eShop source directory.
      *
      * @return string
      */
@@ -104,14 +104,13 @@ class TestConfig
     }
 
     /**
-     * Returns shop edition
+     * Returns the OXID eShop edition
      *
      * @return array|null|string
      */
     public function getShopEdition()
     {
         if (is_null($this->shopEdition)) {
-            require_once $this->getShopPath() . 'bootstrap.php';
             $editionSelector = new EditionSelector();
             $this->shopEdition = $editionSelector->getEdition();
         }
@@ -120,7 +119,7 @@ class TestConfig
     }
 
     /**
-     * Returns shop id
+     * Returns OXID eShop shop id
      *
      * @return int|string
      */
@@ -140,7 +139,7 @@ class TestConfig
     }
 
     /**
-     * Returns shop url.
+     * Returns OXID eShop url.
      *
      * @return string
      */
@@ -158,7 +157,7 @@ class TestConfig
     }
 
     /**
-     * Returns shop charset mode.
+     * Returns OXID eShop charset mode.
      *
      * @return string
      */
@@ -183,7 +182,7 @@ class TestConfig
     }
 
     /**
-     * Returns shop tests path.
+     * Returns OXID eShop tests path.
      *
      * @return string|null
      */
@@ -272,7 +271,7 @@ class TestConfig
     }
 
     /**
-     * Returns path to shop setup.
+     * Returns path to OXID eShop setup.
      *
      * @return string|null
      */
@@ -292,7 +291,7 @@ class TestConfig
     }
 
     /**
-     * Returns what serial to use when installing the shop.
+     * Returns what serial to use when installing the OXID eShop.
      *
      * @return string|null
      */
@@ -302,7 +301,7 @@ class TestConfig
     }
 
     /**
-     * Whether to install shop before running tests.
+     * Whether to install OXID eShop before running tests.
      *
      * @return bool|null
      */
@@ -312,7 +311,7 @@ class TestConfig
     }
 
     /**
-     * Whether to restore shop database after running all the tests.
+     * Whether to restore OXID eShop database after running all the tests.
      *
      * @return bool|null
      */
@@ -445,7 +444,7 @@ class TestConfig
     }
 
     /**
-     * Whether to run shop tests.
+     * Whether to run OXID eShop tests.
      *
      * @return string|null
      */
@@ -479,6 +478,22 @@ class TestConfig
         }
 
         return $retryTimes;
+    }
+
+    /**
+     * Return if generate Unified Namespace classes.
+     *
+     * @return bool
+     */
+    public function shouldGenerateUnifiedNamespaceClasses()
+    {
+        $generate = true;
+
+        if (!is_null($this->getValue('generate_unified_namespace_classes'))) {
+            $generate = (bool)$this->getValue('generate_unified_namespace_classes');
+        }
+
+        return $generate;
     }
 
     /**
@@ -598,7 +613,7 @@ class TestConfig
     }
 
     /**
-     * Returns possible shop path.
+     * Returns possible OXID eShop path.
      *
      * @param string $relativeShopPath
      * @return string
@@ -607,7 +622,7 @@ class TestConfig
     {
         $vendorBaseDir = $this->getVendorDirectory();
         $availablePaths = array(
-            $vendorBaseDir .'../', // When vendor directory is in shop base directory
+            $vendorBaseDir .'../', // When vendor directory is in OXID eShop base directory
             $vendorBaseDir .'../../../', // When vendor directory is in /shop/dir/modules/testmodule/ directory
             $vendorBaseDir .'../../../../', // When vendor directory is in /shop/dir/modules/company/testmodule/ directory
         );

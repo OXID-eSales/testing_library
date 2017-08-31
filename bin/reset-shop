@@ -22,9 +22,10 @@
 
 require_once __DIR__ .'/../base.php';
 
-// NOTE: reset-shop can reset a local shop as well as a remote one depending on
+// NOTE: reset-shop can reset a local OXID eShop as well as a remote one depending on
 // test_config.yml settings. Presence of the correct UNC classes needs to be ensured
-// in local as well as remote installation before any shop classes can be used.
+// in local as well as remote installation before any OXID eShop classes can be used.
+// Always regenerate namespace in case of edition change.
 \OxidEsales\TestingLibrary\TestConfig::prepareUnifiedNamespaceClasses();
 
 $testConfig = new OxidEsales\TestingLibrary\TestConfig();

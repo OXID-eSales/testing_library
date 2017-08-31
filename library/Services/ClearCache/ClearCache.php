@@ -23,46 +23,29 @@ namespace OxidEsales\TestingLibrary\Services\ClearCache;
 use OxidEsales\TestingLibrary\Services\Library\Cache;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
+use OxidEsales\TestingLibrary\Services\NoBootstrapNeededService;
 
 /**
- * This script clears shop cache
+ * This script clears OXID eShop cache
  */
-class ClearCache implements ShopServiceInterface
+class ClearCache extends NoBootstrapNeededService
 {
-    /** @var ServiceConfig */
-    private $serviceConfig;
-
     /**
-     * @param ServiceConfig $config
-     */
-    public function __construct($config)
-    {
-        $this->serviceConfig = $config;
-    }
-
-    /**
-     * Clears shop cache.
+     * Clears OXID eShop cache.
      *
      * @param Request $request
      */
     public function init($request)
     {
         $cache = new Cache();
+
         if ($this->getServiceConfig()->getShopEdition() === ServiceConfig::EDITION_ENTERPRISE) {
             $cache->clearCacheBackend();
             if ($request->getParameter('clearVarnish')) {
                 $cache->clearReverseProxyCache();
             }
         }
-        $cache->clearTemporaryDirectory();
-    }
 
-    /**
-     * @return ServiceConfig
-     */
-    protected function getServiceConfig()
-    {
-        return $this->serviceConfig;
+        $cache->clearTemporaryDirectory();
     }
 }

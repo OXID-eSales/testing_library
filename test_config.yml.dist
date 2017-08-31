@@ -1,42 +1,42 @@
 # parameters for testing library
 mandatory_parameters:
-    # Path to eShop source. Defaults to the same directory as to where vendor is located.
+    # Path to the OXID eShop source. Defaults to the same directory as to where vendor is located.
     shop_path: 'source'
 
-    # Path to eShop tests
+    # Path to the OXID eShop tests
     shop_tests_path: 'tests'
 
-    # When testing not activated module, specify module path in shop.
-    # Module path in shop, e.g. if module is in 'shop/modules/oe/mymodule' directory, value here should be 'oe/mymodule'.
+    # When testing not activated module, specify module path in OXID eShop.
+    # Module path in OXID eShop, e.g. if module is in 'shop/modules/oe/mymodule' directory, value here should be 'oe/mymodule'.
     # Multiple modules can be specified separated by comma: 'oe/module1,module2,tt/module3'.
     partial_module_paths:
 
 optional_parameters:
-    # eShop base url (if not set, takes it from shop's config.inc.php file)
+    # OXID eShop base url (if not set, takes it from shop's config.inc.php file)
     shop_url:
 
-    # For PE and EE editions shop serial has to be specified for shop installer to work.
+    # For PE and EE editions OXID eShop serial has to be specified for the shop installer to work.
     shop_serial: ''
 
-    # Run tests with varnish on. Shop has to be configured to work with varnish, correct serial must be used.
+    # Run tests with varnish on. OXID eShop has to be configured to work with varnish, correct serial must be used.
     enable_varnish: false
 
     # Whether to run subshop tests. Currently only used when running selenium tests.
     is_subshop: false
 
-    # Whether to prepare shop database for testing. Shop config.ing.php file must be correct.
+    # Whether to prepare the OXID eShop database for testing. The OXID eShop config.ing.php file must be correct.
     install_shop: true
 
     # If defined, testing services will be copied to this directory and called via url instead of used locally.
     # Example: username@server.com:/path/to/shop
     remote_server_dir:
 
-    # eShop setup directory. After setting up the shop, setup directory will be deleted.
-    # For shop installation to work during tests run, path to this directory must be specified.
+    # OXID eShop setup directory. After setting up the shop, setup directory will be deleted.
+    # For OXID eShop installation to work during tests run, path to this directory must be specified.
     # Uses shop/directory/Setup/ if not set.
     shop_setup_path:
 
-    # Whether to restore shop data after running all tests. If this is set to false, shop will be left with tests data added on it.
+    # Whether to restore OXID eShop data after running all tests. If this is set to false, the OXID eShop will be left with tests data added on it.
     restore_shop_after_tests_suite: false
 
     # If specified, this database is used instead of real one for unit and integration tests.
@@ -61,7 +61,7 @@ optional_parameters:
     # Normally only tested module is activated during test run. Modules will be activated in the specified order.
     activate_all_modules: false
 
-    # Whether to run shop unit tests. This applies only when correct shop_tests_path are set.
+    # Whether to run OXID eShop unit tests. This applies only when correct shop_tests_path are set.
     run_tests_for_shop: true
 
     # Whether to run modules unit tests. All modules provided in partial_module_paths will be tested.
@@ -91,3 +91,7 @@ optional_parameters:
     # How many times to try test before marking it as failure.
     # Could be used for unstable tests which fails randomly.
     retry_times_after_test_fail: 2
+
+    # Testing library regenerates Unified Namespace classes to make sure that OXID eShop is workable.
+    # In some cases it should not be needed as composer plugin does it already.
+    generate_unified_namespace_classes: true
