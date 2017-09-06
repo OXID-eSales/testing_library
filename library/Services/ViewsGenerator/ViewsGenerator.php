@@ -20,16 +20,22 @@
  */
 namespace OxidEsales\TestingLibrary\Services\ViewsGenerator;
 
-use OxidEsales\TestingLibrary\Services\BootstrapNeededService;
 use OxidEsales\TestingLibrary\Services\Library\Request;
+use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
+use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 
 /**
- * Regenerates OXID eShop views
+ * Regenerates shop views
  */
-class ViewsGenerator extends BootstrapNeededService
+class ViewsGenerator implements ShopServiceInterface
 {
     /**
-     * Clears OXID eShop cache
+     * @param ServiceConfig $config
+     */
+    public function __construct($config) {}
+
+    /**
+     * Clears shop cache
      *
      * @param Request $request
      */

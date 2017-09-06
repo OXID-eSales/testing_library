@@ -41,7 +41,10 @@ $installationRootPath =  dirname(dirname(dirname(__FILE__)));
 $vendorDirectory = $installationRootPath . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR;
 require_once $vendorDirectory . 'autoload.php';
 
-// Bootstrap the OXID eShop framework
+// Generate UNC classes before bootstrapping the shop
+\OxidEsales\TestingLibrary\TestConfig::prepareUnifiedNamespaceClasses();
+
+// Bootstrap the shop framework
 require_once __DIR__ ."../../bootstrap.php";
 
 /** This constant should only be used in TestConfig class. Use TestConfig::getVendorPath() instead. */

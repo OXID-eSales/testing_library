@@ -30,7 +30,7 @@ class FileCopier
 {
 
     /**
-     * Copy files to the OXID eShop
+     * Copy files to shop
      *
      * @param string $source          File or directory to copy.
      * @param string $target          Path where to copy.

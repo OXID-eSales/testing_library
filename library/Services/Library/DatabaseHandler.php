@@ -72,7 +72,7 @@ class DatabaseHandler
      * Execute sql statements from sql file
      *
      * @param string $sqlFile     SQL File name to import.
-     * @param string $charsetMode Charset of imported file. Will use OXID eShop shop charset mode if not set.
+     * @param string $charsetMode Charset of imported file. Will use shop charset mode if not set.
      *
      * @throws Exception
      */

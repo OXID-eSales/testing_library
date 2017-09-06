@@ -21,6 +21,9 @@
 
 require_once 'base.php';
 
+// NOTE: Presence of the correct UNC classes needs to be ensured before any shop classes can be used.
+\OxidEsales\TestingLibrary\TestConfig::prepareUnifiedNamespaceClasses();
+
 define('OXID_PHP_UNIT', true);
 
 $sTestFilePath = strtolower(end($_SERVER['argv']));

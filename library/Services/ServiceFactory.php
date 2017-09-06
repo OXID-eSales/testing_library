@@ -30,13 +30,15 @@ use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 class ServiceFactory
 {
     /**
-     * Loads the OXID eShop.
+     * Loads the shop.
      *
      * @param ServiceConfig $config
      */
     public function __construct($config)
     {
         $this->config = $config;
+
+        include_once $config->getShopDirectory() . '/bootstrap.php';
     }
 
     /**
@@ -62,10 +64,6 @@ class ServiceFactory
 
         if (!($service instanceof ShopServiceInterface)) {
             throw new Exception("Service '$className' does not implement ShopServiceInterface interface!");
-        }
-
-        if ($service->needBootstrap()) {
-            include_once $this->config->getShopDirectory() . '/bootstrap.php';
         }
 
         return $service;

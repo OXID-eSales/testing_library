@@ -16,30 +16,32 @@
  * along with OXID eSales Testing Library. If not, see <http://www.gnu.org/licenses/>.
  *
  * @link http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2017
+ * @copyright (C) OXID eSales AG 2003-2016
  */
 
 namespace OxidEsales\TestingLibrary\Services\Files;
 
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use OxidEsales\TestingLibrary\Services\NoBootstrapNeededService;
+use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class Remove extends NoBootstrapNeededService
+class Remove implements ShopServiceInterface
 {
     const FILES_PARAMETER_NAME = 'files';
+
+    /** @var ServiceConfig */
+    private $serviceConfig;
 
     /** @var Filesystem */
     private $fileSystem;
 
     /**
      * Remove constructor.
-     * @param ServiceConfig $serviceConfiguration
+     * @param ServiceConfig $config
      */
-    public function __construct($serviceConfiguration)
+    public function __construct($config)
     {
-        parent::__construct($serviceConfiguration);
-
+        $this->serviceConfig = $config;
         $this->fileSystem = new Filesystem();
     }
 

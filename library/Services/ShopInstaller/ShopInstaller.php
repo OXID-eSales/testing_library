@@ -16,7 +16,7 @@
  * along with OXID eSales Testing Library. If not, see <http://www.gnu.org/licenses/>.
  *
  * @link http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2017
+ * @copyright (C) OXID eSales AG 2003-2014
  */
 
 namespace OxidEsales\TestingLibrary\Services\ShopInstaller;
@@ -30,24 +30,44 @@ use OxidEsales\EshopCommunity\Setup\Core;
 use OxidEsales\TestingLibrary\Services\Library\Cache;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 use OxidEsales\TestingLibrary\Services\Library\Request;
+use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
+use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use OxidEsales\TestingLibrary\Services\Library\CliExecutor;
 use OxidEsales\EshopProfessional\Core\Serial;
-use OxidEsales\TestingLibrary\Services\NoBootstrapNeededService;
 use OxidEsales\TestingLibrary\TestConfig;
 
 /**
- * Class for OXID eShop installation.
+ * Class for shop installation.
  */
-class ShopInstaller extends NoBootstrapNeededService
+class ShopInstaller implements ShopServiceInterface
 {
     /** @var DatabaseHandler */
     private $dbHandler;
+
+    /** @var ServiceConfig */
+    private $serviceConfig;
+
+    /** @var ConfigFile */
+    private $shopConfig;
 
     /** @var EditionPathProvider */
     private $editionPathProvider;
 
     /**
-     * Starts installation of the OXID eShop.
+     * Includes configuration files.
+     *
+     * @param ServiceConfig $config
+     */
+    public function __construct($config)
+    {
+        $this->serviceConfig = $config;
+
+        $this->shopConfig = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
+        $this->dbHandler = new DatabaseHandler($this->shopConfig);
+    }
+
+    /**
+     * Starts installation of the shop.
      *
      * @param Request $request
      *
@@ -55,18 +75,8 @@ class ShopInstaller extends NoBootstrapNeededService
      */
     public function init($request)
     {
-        $testConfig = new TestConfig();
-        if ($testConfig->shouldGenerateUnifiedNamespaceClasses()) {
-            \OxidEsales\TestingLibrary\TestConfig::prepareUnifiedNamespaceClasses();
-        }
-
-        include_once $this->serviceConfig->getShopDirectory() . '/bootstrap.php';
-
-        $this->shopConfig = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
-        $this->dbHandler = new DatabaseHandler($this->shopConfig);
-
         if (!class_exists('\OxidEsales\EshopCommunity\Setup\Setup')) {
-            throw new \Exception("OXID eShop Setup directory has to be present!");
+            throw new \Exception("Shop Setup directory has to be present!");
         }
 
         $serialNumber = $request->getParameter('serial', false);
@@ -140,7 +150,7 @@ class ShopInstaller extends NoBootstrapNeededService
     }
 
     /**
-     * Inserts test demo data to OXID eShop.
+     * Inserts test demo data to shop.
      */
     public function insertDemoData()
     {
@@ -150,7 +160,7 @@ class ShopInstaller extends NoBootstrapNeededService
     }
 
     /**
-     * Convert OXID eShop to an international shop.
+     * Convert shop to international.
      */
     public function convertToInternational()
     {
@@ -175,7 +185,7 @@ class ShopInstaller extends NoBootstrapNeededService
     }
 
     /**
-     * Adds a serial number to the OXID eShop.
+     * Adds serial number to shop.
      *
      * @param string $serialNumber
      */
@@ -211,7 +221,7 @@ class ShopInstaller extends NoBootstrapNeededService
     }
 
     /**
-     * Converts OXID eShop to utf8.
+     * Converts shop to utf8.
      */
     public function convertToUtf()
     {
@@ -265,6 +275,14 @@ class ShopInstaller extends NoBootstrapNeededService
     }
 
     /**
+     * @return ServiceConfig
+     */
+    protected function getServiceConfig()
+    {
+        return $this->serviceConfig;
+    }
+
+    /**
      * @return DatabaseHandler
      */
     protected function getDbHandler()
@@ -312,7 +330,7 @@ class ShopInstaller extends NoBootstrapNeededService
     }
 
     /**
-     * Returns OXID eShop shop id.
+     * Returns shop id.
      *
      * @return string
      */

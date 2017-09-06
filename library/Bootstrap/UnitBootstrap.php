@@ -27,7 +27,7 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
         protected $addDemoData = 0;
 
         /**
-         * Initiates OXID eShop before testing.
+         * Initiates shop before testing.
          * Loads additional.inc and OxidTestCase classes.
          */
         public function init()
@@ -49,7 +49,7 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
         }
 
         /**
-         * Prepare OXID eShop configuration. Force UTF8 mode, compile directory and database name to be used during testing.
+         * Prepare shop configuration. Force UTF8 mode, compile directory and database name to be used during testing.
          */
         public function prepareShop()
         {
@@ -94,7 +94,7 @@ namespace {
 
     /**
      * Returns framework base path.
-     * Overwrites original method so that it would be possible to mock OXID eShop directory during testing.
+     * Overwrites original method so that it would be possible to mock shop directory during testing.
      *
      * @return string
      */

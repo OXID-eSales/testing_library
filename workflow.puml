@@ -8,7 +8,7 @@
     else (no)
     endif;
 
-    :Install OXID eShop;
+    :Install Shop;
 
     if (Is this acceptance tests?)
         :Install demo data;

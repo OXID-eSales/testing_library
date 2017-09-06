@@ -20,8 +20,8 @@ Requirements
 -  PHP cURL extension
 -  Not compatible with Windows (use VM instead)
 
-This library can be used to test modules with earlier OXID eShop versions, but
-it will not be possible to run the OXID eShop tests.
+This library can be used to test modules with earlier shop versions, but
+it will not be possible to run shop tests.
 
 Installation
 ------------
@@ -33,14 +33,14 @@ installation guide `here <https://getcomposer.org/download/>`__.
 Selecting where to install testing library
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Testing library can be installed directly within the OXID eShop or to any other
+Testing library can be installed directly within shop or to any other
 directory. However, installation varies slightly depending on selected
-location. We advise to install it using the OXID eShop directory.
+location. We advise to install it using shop directory.
 
-Option 1: Selecting OXID eShop directory for installation (preferred way)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Option 1: Selecting shop directory for installation (preferred way)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To install testing library within the OXID eShop directory, update/create
+To install testing library within shop directory, update/create
 ``composer.json`` with following values:
 
 .. code:: json
@@ -84,7 +84,7 @@ To install testing library within the OXID eShop directory, update/create
     }
 
 Installing this way, binaries will be accessible from
-``shop_source_path/vendor/bin``. Latest development OXID eShop version already
+``shop_source_path/vendor/bin``. Latest development shop version already
 includes composer.json file in its source, so no changes need to be
 made.
 
@@ -114,11 +114,11 @@ these steps:
 Running tests
 -------------
 
-First and foremost - make sure you have a working OXID eShop, meaning:
+First and foremost - make sure you have a working shop, meaning:
 
-1. The OXID eShop is installed/configured (``config.inc.php`` is filled in with
+1. Shop is installed/configured (``config.inc.php`` is filled in with
    database connection details and so)
-2. The OXID eShop can be accessed through url (used for shop installation).
+2. Shop can be accessed through url (used for shop installation).
 
 Several test runners are available for use once testing library is prepared.
 These are available in ``bin`` or ``vendor/bin`` directory:
@@ -168,7 +168,7 @@ Configuration
 -------------
 
 Configuration file is named ``test_config.yml`` and is placed in the
-root directory of this library or the OXID eShop (when installing with shop
+root directory of this library or shop (when installing with shop
 composer.json). During setup you will be asked several questions
 regarding testing library and shop/module installation. After setup
 ``test_config.yml`` will be created, and later can be edited if some
@@ -187,15 +187,15 @@ Mandatory parameters
 
 These parameters are required for testing library to work properly.
 
-+------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Parameter name               | Description                                                                                                                                                                                                                                                                                                                                                                   |
-+==============================+===============================================================================================================================================================================================================================================================================================================================================================================+
-| **shop\_path**               | Path to the OXID eShop source. Defaults to the same directory as to where vendor is located. Supports relative and absolute paths. Can be left empty when installed from shop or module directory.                                                                                                                                                                            |
-+------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **shop\_tests\_path**        | Path to the OXID eShop tests. If shop resides in ``/var/www/shop/source`` and tests are in ``/var/www/shop/tests``, this should be set to ``../tests``. Supports relative and absolute paths.                                                                                                                                                                                 |
-+------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **partial\_module\_paths**   | When testing not activated module, specify module path in the OXID eShop. Module path in shop, e.g. if module is in ``shop/modules/oe/mymodule`` directory, value here should be ``oe/mymodule``. Multiple modules can be specified separated by comma: ``oe/module1,module2,tt/module3``. If no modules will be tested, leave this field empty or ``null``. Default ``null`` |
-+------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
++------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Parameter name               | Description                                                                                                                                                                                                                                                                                                                                                           |
++==============================+=======================================================================================================================================================================================================================================================================================================================================================================+
+| **shop\_path**               | Path to eShop source. Defaults to the same directory as to where vendor is located. Supports relative and absolute paths. Can be left empty when installed from shop or module directory.                                                                                                                                                                             |
++------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **shop\_tests\_path**        | Path to eShop tests. If shop resides in ``/var/www/shop/source`` and tests are in ``/var/www/shop/tests``, this should be set to ``../tests``. Supports relative and absolute paths.                                                                                                                                                                                  |
++------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **partial\_module\_paths**   | When testing not activated module, specify module path in shop. Module path in shop, e.g. if module is in ``shop/modules/oe/mymodule`` directory, value here should be ``oe/mymodule``. Multiple modules can be specified separated by comma: ``oe/module1,module2,tt/module3``. If no modules will be tested, leave this field empty or ``null``. Default ``null``   |
++------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 Optional parameters
 ^^^^^^^^^^^^^^^^^^^
@@ -206,15 +206,15 @@ additional functionality and options when testing.
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Parameter name                           | Description                                                                                                                                                                                                                                                                                             |
 +==========================================+=========================================================================================================================================================================================================================================================================================================+
-| **shop\_url**                            | OXID eShop base url (if not set, takes it from shop's config.inc.php file). Default ``null``.                                                                                                                                                                                                           |
+| **shop\_url**                            | eShop base url (if not set, takes it from shop's config.inc.php file). Default ``null``.                                                                                                                                                                                                                |
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **shop\_serial**                         | For PE and EE editions the OXID eShop serial has to be specified for shop installer to work. Default ``''``.                                                                                                                                                                                            |
+| **shop\_serial**                         | For PE and EE editions shop serial has to be specified for shop installer to work. Default ``''``.                                                                                                                                                                                                      |
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **enable\_varnish**                      | Run tests with varnish on or off. The OXID eShop has to be configured to work with varnish, correct serial must be used. Default ``false``                                                                                                                                                              |
+| **enable\_varnish**                      | Run tests with varnish on or off. Shop has to be configured to work with varnish, correct serial must be used. Default ``false``                                                                                                                                                                        |
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | **is\_subshop**                          | Whether to run subshop tests. Currently only used when running selenium tests. Default ``false``.                                                                                                                                                                                                       |
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **install\_shop**                        | Whether to prepare shop database for testing. The OXID eShop ``config.ing.php`` file must be correct. Default ``true``.                                                                                                                                                                                 |
+| **install\_shop**                        | Whether to prepare shop database for testing. Shop ``config.ing.php`` file must be correct. Default ``true``.                                                                                                                                                                                           |
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | **remote\_server\_dir**                  | If defined, testing services will be copied to this directory and called via url instead of used locally. Example: username@server.com:/path/to/shop.                                                                                                                                                   |
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -236,7 +236,7 @@ additional functionality and options when testing.
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | **run\_tests\_for\_shop**                | Whether to run shop unit tests. This applies only when correct shop\_tests\_path are set. Default ``true``.                                                                                                                                                                                             |
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **run\_tests\_for\_modules**             | Whether to run modules unit tests. All modules provided in modules\_path will be tested. If shop\_tests\_path and run\_shop\_tests are set, OXID eShop tests will be run with module tests. Default ``true``.                                                                                           |
+| **run\_tests\_for\_modules**             | Whether to run modules unit tests. All modules provided in modules\_path will be tested. If shop\_tests\_path and run\_shop\_tests are set, shop tests will be run with module tests. Default ``true``.                                                                                                 |
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | **screen\_shots\_path**                  | Folder where to save selenium screen shots. If not specified, screenshots will not be taken. Default ``null``. Default ``false``.                                                                                                                                                                       |
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -246,7 +246,7 @@ additional functionality and options when testing.
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | **selenium\_server\_ip**                 | Selenium server IP address. Used to connect to selenium server when Mink selenium driver is used for acceptance tests. Default ``127.0.0.1``.                                                                                                                                                           |
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **additional\_test\_paths**              | Used for running additional tests. It's possible to add paths separated by comma. Loads tests in same manner as OXID eShop or modules tests.                                                                                                                                                            |
+| **additional\_test\_paths**              | Used for running additional tests. It's possible to add paths separated by comma. Loads tests in same manner as eShop or modules tests.                                                                                                                                                                 |
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | **retry\_times\_after\_test\_fail**      | How many times to try test before marking it as failure. Could be used for unstable tests which fails randomly.                                                                                                                                                                                         |
 +------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -293,11 +293,11 @@ database, registry, configuration parameters restoration, module
 activation would work. If unit tests are not relying on database or
 registry and are real clean unit tests, ``PHPUnit_Framework_TestCase``
 class can be extended, but have in mind that autoloading of module
-classes and correct OXID eShop classes extension will not work. All
+classes and correct shop classes extension will not work. All
 preparation works can be done in ``additional.inc.php`` file. This file
 is loaded before database dump creation and before running any of the
 test, so can be used autoloaders registration, demodata preparation,
-etc. For unit testing OXID eShop is installed without default demodata added.
+etc. For unit testing shop is installed without default demodata added.
 
 Writing acceptance tests
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -321,15 +321,15 @@ manually. This method will be run before any test and before database
 dump creation, once per tests suite.
 
 For acceptance testing
-the OXID eShop is installed with default demodata. Additional demodata can be
+shop is installed with default demodata. Additional demodata can be
 added to ``testSql`` directory by the name of ``demodata_EE.sql``,
 ``demodata_PE_CE.sql`` or ``demodata_EE_mall.sql`` (when subshop
 functionality is enabled in test\_config). These files will be loaded on
-top of the database depending on the OXID eShop edition. Any additional files,
+top of the database depending on the shop edition. Any additional files,
 needed for testing can be placed under ``testData`` directory - all
-content will be copied onto the OXID eShop source before running tests.
+content will be copied onto the shop source before running tests.
 
-A useful method for preparing the OXID eShop is
+A useful method for preparing the shop is
 ``AcceptanceTestCase::callShopSC()``. With this method
 you can e.g. insert a new article or modify config variables. For detailed
 usage examples have a look at the OXID eShop acceptance tests.

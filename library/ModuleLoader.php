@@ -68,7 +68,7 @@ class ModuleLoader
     }
 
     /**
-     * Prepares modules for activation. Registers all modules that exist in the OXID eShop.
+     * Prepares modules for activation. Registers all modules that exist in the shop.
      */
     private function prepareModulesForActivation()
     {
@@ -127,7 +127,7 @@ class ModuleLoader
     }
 
     /**
-     * OXID eShop cache should be deleted as some modules might try to clean cache on top.
+     * Shop cache should be deleted as some modules might try to clean cache on top.
      * This creates problems if CI and Apache user is different.
      * Some modules might not clean cache which would also lead to a random errors/failures.
      */

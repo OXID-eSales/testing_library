@@ -173,7 +173,7 @@ abstract class UnitTestCase extends BaseTestCase
     {
         /**
          * This try catch block fixes some issues with tests that do interfere with the transaction nesting and lead to
-         * transactions marked as rollback only, even when all the OXID eShop code has been executed.
+         * transactions marked as rollback only, even when all the shop code has been executed.
          */
         try {
             while (\OxidEsales\Eshop\Core\DatabaseProvider::getDb()->isTransactionActive() && \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->isRollbackOnly() ) {
@@ -290,7 +290,7 @@ abstract class UnitTestCase extends BaseTestCase
     }
 
     /**
-     * Sets OXID eShop admin mode.
+     * Sets OXID shop admin mode.
      *
      * @param bool $adminMode set to admin mode TRUE / FALSE.
      */
@@ -301,7 +301,7 @@ abstract class UnitTestCase extends BaseTestCase
     }
 
     /**
-     * Get OXID eShop shop ID.
+     * Get OXID shop ID.
      *
      * @return string
      */
@@ -311,7 +311,7 @@ abstract class UnitTestCase extends BaseTestCase
     }
 
     /**
-     * Sets OXID eShop shop ID.
+     * Sets OXID shop ID.
      *
      * @param string $shopId set active shop ID.
      */
@@ -867,7 +867,7 @@ abstract class UnitTestCase extends BaseTestCase
     }
 
     /**
-     * Returns OXID eShop state backup class.
+     * Returns shop state backup class.
      *
      * @return ShopStateBackup
      */

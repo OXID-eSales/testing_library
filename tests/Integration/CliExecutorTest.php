@@ -36,6 +36,6 @@ class ChangeExceptionLogRightsTest extends PHPUnit_Framework_TestCase
      */
     public function testThrowsExceptionWhenWrongCommand()
     {
-        CliExecutor::executeCommand('NotExistingCommand -v 2>&1');
+        CliExecutor::executeCommand('NotExistingCommand -v');
     }
 }

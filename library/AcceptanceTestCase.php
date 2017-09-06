@@ -145,7 +145,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * Sets up OXID eShop before running test case.
+     * Sets up shop before running test case.
      * Does not use setUpBeforeClass to keep this method non-static.
      *
      * @param string $testSuitePath
@@ -324,12 +324,12 @@ abstract class AcceptanceTestCase extends MinkWrapper
         return $sString;
     }
 
-    /* --------------------- OXID eShop frontend side only functions ---------------------- */
+    /* --------------------- eShop frontend side only functions ---------------------- */
 
     /**
-     * opens OXID eShop frontend and runs checkForErrors().
+     * opens shop frontend and runs checkForErrors().
      *
-     * @param bool        $blForceMainShop Opens main OXID eShop even if SubShop is being tested.
+     * @param bool        $blForceMainShop Opens main shop even if SubShop is being tested.
      * @param bool        $blClearCache    Whether to clear cache.
      * @param bool|string $mForceSubShop   Opens sub shop even if man shop is being tested.
      *
@@ -353,7 +353,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * Selects OXID eShop language in frontend.
+     * Selects shop language in frontend.
      *
      * @param string $language Language title.
      */
@@ -366,7 +366,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * Selects OXID eShop currency in frontend.
+     * Selects shop currency in frontend.
      *
      * @param string $currency Currency title.
      */
@@ -427,7 +427,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * @param int    $amount           Amount of items to add
      * @param string $controller       Controller name which should be opened after article is added
      * @param array  $additionalParams Additional parameters (like persparam[details] for label)
-     * @param int    $shopId           OXID eShop shop id
+     * @param int    $shopId           Shop id
      */
     public function addToBasket(
         $articleId,
@@ -449,7 +449,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * @param int    $amount           Amount of items to add
      * @param string $controller       Controller name which should be opened after article is added
      * @param array  $additionalParams Additional parameters (like persparam[details] for label)
-     * @param int    $shopId           OXID eShop shop id
+     * @param int    $shopId           Shop id
      */
     public function changeBasket(
         $articleId,
@@ -491,7 +491,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * Opens basket.
      *
-     * @param string $language active language in OXID eShop.
+     * @param string $language active language in shop.
      */
     public function openBasket($language = "English")
     {
@@ -552,12 +552,12 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * login to admin with default admin pass and opens needed menu.
      *
-     * @param string $menuLink1     Menu link (e.g. master settings, OXID eShop settings).
+     * @param string $menuLink1     Menu link (e.g. master settings, shop settings).
      * @param string $menuLink2     Sub menu link (e.g. administer products, discounts, vat).
      * @param bool   $forceMainShop Force main shop.
-     * @param string $user          OXID eShop admin username.
-     * @param string $pass          OXID eShop admin password.
-     * @param string $language      OXID eShop admin language.
+     * @param string $user          Shop admin username.
+     * @param string $pass          Shop admin password.
+     * @param string $language      Shop admin language.
      */
     public function loginAdmin(
         $menuLink1 = null,
@@ -590,14 +590,14 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * login to admin for PayPal shop with admin pass and opens needed menu.
      *
-     * @param string $menuLink1     Menu link (e.g. master settings, OXID eShop settings).
+     * @param string $menuLink1     Menu link (e.g. master settings, shop settings).
      * @param string $menuLink2     Sub menu link (e.g. administer products, discounts, vat).
      * @param string $editElement   @deprecated Has no effect any more (Was: Element to check in edit frame (optional).)
      * @param string $listElement   @deprecated Has no effect (Was:Element to check in list frame (optional).)
      * @param bool   $forceMainShop Force main shop.
-     * @param string $user          OXID eShop admin username.
-     * @param string $pass          OXID eShop admin password.
-     * @param string $language      OXID eShop admin language.
+     * @param string $user          Shop admin username.
+     * @param string $pass          Shop admin password.
+     * @param string $language      Shop admin language.
      */
     public function loginAdminForModule(
         $menuLink1,
@@ -615,10 +615,10 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * login to admin with admin pass, selects subshop and opens needed menu.
      *
-     * @param string $menuLink1 Menu link (e.g. master settings, OXID eShop settings).
+     * @param string $menuLink1 Menu link (e.g. master settings, shop settings).
      * @param string $menuLink2 Sub menu link (e.g. administer products, discounts, vat).
-     * @param string $user      OXID eShop admin username.
-     * @param string $pass      OXID eShop admin password.
+     * @param string $user      Shop admin username.
+     * @param string $pass      Shop admin password.
      */
     public function loginSubshopAdmin($menuLink1, $menuLink2, $user = "admin@myoxideshop.com", $pass = "admin0303")
     {
@@ -639,7 +639,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * selects other menu in admin interface.
      *
-     * @param string $menuLink1 menu link (e.g. master settings, OXID eShop settings).
+     * @param string $menuLink1 menu link (e.g. master settings, shop settings).
      * @param string $menuLink2 sub menu link (e.g. administer products, discounts, vat).
      */
     public function selectMenu($menuLink1, $menuLink2)
@@ -1592,7 +1592,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * Call OXID eShop selenium connector to execute code in the OXID eShop.
+     * Call shop selenium connector to execute code in shop.
      * @example call to update information to database.
      *
      * @param string $sClass          class name.
@@ -1635,7 +1635,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * Call OXID eShop seleniums connector to execute code in OXID eShop.
+     * Call shop seleniums connector to execute code in shop.
      * @example call to update information to database.
      *
      * @param string  $sElementTable Name of element table
@@ -1705,7 +1705,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * tests if none of php possible errors are displayed into OXID eShop frontend page.
+     * tests if none of php possible errors are displayed into shop frontend page.
      *
      */
     public function checkForErrors()
@@ -1737,7 +1737,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * Calls ModuleInstaller Service and activates all given modules in OXID eShop before tests are run.
+     * Calls ModuleInstaller Service and activates all given modules in shop before tests are run.
      */
     public function activateModules()
     {
@@ -1779,7 +1779,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * Clears OXID eShop cache
+     * Clears shop cache
      */
     public function clearCache()
     {
@@ -1804,7 +1804,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * Clears OXID eShop cache.
+     * Clears shop cache.
      *
      */
     public function clearTemp()
@@ -2033,7 +2033,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * Forms OXID eShop url with given parameters
+     * Forms shop url with given parameters
      *
      * @param array $aParams
      * @param null  $sShopId
