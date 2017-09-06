@@ -35,6 +35,7 @@ use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use OxidEsales\TestingLibrary\Services\Library\CliExecutor;
 use OxidEsales\EshopProfessional\Core\Serial;
 use OxidEsales\TestingLibrary\TestConfig;
+use OxidEsales\EshopCommunity\Setup\Utilities;
 
 /**
  * Class for shop installation.
@@ -126,11 +127,9 @@ class ShopInstaller implements ShopServiceInterface
         $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/database_schema.sql");
         $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql");
 
-        $testConfig = new TestConfig();
-        $vendorDir = $testConfig->getVendorDirectory();
-
-        CliExecutor::executeCommand('"' . $vendorDir . '/bin/oe-eshop-doctrine_migration" migrations:migrate');
-        CliExecutor::executeCommand('"' . $vendorDir . '/bin/oe-eshop-db_views_regenerate"');
+        $utilities = new Utilities();
+        $utilities->executeExternalDatabaseMigrationCommand();
+        $utilities->executeExternalRegenerateViewsCommand();
     }
 
     /**
