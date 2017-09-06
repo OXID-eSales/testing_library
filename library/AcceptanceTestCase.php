@@ -1756,16 +1756,25 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * @param string $themeName Name of the theme to activate
      * @param int    $shopId    Shop Id to activate theme in. If no value is given, the shop ID is taken from TestConfig
      */
-    public function activateTheme($themeName, $shopId = null)
+    public function activateTheme($themeName)
     {
-        $testConfig = $this->getTestConfig();
-        if (is_null($shopId)) {
-            $shopId = $testConfig->getShopId();
-        }
+        $currentShopId = \OxidEsales\Eshop\Core\Registry::getConfig()->getShopId();
 
-        $serviceCaller = new ServiceCaller($testConfig);
-        $serviceCaller->setParameter('themeName', $themeName);
-        $serviceCaller->callService('ThemeSwitcher', $shopId);
+        $theme = oxNew(Theme::class);
+        $theme->load($themeName);
+
+        $testConfig = new TestConfig();
+        $shopId = $testConfig->getShopId();
+        \OxidEsales\Eshop\Core\Registry::getConfig()->setShopId($shopId);
+
+        $theme->activate();
+
+        if ($shopId != 1) {
+            \OxidEsales\Eshop\Core\Registry::getConfig()->setShopId(1);
+
+            $theme->activate();
+        }
+        \OxidEsales\Eshop\Core\Registry::getConfig()->setShopId($currentShopId);
     }
 
     /**
