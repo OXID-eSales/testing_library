@@ -24,6 +24,7 @@ namespace OxidEsales\TestingLibrary;
 use modOXID;
 use modOxUtilsDate;
 
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\EshopCommunity\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\EshopCommunity\Core\Database;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
@@ -979,5 +980,25 @@ abstract class UnitTestCase extends BaseTestCase
         oxTestModules::addModuleObject($saveUnderClassName, $exception);
 
         return $exception;
+    }
+
+    protected function assertViewExists($tableName)
+    {
+        $tableNameView = 'oxv_' . $tableName;
+        $this->assertTrue($this->existsView($tableName), 'Expected view "' . $tableNameView . '" does not exist!');
+    }
+
+    protected function assertViewNotExists($tableName)
+    {
+        $tableNameView = 'oxv_' . $tableName;
+        $this->assertFalse($this->existsView($tableName), 'Expected that view "' . $tableNameView . '" does not exist, but it does!');
+    }
+
+    protected function existsView($tableName)
+    {
+        $tableNameView = 'oxv_' . $tableName;
+        $sql = "SELECT count(*) FROM INFORMATION_SCHEMA.VIEWS WHERE	TABLE_NAME = '" . $tableNameView . "'";
+
+        return '1' == DatabaseProvider::getDb()->getOne($sql);
     }
 }

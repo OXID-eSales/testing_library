@@ -32,7 +32,7 @@ class ShopInstallerTest extends \OxidEsales\TestingLibrary\UnitTestCase
         $this->checkBeforeInstall();
 
         $this->dropOxDiscountView();
-        $this->assertOxDiscountViewNotExists();
+        $this->assertViewNotExists('oxdiscount');
 
         $serviceCaller = new ServiceCaller(new TestConfig());
         try {
@@ -57,13 +57,13 @@ class ShopInstallerTest extends \OxidEsales\TestingLibrary\UnitTestCase
         $this->assertNotEmpty($result);
 
         $this->assertOxModuleColumnHasMaxLength(32);
-        $this->assertOxDiscountViewExists();
+        $this->assertViewExists('oxdiscount');
     }
 
     protected function checkAfterInstall()
     {
         $this->assertOxModuleColumnHasMaxLength(100);
-        $this->assertOxDiscountViewExists();
+        $this->assertViewExists('oxdiscount');
     }
 
     /**
@@ -71,18 +71,18 @@ class ShopInstallerTest extends \OxidEsales\TestingLibrary\UnitTestCase
      */
     private function assertOxModuleColumnHasMaxLength($expectedMaxLength)
     {
-        $columnInformation = $this->getOxModuleColumnInformation();
+        $columnInformation = $this->getDatabaseFieldInformation('oxtplblocks', 'OXMODULE');
 
         $this->assertEquals($expectedMaxLength, $columnInformation->max_length);
     }
 
-    protected function getOxModuleColumnInformation()
+    protected function getDatabaseFieldInformation($tableName, $fieldName)
     {
         $database = DatabaseProvider::getDb();
-        $columns = $database->metaColumns('oxtplblocks');
+        $columns = $database->metaColumns($tableName);
 
         foreach($columns as $column) {
-            if ($column->name === 'OXMODULE') {
+            if ($column->name === $fieldName) {
 
                 return $column;
             }
@@ -101,27 +101,10 @@ class ShopInstallerTest extends \OxidEsales\TestingLibrary\UnitTestCase
 
     protected function dropOxDiscountView()
     {
-        if ($this->existsOxDiscountView()) {
+        if ($this->existsView('oxdiscount')) {
             $database = DatabaseProvider::getDb();
 
             $database->execute("DROP VIEW oxv_oxdiscount");
         }
-    }
-
-    protected function assertOxDiscountViewExists()
-    {
-        $this->assertTrue($this->existsOxDiscountView(), 'Expected view oxv_oxdiscount does not exist!');
-    }
-
-    protected function assertOxDiscountViewNotExists()
-    {
-        $this->assertFalse($this->existsOxDiscountView(), 'Expected that view oxv_oxdiscount does not exist, but it does!');
-    }
-
-    protected function existsOxDiscountView()
-    {
-        $sql = "SELECT count(*) FROM INFORMATION_SCHEMA.VIEWS WHERE	TABLE_NAME = 'oxv_oxdiscount'";
-
-        return '1' == DatabaseProvider::getDb()->getOne($sql);
     }
 }
