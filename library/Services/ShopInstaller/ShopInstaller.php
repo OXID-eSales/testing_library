@@ -36,6 +36,8 @@ use OxidEsales\TestingLibrary\Services\Library\CliExecutor;
 use OxidEsales\EshopProfessional\Core\Serial;
 use OxidEsales\TestingLibrary\TestConfig;
 use OxidEsales\EshopCommunity\Setup\Utilities;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 /**
  * Class for shop installation.
@@ -127,8 +129,11 @@ class ShopInstaller implements ShopServiceInterface
         $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/database_schema.sql");
         $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql");
 
+        $output = new ConsoleOutput();
+        $output->setVerbosity(ConsoleOutputInterface::VERBOSITY_QUIET);
+
         $utilities = new Utilities();
-        $utilities->executeExternalDatabaseMigrationCommand();
+        $utilities->executeExternalDatabaseMigrationCommand($output);
         $utilities->executeExternalRegenerateViewsCommand();
     }
 
