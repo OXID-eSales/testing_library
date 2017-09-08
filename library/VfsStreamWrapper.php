@@ -49,6 +49,10 @@ class VfsStreamWrapper
      * Creating multiple files in the same directory does not work as
      * parent directories gets cleared on creation.
      *
+     * NOTE: this can be used only once! If you call it twice,
+     *       the first file is gone and not found by is_file,
+     *       file_exists and others!
+     *
      * @param string $filePath
      * @param string $content  Will try to convent any value to string if non string is given.
      *
@@ -62,7 +66,7 @@ class VfsStreamWrapper
 
     /**
      * Creates whole directory structure.
-     * Structure example: array('dir' => array('subdir' => array('file' => 'content'))).
+     * Structure example: ['dir' => ['subdir' => ['file' => 'content']]].
      *
      * @param array $structure
      *
