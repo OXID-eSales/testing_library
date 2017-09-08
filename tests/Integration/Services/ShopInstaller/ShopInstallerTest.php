@@ -22,8 +22,9 @@
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\TestingLibrary\ServiceCaller;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
-
 use OxidEsales\TestingLibrary\TestConfig;
+
+require_once TEST_LIBRARY_HELPERS_PATH . 'oxDatabaseHelper.php';
 
 class ShopInstallerTest extends \OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -49,7 +50,8 @@ class ShopInstallerTest extends \OxidEsales\TestingLibrary\UnitTestCase
         $shopConfig = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
         $dbHandler = new DatabaseHandler($shopConfig);
 
-        $this->adjustTemplateBlocksOxModuleColumn();
+        $databaseHelper = new oxDatabaseHelper(DatabaseProvider::getDb());
+        $databaseHelper->adjustTemplateBlocksOxModuleColumn();
 
         $sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" . $dbHandler->getDbName() . "'";
         $result = DatabaseProvider::getDb()->getOne($sql);
@@ -71,40 +73,17 @@ class ShopInstallerTest extends \OxidEsales\TestingLibrary\UnitTestCase
      */
     private function assertOxModuleColumnHasMaxLength($expectedMaxLength)
     {
-        $columnInformation = $this->getDatabaseFieldInformation('oxtplblocks', 'OXMODULE');
+        $databaseHelper = new oxDatabaseHelper(DatabaseProvider::getDb());
+
+        $columnInformation = $databaseHelper->getFieldInformation('oxtplblocks', 'OXMODULE');
 
         $this->assertEquals($expectedMaxLength, $columnInformation->max_length);
     }
 
-    protected function getDatabaseFieldInformation($tableName, $fieldName)
-    {
-        $database = DatabaseProvider::getDb();
-        $columns = $database->metaColumns($tableName);
-
-        foreach($columns as $column) {
-            if ($column->name === $fieldName) {
-
-                return $column;
-            }
-        }
-    }
-
-    protected function adjustTemplateBlocksOxModuleColumn()
-    {
-        $database = DatabaseProvider::getDb();
-        $sql = "ALTER TABLE `oxtplblocks` 
-          CHANGE `OXMODULE` `OXMODULE` char(32) 
-          character set latin1 collate latin1_general_ci NOT NULL 
-          COMMENT 'Module, which uses this template';";
-        $database->execute($sql);
-    }
-
     protected function dropOxDiscountView()
     {
-        if ($this->existsView('oxdiscount')) {
-            $database = DatabaseProvider::getDb();
+        $databaseHelper = new oxDatabaseHelper(DatabaseProvider::getDb());
 
-            $database->execute("DROP VIEW oxv_oxdiscount");
-        }
+        $databaseHelper->dropView('oxdiscount');
     }
 }
