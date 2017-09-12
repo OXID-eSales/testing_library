@@ -1753,8 +1753,9 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * Activates the theme for running acceptance tests on.
      *
+     * @todo Refactor this method to use ThemeSwitcher service. This will require a prior refactoring of the testing library.
+     *
      * @param string $themeName Name of the theme to activate
-     * @param int    $shopId    Shop Id to activate theme in. If no value is given, the shop ID is taken from TestConfig
      */
     public function activateTheme($themeName)
     {
@@ -1769,6 +1770,10 @@ abstract class AcceptanceTestCase extends MinkWrapper
 
         $theme->activate();
 
+        /**
+         * In the tests, the main shops' theme always hay to be switched too.
+         * If the current shop is not a parent shop (i.e. shopId == 1), activate the theme in the parent shop as well.
+         */
         if ($shopId != 1) {
             \OxidEsales\Eshop\Core\Registry::getConfig()->setShopId(1);
 
