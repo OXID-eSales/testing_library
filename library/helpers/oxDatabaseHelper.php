@@ -58,7 +58,8 @@ class oxDatabaseHelper
     public function dropView($tableName)
     {
         if ($this->existsView($tableName)) {
-            $tableNameView = 'oxv_' . $tableName;
+            $generator = oxNew(\OxidEsales\Eshop\Core\TableViewNameGenerator::class);
+            $tableNameView = $generator->getViewName($tableName, 0);
 
             $this->database->execute("DROP VIEW " . $this->database->quoteIdentifier($tableNameView));
         }
@@ -66,13 +67,16 @@ class oxDatabaseHelper
 
     /**
      * @param string $tableName
+     *
+     * @return bool Does the view with the given name exists?
      */
     public function existsView($tableName)
     {
-        $tableNameView = 'oxv_' . $tableName;
-        $sql = "SELECT count(*) FROM INFORMATION_SCHEMA.VIEWS WHERE	TABLE_NAME = '" . $tableNameView . "'";
+        $generator = oxNew(\OxidEsales\Eshop\Core\TableViewNameGenerator::class);
+        $tableNameView = $generator->getViewName($tableName, 0);
+        $sql = "SHOW TABLES LIKE '$tableNameView'";
 
-        return '1' == $this->database->getOne($sql);
+        return $tableNameView === $this->database->getOne($sql);
     }
 
     public function adjustTemplateBlocksOxModuleColumn()
@@ -81,6 +85,7 @@ class oxDatabaseHelper
           CHANGE `OXMODULE` `OXMODULE` char(32) 
           character set latin1 collate latin1_general_ci NOT NULL 
           COMMENT 'Module, which uses this template';";
+
         $this->database->execute($sql);
     }
 }

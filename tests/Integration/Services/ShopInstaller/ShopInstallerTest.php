@@ -35,8 +35,9 @@ class ShopInstallerTest extends \OxidEsales\TestingLibrary\UnitTestCase
         $this->dropOxDiscountView();
         $this->assertViewNotExists('oxdiscount');
 
-        $serviceCaller = new ServiceCaller(new TestConfig());
         try {
+            $serviceCaller = new ServiceCaller(new TestConfig());
+
             $serviceCaller->callService('ShopInstaller');
         } catch (\Exception $e) {
             exit("Failed to install shop with message:" . $e->getMessage());

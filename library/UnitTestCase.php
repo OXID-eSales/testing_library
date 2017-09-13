@@ -984,21 +984,28 @@ abstract class UnitTestCase extends BaseTestCase
 
     protected function assertViewExists($tableName)
     {
-        $tableNameView = 'oxv_' . $tableName;
+        $generator = oxNew(\OxidEsales\Eshop\Core\TableViewNameGenerator::class);
+        $tableNameView = $generator->getViewName($tableName, 0);
+
         $this->assertTrue($this->existsView($tableName), 'Expected view "' . $tableNameView . '" does not exist!');
     }
 
     protected function assertViewNotExists($tableName)
     {
-        $tableNameView = 'oxv_' . $tableName;
+        $generator = oxNew(\OxidEsales\Eshop\Core\TableViewNameGenerator::class);
+        $tableNameView = $generator->getViewName($tableName, 0);
+
         $this->assertFalse($this->existsView($tableName), 'Expected that view "' . $tableNameView . '" does not exist, but it does!');
     }
 
     protected function existsView($tableName)
     {
-        $tableNameView = 'oxv_' . $tableName;
-        $sql = "SELECT count(*) FROM INFORMATION_SCHEMA.VIEWS WHERE	TABLE_NAME = '" . $tableNameView . "'";
+        $generator = oxNew(\OxidEsales\Eshop\Core\TableViewNameGenerator::class);
+        $tableNameView = $generator->getViewName($tableName, 0);
+        $sql = "SHOW TABLES LIKE '$tableNameView'";
 
-        return '1' == DatabaseProvider::getDb()->getOne($sql);
+        $results = DatabaseProvider::getDb()->getAll($sql);
+
+        return $tableNameView === $results[0][0];
     }
 }

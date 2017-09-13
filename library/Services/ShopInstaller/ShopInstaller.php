@@ -134,7 +134,16 @@ class ShopInstaller implements ShopServiceInterface
 
         $utilities = new Utilities();
         $utilities->executeExternalDatabaseMigrationCommand($output);
-        $utilities->executeExternalRegenerateViewsCommand();
+
+        $this->callShellDbViewsRegenerate();
+    }
+
+    protected function callShellDbViewsRegenerate()
+    {
+        $testConfig = new TestConfig();
+        $vendorDir = $testConfig->getVendorDirectory();
+
+        CliExecutor::executeCommand('"' . $vendorDir . '/bin/oe-eshop-db_views_regenerate"');
     }
 
     /**
