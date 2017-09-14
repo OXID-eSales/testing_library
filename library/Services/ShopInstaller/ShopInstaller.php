@@ -175,11 +175,11 @@ class ShopInstaller implements ShopServiceInterface
         $dbHandler = $this->getDbHandler();
         $sShopId = $this->getShopId();
 
-        $dbHandler->query("delete from oxconfig where oxvarname in ('iSetUtfMode','blLoadDynContents','sShopCountry');");
+        $dbHandler->query("delete from oxconfig where oxvarname in ('iSetUtfMode','blSendTechnicalInformationToOxid','sShopCountry');");
         $dbHandler->query(
             "insert into oxconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue) values " .
             "('config1', '{$sShopId}', 'iSetUtfMode',       'str',  ENCODE('0', '{$this->getConfigKey()}') )," .
-            "('config2', '{$sShopId}', 'blLoadDynContents', 'bool', ENCODE('1', '{$this->getConfigKey()}') )," .
+            "('config2', '{$sShopId}', 'blSendTechnicalInformationToOxid', 'bool', ENCODE('1', '{$this->getConfigKey()}') )," .
             "('config3', '{$sShopId}', 'sShopCountry',      'str',  ENCODE('de','{$this->getConfigKey()}') )"
         );
     }
