@@ -28,12 +28,15 @@ require_once TEST_LIBRARY_HELPERS_PATH . 'oxDatabaseHelper.php';
 
 class ShopInstallerTest extends \OxidEsales\TestingLibrary\UnitTestCase
 {
-    public function testShopInstaller()
+    const DEFAULT_OXMODULE_COLUMN_MAX_LENGTH = 32;
+    const CHANGED_OXMODULE_COLUMN_MAX_LENGTH = 100;
+
+    public function testShopInstallerCallsMigrationsAndRegeneratesViews()
     {
         $this->checkBeforeInstall();
 
+        // to be able to assert afterwards, that the views generation was called, we delete one view here
         $this->dropOxDiscountView();
-        $this->assertViewNotExists('oxdiscount');
 
         try {
             $serviceCaller = new ServiceCaller(new TestConfig());
@@ -46,27 +49,28 @@ class ShopInstallerTest extends \OxidEsales\TestingLibrary\UnitTestCase
         $this->checkAfterInstall();
     }
 
+    /**
+     * To be able to assure, that the ShopInstall service call worked correct, we check before, if everything is well.
+     */
     protected function checkBeforeInstall()
     {
-        $shopConfig = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
-        $dbHandler = new DatabaseHandler($shopConfig);
-
         $databaseHelper = new oxDatabaseHelper(DatabaseProvider::getDb());
         $databaseHelper->adjustTemplateBlocksOxModuleColumn();
 
-        $sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" . $dbHandler->getDbName() . "'";
-        $result = DatabaseProvider::getDb()->getOne($sql);
-
-        $this->assertNotEmpty($result);
-
-        $this->assertOxModuleColumnHasMaxLength(32);
-        $this->assertViewExists('oxdiscount');
+        $this->assertThereExistsAtLeastOneDatabaseTable();
+        $this->assertOxModuleColumnHasMaxLength(self::DEFAULT_OXMODULE_COLUMN_MAX_LENGTH);
+        $this->assureGenerateViewsWasCalled();
     }
 
+    /**
+     * To assure, that the ShopInstall service call worked correct, we check, that
+     *  - the views are regenerated
+     *  - the migrations where called
+     */
     protected function checkAfterInstall()
     {
-        $this->assertOxModuleColumnHasMaxLength(100);
-        $this->assertViewExists('oxdiscount');
+        $this->assureMigrationWasCalled();
+        $this->assureGenerateViewsWasCalled();
     }
 
     /**
@@ -86,5 +90,24 @@ class ShopInstallerTest extends \OxidEsales\TestingLibrary\UnitTestCase
         $databaseHelper = new oxDatabaseHelper(DatabaseProvider::getDb());
 
         $databaseHelper->dropView('oxdiscount');
+
+        $this->assertViewNotExists('oxdiscount');
+    }
+
+    private function assureMigrationWasCalled(): void
+    {
+        $this->assertOxModuleColumnHasMaxLength(self::CHANGED_OXMODULE_COLUMN_MAX_LENGTH);
+    }
+
+    protected function assureGenerateViewsWasCalled(): void
+    {
+        $this->assertViewExists('oxdiscount');
+    }
+
+    protected function assertThereExistsAtLeastOneDatabaseTable()
+    {
+        $databaseHelper = new oxDatabaseHelper(DatabaseProvider::getDb());
+
+        $this->assertNotEmpty($databaseHelper->getDataBaseTables());
     }
 }

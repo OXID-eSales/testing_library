@@ -1000,12 +1000,8 @@ abstract class UnitTestCase extends BaseTestCase
 
     protected function existsView($tableName)
     {
-        $generator = oxNew(\OxidEsales\Eshop\Core\TableViewNameGenerator::class);
-        $tableNameView = $generator->getViewName($tableName, 0);
-        $sql = "SHOW TABLES LIKE '$tableNameView'";
+        $databaseHelper = new oxDatabaseHelper(DatabaseProvider::getDb());
 
-        $results = DatabaseProvider::getDb()->getAll($sql);
-
-        return $tableNameView === $results[0][0];
+        return $databaseHelper->existsView($tableName);
     }
 }

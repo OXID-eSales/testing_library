@@ -20,7 +20,9 @@
  * @copyright (C) OXID eSales AG 2003-2017
  */
 
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\EshopCommunity\Core\Database\Adapter\DatabaseInterface;
+use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 
 class oxDatabaseHelper
 {
@@ -87,5 +89,15 @@ class oxDatabaseHelper
           COMMENT 'Module, which uses this template';";
 
         $this->database->execute($sql);
+    }
+
+    public function getDataBaseTables()
+    {
+        $shopConfigFile = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
+        $databaseHandler = new DatabaseHandler($shopConfigFile);
+
+        $sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" . $databaseHandler->getDbName() . "'";
+
+        return DatabaseProvider::getDb()->getAll($sql);
     }
 }
