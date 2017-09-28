@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of OXID eSales Testing Library.
  *
@@ -79,6 +78,21 @@ class oxDatabaseHelper
         $sql = "SHOW TABLES LIKE '$tableNameView'";
 
         return $tableNameView === $this->database->getOne($sql);
+    }
+
+    /**
+     * @param string $tableName The name of the table we want to assure to exist.
+     *
+     * @return bool Does the database table with the given name exists?
+     */
+    public function existsTable($tableName)
+    {
+        $database = DatabaseProvider::getDb();
+        $sql = "SELECT COUNT(TABLE_NAME) FROM information_schema.TABLES WHERE TABLE_NAME = '$tableName'";
+
+        $count = $database->getOne($sql);
+
+        return $count > 0;
     }
 
     public function adjustTemplateBlocksOxModuleColumn()

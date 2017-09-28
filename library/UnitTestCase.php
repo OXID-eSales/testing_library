@@ -24,6 +24,7 @@ namespace OxidEsales\TestingLibrary;
 use modOXID;
 use modOxUtilsDate;
 
+use oxDatabaseHelper;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\EshopCommunity\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\EshopCommunity\Core\Database;
@@ -38,6 +39,7 @@ use PHPUnit_Framework_TestResult as TestResult;
 use ReflectionClass;
 use Exception;
 
+require_once TEST_LIBRARY_HELPERS_PATH . 'oxDatabaseHelper.php';
 require_once TEST_LIBRARY_HELPERS_PATH . 'modOxUtilsDate.php';
 
 /**
