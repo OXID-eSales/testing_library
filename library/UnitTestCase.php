@@ -163,7 +163,8 @@ abstract class UnitTestCase extends BaseTestCase
         $this->removeBlacklistedClassesFromCodeCoverage($result);
         $result = parent::run($result);
 
-        oxTestModules::cleanUp();
+        \oxTestModules::cleanUp();
+
         return $result;
     }
 
@@ -963,25 +964,6 @@ abstract class UnitTestCase extends BaseTestCase
                 $oFilter->removeFileFromWhitelist($sFile);
             }
         }
-    }
-
-    /**
-     * OnlineCaller rethrows exception in method _castExceptionAndWriteToLog
-     * this way we mock it from writing to log.
-     *
-     * @param string $exceptionClassName The name of the exception we want to stub, to not log its output.
-     * @param string $saveUnderClassName The name under which we save the stubbed exception in the testing library.
-     *
-     * @return MockObject The mocked exception.
-     */
-    protected function stubExceptionToNotWriteToLog($exceptionClassName = 'oxException', $saveUnderClassName = 'oxException')
-    {
-        $exception = $this->getMock($exceptionClassName, ['debugOut']);
-        $exception->expects($this->any())->method('debugOut');
-
-        oxTestModules::addModuleObject($saveUnderClassName, $exception);
-
-        return $exception;
     }
 
     protected function assertViewExists($tableName)

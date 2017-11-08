@@ -1750,37 +1750,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
         }
     }
 
-    /**
-     * Activates the theme for running acceptance tests on.
-     *
-     * @todo Refactor this method to use ThemeSwitcher service. This will require a prior refactoring of the testing library.
-     *
-     * @param string $themeName Name of the theme to activate
-     */
-    public function activateTheme($themeName)
-    {
-        $currentShopId = \OxidEsales\Eshop\Core\Registry::getConfig()->getShopId();
-
-        $theme = oxNew(Theme::class);
-        $theme->load($themeName);
-
-        $testConfig = new TestConfig();
-        $shopId = $testConfig->getShopId();
-        \OxidEsales\Eshop\Core\Registry::getConfig()->setShopId($shopId);
-
-        $theme->activate();
-
-        /**
-         * In the tests, the main shops' theme always hay to be switched too.
-         * If the current shop is not a parent shop (i.e. shopId == 1), activate the theme in the parent shop as well.
-         */
-        if ($shopId != 1) {
-            \OxidEsales\Eshop\Core\Registry::getConfig()->setShopId(1);
-
-            $theme->activate();
-        }
-        \OxidEsales\Eshop\Core\Registry::getConfig()->setShopId($currentShopId);
-    }
 
     /**
      * Removes \n signs and it leading spaces from string. keeps only single space in the ends of each row.

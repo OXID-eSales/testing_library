@@ -93,6 +93,8 @@ class oxTestModules
 
     private static $_addedmods = array();
 
+    private static $originalObjects = [];
+
     private static function _getNextName($sOrig)
     {
         $base = $sOrig . '__oxTestModule_';
@@ -247,6 +249,11 @@ class oxTestModules
      */
     public static function addModuleObject($sClassName, $oObject)
     {
+        try {
+            self::$originalObjects[$sClassName] = \OxidEsales\Eshop\Core\Registry::get($sClassName);
+        } catch (\Exception $exception) {
+            // Some classes cannot be stored in registry
+        }
         \OxidEsales\Eshop\Core\Registry::set($sClassName, null);
         UtilsObject::setClassInstance($sClassName, $oObject);
     }
@@ -281,6 +288,11 @@ class oxTestModules
             oxRemClassModule('allmods', $class);
         }
         self::$_addedmods = array();
+
+        foreach (self::$originalObjects as $className => $originalObject) {
+            \OxidEsales\Eshop\Core\Registry::set($sClassName, null);
+            UtilsObject::setClassInstance($sClassName, $originalObject);
+        }
     }
 
     /**
