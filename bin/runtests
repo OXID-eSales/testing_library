@@ -39,7 +39,7 @@ $phpUnit = $testConfig->getVendorDirectory() ."/bin/phpunit";
 if (!file_exists($phpUnit)) {
     $phpUnit = "phpunit";
 }
-$phpUnit = "$php $phpUnit --bootstrap " .__DIR__ ."/../bootstrap.php";
+$phpUnit = "$php $phpUnit --stop-on-failure --tap --bootstrap " .__DIR__ ."/../bootstrap.php";
 
 $arguments = empty($arguments) ? array(escapeshellarg('AllTestsUnit')) : $arguments;
 
@@ -76,7 +76,9 @@ function runSuite($suite, $phpUnit, $arguments)
     $arguments = implode(' ', $arguments);
     $return = 0;
     $suite = escapeshellarg($suite);
-    passthru("TEST_SUITE=$suite $phpUnit $configuration $arguments", $return);
+    $command = "TEST_SUITE=$suite $phpUnit $configuration $arguments";
+    var_dump($command);
+    // passthru($command, $return);
 
     return $return;
 }
