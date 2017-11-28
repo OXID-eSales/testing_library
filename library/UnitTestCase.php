@@ -811,6 +811,28 @@ abstract class UnitTestCase extends BaseTestCase
     }
 
     /**
+     * Mark test run as skipped if tests are run with Subshop flag enabled.
+     * Allows to write Subshop only test case.
+     */
+    public function markTestSkippedIfSubShop()
+    {
+        if ($this->getTestConfig()->isSubShop()) {
+            $this->markTestSkipped('Test is NOT for subshops!');
+        }
+    }
+
+    /**
+     * Mark test run as skipped if tests are run with NO Subshop flag enabled.
+     * Allows to write Subshop only test case.
+     */
+    public function markTestSkippedIfNoSubShop()
+    {
+        if (!$this->getTestConfig()->isSubShop()) {
+            $this->markTestSkipped('Test is ONLY for subshops!');
+        }
+    }
+
+    /**
      * Set a given protected property of a given class instance to a given value.
      *
      * Note: Please use this methods only for static 'mocking' or with other hard reasons!

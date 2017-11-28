@@ -299,6 +299,27 @@ is loaded before database dump creation and before running any of the
 test, so can be used autoloaders registration, demodata preparation,
 etc. For unit testing shop is installed without default demodata added.
 
+Methods usage
+^^^^^^^^^^^^^
+
+Run unit and integration test dependent if Subshops is enabled:
+
+.. code:: php
+
+    public function testCase_forSubShops()
+    {
+        $this->markTestSkippedIfSubShop();
+        ...
+    }
+
+    public function testCase_forNoSubShops()
+    {
+        $this->markTestSkippedIfNoSubShop();
+        ...
+    }
+
+Rest of the methods can be found in class: ``OxidEsales\TestingLibrary\UnitTestCase``.
+
 Writing acceptance tests
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
