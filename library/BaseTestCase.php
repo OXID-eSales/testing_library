@@ -14,6 +14,7 @@ use PHPUnit_Framework_SkippedTestError as SkippedTestError;
  */
 abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
+
     /** @var TestConfig */
     private static $testConfig;
 
@@ -161,7 +162,8 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
             $this->assertSame(
                 $expectedExceptionMessage,
                 $actualExceptionMessage,
-                'The logged exception message should be "' . $expectedExceptionMessage . '"' . PHP_EOL .
+                'The logged exception message should be: "' . $expectedExceptionMessage . '"'
+                . ' instead got this: "' . $actualExceptionMessage . '"'. PHP_EOL .
                 $exceptionLogEntries
             );
         }

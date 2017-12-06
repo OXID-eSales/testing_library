@@ -15,7 +15,6 @@ namespace OxidEsales\TestingLibrary\helpers;
  */
 class ExceptionLogFileHelper
 {
-
     /**
      * @var The fully qualified path to the exception log file
      */
