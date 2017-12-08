@@ -49,7 +49,7 @@
 
         endwhile
 
-        :Restore database to DB2;
+        :Restore database to Dump-2;
 
     endwhile
 
