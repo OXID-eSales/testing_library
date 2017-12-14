@@ -72,7 +72,7 @@ class oxDatabaseHelper
      */
     public function existsTable($tableName)
     {
-        $database = DatabaseProvider::getDb();
+        $database = DatabaseProvider::getMaster();
         $sql = "SELECT COUNT(TABLE_NAME) FROM information_schema.TABLES WHERE TABLE_NAME = '$tableName'";
 
         $count = $database->getOne($sql);
@@ -97,6 +97,6 @@ class oxDatabaseHelper
 
         $sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" . $databaseHandler->getDbName() . "'";
 
-        return DatabaseProvider::getDb()->getAll($sql);
+        return DatabaseProvider::getMaster()->getAll($sql);
     }
 }

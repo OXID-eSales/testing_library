@@ -115,7 +115,7 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
             return;
         }
 
-        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster();
         if ($database->getOne("SHOW TABLES LIKE '$table'")) {
             $database->execute("DROP TABLE `$table`");
         }
@@ -132,7 +132,7 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
      */
     private function dropTable($sTable)
     {
-        $oDB = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
+        $oDB = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster();
         $oDB->execute("DROP TABLE `$sTable`");
     }
 
@@ -191,7 +191,7 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
     private function getTableChecksum($tables)
     {
         $tables = is_array($tables) ? $tables : array($tables);
-        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
         $select = 'CHECKSUM TABLE ' . implode(", ", $tables);
         $results = $database->getAll($select);
 
@@ -212,7 +212,7 @@ class DatabaseRestorerToFile implements DatabaseRestorerInterface
      */
     private function getDbTables()
     {
-        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_NUM);
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_NUM);
         $tables = $database->getCol("SHOW TABLES");
 
         foreach ($tables as $key => $table) {

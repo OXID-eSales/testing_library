@@ -134,7 +134,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
      */
     private function getTableColumns($tables)
     {
-        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
 
         $columns = array();
         foreach ($tables as $table) {
@@ -157,7 +157,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
      */
     private function getTableData($tables)
     {
-        $db = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
+        $db = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
 
         $data = array();
         foreach ($tables as $table) {
@@ -196,7 +196,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
      */
     private function restoreColumns($sTable)
     {
-        $db = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
+        $db = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
 
         $currentColumns = $db->getAll("SHOW COLUMNS FROM `$sTable`", 'Field');
         $dumpColumns = $this->getDumpColumns();
@@ -217,7 +217,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
      */
     private function executeQuery($sQuery)
     {
-        $oDB = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
+        $oDB = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster();
         $oDB->execute($sQuery);
     }
 
@@ -272,7 +272,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
             }
             $rowValues = array();
             foreach ($row as $entry) {
-                $entry = is_null($entry) ? "NULL" : \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC)->quote($entry);
+                $entry = is_null($entry) ? "NULL" : \OxidEsales\Eshop\Core\DatabaseProvider::getMaster(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC)->quote($entry);
                 $rowValues[] = $entry;
             }
             $values[] = "(". implode(", ", $rowValues).")";
@@ -294,7 +294,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
     private function getTableChecksum($aTables)
     {
         $aTables = is_array($aTables) ? $aTables : array($aTables);
-        $oDb = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
+        $oDb = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
         $sSelect = 'CHECKSUM TABLE `' . implode("`, `", $aTables) . '`';
         $aResults = $oDb->getAll($sSelect);
 
@@ -315,7 +315,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
      */
     private function getDbTables()
     {
-        $oDB = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_NUM);
+        $oDB = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_NUM);
         $aTables = $oDB->getCol("SHOW TABLES");
 
         foreach ($aTables as $iKey => $sTable) {

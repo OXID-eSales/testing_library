@@ -65,7 +65,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
     {
         $this->setDumpName($dumpName);
         $tables = $this->getDbTables();
-        $db = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
+        $db = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster();
 
         foreach ($tables as $table) {
             $file = $this->getDumpFolderPath() . '/' . $table . '_dump.sql';
@@ -127,7 +127,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
         $file = $this->getDumpFolderPath() .'/'. $table ."_dump.sql";
 
         if (file_exists($file)) {
-            $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
+            $database = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster();
             $database->execute("TRUNCATE TABLE `$table`");
 
             $query = "LOAD DATA INFILE '$file' INTO TABLE `$table`";
@@ -142,7 +142,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
      */
     private function dropTable($table)
     {
-        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster();
         $database->execute("DROP TABLE `$table`");
     }
 
@@ -184,7 +184,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
     private function getTableChecksum($tables)
     {
         $tables = is_array($tables) ? $tables : array($tables);
-        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC);
         $query = 'CHECKSUM TABLE ' . implode(", ", $tables);
         $results = $database->getAll($query);
 
@@ -205,7 +205,7 @@ class DatabaseRestorerLocal implements DatabaseRestorerInterface
      */
     private function getDbTables()
     {
-        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_NUM);
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getMaster(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_NUM);
         $tables = $database->getCol("SHOW TABLES");
 
         foreach ($tables as $key => $table) {
