@@ -71,15 +71,15 @@ class ExceptionLogFileHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetExceptionLogFileContentReturnsExpectedContent($expectedContent)
     {
-        $exceptionLogFileRessource = tmpfile();
-        $exceptionLogFile = stream_get_meta_data($exceptionLogFileRessource)['uri'];
-        fwrite($exceptionLogFileRessource, $expectedContent);
+        $exceptionLogFileResource = tmpfile();
+        $exceptionLogFile = stream_get_meta_data($exceptionLogFileResource)['uri'];
+        fwrite($exceptionLogFileResource, $expectedContent);
 
         $exceptionLogFileHelper = new \OxidEsales\TestingLibrary\helpers\ExceptionLogFileHelper($exceptionLogFile);
 
         $actualContent = $exceptionLogFileHelper->getExceptionLogFileContent();
 
-        fclose($exceptionLogFileRessource);
+        fclose($exceptionLogFileResource);
 
         $this->assertSame($expectedContent, $actualContent);
     }

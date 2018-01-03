@@ -972,6 +972,27 @@ abstract class UnitTestCase extends BaseTestCase
         }
     }
 
+    /**
+     * OnlineCaller rethrows exception in method _castExceptionAndWriteToLog
+     * this way we mock it from writing to log.
+     *
+     * @param string $exceptionClassName The name of the exception we want to stub, to not log its output.
+     * @param string $saveUnderClassName The name under which we save the stubbed exception in the testing library.
+     *
+     * @return MockObject The mocked exception.
+     *
+     * @deprecated since v.3.4.0 (2018-01-11); The method was using deprecated oxTestModules and was made obsolet now
+     */
+    protected function stubExceptionToNotWriteToLog($exceptionClassName = 'oxException', $saveUnderClassName = 'oxException')
+    {
+        $exception = $this->getMock($exceptionClassName, ['debugOut']);
+        $exception->expects($this->any())->method('debugOut');
+
+        oxTestModules::addModuleObject($saveUnderClassName, $exception);
+
+        return $exception;
+    }
+
     protected function assertViewExists($tableName)
     {
         $generator = oxNew(\OxidEsales\Eshop\Core\TableViewNameGenerator::class);

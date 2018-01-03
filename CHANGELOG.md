@@ -4,15 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [3.4.0] Unreleased
 
 ### Added
+
+- class \OxidEsales\TestingLibrary\helpers\ExceptionLogFileHelper holds some helper methods for exception log file
+- \OxidEsales\TestingLibrary\BaseTestCase::__construct an instance of ExceptionLogFileHelper is assigned within the constructor
+- \OxidEsales\TestingLibrary\BaseTestCase::activateTheme moved from \OxidEsales\TestingLibrary\AcceptanceTestCase
+- \OxidEsales\TestingLibrary\BaseTestCase::failOnLoggedExceptions makes a test fail, if exception log is not empty
+- \OxidEsales\TestingLibrary\BaseTestCase::setUp calls failOnLoggedExceptions now
+- \OxidEsales\TestingLibrary\BaseTestCase::tearDown calls failOnLoggedExceptions now
+- \OxidEsales\TestingLibrary\BaseTestCase::assertLoggedException validates an expected entry in the exception log file 
 
 ### Changed
 
 ### Deprecated
+- \OxidEsales\TestingLibrary\UnitTestCase::stubExceptionToNotWriteToLog was using deprecated oxTestModules and was made obsolete now
 
 ### Removed
+- \OxidEsales\TestingLibrary\AcceptanceTestCase::activateTheme moved to \OxidEsales\TestingLibrary\BaseTestCase as this method is needed by some integration tests too
 
 ### Fixed
 
