@@ -17,14 +17,20 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
     /** @var TestConfig */
     private static $testConfig;
 
+    protected $exceptionLogHelper;
+
+
     /**
-     * Returns test configuration.
+     * BaseTestCase constructor.
      *
-     * @return TestConfig
+     * @param null   $name
+     * @param array  $data
+     * @param string $dataName
      */
-    public function getTestConfig()
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
-        return self::getStaticTestConfig();
+        parent::__construct($name, $data, $dataName);
+        $this->exceptionLogHelper = new \OxidEsales\TestingLibrary\helpers\ExceptionLogFileHelper(OX_LOG_FILE);
     }
 
     /**
@@ -42,6 +48,16 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Returns test configuration.
+     *
+     * @return TestConfig
+     */
+    public function getTestConfig()
+    {
+        return self::getStaticTestConfig();
+    }
+
+    /**
      * Mark the test as skipped until given date.
      * Wrapper function for PHPUnit_Framework_Assert::markTestSkipped.
      *
@@ -54,8 +70,111 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
     {
         $oDate = DateTime::createFromFormat('Y-m-d', $sDate);
 
-        if (time() < ((int)$oDate->format('U'))) {
+        if (time() < ((int) $oDate->format('U'))) {
             $this->markTestSkipped($sMessage);
+        }
+    }
+
+    /**
+     * Activates the theme for running acceptance tests on.
+     *
+     * @todo Refactor this method to use ThemeSwitcher service. This will require a prior refactoring of the testing library.
+     *
+     * @param string $themeName Name of the theme to activate
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     */
+    public function activateTheme($themeName)
+    {
+        $currentShopId = \OxidEsales\Eshop\Core\Registry::getConfig()->getShopId();
+
+        $theme = oxNew(\OxidEsales\Eshop\Core\Theme::class);
+        $theme->load($themeName);
+
+        $testConfig = new TestConfig();
+        $shopId = $testConfig->getShopId();
+        \OxidEsales\Eshop\Core\Registry::getConfig()->setShopId($shopId);
+
+        $theme->activate();
+
+        /**
+         * In the tests, the main shops' theme always hay to be switched too.
+         * If the current shop is not a parent shop (i.e. shopId == 1), activate the theme in the parent shop as well.
+         */
+        if ($shopId != 1) {
+            \OxidEsales\Eshop\Core\Registry::getConfig()->setShopId(1);
+
+            $theme->activate();
+        }
+
+        \OxidEsales\Eshop\Core\Registry::getConfig()->setShopId($currentShopId);
+    }
+
+    /**
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->failOnLoggedExceptions();
+    }
+
+    /**
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     */
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->failOnLoggedExceptions();
+    }
+
+    /**
+     * @param string      $expectedExceptionClass
+     * @param string|null $expectedExceptionMessage
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     */
+    protected function assertLoggedException($expectedExceptionClass, $expectedExceptionMessage = null)
+    {
+        $parsedExceptions = $this->exceptionLogHelper->getParsedExceptions();
+
+        $actualExceptionCount = count($parsedExceptions);
+        $actualExceptionClass = $parsedExceptions[0]['type'];
+        $actualExceptionMessage = $parsedExceptions[0]['message'];
+        $exceptionLogEntries = $this->exceptionLogHelper->getExceptionLogFileContent();
+
+        $this->exceptionLogHelper->clearExceptionLogFile();
+
+        $this->assertSame(
+            1,
+            $actualExceptionCount,
+            'Only one exception is expected to be logged' . PHP_EOL .
+            $exceptionLogEntries
+        );
+        $this->assertSame(
+            $expectedExceptionClass,
+            $actualExceptionClass,
+            'The logged exception should be an instance of ' . $expectedExceptionClass . PHP_EOL .
+            $exceptionLogEntries
+        );
+        if ($expectedExceptionMessage) {
+            $this->assertSame(
+                $expectedExceptionMessage,
+                $actualExceptionMessage,
+                'The logged exception message should be "' . $expectedExceptionMessage . '"' . PHP_EOL .
+                $exceptionLogEntries
+            );
+        }
+    }
+
+    /**
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     */
+    protected function failOnLoggedExceptions()
+    {
+        if ($exceptionLogEntries = $this->exceptionLogHelper->getExceptionLogFileContent()) {
+            $this->exceptionLogHelper->clearExceptionLogFile();
+            $this->fail('Test failed with ' . OX_LOG_FILE . ' entry:' . PHP_EOL . PHP_EOL . $exceptionLogEntries);
         }
     }
 }
