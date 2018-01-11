@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Security
 
+## [3.3.2] - 2018-01-11
+
+### Changed
+
+Updated oxDatabaseHelper class. Will use single parameter for database connection.
+
 ## [3.3.1] - 2017-12-21
 
 ### Changed
