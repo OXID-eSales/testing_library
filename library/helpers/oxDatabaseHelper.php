@@ -16,6 +16,7 @@ class oxDatabaseHelper
     public function __construct(DatabaseInterface $database)
     {
         $this->database = $database;
+        $this->database->forceMasterConnection();
     }
 
     /**
@@ -72,10 +73,9 @@ class oxDatabaseHelper
      */
     public function existsTable($tableName)
     {
-        $database = DatabaseProvider::getMaster();
         $sql = "SELECT COUNT(TABLE_NAME) FROM information_schema.TABLES WHERE TABLE_NAME = '$tableName'";
 
-        $count = $database->getOne($sql);
+        $count = $this->database->getOne($sql);
 
         return $count > 0;
     }
@@ -97,6 +97,6 @@ class oxDatabaseHelper
 
         $sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" . $databaseHandler->getDbName() . "'";
 
-        return DatabaseProvider::getMaster()->getAll($sql);
+        return $this->database->getAll($sql);
     }
 }
