@@ -1849,6 +1849,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
         if ($this->retryTimesLeft > 0) {
             $this->retryTimesLeft--;
             $this->stopMinkSession();
+            $this->setUpTestsSuite($this->getSuitePath());
             $this->runBare();
             return;
         }

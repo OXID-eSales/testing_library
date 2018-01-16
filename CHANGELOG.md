@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - \OxidEsales\TestingLibrary\AcceptanceTestCase::activateTheme moved to \OxidEsales\TestingLibrary\BaseTestCase as this method is needed by some integration tests too
 
 ### Fixed
+- Stabilize acceptance tests: after first failure test data were not completely restored, so if same test was triggered
+once again, it could have failed because of previously failed test influence.
 
 ### Security
 
@@ -32,7 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-Updated oxDatabaseHelper class. Will use single parameter for database connection.
+- Updated oxDatabaseHelper class. Will use single parameter for database connection.
 
 ## [3.3.1] - 2017-12-21
 
