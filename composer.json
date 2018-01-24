@@ -4,7 +4,7 @@
     "type": "library",
     "keywords": ["oxid", "testing", "library", "modules", "eShop"],
     "homepage": "https://www.oxid-esales.com/en/home.html",
-    "license": "GPL-3.0",
+    "license": "GPL-3.0-only",
     "require": {
         "phpunit/phpunit": "4.8.26",
         "pdepend/pdepend": "2.5.0",
