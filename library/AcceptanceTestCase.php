@@ -112,6 +112,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     protected function setUp()
     {
+        parent::setUp();
+
         $this->selectedFrame = 'relative=top';
         $this->currentMinkDriver = $this->_blDefaultMinkDriver;
         $this->selectedWindow = null;
@@ -1846,11 +1848,14 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     protected function onNotSuccessfulTest(Exception $exception)
     {
-        if ($this->retryTimesLeft > 0) {
+        if ($exception instanceof AssertionFailedError &&
+            $this->retryTimesLeft > 0
+        ) {
             $this->retryTimesLeft--;
             $this->stopMinkSession();
             $this->setUpTestsSuite($this->getSuitePath());
             $this->runBare();
+
             return;
         }
 
