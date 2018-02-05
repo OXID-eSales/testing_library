@@ -1615,7 +1615,10 @@ abstract class AcceptanceTestCase extends MinkWrapper
         try {
             $mResponse = $oServiceCaller->callService('ShopObjectConstructor', $sShopId);
         } catch (Exception $oException) {
-            $this->fail("Exception caught calling ShopObjectConstructor with message: '{$oException->getMessage()}'");
+            $this->fail(
+                "Exception caught calling ShopObjectConstructor with message: '{$oException->getMessage()}
+                \n{$oException->getTraceAsString()}'"
+            );
         }
 
         return $mResponse;
