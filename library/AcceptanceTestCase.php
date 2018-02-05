@@ -1851,14 +1851,11 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     protected function onNotSuccessfulTest(Exception $exception)
     {
-        if ($exception instanceof AssertionFailedError &&
-            $this->retryTimesLeft > 0
-        ) {
+        if ($this->retryTimesLeft > 0) {
             $this->retryTimesLeft--;
             $this->stopMinkSession();
             $this->setUpTestsSuite($this->getSuitePath());
             $this->runBare();
-
             return;
         }
 
