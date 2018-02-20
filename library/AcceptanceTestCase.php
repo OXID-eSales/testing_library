@@ -88,6 +88,13 @@ abstract class AcceptanceTestCase extends MinkWrapper
     private $oTestConfig;
 
     /**
+     * Exception log entries.
+     *
+     * @var array
+     */
+    private $exceptionLogEntries;
+
+    /**
      * Constructs a test case with the given name.
      *
      * @param string $name
@@ -1851,6 +1858,9 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     protected function onNotSuccessfulTest(Exception $exception)
     {
+        $this->storeExceptionLogEntries();
+        $this->exceptionLogHelper->clearExceptionLogFile();
+
         if ($this->retryTimesLeft > 0) {
             $this->retryTimesLeft--;
             $this->stopMinkSession();
@@ -1862,6 +1872,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
         if ($this->shouldReformatExceptionMessage($exception)) {
             $exception = $this->formException($exception);
         }
+
+        $this->cleanUpExceptionLogEntries();
 
         $this->stopMinkSession();
         throw $exception;
@@ -1896,6 +1908,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $errorMessage .= $exception->getMessage();
         $errorMessage .= "\nSelected Frame: '" . $this->getSelectedFrame() . "'";
         $errorMessage .= "\n\n" . $this->_formTrace($trace);
+        $errorMessage .= $this->getExceptionLogMessage();
 
         return $errorMessage;
     }
@@ -2132,6 +2145,46 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $params = array_merge($params, $additionalParams);
 
         $this->openNewWindow($this->_getShopUrl($params, $shopId), true);
+    }
+
+    /**
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     */
+    protected function failOnLoggedExceptions()
+    {
+        if ($this->exceptionLogHelper->getExceptionLogFileContent()) {
+            $this->fail();
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function getExceptionLogMessage()
+    {
+        $message = '';
+
+        foreach ($this->exceptionLogEntries as $entry) {
+            $message .= PHP_EOL . 'Test failed with ' . OX_LOG_FILE . ' entry:' . PHP_EOL . $entry;
+        }
+
+        return $message;
+    }
+
+    /**
+     * Cleans up exception log entries.
+     */
+    private function cleanUpExceptionLogEntries()
+    {
+        $this->exceptionLogEntries = [];
+    }
+
+    /**
+     * Stores exception log entries.
+     */
+    private function storeExceptionLogEntries()
+    {
+        $this->exceptionLogEntries[] = $this->exceptionLogHelper->getExceptionLogFileContent();
     }
 }
 
