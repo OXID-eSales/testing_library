@@ -13,6 +13,7 @@ require_once TEST_LIBRARY_PATH .'test_utils.php';
 use OxidEsales\TestingLibrary\TestConfig;
 use OxidEsales\TestingLibrary\FileCopier;
 use OxidEsales\TestingLibrary\ServiceCaller;
+use OxidEsales\TestingLibrary\helpers\ExceptionLogFileHelper;
 
 abstract class BootstrapBase
 {
@@ -37,8 +38,8 @@ abstract class BootstrapBase
     {
         $testConfig = $this->getTestConfig();
 
+        $this->cleanUpExceptionLogFile();
         $this->prepareShop();
-
         $this->setGlobalConstants();
 
         if ($testConfig->shouldRestoreShopAfterTestsSuite()) {
@@ -156,5 +157,26 @@ abstract class BootstrapBase
                 $serviceCaller->callService('ShopPreparation', 1);
             }
         });
+    }
+
+    /**
+     * Cleans exception log.
+     */
+    private function cleanUpExceptionLogFile()
+    {
+        $exceptionLogHelper = $this->getExceptionLogHelper();
+        $exceptionLogHelper->clearExceptionLogFile();
+    }
+
+    /**
+     * Returns ExceptionLogFileHelper.
+     *
+     * @return ExceptionLogFileHelper
+     */
+    private function getExceptionLogHelper()
+    {
+        $exceptionLogPath = $this->testConfig->getShopPath() . '/log/EXCEPTION_LOG.txt';
+
+        return new ExceptionLogFileHelper($exceptionLogPath);
     }
 }
