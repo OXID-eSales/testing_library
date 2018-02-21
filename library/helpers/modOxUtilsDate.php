@@ -6,6 +6,7 @@
 
 /**
  * Useful for defining custom time
+ * @deprecated since v4.0.0
  */
 class modOxUtilsDate extends \OxidEsales\Eshop\Core\UtilsDate
 {

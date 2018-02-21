@@ -6,6 +6,8 @@
 
 require_once 'base.php';
 
+require_once TEST_LIBRARY_PATH .'Deprecated.php';
+
 // NOTE: Presence of the correct UNC classes needs to be ensured before any shop classes can be used.
 \OxidEsales\TestingLibrary\TestConfig::prepareUnifiedNamespaceClasses();
 

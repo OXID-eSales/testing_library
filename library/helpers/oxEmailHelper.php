@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Core\Email
+ * @deprecated since v4.0.0
  */
 class oxEmailHelper extends \OxidEsales\Eshop\Core\Email
 {

@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\EshopEnterprise\Core\Cache\DynamicContent\ContentCache
+ * @deprecated since v4.0.0
  */
 class oxCacheHelper extends \OxidEsales\EshopEnterprise\Core\Cache\DynamicContent\ContentCache
 {

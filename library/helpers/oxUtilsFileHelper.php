@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Core\UtilsFile
+ * @deprecated since v4.0.0
  */
 class oxUtilsFileHelper extends \OxidEsales\Eshop\Core\UtilsFile
 {

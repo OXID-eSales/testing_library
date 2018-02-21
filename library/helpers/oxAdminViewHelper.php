@@ -6,10 +6,10 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Application\Controller\Admin\AdminController
+ * @deprecated since v4.0.0
  */
 class oxAdminViewHelper extends \OxidEsales\Eshop\Application\Controller\Admin\AdminController
 {
-
     /**
      * Cleans oxAdminView static cache.
      */

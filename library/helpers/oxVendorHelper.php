@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Application\Model\Vendor
+ * @deprecated since v4.0.0
  */
 class oxVendorHelper extends \OxidEsales\Eshop\Application\Model\Vendor
 {

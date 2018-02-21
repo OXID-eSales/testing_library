@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Application\Model\Category
+ * @deprecated since v4.0.0
  */
 class oxCategoryHelper extends \OxidEsales\Eshop\Application\Model\Category
 {

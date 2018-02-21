@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Core\SeoEncoder
+ * @deprecated since v4.0.0
  */
 class oxSeoEncoderHelper extends \OxidEsales\Eshop\Core\SeoEncoder
 {

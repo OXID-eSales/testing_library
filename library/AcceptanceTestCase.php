@@ -8,7 +8,6 @@ namespace OxidEsales\TestingLibrary;
 
 use Exception;
 use DateTime;
-use OxidEsales\Eshop\Core\Theme;
 use ReflectionClass;
 use PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
 use PHPUnit_Framework_AssertionFailedError as AssertionFailedError;

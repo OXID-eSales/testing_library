@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Application\Controller\FrontendController
+ * @deprecated since v4.0.0
  */
 class oxUBaseHelper extends \OxidEsales\Eshop\Application\Controller\FrontendController
 {

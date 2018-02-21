@@ -4,7 +4,6 @@
  * See LICENSE file for license details.
  */
 
-use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\EshopCommunity\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 

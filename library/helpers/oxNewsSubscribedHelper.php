@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Application\Model\NewsSubscribed
+ * @deprecated since v4.0.0
  */
 class oxNewsSubscribedHelper extends \OxidEsales\Eshop\Application\Model\NewsSubscribed
 {

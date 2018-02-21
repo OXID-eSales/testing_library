@@ -6,10 +6,6 @@
 
 namespace OxidEsales\TestingLibrary\Bootstrap;
 
-require_once TEST_LIBRARY_PATH .'test_utils.php';
-
-
-
 use OxidEsales\TestingLibrary\TestConfig;
 use OxidEsales\TestingLibrary\FileCopier;
 use OxidEsales\TestingLibrary\ServiceCaller;

@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Application\Model\Voucher
+ * @deprecated since v4.0.0
  */
 class oxVoucherHelper extends  \OxidEsales\Eshop\Application\Model\Voucher
 {

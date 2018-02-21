@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Core\Utils
+ * @deprecated since v4.0.0
  */
 class oxUtilsHelper extends \OxidEsales\Eshop\Core\Utils
 {

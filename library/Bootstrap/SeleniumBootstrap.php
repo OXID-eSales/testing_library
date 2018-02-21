@@ -36,8 +36,6 @@ class SeleniumBootstrap extends BootstrapBase
         register_shutdown_function(function () {
             AcceptanceTestCase::stopMinkSession();
         });
-
-        require_once TEST_LIBRARY_PATH .'oxTestCase.php';
     }
 
     /**

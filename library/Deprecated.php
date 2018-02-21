@@ -4,6 +4,43 @@
  * See LICENSE file for license details.
  */
 
+/**
+ * Backward compatibility, do not use it for new tests.
+ *
+ * @deprecated use OxidEsales\TestingLibrary\UnitTestCase instead
+ */
+class OxidTestCase extends OxidEsales\TestingLibrary\UnitTestCase
+{
+}
+
+/**
+ * Backward compatibility, do not use it for new tests.
+ *
+ * @deprecated use OxidEsales\TestingLibrary\UnitTestCase instead
+ */
+class oxUnitTestCase extends OxidEsales\TestingLibrary\UnitTestCase
+{
+
+}
+
+/**
+ * Backward compatibility, do not use it for new tests.
+ *
+ * @deprecated use OxidEsales\TestingLibrary\AcceptanceTestCase instead
+ */
+class oxTestCase extends OxidEsales\TestingLibrary\AcceptanceTestCase
+{
+}
+
+/**
+ * Backward compatibility, do not use it for new tests.
+ *
+ * @deprecated use OxidEsales\TestingLibrary\AcceptanceTestCase instead
+ */
+class oxAcceptanceTestCase extends OxidEsales\TestingLibrary\AcceptanceTestCase
+{
+}
+
 use \OxidEsales\Eshop\Core\UtilsObject;
 
 /**
@@ -28,6 +65,8 @@ use \OxidEsales\Eshop\Core\UtilsObject;
  * @param $sModuleClass
  * @param $sClass
  * @param bool $prependStrategy
+ *
+ * @deprecated since v4.0.0; Use native PHPUnit functionality like mocks for achieving similar result.
  */
 function oxAddClassModule($sModuleClass, $sClass, $prependStrategy = false)
 {
@@ -47,6 +86,12 @@ function oxAddClassModule($sModuleClass, $sClass, $prependStrategy = false)
     $oFactory->setModuleVar("aModules", $aModules);
 }
 
+/**
+ * @param $sModuleClass
+ * @param string $sClass
+ *
+ * @deprecated since v4.0.0; Use native PHPUnit functionality like mocks for achieving similar result.
+ */
 function oxRemClassModule($sModuleClass, $sClass = '')
 {
     \OxidEsales\Eshop\Core\Registry::set($sClass, null);
@@ -279,10 +324,11 @@ class oxTestModules
 
 /**
  * creates static cleaner subclasses and nulls parent class protected static property
+ *
+ * @deprecated since v4.0.0
  */
 class oxTestsStaticCleaner
 {
-
     /**
      * get class name
      *
@@ -341,6 +387,7 @@ class oxTestsStaticCleaner
  * Also, since all tests are INDEPENDANT, no real changes are made to the real instance.
  * NOTE: after cleanup, all oxConfig variable changes while modConfig was active are LOST.
  *
+ * @deprecated since v4.0.0
  */
 abstract class modOXID
 {
@@ -516,6 +563,11 @@ class modDB extends modOXID
 }
 
 if (!function_exists('replaceDirSeperator')) {
+    /**
+     * @param string $sDir
+     * @return mixed
+     * @deprecated since v4.0.0
+     */
     function replaceDirSeperator($sDir)
     {
         if (DIRECTORY_SEPARATOR == '\\') {
@@ -527,6 +579,11 @@ if (!function_exists('replaceDirSeperator')) {
 }
 
 if (!function_exists('preparePathArray')) {
+    /**
+     * @param string $aPaths
+     * @param string $sBasePath
+     * @deprecated since v4.0.0
+     */
     function preparePathArray(&$aPaths, $sBasePath)
     {
         foreach (array_keys($aPaths) as $key) {
@@ -537,6 +594,14 @@ if (!function_exists('preparePathArray')) {
 }
 
 if (!function_exists('findphp')) {
+    /**
+     * @param $baseDir
+     * @param array $aDirBlackList
+     * @param array $aFileBlackList
+     * @param array $aFileWhiteList
+     * @return array
+     * @deprecated since v4.0.0
+     */
     function findphp($baseDir, $aDirBlackList = array(), $aFileBlackList = array(), $aFileWhiteList = array())
     {
         $baseDir = preg_replace('#/$#', '', $baseDir);
@@ -581,6 +646,11 @@ if (!function_exists('findphp')) {
 }
 
 if (!function_exists('preg_stripper')) {
+    /**
+     * @param $matches
+     * @return null|string|string[]
+     * @deprecated since v4.0.0
+     */
     function preg_stripper($matches)
     {
         return preg_replace('/.*/', '', $matches[0]);
@@ -588,6 +658,13 @@ if (!function_exists('preg_stripper')) {
 }
 
 if (!function_exists('stripCodeLines')) {
+    /**
+     * @param $sFile
+     * @param $sCCarrayDir
+     * @return array|mixed
+     * @throws Exception
+     * @deprecated since v4.0.0
+     */
     function stripCodeLines($sFile, $sCCarrayDir)
     {
         if (!file_exists($sFile)) {

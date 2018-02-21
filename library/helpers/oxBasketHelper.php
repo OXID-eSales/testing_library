@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Application\Model\Basket
+ * @deprecated since v4.0.0
  */
 class oxBasketHelper extends \OxidEsales\Eshop\Application\Model\Basket
 {

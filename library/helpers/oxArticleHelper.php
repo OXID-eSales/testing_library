@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Application\Model\Article
+ * @deprecated since v4.0.0
  */
 class oxArticleHelper extends \OxidEsales\Eshop\Application\Model\Article
 {

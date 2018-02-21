@@ -28,8 +28,6 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
                 $this->initializeConfig();
             }
 
-            require_once TEST_LIBRARY_PATH .'OxidTestCase.php';
-
             define('TEST_PREPARATION_FINISHED', true);
         }
 

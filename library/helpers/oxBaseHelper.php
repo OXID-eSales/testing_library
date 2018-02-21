@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Core\Model\BaseModel
+ * @deprecated since v4.0.0
  */
 class oxBaseHelper extends \OxidEsales\Eshop\Core\Model\BaseModel
 {

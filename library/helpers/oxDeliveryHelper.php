@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Application\Model\Delivery
+ * @deprecated since v4.0.0
  */
 class oxDeliveryHelper extends \OxidEsales\Eshop\Application\Model\Delivery
 {

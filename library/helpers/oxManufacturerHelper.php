@@ -6,6 +6,7 @@
 
 /**
  * Helper class for \OxidEsales\Eshop\Application\Model\Manufacturer
+ * @deprecated since v4.0.0
  */
 class oxManufacturerHelper extends \OxidEsales\Eshop\Application\Model\Manufacturer
 {
