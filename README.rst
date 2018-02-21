@@ -406,6 +406,15 @@ implementing
 interface and registering new class in
 ``test_config.yml::database_restoration_class``.
 
+Library API
+~~~~~~~~~~~
+
+- ``test_config.yml`` parameters
+- ``OxidEsales\TestingLibrary\AcceptanceTestCase``
+- ``OxidEsales\TestingLibrary\UnitTestCase``
+- ``\OxidEsales\TestingLibrary\ServiceCaller``
+- ``OxidEsales\TestingLibrary\Services`` called via ``\OxidEsales\TestingLibrary\ServiceCaller``
+
 Tests running workflow
 ----------------------
 
