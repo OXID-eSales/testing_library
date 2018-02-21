@@ -2165,7 +2165,11 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $message = '';
 
         foreach ($this->exceptionLogEntries as $entry) {
-            $message .= PHP_EOL . 'Test failed with ' . OX_LOG_FILE . ' entry:' . PHP_EOL . $entry;
+            if ($entry) {
+                $message .= PHP_EOL . 'Test failed with ' . OX_LOG_FILE . ' entry:' . PHP_EOL . $entry;
+            } else {
+                $message .= PHP_EOL . 'Test failed but ' . OX_LOG_FILE . ' is empty';
+            }
         }
 
         return $message;
