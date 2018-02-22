@@ -79,12 +79,12 @@ class ShopInstallerTest extends \OxidEsales\TestingLibrary\UnitTestCase
         $this->assertViewNotExists('oxdiscount');
     }
 
-    private function assureMigrationWasCalled(): void
+    private function assureMigrationWasCalled()
     {
         $this->assertOxModuleColumnHasMaxLength(self::CHANGED_OXMODULE_COLUMN_MAX_LENGTH);
     }
 
-    protected function assureGenerateViewsWasCalled(): void
+    protected function assureGenerateViewsWasCalled()
     {
         $this->assertViewExists('oxdiscount');
     }
