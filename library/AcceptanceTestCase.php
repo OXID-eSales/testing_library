@@ -1868,10 +1868,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
             return;
         }
 
-        if ($this->shouldReformatExceptionMessage($exception)) {
-            $exception = $this->formException($exception);
-        }
-
+        $exception = $this->formException($exception);
         $this->cleanUpExceptionLogEntries();
 
         $this->stopMinkSession();
@@ -1882,6 +1879,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
      * Checks whether test should be retried.
      *
      * @param Exception $exception
+     *
+     * @deprecated since v4.0.0
      *
      * @return bool
      */
