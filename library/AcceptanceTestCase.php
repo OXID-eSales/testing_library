@@ -639,7 +639,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
     {
         $this->selectWindow(null);
 
-        $this->frame('navigation');
+        $this->frame('adminnav');
+        $this->waitForElement("link=" . $menuLink1);
         $this->click("link=" . $menuLink1);
         $this->click("link=" . $menuLink2);
 
