@@ -1922,15 +1922,19 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     protected function _getScreenShot()
     {
-        $sPath = $this->_getScreenShotPath();
-        if ($sPath) {
-            $sFileName = basename(__FILE__) . '_' . $this->getName(false) . '_' . time() . '.png';
+        try {
+            $sPath = $this->_getScreenShotPath();
+            if ($sPath) {
+                $sFileName = basename(__FILE__) . '_' . $this->getName(false) . '_' . time() . '.png';
 
-            $this->getScreenShot($sPath . $sFileName);
+                $this->getScreenShot($sPath . $sFileName);
 
-            return 'Screenshot: ' . $this->getTestConfig()->getScreenShotsUrl() . '/' . $sFileName . "\n";
-        } else {
-            return '';
+                return 'Screenshot: ' . $this->getTestConfig()->getScreenShotsUrl() . '/' . $sFileName . "\n";
+            } else {
+                return '';
+            }
+        } catch (\Selenium\Exception $e) {
+            return $e->getMessage();
         }
     }
 
