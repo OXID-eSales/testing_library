@@ -16,7 +16,7 @@ namespace OxidEsales\TestingLibrary\helpers;
 class ExceptionLogFileHelper
 {
     /**
-     * @var The fully qualified path to the exception log file
+     * @var string The fully qualified path to the exception log file
      */
     protected $exceptionLogFile;
 
@@ -44,6 +44,16 @@ class ExceptionLogFileHelper
      */
     public function getExceptionLogFileContent()
     {
+        $fileCreated = false;
+        
+        /** Suppress the warning, which is emitted, if the file does not existt */
+        if ($fileDoesNotExist = !@file_exists($this->exceptionLogFile)) {
+            $fileCreated = touch($this->exceptionLogFile);
+        }
+        if ($fileDoesNotExist && !$fileCreated) {
+            throw new \OxidEsales\Eshop\Core\Exception\StandardException('Empty file ' . $this->exceptionLogFile . ' could not have been be created');
+        }
+
         $logFileContent = file_get_contents($this->exceptionLogFile);
         if (false === $logFileContent) {
             throw new \OxidEsales\Eshop\Core\Exception\StandardException('File ' . $this->exceptionLogFile . ' could not be read');
@@ -73,8 +83,6 @@ class ExceptionLogFileHelper
      * Return an array of arrays with parsed exception lines
      *
      * @return array
-     *
-     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      */
     public function getParsedExceptions()
     {
@@ -82,29 +90,7 @@ class ExceptionLogFileHelper
 
         $exceptions = $this->getExceptionLinesFromLogFile();
         foreach ($exceptions as $exception) {
-            /**
-             * See \OxidEsales\EshopCommunity\Core\Exception\ExceptionHandler::getFormattedException
-             * for the current log file format.
-             *
-             */
-            $logEntryDetails = explode('[', $exception);
-            array_walk(
-                $logEntryDetails,
-                function (&$detail) {
-                    $detail = trim(str_replace(['type ', 'code ', 'file ', 'line ', 'message ',], '', $detail), '] ');
-                }
-            );
-            list(, $timestamp, $level, $type, $code, $file, $line, $message) = $logEntryDetails;
-
-            $parsedExceptions[] = [
-                'timestamp' => $timestamp,
-                'level'     => $level,
-                'type'      => $type,
-                'code'      => $code,
-                'file'      => $file,
-                'line'      => $line,
-                'message'   => $message,
-            ];
+            $parsedExceptions[] = str_replace('\\\\', '\\', $exception);
         }
 
         return $parsedExceptions;
@@ -127,7 +113,7 @@ class ExceptionLogFileHelper
         $exceptionEntries = array_filter(
             $exceptionLogLines,
             function ($entry) {
-                return false !== strpos($entry, '[exception] [type ');
+                return false !== strpos($entry, '.ERROR') && false !== strpos($entry, 'Exception');
             }
         );
 

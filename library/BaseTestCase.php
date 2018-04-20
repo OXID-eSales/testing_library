@@ -130,43 +130,31 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param string      $expectedExceptionClass
-     * @param string|null $expectedExceptionMessage
+     * @param string $expectedExceptionClass
+     * @param string $expectedExceptionMessage
      *
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      */
-    protected function assertLoggedException($expectedExceptionClass, $expectedExceptionMessage = null)
+    protected function assertLoggedException($expectedExceptionClass, $expectedExceptionMessage = '')
     {
-        $parsedExceptions = $this->exceptionLogHelper->getParsedExceptions();
-
-        $actualExceptionCount = count($parsedExceptions);
-        $actualExceptionClass = $parsedExceptions[0]['type'];
-        $actualExceptionMessage = $parsedExceptions[0]['message'];
-        $exceptionLogEntries = $this->exceptionLogHelper->getExceptionLogFileContent();
-
-        $this->exceptionLogHelper->clearExceptionLogFile();
-
-        $this->assertSame(
+        $this->assertCount(
             1,
-            $actualExceptionCount,
-            'Only one exception is expected to be logged' . PHP_EOL .
-            $exceptionLogEntries
+            $this->exceptionLogHelper->getParsedExceptions()
         );
-        $this->assertSame(
+
+        $this->assertContains(
             $expectedExceptionClass,
-            $actualExceptionClass,
-            'The logged exception should be an instance of ' . $expectedExceptionClass . PHP_EOL .
-            $exceptionLogEntries
+            $this->exceptionLogHelper->getParsedExceptions()[0]
         );
+
         if ($expectedExceptionMessage) {
-            $this->assertSame(
+            $this->assertContains(
                 $expectedExceptionMessage,
-                $actualExceptionMessage,
-                'The logged exception message should be: "' . $expectedExceptionMessage . '"'
-                . ' instead got this: "' . $actualExceptionMessage . '"'. PHP_EOL .
-                $exceptionLogEntries
+                $this->exceptionLogHelper->getParsedExceptions()[0]
             );
         }
+
+        $this->exceptionLogHelper->clearExceptionLogFile();
     }
 
     /**
@@ -176,7 +164,7 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
     {
         if ($exceptionLogEntries = $this->exceptionLogHelper->getExceptionLogFileContent()) {
             $this->exceptionLogHelper->clearExceptionLogFile();
-            $this->fail('Test failed with ' . OX_LOG_FILE . ' entry:' . PHP_EOL . PHP_EOL . $exceptionLogEntries);
+            $this->fail('Test failed with ' . OX_LOG_FILE . ' entry:' . $exceptionLogEntries);
         }
     }
 }

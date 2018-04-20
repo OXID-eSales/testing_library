@@ -6,6 +6,10 @@
 
 namespace OxidEsales\TestingLibrary\Tests\Integration\helpers;
 
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+
 class ExceptionLogFileHelperTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -20,7 +24,7 @@ class ExceptionLogFileHelperTest extends \PHPUnit_Framework_TestCase
             \OxidEsales\Eshop\Core\Exception\StandardException::class,
             'Constructor parameter $exceptionLogFile must be a non empty string'
         );
-        $exceptionLogFileHelper = new \OxidEsales\TestingLibrary\helpers\ExceptionLogFileHelper($constructorParameters);
+        new \OxidEsales\TestingLibrary\helpers\ExceptionLogFileHelper($constructorParameters);
     }
 
     public function dataProviderWrongConstructorParameters()
@@ -34,33 +38,6 @@ class ExceptionLogFileHelperTest extends \PHPUnit_Framework_TestCase
             [1],
             [0],
         ];
-    }
-
-    /**
-     * @covers \OxidEsales\TestingLibrary\helpers\ExceptionLogFileHelper::getExceptionLogFileContent
-     */
-    public function testGetExceptionLogFileContentThrowsExpectedOnFileNotReadable()
-    {
-        $exceptionLogFile = './non_existent_file.log';
-        $expectedExceptionMessage = 'File ' . $exceptionLogFile . ' could not be read';
-
-        $exceptionLogFileHelper = new \OxidEsales\TestingLibrary\helpers\ExceptionLogFileHelper($exceptionLogFile);
-
-        $actualExceptionMessage = '';
-        $exceptionThrown = false;
-        try {
-            // We do not want the E_WARNING issued by file_get_contrents to break our test
-            $originalErrorReportingLevel = error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED ^ E_WARNING);
-            $logFileContent = $exceptionLogFileHelper->getExceptionLogFileContent();
-        } catch (\OxidEsales\Eshop\Core\Exception\StandardException $actualException) {
-            $actualExceptionMessage = $actualException->getMessage();
-            $exceptionThrown = true;
-        } finally {
-            error_reporting($originalErrorReportingLevel);
-        }
-
-        $this->assertEquals($expectedExceptionMessage, $actualExceptionMessage);
-        $this->assertTrue($exceptionThrown);
     }
 
     /**
@@ -160,23 +137,29 @@ class ExceptionLogFileHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetParsedExceptionsReturnsExpectedValue($exceptionsToBeLogged)
     {
-        $exceptionHandler = new \OxidEsales\EshopCommunity\Core\Exception\ExceptionHandler();
-
-        $expectedLevel = 'exception';
-        $expectedType = \OxidEsales\Eshop\Core\Exception\StandardException::class;
+        $expectedLevel = 'ERROR';
+        $expectedType = \Exception::class;
         $expectedMessage = 'test message';
-        $expectedCode = 1024;
-        $expectedFile = __FILE__;
-        $expectedLine = __LINE__ + 2;
 
-        $exception = new \OxidEsales\Eshop\Core\Exception\StandardException($expectedMessage, $expectedCode);
-        $formattedException = $exceptionHandler->getFormattedException($exception);
+        $exception = new \Exception($expectedMessage);
 
         $exceptionLogFileRessource = tmpfile();
         $exceptionLogFile = stream_get_meta_data($exceptionLogFileRessource)['uri'];
 
+        $lineFormatter = new LineFormatter();
+        $lineFormatter->includeStacktraces(true);
+
+        $streamHandler = new StreamHandler(
+            $exceptionLogFile,
+            'error'
+        );
+        $streamHandler->setFormatter($lineFormatter);
+
+        $logger = new Logger('test logger');
+        $logger->pushHandler($streamHandler);
+
         for ($i = 0; $i < $exceptionsToBeLogged; $i++) {
-            file_put_contents($exceptionLogFile, $formattedException, FILE_APPEND);
+            $logger->error($exception->getMessage(), [$exception]);
         }
 
         $exceptionLogFileHelper = new \OxidEsales\TestingLibrary\helpers\ExceptionLogFileHelper($exceptionLogFile);
@@ -185,12 +168,9 @@ class ExceptionLogFileHelperTest extends \PHPUnit_Framework_TestCase
         fclose($exceptionLogFileRessource);
 
         for ($i = 0; $i < $exceptionsToBeLogged; $i++) {
-            $this->assertEquals($expectedLevel, $actualParsedExceptions[$i]['level']);
-            $this->assertEquals($expectedType, $actualParsedExceptions[$i]['type']);
-            $this->assertEquals($expectedCode, $actualParsedExceptions[$i]['code']);
-            $this->assertEquals($expectedFile, $actualParsedExceptions[$i]['file']);
-            $this->assertEquals($expectedLine, $actualParsedExceptions[$i]['line']);
-            $this->assertEquals($expectedMessage, $actualParsedExceptions[$i]['message']);
+            $this->assertContains($expectedLevel, $actualParsedExceptions[$i]);
+            $this->assertContains($expectedType, $actualParsedExceptions[$i]);
+            $this->assertContains($expectedMessage, $actualParsedExceptions[$i]);
         }
     }
 

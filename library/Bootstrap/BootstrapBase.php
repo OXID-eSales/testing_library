@@ -171,7 +171,7 @@ abstract class BootstrapBase
      */
     private function getExceptionLogHelper()
     {
-        $exceptionLogPath = $this->testConfig->getShopPath() . '/log/EXCEPTION_LOG.txt';
+        $exceptionLogPath = $this->testConfig->getShopPath() . '/log/oxideshop.log';
 
         return new ExceptionLogFileHelper($exceptionLogPath);
     }

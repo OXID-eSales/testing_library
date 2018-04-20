@@ -15,8 +15,8 @@ class ChangeExceptionLogRightsTest extends PHPUnit_Framework_TestCase
 {
     public function testLogIsWritableForAllUsersWhenFileExist()
     {
-        $rootPath = FilesHelper::prepareStructureAndReturnPath(['log' => ['EXCEPTION_LOG.txt' => 'content']]);
-        $pathToExceptionLog = "$rootPath/log/EXCEPTION_LOG.txt";
+        $rootPath = FilesHelper::prepareStructureAndReturnPath(['log' => ['oxid.log' => 'content']]);
+        $pathToExceptionLog = "$rootPath/log/oxid.log";
         chmod($pathToExceptionLog, 0111);
 
         $this->assertFalse(is_writable($pathToExceptionLog));
@@ -31,7 +31,7 @@ class ChangeExceptionLogRightsTest extends PHPUnit_Framework_TestCase
     public function testCreateWhenFileDoesNotExist()
     {
         $rootPath = FilesHelper::prepareStructureAndReturnPath(['log' => []]);
-        $pathToExceptionLog = "$rootPath/log/EXCEPTION_LOG.txt";
+        $pathToExceptionLog = "$rootPath/log/oxid.log";
 
         $this->assertFalse(file_exists($pathToExceptionLog));
 

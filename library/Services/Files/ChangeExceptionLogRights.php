@@ -26,7 +26,7 @@ class ChangeExceptionLogRights implements ShopServiceInterface
     private $fileSystem;
 
     /** @var String partly path to exception log */
-    const EXCEPTION_LOG_PATH = 'log' . DIRECTORY_SEPARATOR . 'EXCEPTION_LOG.txt';
+    const EXCEPTION_LOG_PATH = 'log' . DIRECTORY_SEPARATOR . 'oxideshop.log';
 
     /**
      * Remove constructor.
