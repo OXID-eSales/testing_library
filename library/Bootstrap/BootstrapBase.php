@@ -126,7 +126,7 @@ abstract class BootstrapBase
         try {
             $serviceCaller->callService('ShopInstaller');
         } catch (\Exception $e) {
-            exit("Failed to install shop with message:" . $e->getMessage());
+            exit("Failed to install shop with message: " . $e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
     }
 
