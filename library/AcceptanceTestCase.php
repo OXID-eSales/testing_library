@@ -2081,12 +2081,15 @@ abstract class AcceptanceTestCase extends MinkWrapper
             $exceptionClassName = get_class(new AssertionFailedError());
         }
 
-        $newException = new $exceptionClassName(
-            $this->formExceptionMessage($exception),
-            $exception->getCode()
-        );
-
-        return $newException;
+        try {
+            $newException = new $exceptionClassName(
+                $this->formExceptionMessage($exception),
+                $exception->getCode()
+            );
+            return $newException;
+        } catch (Exception $e) {
+            return $exception;
+        }
     }
 
     /**
