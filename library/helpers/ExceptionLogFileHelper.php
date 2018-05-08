@@ -46,7 +46,7 @@ class ExceptionLogFileHelper
     {
         $fileCreated = false;
         
-        /** Suppress the warning, which is emitted, if the file does not existt */
+        /** Suppress the warning, which is emitted, if the file does not exist */
         if ($fileDoesNotExist = !@file_exists($this->exceptionLogFile)) {
             $fileCreated = touch($this->exceptionLogFile);
         }
