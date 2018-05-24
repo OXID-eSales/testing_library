@@ -1358,7 +1358,9 @@ abstract class AcceptanceTestCase extends MinkWrapper
     public function assertElementPresent($sLocator, $sMessage = '')
     {
         $sLocator = $this->translate($sLocator);
-        $this->_waitForAppear('isElementPresent', $sLocator, 5, true);
+        if ($this->currentMinkDriver !== 'goutte') {
+            $this->_waitForAppear('isElementPresent', $sLocator, 5, true);
+        }
         $isElementPresent = $this->isElementPresent($sLocator);
 
         $sFailMessage = "Element $sLocator was not found! " . $sMessage;
@@ -2081,12 +2083,15 @@ abstract class AcceptanceTestCase extends MinkWrapper
             $exceptionClassName = get_class(new AssertionFailedError());
         }
 
-        $newException = new $exceptionClassName(
-            $this->formExceptionMessage($exception),
-            $exception->getCode()
-        );
-
-        return $newException;
+        try {
+            $newException = new $exceptionClassName(
+                $this->formExceptionMessage($exception),
+                $exception->getCode()
+            );
+            return $newException;
+        } catch (Exception $e) {
+            return $exception;
+        }
     }
 
     /**
