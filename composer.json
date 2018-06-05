@@ -18,12 +18,16 @@
         "symfony/dom-crawler": "v2.7.*",
         "symfony/filesystem": "^3.0",
         "oxid-esales/oxideshop-facts": "^2.0.0",
-        "oxid-esales/oxideshop-unified-namespace-generator": "^1.0.0"
+        "oxid-esales/oxideshop-unified-namespace-generator": "^1.0.0",
+        "codeception/codeception": "^2.3",
+        "oxid-esales/codeception-module": "dev-master",
+        "oxid-esales/codeception-page-object": "dev-master"
     },
     "bin": [
         "bin/reset-shop",
         "bin/runmetrics",
         "bin/runtests",
+        "bin/runtests-codeception",
         "bin/runtests-coverage",
         "bin/runtests-selenium"
     ],

@@ -1,0 +1,36 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Copyright © OXID eSales AG. All rights reserved.
+ * See LICENSE file for license details.
+ */
+
+require_once __DIR__ .'/../base.php';
+
+$testConfig = new OxidEsales\TestingLibrary\TestConfig();
+
+$arguments = array();
+array_shift($argv);
+foreach ($argv as $argument) {
+    $arguments[] = (strpos($argument, '-') === 0) ? $argument : escapeshellarg($argument);
+}
+$arguments = implode(' ', $arguments);
+
+$php = getenv('PHPBIN') ? getenv('PHPBIN') : 'php';
+
+$returnCode = 0;
+$testSuites = $testConfig->getTestSuites();
+foreach ($testSuites as $suite) {
+    $configurationFile = "$suite/codeception.yml";
+    if (file_exists($configurationFile)) {
+        $codecept = $testConfig->getVendorDirectory() . "/bin/codecept";
+
+        $configuration = "-c " . escapeshellarg($configurationFile);
+
+        passthru("$php $codecept build $configuration", $ccReturnCode);
+        passthru("TEST_SUITE=$suite $php $codecept $configuration run acceptance --xml --no-colors $arguments", $ccReturnCode);
+    }
+    $returnCode = $returnCode == 0 ? $ccReturnCode : $returnCode;
+}
+
+exit($returnCode);
