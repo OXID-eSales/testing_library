@@ -19,12 +19,16 @@
         "oxid-esales/oxideshop-facts": "^2.0.0",
         "oxid-esales/oxideshop-unified-namespace-generator": "^2.0.0",
         "phpunit/php-code-coverage": "^5.3",
-        "phpunit/phpcov": "^4.0"
+        "phpunit/phpcov": "^4.0",
+        "codeception/codeception": "^2.3",
+        "oxid-esales/codeception-module": "dev-master",
+        "oxid-esales/codeception-page-object": "dev-master"
     },
     "bin": [
         "bin/reset-shop",
         "bin/runmetrics",
         "bin/runtests",
+        "bin/runtests-codeception",
         "bin/runtests-coverage",
         "bin/runtests-selenium"
     ],
