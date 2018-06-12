@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Changed
  - expected log file name was changed to 'source/oxideshop.log'
  - expected log file format was changed
+ - require v2.0.0 of oxid-esales/oxideshop-unified-namespace-generator
 
 ## [v4.0.0] - 2018-04-30
 
