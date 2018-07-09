@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v5.0.0] - Unreleased
+## [v5.0.0] - 2018-07-09
 
 ## Changed
  - expected log file name was changed to 'source/oxideshop.log'
@@ -42,13 +42,13 @@ once again, it could have failed because of previously failed test influence.
 
 ### Security
 
-## [3.3.2] - 2018-01-11
+## [v3.3.2] - 2018-01-11
 
 ### Changed
 
 - Updated oxDatabaseHelper class. Will use single parameter for database connection.
 
-## [3.3.1] - 2017-12-21
+## [v3.3.1] - 2017-12-21
 
 ### Changed
 
@@ -61,8 +61,16 @@ An example:
 - Testing Library tries to delete the table from master
 - Exception is raised as the table is already gone
 
-## [3.3.0] - 2017-12-05
+## [v3.3.0] - 2017-12-05
 
 ### Added
 
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
+
+
+[v5.0.0]: https://github.com/OXID-eSales/testing_library/compare/v4.0.0...v5.0.0
+[v4.0.0]: https://github.com/OXID-eSales/testing_library/compare/v4.0.0-beta.1...v4.0.0
+[v4.0.0-beta.1]: https://github.com/OXID-eSales/testing_library/compare/v3.3.2...v4.0.0-beta.1
+[v3.3.2]: https://github.com/OXID-eSales/testing_library/compare/v3.3.1...v3.3.2
+[v3.3.1]: https://github.com/OXID-eSales/testing_library/compare/v3.3.0...v3.3.1
+[v3.3.0]: https://github.com/OXID-eSales/testing_library/compare/v3.2.0...v3.3.0
