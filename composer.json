@@ -13,7 +13,7 @@
         "behat/mink-goutte-driver": "~v1.1.0",
         "symfony/yaml": "~3.0",
         "incenteev/composer-parameter-handler": "~2.0",
-        "phpunit/phpcov": "~2.0.2",
+        "phpunit/phpcov": "*@stable",
         "symfony/dom-crawler": "v2.7.*",
         "symfony/filesystem": "^3.0",
         "oxid-esales/oxideshop-facts": "^2.0.0",
