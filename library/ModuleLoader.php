@@ -40,8 +40,6 @@ class ModuleLoader
      */
     public function activateModules($modulesToActivate)
     {
-        $this->clearModuleChain();
-
         // First load all needed config options before the module will be installed.
         $this->prepareModulesForActivation();
         foreach ($modulesToActivate as $modulePath) {
@@ -60,7 +58,6 @@ class ModuleLoader
         $moduleDirectory = \OxidEsales\Eshop\Core\Registry::getConfig()->getModulesDir();
         $moduleList = new ModuleList();
         $moduleList->getModulesFromDir($moduleDirectory);
-        $this->clearShopTmpFolder();
     }
 
     /**
@@ -76,6 +73,12 @@ class ModuleLoader
 
         $moduleCache = new ModuleCache($module);
         $moduleInstaller = new ModuleInstaller($moduleCache);
+
+        /** Clean all caches before module activation */
+        $this->clearModuleChain();
+        $this->clearShopTmpFolder();
+        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getInstance();
+        $database->flushTableDescriptionCache();
 
         if (!$moduleInstaller->activate($module)) {
             throw new Exception("Error on module installation: " . $module->getId());
