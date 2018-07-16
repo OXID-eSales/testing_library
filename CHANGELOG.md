@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v4.0.1] - 2018-07-16
+
+### Changed
+- Added exception handling to `\OxidEsales\TestingLibrary\AcceptanceTestCase::formException`
+- Special treatment of goute driver in `\OxidEsales\TestingLibrary\AcceptanceTestCase::assertElementPresent`
+- Flushes table description cache before activation in `\OxidEsales\TestingLibrary\ModuleLoader::installModule`  
+
 ## [v4.0.0] - 2018-04-30
 
 ### Deprecated
