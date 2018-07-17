@@ -8,6 +8,7 @@ namespace OxidEsales\TestingLibrary;
 
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementException;
+use Behat\Mink\Selector\Xpath\Escaper;
 use Exception;
 use InvalidArgumentException;
 
@@ -97,9 +98,8 @@ abstract class MinkWrapper extends BaseTestCase
                 $oDriver = new \Behat\Mink\Driver\SahiDriver($browserName, $this->_getClient());
                 break;
             case 'goutte':
-                $aClientOptions = array();
                 $oGoutteClient = new \Behat\Mink\Driver\Goutte\Client();
-                $oGoutteClient->setClient(new \Guzzle\Http\Client('', $aClientOptions));
+                $oGoutteClient->setClient(new \GuzzleHttp\Client());
                 $oDriver = new \Behat\Mink\Driver\GoutteDriver($oGoutteClient);
                 break;
             case 'zombie':
