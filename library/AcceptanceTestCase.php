@@ -145,6 +145,14 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function setUpTestsSuite($testSuitePath)
     {
+        // Patching the selenium driver
+        spl_autoload_register(function ($class) {
+            if ($class == 'Selenium\Driver') {
+                require_once __DIR__ . '/../Patches/Driver.php';
+            }
+        }, true, true
+        );
+
         if (!self::$testsSuiteStarted) {
             self::$testsSuiteStarted = true;
             $this->dumpDb('reset_suite_db_dump');
