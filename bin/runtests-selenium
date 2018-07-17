@@ -7,6 +7,22 @@
 
 require_once __DIR__ .'/../base.php';
 
+// Patching the selenium driver
+function selenium_driver_autoloader($class) {
+
+    if ($class == '/Selenium/Driver') {
+        require_once __DIR__ . '/../Patches/Driver.php';
+    }
+
+}
+
+spl_autoload_register(function ($class) {
+    if ($class == '/Selenium/Driver') {
+        require_once __DIR__ . '/../Patches/Driver.php';
+    }
+}, true, true
+);
+
 $testConfig = new OxidEsales\TestingLibrary\TestConfig();
 
 $arguments = array();
