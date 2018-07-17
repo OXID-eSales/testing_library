@@ -853,22 +853,30 @@ abstract class MinkWrapper extends BaseTestCase
      *
      * @return mixed
      */
+    /**
+     * Returns element by given link
+     *
+     * @param string $sSelector
+     *
+     * @return mixed
+     */
     protected function _getElementByLink($sSelector)
     {
         $sSelector = str_replace('link=', '', $sSelector);
 
-        $sParsedSelector = $this->getMinkSession()->getSelectorsHandler()->xpathLiteral($sSelector);
-        $oElements = $this->getMinkSession()->getPage()->findAll('named', array('link', $sParsedSelector));
-
-        if (empty($oElements)) {
-            $aSelectorParts = explode(' ', $sSelector);
-            $aSelectorParts = array_map(array($this->getMinkSession()->getSelectorsHandler(), 'xpathLiteral'),
-                $aSelectorParts);
-            $sFormedSelector = "//a[contains(.," . implode(") and contains(.,", $aSelectorParts) . ")]";
-            $oElements = $this->getMinkSession()->getPage()->findAll('xpath', $sFormedSelector);
+        $escaper = new Escaper();
+        $sParsedSelector = $escaper->escapeLiteral($sSelector);
+        $link = $this->getMinkSession()->getPage()->findLink($sParsedSelector);
+        if (! $link) {
+            foreach ($this->getMinkSession()->getPage()->findAll('xpath', '//a') as $anchor) {
+                /** @var NodeElement $anchor */
+                if ($anchor->getText() == $sSelector) {
+                    $link = $anchor;
+                    break;
+                }
+            }
         }
-
-        return $this->_getExactMatch($oElements, $sSelector);
+        return $link;
     }
 
     /**
