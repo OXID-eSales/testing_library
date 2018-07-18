@@ -154,7 +154,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
                 require_once __DIR__ . '/../Patches/SeleniumDriver.php';
             }
             if ($class == 'Behat\Mink\Selector\Xpath\Manipulator') {
-                require_once __DIR__ . '../Patches/Manipulator.php';
+                require_once __DIR__ . '/../Patches/Manipulator.php';
             }
         }, true, true
         );
