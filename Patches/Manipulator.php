@@ -10,13 +10,21 @@
 
 namespace Behat\Mink\Selector\Xpath;
 
+/**
+ * XPath manipulation utility.
+ *
+ * @author Graham Bates
+ * @author Christophe Coevoet <stof@notk.org>
+ */
 class Manipulator
 {
     /**
      * Regex to find union operators not inside brackets.
      */
     const UNION_PATTERN = '/\|(?![^\[]*\])/';
+    const LITERALS = "/'(.*?)'/s";
 
+    private $literals;
     /**
      * Prepends the XPath prefix to the given XPath.
      *
@@ -32,23 +40,56 @@ class Manipulator
     {
         $expressions = array();
 
+        $xpath = $this->replaceAllLiterals($xpath);
+
         // If the xpath prefix contains a union we need to wrap it in parentheses.
         if (preg_match(self::UNION_PATTERN, $prefix)) {
-            $prefix = '(' . $prefix . ')';
+            $prefix = '('.$prefix.')';
         }
 
         // Split any unions into individual expressions.
         foreach (preg_split(self::UNION_PATTERN, $xpath) as $expression) {
             $expression = trim($expression);
+            $parenthesis = '';
+
+            // If the union is inside some braces, we need to preserve the opening braces and apply
+            // the prefix only inside it.
+            if (preg_match('/^[\(\s*]+/', $expression, $matches)) {
+                $parenthesis = $matches[0];
+                $expression = substr($expression, strlen($parenthesis));
+            }
+
             // add prefix before element selector
             if (0 === strpos($expression, '/')) {
-                $expression = $prefix . $expression;
+                $expression = $prefix.$expression;
             } else {
-                $expression = $prefix . '/' . $expression;
+                $expression = $prefix.'/'.$expression;
             }
-            $expressions[] = $expression;
+            $expressions[] = $parenthesis.$expression;
         }
 
-        return implode(' | ', $expressions);
+        return $this->restoreAllLiterals(implode(' | ', $expressions));
+    }
+
+    private function replaceAllLiterals($xpath)
+    {
+        print("Before replace: $xpath");
+        $this->literals = [];
+        if (preg_match(self::LITERALS, $xpath, $matches)) {
+            for ($i = 0; $i < sizeof($matches); $i++) {
+                $this->literals[$i] = $matches[$i];
+                $xpath = str_replace($matches[$i], "LITERAL$i", $xpath);
+            }
+        }
+        print("After replace: $xpath");
+        return $xpath;
+    }
+
+    private function restoreAllLiterals($xpath) {
+
+        for ($i = 0; $i < sizeof($this->literals); $i++) {
+            $xpath = str_replace("LITERAL$i", $this->literals[$i], $xpath);
+        }
+        return $xpath;
     }
 }
