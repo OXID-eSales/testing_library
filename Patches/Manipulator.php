@@ -22,9 +22,20 @@ class Manipulator
      * Regex to find union operators not inside brackets.
      */
     const UNION_PATTERN = '/\|(?![^\[]*\])/';
-    const LITERALS = "/'(.*?)'/s";
+    /**
+     * Regex to find strings in the xpath. If there is
+     * a | in a string, we do not want to prepend it.
+     */
+    const STRING_LITERALS = "/'(.*?)'/s";
 
-    private $literals;
+    /**
+     * Cache variable for string literals we patched out of
+     * the xpath
+     *
+     * @var array $stringLiterals
+     */
+    private $stringLiterals;
+
     /**
      * Prepends the XPath prefix to the given XPath.
      *
@@ -73,22 +84,20 @@ class Manipulator
 
     private function replaceAllLiterals($xpath)
     {
-        print("Before replace: $xpath");
-        $this->literals = [];
-        if (preg_match(self::LITERALS, $xpath, $matches)) {
+        $this->stringLiterals = [];
+        if (preg_match(self::STRING_LITERALS, $xpath, $matches)) {
             for ($i = 0; $i < sizeof($matches); $i++) {
-                $this->literals[$i] = $matches[$i];
+                $this->stringLiterals[$i] = $matches[$i];
                 $xpath = str_replace($matches[$i], "LITERAL$i", $xpath);
             }
         }
-        print("After replace: $xpath");
         return $xpath;
     }
 
     private function restoreAllLiterals($xpath) {
 
-        for ($i = 0; $i < sizeof($this->literals); $i++) {
-            $xpath = str_replace("LITERAL$i", $this->literals[$i], $xpath);
+        for ($i = 0; $i < sizeof($this->stringLiterals); $i++) {
+            $xpath = str_replace("LITERAL$i", $this->stringLiterals[$i], $xpath);
         }
         return $xpath;
     }
