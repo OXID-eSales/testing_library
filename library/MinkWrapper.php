@@ -197,7 +197,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function getTitle()
     {
-        return $this->getMinkSession()->getPage()->find('xpath', '//title')->getText();
+        return $this->getMinkSession()->getDriver()->getBrowser()->getTitle();
     }
 
     /**
@@ -205,7 +205,16 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function windowMaximize()
     {
-        $wd = $this->getMinkSession()->getDriver()->maximizeWindow();
+        $this->getMinkSession()->getDriver()->getBrowser()->windowMaximize();
+    }
+
+    /**
+     * @param $sUrl
+     * @param $sId
+     */
+    public function openWindow($sUrl, $sId)
+    {
+        $this->getMinkSession()->getDriver()->getBrowser()->openWindow($sUrl, $sId);
     }
 
     /**
@@ -374,6 +383,22 @@ abstract class MinkWrapper extends BaseTestCase
     }
 
     /**
+     * @param string $sSelector
+     */
+    public function mouseDown($sSelector)
+    {
+        $this->fireEvent($sSelector, 'mousedown');
+    }
+
+    /**
+     * @param string $sSelector
+     */
+    public function mouseOver($sSelector)
+    {
+        $this->fireEvent($sSelector, 'mouseover');
+    }
+
+    /**
      * Drags element to container
      *
      * @param string $sSelector
@@ -420,6 +445,17 @@ abstract class MinkWrapper extends BaseTestCase
     {
         $element = $this->getElement($sSelector, false);
         return $element && $element->isVisible();
+    }
+
+    /**
+     * Checks whether element is editable
+     *
+     * @param string $sSelector
+     * @return mixed
+     */
+    public function isEditable($sSelector)
+    {
+        return $this->getMinkSession()->getDriver()->getBrowser()->isEditable($sSelector);
     }
 
     /**
@@ -518,6 +554,23 @@ abstract class MinkWrapper extends BaseTestCase
             }
         }
         return $oSelect->getText();
+    }
+
+    /**
+     * Confirms alert confirmation
+     */
+    public function getConfirmation()
+    {
+        $this->getMinkSession()->getDriver()->getBrowser()->getConfirmation();
+    }
+
+    /**
+     * Closes browser window, mainly used for closing popups
+     */
+    public function close()
+    {
+        $this->getMinkSession()->getDriver()->getBrowser()->close();
+        $this->getMinkSession()->getDriver()->switchToWindow(null);
     }
 
     /**
