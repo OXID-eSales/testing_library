@@ -32,6 +32,9 @@ abstract class MinkWrapper extends BaseTestCase
     /** @var string Used to follow which frame is currently selected by driver. */
     protected $selectedFrame = 'relative=top';
 
+    /** @var Escaper Used for escaping */
+    private $escaper = null;
+
     /**
      * @return \Behat\Mink\Session
      */
@@ -194,7 +197,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function getTitle()
     {
-        return $this->getMinkSession()->getDriver()->getBrowser()->getTitle();
+        return $this->getMinkSession()->getPage()->find('xpath', '//title')->getText();
     }
 
     /**
@@ -202,16 +205,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function windowMaximize()
     {
-        $this->getMinkSession()->getDriver()->getBrowser()->windowMaximize();
-    }
-
-    /**
-     * @param $sUrl
-     * @param $sId
-     */
-    public function openWindow($sUrl, $sId)
-    {
-        $this->getMinkSession()->getDriver()->getBrowser()->openWindow($sUrl, $sId);
+        $wd = $this->getMinkSession()->getDriver()->maximizeWindow();
     }
 
     /**
@@ -267,31 +261,30 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function select($sSelector, $sOptionSelector)
     {
-        $oSelectorsHandler = $this->getMinkSession()->getSelectorsHandler();
-        $oSelect = null;
+        $selectElement = null;
 
         if (strpos($sSelector, '/') === false) {
             $page = $this->getMinkSession()->getPage();
-            $sParsedSelector = $oSelectorsHandler->xpathLiteral($sSelector);
-            $oSelect = $page->find('named', array('select', $sParsedSelector));
+            $sParsedSelector = $this->escape($sSelector);
+            $selectElement = $page->find('named', array('select', $sParsedSelector));
         }
 
-        if (is_null($oSelect)) {
-            $oSelect = $this->getElementLazy($sSelector);
+        if (is_null($selectElement)) {
+            $selectElement = $this->getElementLazy($sSelector);
         }
 
         if (strpos($sOptionSelector, 'index=') === 0) {
             $iIndex = str_replace('index=', '', $sOptionSelector);
-            $sOptionSelector = $this->_getSelectOptionByIndex($oSelect, $iIndex);
+            $sOptionSelector = $this->_getSelectOptionByIndex($selectElement, $iIndex);
         } else {
             $sOptionSelector = str_replace(array('label=', 'value='), '', $sOptionSelector);
         }
 
-        if (is_null($oSelect)) {
+        if (is_null($selectElement)) {
             $this->fail("Select '$sSelector' was not found!");
         }
 
-        $oOptions = $oSelect->findAll('named', array('option', $oSelectorsHandler->xpathLiteral($sOptionSelector)));
+        $oOptions = $selectElement->findAll('named', array('option', $this->escape($sOptionSelector)));
 
         $oOption = $this->_getExactMatch($oOptions, $sOptionSelector);
 
@@ -300,7 +293,7 @@ abstract class MinkWrapper extends BaseTestCase
         }
 
         $this->getMinkSession()->getDriver()->selectOption(
-            $oSelect->getXpath(), $oOption->getValue(), false
+            $selectElement->getXpath(), $oOption->getValue(), false
         );
 
         $this->fireEvent($sSelector, 'change');
@@ -381,22 +374,6 @@ abstract class MinkWrapper extends BaseTestCase
     }
 
     /**
-     * @param string $sSelector
-     */
-    public function mouseDown($sSelector)
-    {
-        $this->fireEvent($sSelector, 'mousedown');
-    }
-
-    /**
-     * @param string $sSelector
-     */
-    public function mouseOver($sSelector)
-    {
-        $this->fireEvent($sSelector, 'mouseover');
-    }
-
-    /**
      * Drags element to container
      *
      * @param string $sSelector
@@ -443,17 +420,6 @@ abstract class MinkWrapper extends BaseTestCase
     {
         $element = $this->getElement($sSelector, false);
         return $element && $element->isVisible();
-    }
-
-    /**
-     * Checks whether element is editable
-     *
-     * @param string $sSelector
-     * @return mixed
-     */
-    public function isEditable($sSelector)
-    {
-        return $this->getMinkSession()->getDriver()->getBrowser()->isEditable($sSelector);
     }
 
     /**
@@ -512,7 +478,7 @@ abstract class MinkWrapper extends BaseTestCase
             $oSelectorsHandler = $this->getMinkSession()->getSelectorsHandler();
             $page = $this->getMinkSession()->getPage();
 
-            $sParsedSelector = $oSelectorsHandler->xpathLiteral($sSelector);
+            $sParsedSelector = $this->escape($sSelector);
 
             $oSelect = $page->find('named', array('select', $sParsedSelector));
 
@@ -526,8 +492,7 @@ abstract class MinkWrapper extends BaseTestCase
         $aOptions = $oSelect->findAll('xpath', '//option[@selected]');
 
         if (empty($oOptions)) {
-            $value = $this->_getValue($oSelect->getXpath());
-            $value = $this->getMinkSession()->getSelectorsHandler()->xpathLiteral($value);
+            $value = $this->escape($this->_getValue($oSelect->getXpath()));
             $aOptions = $oSelect->findAll('xpath', '//option[@value=' . $value . ']');
         }
         $oOption = !empty($aOptions) ? array_pop($aOptions) : $oSelect->find('xpath', 'option');
@@ -553,23 +518,6 @@ abstract class MinkWrapper extends BaseTestCase
             }
         }
         return $oSelect->getText();
-    }
-
-    /**
-     * Confirms alert confirmation
-     */
-    public function getConfirmation()
-    {
-        $this->getMinkSession()->getDriver()->getBrowser()->getConfirmation();
-    }
-
-    /**
-     * Closes browser window, mainly used for closing popups
-     */
-    public function close()
-    {
-        $this->getMinkSession()->getDriver()->getBrowser()->close();
-        $this->getMinkSession()->getDriver()->switchToWindow(null);
     }
 
     /**
@@ -909,7 +857,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     protected function _getElementByIdOrNameXpath($sSelector)
     {
-        $sSelector = $this->getMinkSession()->getSelectorsHandler()->xpathLiteral($sSelector);
+        $sSelector = $this->escape($sSelector);
         return $this->getMinkSession()->getPage()->find('xpath', "//*[@id=$sSelector or @name=$sSelector]");
     }
 
@@ -1036,4 +984,19 @@ JS;
 
         return preg_replace("/[ \n]+/", " ", $sResult);
     }
+
+
+    private function getEscaper()
+    {
+        if (! $this->escaper) {
+            $this->escaper = new Escaper();
+        }
+        return $this->escaper;
+    }
+
+    private function escape($selector)
+    {
+        return $this->escaper->escapeLiteral($selector);
+    }
+
 }

@@ -471,18 +471,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * mouseOver element and then click specified link.
-     *
-     * @param string $element1 MouseOver element.
-     * @param string $element2 Clickable element.
-     */
-    public function mouseOverAndClick($element1, $element2)
-    {
-        $this->mouseOver($element1);
-        $this->clickAndWait($element2);
-    }
-
-    /**
      * Performs search for selected parameter.
      *
      * @param string $searchParam search parameter.
@@ -999,19 +987,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /* ------------------------ Selenium API related functions, override functions ---------------------- */
 
     /**
-     * Opens new window in popUp
-     *
-     * @param string $sUrl
-     * @param string $sId
-     */
-    public function openWindow($sUrl, $sId)
-    {
-        parent::openWindow($sUrl, $sId);
-        $this->selectWindow($sId);
-        $this->waitForPageToLoad(10000);
-    }
-
-    /**
      * Clicks link/button and waits till page will be loaded. then checks for errors.
      * recommended to use in frontend. use in admin only, if this click wont relode frames.
      *
@@ -1451,32 +1426,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     {
         $sFailMessage = "Element '$sLocator' should not be visible! " . $sMessage;
         $this->assertFalse($this->isVisible($sLocator), $sFailMessage);
-    }
-
-    /**
-     * Asserts that element is editable.
-     *
-     * @param string $sLocator element to search
-     * @param string $sMessage fail message
-     * @return void
-     */
-    public function assertElementEditable($sLocator, $sMessage = '')
-    {
-        $sFailMessage = "Element '$sLocator' is not editable! " . $sMessage;
-        $this->assertTrue($this->isEditable($sLocator), $sFailMessage);
-    }
-
-    /**
-     * Asserts that element is not editable.
-     *
-     * @param string $sLocator element to search
-     * @param string $sMessage fail message
-     * @return void
-     */
-    public function assertElementNotEditable($sLocator, $sMessage = '')
-    {
-        $sFailMessage = "Element '$sLocator' should not be editable! " . $sMessage;
-        $this->assertFalse($this->isEditable($sLocator), $sFailMessage);
     }
 
     /**
