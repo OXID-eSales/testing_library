@@ -996,7 +996,7 @@ JS;
 
     private function escape($selector)
     {
-        return $this->escaper->escapeLiteral($selector);
+        return $this->getEscaper()->escapeLiteral($selector);
     }
 
 }
