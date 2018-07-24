@@ -128,7 +128,9 @@ class ShopInstaller implements ShopServiceInterface
         $testConfig = new TestConfig();
         $vendorDir = $testConfig->getVendorDirectory();
 
-        CliExecutor::executeCommand('"' . $vendorDir . '/bin/oe-eshop-db_views_regenerate"');
+        $php = getenv('PHPBIN') ? getenv('PHPBIN') . ' ': '';
+
+        CliExecutor::executeCommand( $php . '"' . $vendorDir . '/bin/oe-eshop-db_views_regenerate"');
     }
 
     /**
