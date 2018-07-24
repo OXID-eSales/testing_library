@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v5.0.3] - 2018-07-24
+
+## Changed
+ - ShopInstaller: Pass proper PHP version to oe-eshop-db_views_regenerate command if PHPBIN is set in the environment
+ 
 ## [v5.0.2] - 2018-07-16
 
 ## Changed
@@ -79,6 +84,9 @@ An example:
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
 
+[v5.0.3]: https://github.com/OXID-eSales/testing_library/compare/v5.0.2...v5.0.3
+[v5.0.2]: https://github.com/OXID-eSales/testing_library/compare/v5.0.1...v5.0.2
+[v5.0.1]: https://github.com/OXID-eSales/testing_library/compare/v5.0.0...v5.0.1
 [v5.0.0]: https://github.com/OXID-eSales/testing_library/compare/v4.0.0...v5.0.0
 [v4.0.0]: https://github.com/OXID-eSales/testing_library/compare/v4.0.0-beta.1...v4.0.0
 [v4.0.0-beta.1]: https://github.com/OXID-eSales/testing_library/compare/v3.3.2...v4.0.0-beta.1
