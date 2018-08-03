@@ -11,6 +11,7 @@ use OxidEsales\Eshop\Core\Module\ModuleCache;
 use OxidEsales\Eshop\Core\Module\ModuleInstaller;
 use OxidEsales\Eshop\Core\Module\Module;
 use Exception;
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\TestingLibrary\Services\Library\Cache;
 
 /**
@@ -78,13 +79,21 @@ class ModuleLoader
 
         /** Clean all caches before module activation */
         $this->clearShopTmpFolder();
+
         $database = \OxidEsales\Eshop\Core\DatabaseProvider::getInstance();
         $database->flushTableDescriptionCache();
+
+        $cachedClassInstances = Registry::getKeys();
 
         if (!$moduleInstaller->activate($module)) {
             throw new Exception("Error on module installation: " . $module->getId());
         }
 
+        foreach ($cachedClassInstances as $cachedClassInstance) {
+            if (\OxidEsales\Eshop\Core\ConfigFile::class !== $cachedClassInstance) {
+                Registry::set($cachedClassInstance, null);
+            }
+        }
         $this->clearShopTmpFolder();
     }
 
