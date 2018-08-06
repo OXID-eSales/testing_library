@@ -94,6 +94,16 @@ class ModuleLoader
                 Registry::set($cachedClassInstance, null);
             }
         }
+        $baseClass = new \OxidEsales\Eshop\Core\Base();
+        $baseClass->setConfig(null);
+        $baseClass->setSession(null);
+        $baseClass->setUser(null);
+        $baseClass->setAdminMode(null);
+
+        if (method_exists($baseClass, 'setRights')) {
+            $baseClass->setRights(null);
+        }
+
         $this->clearShopTmpFolder();
     }
 
