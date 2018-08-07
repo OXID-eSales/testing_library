@@ -1854,11 +1854,11 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * Fix for showing stack trace with phpunit 3.6 and later
      *
-     * @param Exception $exception
+     * @param \Throwable $exception
      *
      * @throws Exception
      */
-    protected function onNotSuccessfulTest(Exception $exception)
+    protected function onNotSuccessfulTest($exception)
     {
         $this->storeExceptionLogEntries();
         $this->exceptionLogHelper->clearExceptionLogFile();

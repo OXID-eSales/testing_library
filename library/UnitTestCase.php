@@ -543,7 +543,39 @@ abstract class UnitTestCase extends BaseTestCase
             $originalClassName = strtolower($originalClassName);
         }
         $originalClassName = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsObject::class)->getClassName($originalClassName);
-        return parent::getMock($originalClassName, $methods, $arguments, $mockClassName, $callOriginalConstructor, $callOriginalClone, $callAutoload, $cloneArguments, $proxyTarget);
+
+        $mockBuilder = parent::getMockBuilder($originalClassName);
+        $mockBuilder->setMethods($methods);
+        $mockBuilder->setConstructorArgs($arguments);
+        $mockBuilder->setMockClassName($mockClassName);
+        if ($callOriginalConstructor) {
+            $mockBuilder->enableOriginalConstructor();
+        }
+        else {
+            $mockBuilder->disableOriginalConstructor();
+        }
+        if ($callOriginalClone) {
+            $mockBuilder->enableOriginalClone();
+        }
+        else {
+            $mockBuilder->disableOriginalClone();
+        }
+        if ($callAutoload) {
+            $mockBuilder->enableAutoload();
+        }
+        else {
+            $mockBuilder->disableAutoload();
+        }
+        if ($cloneArguments) {
+            $mockBuilder->enableArgumentCloning();
+        }
+        else {
+            $mockBuilder->disableArgumentCloning();
+        }
+        if (! is_null($proxyTarget)) {
+            $mockBuilder->setProxyTarget($proxyTarget);
+        }
+        return $mockBuilder->getMock();
     }
 
     /**
