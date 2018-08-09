@@ -6,7 +6,7 @@
 
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 
-class ServiceConfigTest extends PHPUnit_Framework_TestCase
+class ServiceConfigTest extends PHPUnit\Framework\TestCase
 {
 
     public function testReturningDefaultShopPath()

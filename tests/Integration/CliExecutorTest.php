@@ -7,9 +7,9 @@
 namespace OxidEsales\TestingLibrary\Integration;
 
 use OxidEsales\TestingLibrary\Services\Library\CliExecutor;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class ChangeExceptionLogRightsTest extends PHPUnit_Framework_TestCase
+class ChangeExceptionLogRightsTest extends PHPUnit\Framework\TestCase
 {
     public function testThrowsNoExceptionWhenCorrectCommand()
     {

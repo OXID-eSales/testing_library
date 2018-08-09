@@ -8,12 +8,8 @@ namespace OxidEsales\TestingLibrary;
 
 use Exception;
 use DateTime;
+use PHPUnit\Framework\ExpectationFailedException;
 use ReflectionClass;
-use PHPUnit_Framework_ExpectationFailedException as ExpectationFailedException;
-use PHPUnit_Framework_AssertionFailedError as AssertionFailedError;
-use PHPUnit_Framework_SkippedTest as SkippedTest;
-use PHPUnit_Framework_IncompleteTest as IncompleteTest;
-use PHPUnit_Util_Filter;
 
 /**
  * Base class for Selenium tests.
@@ -1858,7 +1854,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @throws Exception
      */
-    protected function onNotSuccessfulTest($exception)
+    protected function onNotSuccessfulTest(\Throwable $exception)
     {
         $this->storeExceptionLogEntries();
         $this->exceptionLogHelper->clearExceptionLogFile();
@@ -1903,7 +1899,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     protected function formExceptionMessage($exception)
     {
-        $trace = PHPUnit_Util_Filter::getFilteredStacktrace($exception, false);
+        $trace = \PHPUnit\Util\Filter::getFilteredStacktrace($exception, false);
 
         $errorMessage = $this->_getScreenShot();
         $errorMessage .= $exception->getMessage();

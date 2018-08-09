@@ -9,9 +9,9 @@ namespace OxidEsales\TestingLibrary\Tests\Integration\Services\Files;
 use OxidEsales\TestingLibrary\Services\Files\ChangeExceptionLogRights;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class ChangeExceptionLogRightsTest extends PHPUnit_Framework_TestCase
+class ChangeExceptionLogRightsTest extends PHPUnit\Framework\TestCase
 {
     public function testLogIsWritableForAllUsersWhenFileExist()
     {

@@ -6,12 +6,12 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use PHPUnit_Framework_MockObject_Invocation as Invocation;
+use PHPUnit\Framework\MockObject\Invocation;
 
 /**
  * Class for creating stub objects.
  */
-class MockStubFunc implements \PHPUnit_Framework_MockObject_Stub
+class MockStubFunc implements \PHPUnit\Framework\MockObject\Stub
 {
     /** @var string */
     private $_func;
@@ -39,12 +39,12 @@ class MockStubFunc implements \PHPUnit_Framework_MockObject_Stub
     public function invoke(Invocation $invocation)
     {
         if (is_string($this->_func) && preg_match('/^\{.+\}$/', $this->_func)) {
-            $args = $invocation->parameters;
-            $_this = $invocation->object;
+            $args = $invocation->getParameters();
+            $_this = $invocation->getObject();
 
             return eval($this->_func);
         } else {
-            return call_user_func_array($this->_func, $invocation->parameters);
+            return call_user_func_array($this->_func, $invocation->getParameters());
         }
     }
 

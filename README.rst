@@ -291,7 +291,7 @@ created inside - all tests will be collected. Unit and integration tests
 should extend ``OxidEsales\TestingLibrary\UnitTestCase`` class so that
 database, registry, configuration parameters restoration, module
 activation would work. If unit tests are not relying on database or
-registry and are real clean unit tests, ``PHPUnit_Framework_TestCase``
+registry and are real clean unit tests, ``PHPUnit\Framework\TestCase``
 class can be extended, but have in mind that autoloading of module
 classes and correct shop classes extension will not work. All
 preparation works can be done in ``additional.inc.php`` file. This file

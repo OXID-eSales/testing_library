@@ -6,9 +6,10 @@
 
 namespace OxidEsales\TestingLibrary;
 
+use PHPUnit\Framework\AssertionFailedError;
 /**
- * Extension to PHPUnit_Framework_AssertionFailedError to mark that test should be retried.
+ * Extension to PHPUnit\Framework\AssertionFailedError to mark that test should be retried.
  */
-class RetryTestException extends \PHPUnit_Framework_AssertionFailedError
+class RetryTestException extends AssertionFailedError
 {
 }
