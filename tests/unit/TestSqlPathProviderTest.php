@@ -7,7 +7,7 @@
 use OxidEsales\Eshop\Core\Edition\EditionSelector;
 use OxidEsales\TestingLibrary\TestSqlPathProvider;
 
-class TestSqlPathProviderTest extends PHPUnit_Framework_TestCase
+class TestSqlPathProviderTest extends PHPUnit\Framework\TestCase
 {
     public function providerChecksForCorrectPath()
     {

@@ -7,7 +7,7 @@
 namespace OxidEsales\TestingLibrary\Unit;
 
 use org\bovigo\vfs\vfsStream;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestConfigTest
@@ -15,7 +15,7 @@ use PHPUnit_Framework_TestCase;
  * @package OxidEsales\TestingLibrary\Unit
  * @covers \OxidEsales\TestingLibrary\TestConfig
  */
-class TestConfigTest extends PHPUnit_Framework_TestCase
+class TestConfigTest extends PHPUnit\Framework\TestCase
 {
 
     /**

@@ -18,9 +18,7 @@ use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorer
 
 use oxTestModules;
 use oxTestsStaticCleaner;
-use PHPUnit_Framework_Exception;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
-use PHPUnit_Framework_TestResult as TestResult;
+use PHPUnit\Framework\TestResult;
 use ReflectionClass;
 use Exception;
 
@@ -333,7 +331,7 @@ abstract class UnitTestCase extends BaseTestCase
      *
      * @return \OxidEsales\Eshop\Core\Session
      */
-    public static function getSession()
+    public function getSession()
     {
         return \OxidEsales\Eshop\Core\Registry::getSession();
     }
@@ -343,7 +341,7 @@ abstract class UnitTestCase extends BaseTestCase
      *
      * @return \OxidEsales\Eshop\Core\Config
      */
-    public static function getConfig()
+    public function getConfig()
     {
         return \OxidEsales\Eshop\Core\Registry::getConfig();
     }
@@ -532,19 +530,15 @@ abstract class UnitTestCase extends BaseTestCase
      *
      * @return MockObject
      *
-     * @throws PHPUnit_Framework_Exception
+     * @throws PHPUnit\Framework\Exception
      *
      * @since  Method available since Release 3.0.0
+     *
+     * @deprecated This is just for compatibility with PHPUnit 4 - use getMockBuilder() to obtain a mock
      */
     public function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = false, $callOriginalMethods = false, $proxyTarget = null)
     {
-        // TODO: remove this condition when namespaces will be implemented fully.
-        if (strpos($originalClassName, '\\') === false) {
-            $originalClassName = strtolower($originalClassName);
-        }
-        $originalClassName = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsObject::class)->getClassName($originalClassName);
-
-        $mockBuilder = parent::getMockBuilder($originalClassName);
+        $mockBuilder = $this->getMockBuilder($originalClassName);
         $mockBuilder->setMethods($methods);
         $mockBuilder->setConstructorArgs($arguments);
         $mockBuilder->setMockClassName($mockClassName);
@@ -578,6 +572,24 @@ abstract class UnitTestCase extends BaseTestCase
         return $mockBuilder->getMock();
     }
 
+    /**
+     * Creates a mock builder for the edition file of the class name given
+     *
+     * @param $className
+     *
+     * @return mixed
+     */
+    public function getMockBuilder($className)
+    {
+        // TODO: remove this condition when namespaces will be implemented fully.
+        if (strpos($className, '\\') === false) {
+            $className = strtolower($className);
+        }
+        $editionClassName = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsObject::class)->getClassName($className);
+
+        return parent::getMockBuilder($editionClassName);
+
+    }
     /**
      * Calls all the queries stored in $_aTeardownSqls
      * Cleans all the tables that were set

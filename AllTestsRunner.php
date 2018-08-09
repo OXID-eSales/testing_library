@@ -4,12 +4,14 @@
  * See LICENSE file for license details.
  */
 
+use \PHPUnit\Framework\TestCase;
+
 echo "=========\nrunning php version " . phpversion() . "\n\n============\n";
 
 /**
  * This class is used as a base class to run all CE|PE|EE edition tests.
  */
-class AllTestsRunner extends PHPUnit_Framework_TestCase
+class AllTestsRunner extends TestCase
 {
 
     /** @var array Default test suites */
@@ -30,13 +32,13 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     /**
      * Forms test suite
      *
-     * @return PHPUnit_Framework_TestSuite
+     * @return \PHPUnit\Framework\TestSuite
      */
     public static function suite()
     {
         $aTestDirectories = static::_getTestDirectories();
 
-        $oSuite = new PHPUnit_Framework_TestSuite('PHPUnit');
+        $oSuite = new \PHPUnit\Framework\TestSuite('PHPUnit');
 
         static::_addPriorityTests($oSuite, static::$priorityTests, $aTestDirectories);
 
@@ -60,7 +62,7 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     /**
      * Adds tests with highest priority.
      *
-     * @param PHPUnit_Framework_TestSuite $oSuite
+     * @param TestSuite $oSuite
      * @param array                       $aPriorityTests
      * @param array                       $aTestDirectories
      */
@@ -127,10 +129,10 @@ class AllTestsRunner extends PHPUnit_Framework_TestCase
     /**
      * Adds files to test suite
      *
-     * @param PHPUnit_Framework_TestSuite $oSuite
+     * @param TestSuite $oSuite
      * @param array                       $aTestFiles
      *
-     * @return PHPUnit_Framework_TestSuite
+     * @return TestSuite
      */
     protected static function _addFilesToSuite($oSuite, $aTestFiles)
     {

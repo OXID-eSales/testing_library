@@ -6,12 +6,12 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use PHPUnit_Framework_Test;
-use PHPUnit_Framework_AssertionFailedError;
+use PHPUnit\Framework\Test;
+use PHPUnit\Framework\AssertionFailedError;
 use Exception;
-use PHPUnit_Framework_TestSuite;
+use PHPUnit\Framework\TestSuite;
 
-class Printer extends \PHPUnit_TextUI_ResultPrinter
+class Printer extends \PHPUnit\TextUI\ResultPrinter
 {
     /** @var int */
     private $timeStats;
@@ -19,7 +19,7 @@ class Printer extends \PHPUnit_TextUI_ResultPrinter
     /**
      * @inheritdoc
      */
-    public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addError(PHPUnit\Framework\Test $test, Exception $e, $time)
     {
         if ($this->verbose) {
             echo "        ERROR: '" . $e->getMessage() . "'\n" . $e->getTraceAsString();
@@ -30,7 +30,7 @@ class Printer extends \PHPUnit_TextUI_ResultPrinter
     /**
      * @inheritdoc
      */
-    public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
+    public function addFailure(PHPUnit\Framework\Test $test, PHPUnit\Framework\AssertionFailedError $e, $time)
     {
         if ($this->verbose) {
             echo "        FAIL: '" . $e->getMessage() . "'\n" . $e->getTraceAsString();
@@ -41,7 +41,7 @@ class Printer extends \PHPUnit_TextUI_ResultPrinter
     /**
      * @inheritdoc
      */
-    public function endTest(PHPUnit_Framework_Test $test, $time)
+    public function endTest(PHPUnit\Framework\Test $test, $time)
     {
         $t = microtime(true) - $this->timeStats['startTime'];
         if ($this->timeStats['min'] > $t) {
@@ -59,7 +59,7 @@ class Printer extends \PHPUnit_TextUI_ResultPrinter
     /**
      * @inheritdoc
      */
-    public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
+    public function endTestSuite(PHPUnit\Framework\TestSuite $suite)
     {
         parent::endTestSuite($suite);
 
@@ -69,7 +69,7 @@ class Printer extends \PHPUnit_TextUI_ResultPrinter
     /**
      * @inheritdoc
      */
-    public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
+    public function startTestSuite(PHPUnit\Framework\TestSuite $suite)
     {
         echo("\n\n" . $suite->getName() . "\n");
 
@@ -81,7 +81,7 @@ class Printer extends \PHPUnit_TextUI_ResultPrinter
     /**
      * @inheritdoc
      */
-    public function startTest(PHPUnit_Framework_Test $test)
+    public function startTest(PHPUnit\Framework\Test $test)
     {
         if ($this->verbose) {
             echo "\n        " . $test->getName();

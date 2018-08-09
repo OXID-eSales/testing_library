@@ -7,12 +7,13 @@
 namespace OxidEsales\TestingLibrary;
 
 use DateTime;
-use PHPUnit_Framework_SkippedTestError as SkippedTestError;
+use PHPUnit\Framework\SkippedTestError;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Base tests class. Most tests should extend this class.
  */
-abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
+abstract class BaseTestCase extends TestCase
 {
 
     /** @var TestConfig */
@@ -60,7 +61,7 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * Mark the test as skipped until given date.
-     * Wrapper function for PHPUnit_Framework_Assert::markTestSkipped.
+     * Wrapper function for PHPUnit\Framework\Assert::markTestSkipped.
      *
      * @param string $sDate    Date string in format 'Y-m-d'.
      * @param string $sMessage Message.

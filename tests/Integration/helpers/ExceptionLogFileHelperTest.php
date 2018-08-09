@@ -10,7 +10,7 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
-class ExceptionLogFileHelperTest extends \PHPUnit_Framework_TestCase
+class ExceptionLogFileHelperTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider dataProviderWrongConstructorParameters
