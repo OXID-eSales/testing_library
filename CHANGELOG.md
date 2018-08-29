@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v6.0.0] - unreleased
+
+## Changed
+
+ - \OxidEsales\TestingLibrary\AcceptanceTestCase::onNotSuccessfulTest(): Fixed method signature for phpunit 5
+ - \OxidEsales\TestingLibrary\UnitTestCase::getMock(): Simulated the getMock() method that is deprecated from
+ phpunit Version 5
+ - Updated phpunit dependency to version 5 
+
 ## [v5.0.3] - 2018-07-24
 
 ## Changed
