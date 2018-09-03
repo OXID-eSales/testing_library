@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [v6.0.0] - unreleased
 
 ## Changed
-
+ - Changes PHP Unit classes to namespaced versions
+ - Fixes static calls in UnitTestCase
+ - Updated phpunit dependency to version 6
  - \OxidEsales\TestingLibrary\AcceptanceTestCase::onNotSuccessfulTest(): Fixed method signature for phpunit 5
  - \OxidEsales\TestingLibrary\UnitTestCase::getMock(): Simulated the getMock() method that is deprecated from
  phpunit Version 5
