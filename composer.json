@@ -12,7 +12,7 @@
         "behat/mink": "~1.5.0",
         "behat/mink-goutte-driver": "~v1.0.9",
         "oxid-esales/mink-selenium-driver": "~v1.1.2",
-        "symfony/yaml": "~2.0",
+        "symfony/yaml": "~3.0",
         "incenteev/composer-parameter-handler": "~2.0",
         "symfony/dom-crawler": "v2.7.*",
         "symfony/filesystem": "^3.0",
