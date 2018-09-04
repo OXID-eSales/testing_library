@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [v6.0.0] - unreleased
 
 ## Changed
+ - Updates Symfony yaml component to version ~3
  - Changes PHP Unit classes to namespaced versions
  - Fixes static calls in UnitTestCase
  - Updated phpunit dependency to version 6
