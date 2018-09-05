@@ -4,7 +4,7 @@
  * See LICENSE file for license details.
  */
 
-use \PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase;
 
 echo "=========\nrunning php version " . phpversion() . "\n\n============\n";
 
