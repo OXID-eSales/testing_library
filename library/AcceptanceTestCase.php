@@ -1867,7 +1867,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
             return;
         }
 
-        $exception = $this->formException($exception);
         $this->cleanUpExceptionLogEntries();
 
         $this->stopMinkSession();
@@ -2062,32 +2061,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     {
         $class = new ReflectionClass(get_class($this));
         return dirname($class->getFileName());
-    }
-
-    /**
-     * Newly forms Exception according provided Exception object.
-     *
-     * @param Exception $exception
-     *
-     * @return Exception|AssertionFailedError
-     */
-    protected function formException(Exception $exception)
-    {
-        $exceptionClassName = get_class($exception);
-
-        if ($exception instanceof ExpectationFailedException) {
-            $exceptionClassName = get_class(new AssertionFailedError());
-        }
-
-        try {
-            $newException = new $exceptionClassName(
-                $this->formExceptionMessage($exception),
-                $exception->getCode()
-            );
-            return $newException;
-        } catch (Exception $e) {
-            return $exception;
-        }
     }
 
     /**
