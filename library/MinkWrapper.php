@@ -99,7 +99,7 @@ abstract class MinkWrapper extends BaseTestCase
             case 'goutte':
                 $aClientOptions = array();
                 $oGoutteClient = new \Behat\Mink\Driver\Goutte\Client();
-                $oGoutteClient->setClient(new \Guzzle\Http\Client('', $aClientOptions));
+                $oGoutteClient->setClient(new \GuzzleHttp\Client());
                 $oDriver = new \Behat\Mink\Driver\GoutteDriver($oGoutteClient);
                 break;
             case 'zombie':
