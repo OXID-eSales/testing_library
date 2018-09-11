@@ -18,7 +18,8 @@
         "oxid-esales/oxideshop-facts": "^2.0.0",
         "oxid-esales/oxideshop-unified-namespace-generator": "^2.0.0",
         "phpunit/php-code-coverage": "^5.3",
-        "phpunit/phpcov": "^4.0"
+        "phpunit/phpcov": "^4.0",
+        "behat/mink-goutte-driver": "^1.2"
     },
     "bin": [
         "bin/reset-shop",
