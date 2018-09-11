@@ -1867,7 +1867,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
             return;
         }
 
-        $exception = $this->formException($exception);
         $this->cleanUpExceptionLogEntries();
 
         $this->stopMinkSession();
@@ -1890,24 +1889,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
             || $exception instanceof IncompleteTest;
 
         return $isAssertionException && !$isTestSkipped;
-    }
-
-    /**
-     * @param Exception $exception
-     *
-     * @return string
-     */
-    protected function formExceptionMessage($exception)
-    {
-        $trace = \PHPUnit\Util\Filter::getFilteredStacktrace($exception, false);
-
-        $errorMessage = $this->_getScreenShot();
-        $errorMessage .= $exception->getMessage();
-        $errorMessage .= "\nSelected Frame: '" . $this->getSelectedFrame() . "'";
-        $errorMessage .= "\n\n" . $this->_formTrace($trace);
-        $errorMessage .= $this->getExceptionLogMessage();
-
-        return $errorMessage;
     }
 
     /**
@@ -2074,10 +2055,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     protected function formException(Exception $exception)
     {
         $exceptionClassName = get_class($exception);
-
-        if ($exception instanceof ExpectationFailedException) {
-            $exceptionClassName = get_class(new AssertionFailedError());
-        }
 
         try {
             $newException = new $exceptionClassName(
