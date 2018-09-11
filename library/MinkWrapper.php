@@ -90,27 +90,12 @@ abstract class MinkWrapper extends BaseTestCase
     {
         $browserName = $this->getTestConfig()->getBrowserName();
         switch ($sDriver) {
-            case 'selenium2':
-                $oDriver = new \Behat\Mink\Driver\Selenium2Driver($browserName);
-                break;
-            case 'sahi':
-                $oDriver = new \Behat\Mink\Driver\SahiDriver($browserName, $this->_getClient());
-                break;
-            case 'goutte':
-                $aClientOptions = array();
-                $oGoutteClient = new \Behat\Mink\Driver\Goutte\Client();
-                $oGoutteClient->setClient(new \Guzzle\Http\Client('', $aClientOptions));
-                $oDriver = new \Behat\Mink\Driver\GoutteDriver($oGoutteClient);
-                break;
-            case 'zombie':
-                $oDriver = new \Behat\Mink\Driver\ZombieDriver();
-                break;
             case 'selenium':
                 $client = $this->_getClient();
                 $oDriver = new \Behat\Mink\Driver\SeleniumDriver($browserName, shopURL, $client);
                 break;
             default:
-                throw new Exception('Driver ' . $sDriver . ' was not found!');
+                throw new Exception('Driver ' . $sDriver . ' not supported any more!');
                 break;
         }
 
