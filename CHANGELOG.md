@@ -4,19 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v4.0.1] - 2018-07-16
+## [4.0.2] - 2018-09-17
+
+### Changed
+- Invalidate cached objects after module activation in `\OxidEsales\TestingLibrary\ModuleLoader::installModule`
+
+## [4.0.1] - 2018-07-16
 
 ### Changed
 - Added exception handling to `\OxidEsales\TestingLibrary\AcceptanceTestCase::formException`
 - Special treatment of goute driver in `\OxidEsales\TestingLibrary\AcceptanceTestCase::assertElementPresent`
 - Flushes table description cache before activation in `\OxidEsales\TestingLibrary\ModuleLoader::installModule`  
 
-## [v4.0.0] - 2018-04-30
+## [4.0.0] - 2018-04-30
 
 ### Deprecated
 - `\OxidEsales\TestingLibrary\AcceptanceTestCase::shouldReformatExceptionMessage`
 
-## [v4.0.0-beta.1] - 2018-01-17
+## [4.0.0-beta.1] - 2018-01-17
 
 ### Added
 
@@ -66,3 +71,6 @@ An example:
 ### Added
 
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
+
+[4.0.2]: https://github.com/OXID-eSales/testing_library/compare/v4.0.1...v4.0.2
+[4.0.1]: https://github.com/OXID-eSales/testing_library/compare/v4.0.0...v4.0.1
