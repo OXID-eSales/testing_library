@@ -4,14 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v6.0.0] - unreleased
+## [v6.0.0] - 2018-09-17
 
 ## Changed
+ - Removes goutte driver for acceptance tests
+ - Removes unnecessary exception translation in AcceptanceTestCase
  - Updates Symfony yaml component to version ~3
  - Changes PHP Unit classes to namespaced versions
  - Fixes static calls in UnitTestCase
  - Updated phpunit dependency to version 6
- - \OxidEsales\TestingLibrary\AcceptanceTestCase::onNotSuccessfulTest(): Fixed method signature for phpunit 5
+ - \OxidEsales\TestingLibrary\AcceptanceTestCase::onNotSuccessfulTest(): Fixed method signature for phpunit 6
  - \OxidEsales\TestingLibrary\UnitTestCase::getMock(): Simulated the getMock() method that is deprecated from
  phpunit Version 5
  - Updated phpunit dependency to version 5 
