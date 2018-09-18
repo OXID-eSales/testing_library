@@ -27,6 +27,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - expected log file format was changed
  - require v2.0.0 of oxid-esales/oxideshop-unified-namespace-generator
 
+## [v4.0.2] - 2018-09-17
+
+### Changed
+- Invalidate cached objects after module activation in `\OxidEsales\TestingLibrary\ModuleLoader::installModule`
+
+## [v4.0.1] - 2018-07-16
+
+### Changed
+- Added exception handling to `\OxidEsales\TestingLibrary\AcceptanceTestCase::formException`
+- Special treatment of goute driver in `\OxidEsales\TestingLibrary\AcceptanceTestCase::assertElementPresent`
+- Flushes table description cache before activation in `\OxidEsales\TestingLibrary\ModuleLoader::installModule`  
+
 ## [v4.0.0] - 2018-04-30
 
 ### Deprecated
@@ -93,3 +105,5 @@ An example:
 [v3.3.2]: https://github.com/OXID-eSales/testing_library/compare/v3.3.1...v3.3.2
 [v3.3.1]: https://github.com/OXID-eSales/testing_library/compare/v3.3.0...v3.3.1
 [v3.3.0]: https://github.com/OXID-eSales/testing_library/compare/v3.2.0...v3.3.0
+[4.0.2]: https://github.com/OXID-eSales/testing_library/compare/v4.0.1...v4.0.2
+[4.0.1]: https://github.com/OXID-eSales/testing_library/compare/v4.0.0...v4.0.1
