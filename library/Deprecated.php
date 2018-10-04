@@ -150,7 +150,7 @@ class oxTestModules
     {
         $class = strtolower($class);
         $name = self::_getNextName($class);
-        if ($cnt = count(self::$_addedmods[$class])) {
+        if (is_array(self::$_addedmods[$class]) && $cnt = count(self::$_addedmods[$class])) {
             $last = self::$_addedmods[$class][$cnt - 1];
         } else {
             $last = \OxidEsales\Eshop\Core\Registry::getUtilsObject()->getClassName(strtolower($class));
@@ -176,7 +176,7 @@ class oxTestModules
         $class = strtolower($class);
         $name = self::_getNextName($class);
 
-        if ($cnt = count(self::$_addedmods[$class])) {
+        if (is_array(self::$_addedmods[$class]) && $cnt = count(self::$_addedmods[$class])) {
             $last = self::$_addedmods[$class][$cnt - 1];
         } else {
             $last = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsObject::class)->getClassName(strtolower($class));
@@ -539,7 +539,7 @@ class modDB extends modOXID
             $oObj = $this;
         }
         self::$unitMOD = $oObj;
-        $this->addClassFunction('getDB', create_function('', 'return modDB::$unitMOD;'));
+        $this->addClassFunction('getDB', function () {return modDB::$unitMOD;});
     }
 
     static function getInstance()
@@ -615,7 +615,7 @@ if (!function_exists('findphp')) {
 
 
         //get directories (do not go to blacklist)
-        while (list (, $dir) = each($dirs)) {
+        foreach ($dirs as $dir) {
             foreach (glob($dir . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR) as $sdir) {
                 if (array_search($sdir, $aDirBlackList) === false) {
                     $dirs[] = $sdir;
