@@ -2102,9 +2102,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     private function resetCachedObjects()
     {
         \OxidEsales\Eshop\Core\Registry::set('oxConfig', null);
-        $baseModel = new \OxidEsales\Eshop\Core\Base();
-        $baseModel->setConfig(null);
-
         \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Language::class, oxNew(\OxidEsales\Eshop\Core\Language::class));
     }
 

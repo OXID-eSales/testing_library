@@ -50,9 +50,6 @@ abstract class BootstrapBase
         $config = oxNew(\OxidEsales\Eshop\Core\Config::class);
         \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Config::class, $config);
 
-        /** Reset static variable in oxSuperCfg class, which is base class for every class. */
-        $config->setConfig($config);
-
         $config->init();
     }
 
