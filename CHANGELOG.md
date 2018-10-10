@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - \OxidEsales\TestingLibrary\UnitTestCase::getMock(): Simulated the getMock() method that is deprecated from
  phpunit Version 5
  - Updated phpunit dependency to version 5 
+ - PHP 7.2 support
+ - Added screenshots for selenium functionality
 
 ## [v5.0.4] - 2018-10-05
 

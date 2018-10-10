@@ -8,7 +8,10 @@ namespace OxidEsales\TestingLibrary;
 
 use Exception;
 use DateTime;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\IncompleteTest;
+use PHPUnit\Framework\SkippedTest;
 use ReflectionClass;
 
 /**
@@ -1867,6 +1870,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
             return;
         }
 
+        $exception = $this->createScreenShot($exception);
         $this->cleanUpExceptionLogEntries();
 
         $this->stopMinkSession();
@@ -1892,21 +1896,34 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
     /**
-     * @param Exception $exception
+     * @param \Throwable $exception
      *
-     * @return string
+     * @return \Throwable
      */
-    protected function formExceptionMessage($exception)
+    protected function createScreenShot($exception)
     {
-        $trace = \PHPUnit\Util\Filter::getFilteredStacktrace($exception, false);
+        if ($this->shouldMakeScreenShot($exception)) {
+            $screenShotMessage = $this->_getScreenShot();
+            return new Exception($screenShotMessage, 0, $exception);
+        }
 
-        $errorMessage = $this->_getScreenShot();
-        $errorMessage .= $exception->getMessage();
-        $errorMessage .= "\nSelected Frame: '" . $this->getSelectedFrame() . "'";
-        $errorMessage .= "\n\n" . $this->_formTrace($trace);
-        $errorMessage .= $this->getExceptionLogMessage();
+        return $exception;
+    }
 
-        return $errorMessage;
+    /**
+     * Checks whether test should get screen shot.
+     *
+     * @param \Throwable $exception
+     *
+     * @return bool
+     */
+    protected function shouldMakeScreenShot($exception)
+    {
+        $isAssertionException = $exception instanceof AssertionFailedError;
+        $isTestSkipped = $exception instanceof SkippedTest
+            || $exception instanceof IncompleteTest;
+
+        return $isAssertionException && !$isTestSkipped;
     }
 
     /**
