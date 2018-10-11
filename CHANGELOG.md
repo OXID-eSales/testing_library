@@ -18,28 +18,45 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  phpunit Version 5
  - Updated phpunit dependency to version 5 
 
+## [v5.0.4] - 2018-10-05
+
+### Changed
+ - Ported changes from v4.0.2 
+
 ## [v5.0.3] - 2018-07-24
 
-## Changed
+### Changed
  - ShopInstaller: Pass proper PHP version to oe-eshop-db_views_regenerate command if PHPBIN is set in the environment
  
 ## [v5.0.2] - 2018-07-16
 
-## Changed
+### Changed
  - \OxidEsales\TestingLibrary\ModuleLoader::installModule move call to ModuleLoader::clearModuleChain 
  to ModuleLoader::activateModules
  
 ## [v5.0.1] - 2018-07-16
 
-## Changed
+### Changed
  - \OxidEsales\TestingLibrary\ModuleLoader::installModule flushes table description cache before activation 
  
 ## [v5.0.0] - 2018-07-09
 
-## Changed
+### Changed
  - expected log file name was changed to 'source/oxideshop.log'
  - expected log file format was changed
  - require v2.0.0 of oxid-esales/oxideshop-unified-namespace-generator
+
+## [v4.0.2] - 2018-09-17
+
+### Changed
+- Invalidate cached objects after module activation in `\OxidEsales\TestingLibrary\ModuleLoader::installModule`
+
+## [v4.0.1] - 2018-07-16
+
+### Changed
+- Added exception handling to `\OxidEsales\TestingLibrary\AcceptanceTestCase::formException`
+- Special treatment of goute driver in `\OxidEsales\TestingLibrary\AcceptanceTestCase::assertElementPresent`
+- Flushes table description cache before activation in `\OxidEsales\TestingLibrary\ModuleLoader::installModule`  
 
 ## [v4.0.0] - 2018-04-30
 
@@ -98,10 +115,13 @@ An example:
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
 
+[v5.0.4]: https://github.com/OXID-eSales/testing_library/compare/v5.0.3...v5.0.4
 [v5.0.3]: https://github.com/OXID-eSales/testing_library/compare/v5.0.2...v5.0.3
 [v5.0.2]: https://github.com/OXID-eSales/testing_library/compare/v5.0.1...v5.0.2
 [v5.0.1]: https://github.com/OXID-eSales/testing_library/compare/v5.0.0...v5.0.1
 [v5.0.0]: https://github.com/OXID-eSales/testing_library/compare/v4.0.0...v5.0.0
+[v4.0.2]: https://github.com/OXID-eSales/testing_library/compare/v4.0.1...v4.0.2
+[v4.0.1]: https://github.com/OXID-eSales/testing_library/compare/v4.0.0...v4.0.1
 [v4.0.0]: https://github.com/OXID-eSales/testing_library/compare/v4.0.0-beta.1...v4.0.0
 [v4.0.0-beta.1]: https://github.com/OXID-eSales/testing_library/compare/v3.3.2...v4.0.0-beta.1
 [v3.3.2]: https://github.com/OXID-eSales/testing_library/compare/v3.3.1...v3.3.2
