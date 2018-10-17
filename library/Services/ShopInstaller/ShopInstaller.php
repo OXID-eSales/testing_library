@@ -257,11 +257,12 @@ class ShopInstaller implements ShopServiceInterface
     {
         $dbHandler = $this->getDbHandler();
 
-        $dbHandler->query("DELETE from oxconfig WHERE oxshopid = 1 AND oxvarname in ('iLayoutCacheLifeTime', 'blReverseProxyActive');");
+        $dbHandler->query("DELETE from oxconfig WHERE oxshopid = 1 AND oxvarname in ('iLayoutCacheLifeTime', 'blReverseProxyActive', 'isOeVarnishModuleReverseProxyActive')");
         $dbHandler->query(
             "INSERT INTO oxconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue) VALUES
               ('35863f223f91930177693956aafe69e6', 1, 'iLayoutCacheLifeTime', 'str', 0xB00FB55D),
-              ('dbcfca66eed01fd43963443d35b109e0', 1, 'blReverseProxyActive',  'bool', 0x07);"
+              ('dbcfca66eed01fd43963443d35b109e0', 1, 'isOeVarnishModuleReverseProxyActive',  'bool', 0x07),
+              ('dbcfca66eed01fd43963443d35b109c1', 1, 'blReverseProxyActive',  'bool', 0x07);"
         );
     }
 
