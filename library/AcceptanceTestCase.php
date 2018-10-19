@@ -8,6 +8,7 @@ namespace OxidEsales\TestingLibrary;
 
 use Exception;
 use DateTime;
+use OxidEsales\Eshop\Core\Registry;
 use PHPUnit\Framework\ExpectationFailedException;
 use ReflectionClass;
 
@@ -1474,6 +1475,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
         if (!$this->waitForElementText($value, $locator, 10)) {
             $this->fail($message);
         }
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -1734,14 +1736,14 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * Calls ModuleInstaller Service and activates all given modules in shop before tests are run.
      */
-    public function activateModules()
+    public function activateModules($shopId = 1)
     {
         $testConfig = $this->getTestConfig();
         $modulesToActivate = $testConfig->getModulesToActivate();
         if ($modulesToActivate) {
             $serviceCaller = new ServiceCaller();
             $serviceCaller->setParameter('modulestoactivate', $modulesToActivate);
-            $serviceCaller->callService('ModuleInstaller', 1);
+            $serviceCaller->callService('ModuleInstaller', $shopId);
         }
     }
 
