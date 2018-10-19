@@ -1730,14 +1730,14 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * Calls ModuleInstaller Service and activates all given modules in shop before tests are run.
      */
-    public function activateModules()
+    public function activateModules($shopId = 1)
     {
         $testConfig = $this->getTestConfig();
         $modulesToActivate = $testConfig->getModulesToActivate();
         if ($modulesToActivate) {
             $serviceCaller = new ServiceCaller();
             $serviceCaller->setParameter('modulestoactivate', $modulesToActivate);
-            $serviceCaller->callService('ModuleInstaller', 1);
+            $serviceCaller->callService('ModuleInstaller', $shopId);
         }
     }
 
