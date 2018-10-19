@@ -13,7 +13,16 @@ require_once TEST_LIBRARY_PATH .'Deprecated.php';
 
 define('OXID_PHP_UNIT', true);
 
-$sTestFilePath = strtolower(end($_SERVER['argv']));
+$arguments = array_reverse($_SERVER['argv']);
+$sTestFilePath = implode(",", $_SERVER['argv']);
+foreach ($arguments as $oneArgument) {
+    if (file_exists($oneArgument)) {
+        $sTestFilePath = $oneArgument;
+        break;
+    }
+}
+
+$sTestFilePath = strtolower($sTestFilePath);
 $sTestType = 'unit';
 foreach (array('acceptance', 'selenium', 'javascript') as $search) {
     if (strpos($sTestFilePath, $search) !== false) {
