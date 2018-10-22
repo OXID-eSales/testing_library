@@ -33,6 +33,11 @@ class Cache
             $oReverseProxy->setFlush();
             $oReverseProxy->execute();
         }
+        if (class_exists('\OxidEsales\EshopEnterprise\Core\Cache\ReverseProxy\ReverseProxyBackend')) {
+            $oReverseProxy = oxNew(\OxidEsales\EshopEnterprise\Core\Cache\ReverseProxy\ReverseProxyBackend::class);
+            $oReverseProxy->setFlush();
+            $oReverseProxy->execute();
+        }
     }
 
     /**
