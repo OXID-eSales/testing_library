@@ -362,6 +362,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function switchCurrency($currency)
     {
+        $this->waitForItemAppear("//p[@id='currencyTrigger']/a");
         $this->click("//p[@id='currencyTrigger']/a");
         $this->waitForItemAppear("currencies");
         $this->clickAndWait("//ul[@id='currencies']//*[text()='$currency']");
