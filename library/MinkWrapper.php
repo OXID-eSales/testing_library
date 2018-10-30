@@ -65,6 +65,7 @@ abstract class MinkWrapper extends BaseTestCase
     public static function stopMinkSession()
     {
         if (self::isMinkSessionStarted()) {
+            self::$minkSession->reset();
             self::$minkSession->stop();
         }
     }
