@@ -21,7 +21,7 @@ use ReflectionClass;
 abstract class AcceptanceTestCase extends MinkWrapper
 {
     /** @var int How many times to retry after server error. */
-    protected $retryTimes = null;
+    protected $retryTimes = 0;
 
     /** @var bool Whether to start mink session before test run. New tests can start session in runtime. */
     protected $_blStartMinkSession = false;
