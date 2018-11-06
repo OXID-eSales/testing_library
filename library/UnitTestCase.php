@@ -18,6 +18,7 @@ use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorer
 
 use oxTestModules;
 use oxTestsStaticCleaner;
+use PHPUnit\Framework\MockObject\MockBuilder;
 use PHPUnit\Framework\TestResult;
 use ReflectionClass;
 use Exception;
@@ -577,7 +578,7 @@ abstract class UnitTestCase extends BaseTestCase
      *
      * @param $className
      *
-     * @return mixed
+     * @return MockBuilder
      */
     public function getMockBuilder($className)
     {
