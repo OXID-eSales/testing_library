@@ -264,6 +264,8 @@ class ShopInstaller implements ShopServiceInterface
               ('dbcfca66eed01fd43963443d35b109e0', 1, 'isOeVarnishModuleReverseProxyActive',  'bool', 0x07),
               ('dbcfca66eed01fd43963443d35b109c1', 1, 'blReverseProxyActive',  'bool', 0x07);"
         );
+
+        $this->setUpVarnishEventListener();
     }
 
     /**
@@ -398,5 +400,25 @@ class ShopInstaller implements ShopServiceInterface
         }
 
         return $input;
+    }
+
+    /**
+     * TODO: remove as soon as module installation is ready for service yaml file handling.
+     *
+     * Sets up shop before running test case.
+     * Does not use setUpBeforeClass to keep this method non-static.
+     *
+     * @param string $testSuitePath
+     */
+    protected function setUpVarnishEventListener()
+    {
+        $source = OX_BASE_PATH . 'modules' . DIRECTORY_SEPARATOR . 'oe' . DIRECTORY_SEPARATOR . 'varnish' .
+                  DIRECTORY_SEPARATOR . 'project.yaml';
+        $target = OX_BASE_PATH . 'project.yaml';
+
+        if (!file_exists($target)) {
+            $fileCopier = new \OxidEsales\TestingLibrary\FileCopier();
+            $fileCopier->copyFiles($source, $target, true);
+        }
     }
 }
