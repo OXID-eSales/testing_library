@@ -1910,6 +1910,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     {
         if ($this->shouldMakeScreenShot($exception)) {
             $screenShotMessage = $this->_getScreenShot();
+            $screenShotMessage .= "\n" . $this->formExceptionMessage($exception);
             return new Exception($screenShotMessage, 0, $exception);
         }
 
