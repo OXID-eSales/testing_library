@@ -21,7 +21,7 @@ use ReflectionClass;
 abstract class AcceptanceTestCase extends MinkWrapper
 {
     /** @var int How many times to retry after server error. */
-    protected $retryTimes = 0;
+    protected $retryTimes = null;
 
     /** @var bool Whether to start mink session before test run. New tests can start session in runtime. */
     protected $_blStartMinkSession = false;
@@ -1910,7 +1910,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     {
         if ($this->shouldMakeScreenShot($exception)) {
             $screenShotMessage = $this->_getScreenShot();
-            $screenShotMessage .= "\n" . $this->formExceptionMessage($exception);
+            $screenShotMessage .= "\n" . $exception->getMessage();
             return new Exception($screenShotMessage, 0, $exception);
         }
 
