@@ -364,6 +364,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function switchCurrency($currency)
     {
+        $this->waitForItemAppear("//p[@id='currencyTrigger']/a");
         $this->click("//p[@id='currencyTrigger']/a");
         $this->waitForItemAppear("currencies");
         $this->clickAndWait("//ul[@id='currencies']//*[text()='$currency']");
@@ -529,10 +530,12 @@ abstract class AcceptanceTestCase extends MinkWrapper
     public function selectVariant($elementId, $elementNr, $itemValue, $sSelectedCombination = '')
     {
         if (!$this->isVisible("//div[@id='$elementId']/div[$elementNr]//ul")) {
-            $this->click("//div[@id='$elementId']/div[$elementNr]//p");
+            $this->clickAndWait("//div[@id='$elementId']/div[$elementNr]//p", 5);
         }
 
-        $this->click("//div[@id='$elementId']/div[$elementNr]//ul//a[text()='$itemValue']");
+        $locator = "//div[@id='$elementId']/div[$elementNr]//ul//a[text()='$itemValue']";
+        $this->waitForElement($locator);
+        $this->clickAndWait($locator, 5);
 
         if ($sSelectedCombination) {
             $this->waitForText("%SELECTED_COMBINATION%: $sSelectedCombination");
@@ -988,12 +991,13 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @param string $sUrl
      * @param string $sId
+     * @param bool   $checkIfLoading
      */
-    public function openWindow($sUrl, $sId)
+    public function openWindow($sUrl, $sId, $checkIfLoading = false)
     {
         parent::openWindow($sUrl, $sId);
         $this->selectWindow($sId);
-        $this->waitForPageToLoad(10000);
+        $this->waitForPageToLoad(10000, $checkIfLoading);
     }
 
     /**
@@ -1477,6 +1481,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
         if (!$this->waitForElementText($value, $locator, 10)) {
             $this->fail($message);
         }
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -1737,14 +1742,14 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * Calls ModuleInstaller Service and activates all given modules in shop before tests are run.
      */
-    public function activateModules()
+    public function activateModules($shopId = 1)
     {
         $testConfig = $this->getTestConfig();
         $modulesToActivate = $testConfig->getModulesToActivate();
         if ($modulesToActivate) {
             $serviceCaller = new ServiceCaller();
             $serviceCaller->setParameter('modulestoactivate', $modulesToActivate);
-            $serviceCaller->callService('ModuleInstaller', 1);
+            $serviceCaller->callService('ModuleInstaller', $shopId);
         }
     }
 
@@ -1904,6 +1909,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     {
         if ($this->shouldMakeScreenShot($exception)) {
             $screenShotMessage = $this->_getScreenShot();
+            $screenShotMessage .= "\n" . $exception->getMessage();
             return new Exception($screenShotMessage, 0, $exception);
         }
 

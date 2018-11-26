@@ -28,6 +28,11 @@ class Cache
      */
     public function clearReverseProxyCache()
     {
+        if (class_exists('\OxidEsales\VarnishModule\ReverseProxy\ReverseProxyBackend')) {
+            $oReverseProxy = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\VarnishModule\ReverseProxy\ReverseProxyBackend::class);
+            $oReverseProxy->setFlush();
+            $oReverseProxy->execute();
+        }
         if (class_exists('\OxidEsales\EshopEnterprise\Core\Cache\ReverseProxy\ReverseProxyBackend')) {
             $oReverseProxy = oxNew(\OxidEsales\EshopEnterprise\Core\Cache\ReverseProxy\ReverseProxyBackend::class);
             $oReverseProxy->setFlush();

@@ -50,7 +50,12 @@ class ModuleLoader
         }
 
         // Reset reverse proxy backend as module activation sets it to flush mode.
-        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Cache\ReverseProxy\ReverseProxyBackend::class, null);
+        if (class_exists(\OxidEsales\Eshop\Core\Cache\ReverseProxy\ReverseProxyBackend::class, false)) {
+            \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Cache\ReverseProxy\ReverseProxyBackend::class, null);
+        }
+        if (class_exists(\OxidEsales\VarnishModule\ReverseProxy\ReverseProxyBackend::class)) {
+            \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\VarnishModule\ReverseProxy\ReverseProxyBackend::class, null);
+        }
     }
 
     /**
