@@ -95,7 +95,6 @@ class ModuleLoader
             }
         }
         $baseClass = new \OxidEsales\Eshop\Core\Base();
-        $baseClass->setConfig(null);
         $baseClass->setSession(null);
         $baseClass->setUser(null);
         $baseClass->setAdminMode(null);
