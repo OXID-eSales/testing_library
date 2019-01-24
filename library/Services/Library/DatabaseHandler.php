@@ -41,7 +41,7 @@ class DatabaseHandler
                ':host=' . $this->getDbHost() .
                (empty($this->getDbPort()) ? '' : ';port=' . $this->getDbPort());
 
-        try{
+        try {
             $this->dbConnection = new PDO(
                 $dsn,
                 $this->getDbUser(),
@@ -276,11 +276,11 @@ class DatabaseHandler
      */
     protected function executeCommand($command)
     {
+
         try {
             CliExecutor::executeCommand($command);
         } catch (Exception $e) {
-            sleep(1);
-            CliExecutor::executeCommand($command);
+            exit($e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL);
         }
     }
 
