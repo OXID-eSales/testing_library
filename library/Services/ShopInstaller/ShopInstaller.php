@@ -81,10 +81,6 @@ class ShopInstaller implements ShopServiceInterface
             $this->insertDemoData();
         }
 
-        if ($request->getParameter('international', false)) {
-            $this->convertToInternational();
-        }
-
         $this->setConfigurationParameters();
 
         $this->setSerialNumber($serialNumber);
@@ -157,14 +153,6 @@ class ShopInstaller implements ShopServiceInterface
         $testConfig = new TestConfig();
         $testDirectory = $testConfig->getEditionTestsPath($testConfig->getShopEdition());
         $this->getDbHandler()->import($testDirectory . "/Fixtures/testdemodata.sql");
-    }
-
-    /**
-     * Convert shop to international.
-     */
-    public function convertToInternational()
-    {
-        $this->getDbHandler()->import($this->getEditionPathProvider()->getDatabaseSqlDirectory() . "/en.sql", 'latin1');
     }
 
     /**
