@@ -93,8 +93,9 @@ class ExceptionLogFileHelperTest extends \PHPUnit\Framework\TestCase
         $actualExceptionMessage = '';
         $exceptionThrown = false;
         try {
-            // We do not want the E_WARNING issued by file_get_contrents to break or test
-            $originalErrorReportingLevel = error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED ^ E_WARNING);
+            // We do not want the E_WARNING issued by file_get_contents to break our test
+            $originalErrorReportingLevel = error_reporting();
+            error_reporting($originalErrorReportingLevel & ~E_WARNING);
             $exceptionLogFileHelper->clearExceptionLogFile();
         } catch (\OxidEsales\Eshop\Core\Exception\StandardException $actualException) {
             $actualExceptionMessage = $actualException->getMessage();

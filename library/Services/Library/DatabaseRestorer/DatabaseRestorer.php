@@ -121,7 +121,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
         $data = $this->getDumpData();
 
         $this->executeQuery("TRUNCATE TABLE `$table`");
-        if ($data[$table]["_sql_"]) {
+        if (isset($data[$table]["_sql_"])) {
             $this->executeQuery($data[$table]["_sql_"]);
         }
     }
