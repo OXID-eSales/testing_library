@@ -577,9 +577,9 @@ abstract class UnitTestCase extends BaseTestCase
      *
      * @param $className
      *
-     * @return mixed
+     * @return \PHPUnit\Framework\MockObject\MockBuilder
      */
-    public function getMockBuilder($className)
+    public function getMockBuilder($className): \PHPUnit\Framework\MockObject\MockBuilder
     {
         // TODO: remove this condition when namespaces will be implemented fully.
         if (strpos($className, '\\') === false) {
