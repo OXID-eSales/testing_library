@@ -20,7 +20,7 @@
         "oxid-esales/oxideshop-facts": "^2.0.0",
         "oxid-esales/oxideshop-unified-namespace-generator": "^1.0.0",
         "codeception/codeception": "^2.3",
-        "oxid-esales/codeception-module": "dev-b-6.1",
+        "oxid-esales/codeception-module": "dev-b-1.x",
         "oxid-esales/codeception-page-object": "dev-master"
     },
     "bin": [
