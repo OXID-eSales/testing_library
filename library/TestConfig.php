@@ -477,9 +477,9 @@ class TestConfig
             $currentSuite = getenv('TEST_SUITE');
             if (!$currentSuite) {
                 $testSuites = $this->getTestSuites();
-                $testFilePath = realpath(end($_SERVER['argv']));
+                $testFilePath = implode(",", $_SERVER['argv']);
                 foreach ($testSuites as $suite) {
-                    if (strpos($testFilePath, realpath($suite)) === 0) {
+                    if (strpos($testFilePath, realpath($suite)) !== false) {
                         $currentSuite = $suite;
                         break;
                     }
