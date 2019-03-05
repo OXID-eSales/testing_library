@@ -347,6 +347,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function switchLanguage($language)
     {
+        $this->waitForItemAppear("//p[@id='languageTrigger']/a");
         $this->click("languageTrigger");
         $this->waitForItemAppear("languages");
         $this->clickAndWait("//ul[@id='languages']//li/a/span[text()='" . $language . "']");
@@ -360,6 +361,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function switchCurrency($currency)
     {
+        $this->waitForItemAppear("//p[@id='currencyTrigger']/a");
         $this->click("//p[@id='currencyTrigger']/a");
         $this->waitForItemAppear("currencies");
         $this->clickAndWait("//ul[@id='currencies']//*[text()='$currency']");
