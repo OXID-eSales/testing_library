@@ -267,12 +267,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
             $this->clearTemp();
         }
 
-        try {
-            $this->open($sUrl);
-        } catch (Exception $e) {
-            usleep(500000);
-            $this->open($sUrl);
-        }
+        $this->open($sUrl);
         $this->checkForErrors();
     }
 
