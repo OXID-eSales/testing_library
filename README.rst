@@ -323,8 +323,7 @@ Rest of the methods can be found in class: ``OxidEsales\TestingLibrary\UnitTestC
 Writing acceptance tests
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Currently for acceptance testing Mink library and selenium 1 or goutte
-drivers are used.
+Currently for acceptance testing Mink library and selenium driver is used.
 
 **Note:**
 
