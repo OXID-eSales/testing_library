@@ -132,6 +132,7 @@ abstract class UnitTestCase extends BaseTestCase
 
         $this->setShopId(null);
         $this->setAdminMode(false);
+        \OxidEsales\Eshop\Core\UtilsObject::resetModuleVars();
     }
 
     /**
