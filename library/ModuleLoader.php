@@ -53,7 +53,7 @@ class ModuleLoader
         if (class_exists(\OxidEsales\Eshop\Core\Cache\ReverseProxy\ReverseProxyBackend::class, false)) {
             \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Cache\ReverseProxy\ReverseProxyBackend::class, null);
         }
-        if (class_exists(\OxidEsales\VarnishModule\ReverseProxy\ReverseProxyBackend::class)) {
+        if (class_exists(\OxidEsales\VarnishModule\ReverseProxy\ReverseProxyBackend::class, false)) {
             \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\VarnishModule\ReverseProxy\ReverseProxyBackend::class, null);
         }
     }
