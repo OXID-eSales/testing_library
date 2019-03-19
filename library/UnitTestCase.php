@@ -145,7 +145,6 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function run(TestResult $result = null)
     {
-        $this->removeBlacklistedClassesFromCodeCoverage($result);
         $result = parent::run($result);
 
         oxTestModules::cleanUp();
@@ -999,23 +998,6 @@ abstract class UnitTestCase extends BaseTestCase
     {
         $oDbRestore = self::_getDbRestore();
         $oDbRestore->dumpDB();
-    }
-
-    /**
-     * Removes blacklisted classes from code coverage report, as this is only fixed in PHPUnit 4.0.
-     *
-     * @param TestResult $result
-     */
-    private function removeBlacklistedClassesFromCodeCoverage($result)
-    {
-        if ($result->getCollectCodeCoverageInformation()) {
-            $oCoverage = $result->getCodeCoverage();
-            $oFilter = $oCoverage->filter();
-            $aBlacklist = $oFilter->getBlacklist();
-            foreach ($aBlacklist as $sFile) {
-                $oFilter->removeFileFromWhitelist($sFile);
-            }
-        }
     }
 
     /**
