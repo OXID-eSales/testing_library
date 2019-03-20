@@ -488,13 +488,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
             $sLink = "Display cart";
         }
 
-        if ($this->currentMinkDriver === "goutte") {
-            $link = $this->getElement("//div[@id='basketFlyout']//a[text()='" . $sLink . "']");
-            $link->click();
-        } else {
-            $this->click("//div[@id='miniBasket']/img");
-            $this->clickAndWait("//div[@id='basketFlyout']//a[text()='" . $sLink . "']");
-        }
+        $this->click("//div[@id='miniBasket']/img");
+        $this->clickAndWait("//div[@id='basketFlyout']//a[text()='" . $sLink . "']");
     }
 
     /**
@@ -1352,9 +1347,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
     public function assertElementPresent($sLocator, $sMessage = '')
     {
         $sLocator = $this->translate($sLocator);
-        if ($this->currentMinkDriver !== 'goutte') {
-            $this->_waitForAppear('isElementPresent', $sLocator, 5, true);
-        }
+        $this->_waitForAppear('isElementPresent', $sLocator, 5, true);
+
         $isElementPresent = $this->isElementPresent($sLocator);
 
         $sFailMessage = "Element $sLocator was not found! " . $sMessage;

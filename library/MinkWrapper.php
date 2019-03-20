@@ -45,7 +45,7 @@ abstract class MinkWrapper extends BaseTestCase
 
     /**
      * Starts Mink session.
-     * Currently supported drivers: selenium, selenium2, goutte, sahi, zombie.
+     * Currently supported drivers: selenium.
      *
      * @param string $driver
      */

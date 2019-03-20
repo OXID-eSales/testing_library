@@ -6,19 +6,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v6.0.0] - 2018-09-17
 
-## Changed
- - Removes goutte driver for acceptance tests
+### Changed
+ - Backwards compatibility break: Removes goutte driver for acceptance tests
  - Removes unnecessary exception translation in AcceptanceTestCase
  - Updates Symfony yaml component to version ~3
- - Changes PHP Unit classes to namespaced versions
- - Fixes static calls in UnitTestCase
- - Updated phpunit dependency to version 6
- - \OxidEsales\TestingLibrary\AcceptanceTestCase::onNotSuccessfulTest(): Fixed method signature for phpunit 6
- - \OxidEsales\TestingLibrary\UnitTestCase::getMock(): Simulated the getMock() method that is deprecated from
- phpunit Version 5
- - Updated phpunit dependency to version 5 
+ - Backwards compatibility break: Updated phpunit dependency to version 6
+   - Changes PHP Unit classes to namespaced versions
+   - \OxidEsales\TestingLibrary\Printer methods use namespaced phpunit classes as arguments
+   - \OxidEsales\TestingLibrary\UnitTestCase::getSession() and getConfig() not static any more.    
+   - Calls to prior methods of PHPUnit_Framework_TestCase (base class of \OxidEsales\TestingLibrary\UnitTestCase) not possible any more. An example is \OxidEsales\TestingLibrary\UnitTestCase::setExpectedException(). Use \OxidEsales\TestingLibrary\UnitTestCase::expectException() for this example instead. Please have a look at the changelog of phpunit version 5 and 6 for other changes.
+   - \OxidEsales\TestingLibrary\AcceptanceTestCase::onNotSuccessfulTest(): Fixed method signature for phpunit 6 
  - PHP 7.2 support
  - Added screenshots for selenium functionality
+ 
+### Deprecated
+ - \OxidEsales\TestingLibrary\UnitTestCase::getMock(): Simulated the getMock() method that is deprecated from phpunit Version 5  
 
 ## [v5.0.4] - 2018-10-05
 
