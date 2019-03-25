@@ -126,9 +126,6 @@ abstract class UnitTestCase extends BaseTestCase
         \OxidEsales\Eshop\Core\Registry::getUtils()->cleanStaticCache();
         \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\TableViewNameGenerator::class, null);
 
-        $reportingLevel = (int) getenv('TRAVIS_ERROR_LEVEL');
-        error_reporting($reportingLevel ? $reportingLevel : ((E_ALL ^ E_NOTICE) | E_STRICT));
-
         $this->dbQueryBuffer = array();
 
         $this->setShopId(null);
@@ -145,9 +142,13 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function run(TestResult $result = null)
     {
+        $originalErrorReportingLevel = error_reporting();
+        error_reporting($originalErrorReportingLevel & ~E_NOTICE);
         $result = parent::run($result);
+        error_reporting($originalErrorReportingLevel);
 
         oxTestModules::cleanUp();
+
         return $result;
     }
 
@@ -578,9 +579,9 @@ abstract class UnitTestCase extends BaseTestCase
      *
      * @param $className
      *
-     * @return MockBuilder
+     * @return \PHPUnit\Framework\MockObject\MockBuilder
      */
-    public function getMockBuilder($className)
+    public function getMockBuilder($className): \PHPUnit\Framework\MockObject\MockBuilder
     {
         // TODO: remove this condition when namespaces will be implemented fully.
         if (strpos($className, '\\') === false) {

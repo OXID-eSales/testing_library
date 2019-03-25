@@ -173,91 +173,92 @@ class oxTestModules
      */
     public static function addFunction($class, $fncName, $func)
     {
-        $class = strtolower($class);
-        $name = self::_getNextName($class);
+        $originalErrorReportingLevel = error_reporting();
+        error_reporting($originalErrorReportingLevel & ~E_NOTICE);
 
-        if (is_array(self::$_addedmods[$class]) && $cnt = count(self::$_addedmods[$class])) {
-            $last = self::$_addedmods[$class][$cnt - 1];
-        } else {
-            $last = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsObject::class)->getClassName(strtolower($class));
-        }
-        if (preg_match('/^{.*}$/ms', $func)) {
-            $sCode = "\$aA = func_get_args(); " . trim($func, '{}');
-        } else {
-            if (preg_match('/^[a-z0-9_-]*$/i', trim($func))) {
-                $func = "'$func'";
-            }
-            $sCode = " \$arg = func_get_args(); return call_user_func_array($func, \$arg);";
-        }
+        try {
+            $class = strtolower($class);
+            $name = self::_getNextName($class);
 
-        if (!getenv('TRAVIS_ERROR_LEVEL')) {
-            $iErrorReportinc = error_reporting(E_ALL ^ E_NOTICE);
-        }
-
-        $aFncParams = array();
-        if (strpos($fncName, '(') !== false) {
-            $aMatches = null;
-            preg_match("@(.*?)\((.*?)\)$@", trim($fncName), $aMatches);
-
-            $fncName = trim($aMatches[1]);
-            if (trim($aMatches[2])) {
-                $aFncParams = explode(',', $aMatches[2]);
+            if (is_array(self::$_addedmods[$class]) && $cnt = count(self::$_addedmods[$class])) {
+                $last = self::$_addedmods[$class][$cnt - 1];
             } else {
-                $aFncParams = array();
+                $last = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsObject::class)->getClassName(strtolower($class));
             }
-        }
-
-        if (method_exists($last, $fncName)) {
-            $oReflection = new ReflectionClass($last);
-            $aMethodParams = $oReflection->getMethod($fncName)->getParameters();
-
-            $fncName .= '(';
-            $blFirst = true;
-            foreach ($aMethodParams AS $iKey => $oParam) {
-
-                if (!$blFirst) {
-                    $fncName .= ', ';
-                } else {
-                    $blFirst = false;
+            if (preg_match('/^{.*}$/ms', $func)) {
+                $sCode = "\$aA = func_get_args(); " . trim($func, '{}');
+            } else {
+                if (preg_match('/^[a-z0-9_-]*$/i', trim($func))) {
+                    $func = "'$func'";
                 }
+                $sCode = " \$arg = func_get_args(); return call_user_func_array($func, \$arg);";
+            }
 
-                if (isset($aFncParams[$iKey])) {
-                    $fncName .= $aFncParams[$iKey];
+            $aFncParams = array();
+            if (strpos($fncName, '(') !== false) {
+                $aMatches = null;
+                preg_match("@(.*?)\((.*?)\)$@", trim($fncName), $aMatches);
 
-                    if (strpos($aFncParams[$iKey], '=') === false && $oParam->isDefaultValueAvailable()) {
-                        $fncName .= ' = ' . var_export($oParam->getDefaultValue(), true);
+                $fncName = trim($aMatches[1]);
+                if (trim($aMatches[2])) {
+                    $aFncParams = explode(',', $aMatches[2]);
+                } else {
+                    $aFncParams = array();
+                }
+            }
+
+            if (method_exists($last, $fncName)) {
+                $oReflection = new ReflectionClass($last);
+                $aMethodParams = $oReflection->getMethod($fncName)->getParameters();
+
+                $fncName .= '(';
+                $blFirst = true;
+                foreach ($aMethodParams AS $iKey => $oParam) {
+
+                    if (!$blFirst) {
+                        $fncName .= ', ';
+                    } else {
+                        $blFirst = false;
                     }
 
-                    continue;
-                }
+                    if (isset($aFncParams[$iKey])) {
+                        $fncName .= $aFncParams[$iKey];
 
-                if ($oParam->getClass()) {
-                    $fncName .= $oParam->getClass()->getName() . ' ';
+                        if (strpos($aFncParams[$iKey], '=') === false && $oParam->isDefaultValueAvailable()) {
+                            $fncName .= ' = ' . var_export($oParam->getDefaultValue(), true);
+                        }
+
+                        continue;
+                    }
+
+                    if ($oParam->getClass()) {
+                        $fncName .= $oParam->getClass()->getName() . ' ';
+                    }
+                    $fncName .= '$' . $oParam->getName();
+                    if ($oParam->isDefaultValueAvailable()) {
+                        $fncName .= ' = ' . var_export($oParam->getDefaultValue(), true);
+                    }
                 }
-                $fncName .= '$' . $oParam->getName();
-                if ($oParam->isDefaultValueAvailable()) {
-                    $fncName .= ' = ' . var_export($oParam->getDefaultValue(), true);
-                }
-            }
-            $fncName .= ')';
-        } else {
-            if (empty($aFncParams)) {
-                $fncName .= '($p1=null, $p2=null, $p3=null, $p4=null, $p5=null, $p6=null, $p7=null, $p8=null, $p9=null, $p10=null)';
+                $fncName .= ')';
             } else {
-                $fncName .= '(' . implode(', ', $aFncParams) . ')';
+                if (empty($aFncParams)) {
+                    $fncName .= '($p1=null, $p2=null, $p3=null, $p4=null, $p5=null, $p6=null, $p7=null, $p8=null, $p9=null, $p10=null)';
+                } else {
+                    $fncName .= '(' . implode(', ', $aFncParams) . ')';
+                }
             }
+
+            eval ("class $name extends $last { function $fncName { $sCode }}");
+            oxAddClassModule($name, $class);
+
+            self::$_addedmods[$class][] = $name;
+
+            return $name;
+        } catch (\Throwable $throwable) {
+            throw $throwable;
+        } finally {
+            error_reporting($originalErrorReportingLevel);
         }
-
-        eval ("class $name extends $last { function $fncName { $sCode }}");
-        oxAddClassModule($name, $class);
-
-        if (!getenv('TRAVIS_ERROR_LEVEL')) {
-            error_reporting($iErrorReportinc);
-        }
-
-        self::$_addedmods[$class][] = $name;
-
-        return $name;
     }
 
     /**
