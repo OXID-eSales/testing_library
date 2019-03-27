@@ -23,6 +23,9 @@ class DatabaseHandler
     /** @var PDO Database connection. */
     private $dbConnection;
 
+    /** @var DatabaseDefaultsFileGenerator */
+    private $databaseDefaultsFileGenerator;
+
     /**
      * Initiates class dependencies.
      *
@@ -33,6 +36,7 @@ class DatabaseHandler
     public function __construct($configFile)
     {
         $this->configFile = $configFile;
+        $this->databaseDefaultsFileGenerator = new DatabaseDefaultsFileGenerator($configFile);
         if (!extension_loaded('pdo_mysql')) {
             throw new \Exception("the php pdo_mysql extension is not installed!\n");
         }
@@ -63,12 +67,18 @@ class DatabaseHandler
      */
     public function import($sqlFile, $charsetMode = null)
     {
-        if (file_exists($sqlFile)) {
-            $charsetMode = $charsetMode ? $charsetMode : $this->getCharsetMode();
-            $this->executeCommand($this->getImportCommand($sqlFile, $charsetMode));
-        } else {
+        if (!file_exists($sqlFile)) {
             throw new Exception("File '$sqlFile' was not found.");
         }
+
+        $credentialsFile = $this->databaseDefaultsFileGenerator->generate();
+        $charsetMode = $charsetMode ? $charsetMode : $this->getCharsetMode();
+        $command = 'mysql --defaults-file=' . $credentialsFile;
+        $command .= ' --default-character-set=' . $charsetMode;
+        $command .= ' ' .escapeshellarg($this->getDbName());
+        $command .= ' < ' . escapeshellarg($sqlFile) . ' 2>&1';
+        $this->executeCommand($command);
+        unset($credentialsFile);
     }
 
     /**
@@ -77,7 +87,16 @@ class DatabaseHandler
      */
     public function export($sqlFile, $tables)
     {
-        $this->executeCommand($this->getExportCommand($sqlFile, $tables));
+        $credentialsFile = $this->databaseDefaultsFileGenerator->generate();
+        $command = 'mysqldump --defaults-file=' . $credentialsFile;
+        if (!empty($tables)) {
+            array_map('escapeshellarg', $tables);
+            $tables = ' ' . implode($tables);
+        }
+        $command .= ' ' . escapeshellarg($this->getDbName()) . $tables;
+        $command .= ' > ' . escapeshellarg($sqlFile);
+        $this->executeCommand($command);
+        unset($credentialsFile);
     }
 
     /**
@@ -217,54 +236,6 @@ class DatabaseHandler
     public function getDbConnection()
     {
         return $this->dbConnection;
-    }
-
-    /**
-     * Returns CLI import command, execute sql from given file
-     *
-     * @param string $fileName    SQL File name to import.
-     * @param string $charsetMode Charset of imported file.
-     *
-     * @return string
-     */
-    protected function getImportCommand($fileName, $charsetMode)
-    {
-        $command = 'mysql -h' . escapeshellarg($this->getDbHost());
-        $command .= ' -u' . escapeshellarg($this->getDbUser());
-        if ($password = $this->getDbPassword()) {
-            $command .= ' -p' . escapeshellarg($password);
-        }
-        $command .= ' --default-character-set=' . $charsetMode;
-        $command .= ' ' .escapeshellarg($this->getDbName());
-        $command .= ' < ' . escapeshellarg($fileName) . ' 2>&1';
-
-        return $command;
-    }
-
-    /**
-     * Returns CLI command for db export to given file name
-     *
-     * @param string $fileName file name
-     * @param array  $tables   Tables to export
-     *
-     * @return string
-     */
-    protected function getExportCommand($fileName, $tables = null)
-    {
-        $command = 'mysqldump';
-        $command .= ' -h' . escapeshellarg($this->getDbHost());
-        $command .= ' -u' . escapeshellarg($this->getDbUser());
-        if ($password = $this->getDbPassword()) {
-            $command .= ' -p' . escapeshellarg($password);
-        }
-        if (!empty($tables)) {
-            array_map('escapeshellarg', $tables);
-            $tables = ' ' . implode($tables);
-        }
-        $command .= ' ' . escapeshellarg($this->getDbName()) . $tables;
-        $command .= ' > ' . escapeshellarg($fileName);
-
-        return $command;
     }
 
     /**
