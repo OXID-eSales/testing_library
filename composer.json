@@ -6,6 +6,7 @@
     "homepage": "https://www.oxid-esales.com/en/home.html",
     "license": "GPL-3.0-only",
     "require": {
+        "php": "^7.0",
         "phpunit/phpunit": "~6",
         "pdepend/pdepend": "2.5.0",
         "mikey179/vfsstream": "~1.4.0",
