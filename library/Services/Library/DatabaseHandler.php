@@ -76,9 +76,9 @@ class DatabaseHandler
         $command = 'mysql --defaults-file=' . $credentialsFile;
         $command .= ' --default-character-set=' . $charsetMode;
         $command .= ' ' .escapeshellarg($this->getDbName());
-        $command .= ' < ' . escapeshellarg($sqlFile) . ' 2>&1';
+        $command .= ' < ' . escapeshellarg($sqlFile);
         $this->executeCommand($command);
-        unset($credentialsFile);
+        unlink($credentialsFile);
     }
 
     /**
@@ -96,7 +96,7 @@ class DatabaseHandler
         $command .= ' ' . escapeshellarg($this->getDbName()) . $tables;
         $command .= ' > ' . escapeshellarg($sqlFile);
         $this->executeCommand($command);
-        unset($credentialsFile);
+        unlink($credentialsFile);
     }
 
     /**

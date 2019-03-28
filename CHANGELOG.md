@@ -22,6 +22,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Deprecated
  - \OxidEsales\TestingLibrary\UnitTestCase::getMock(): Simulated the getMock() method that is deprecated from phpunit Version 5  
 
+## [v5.0.6] - 2019-03-28
+
+### Changed
+ - Remove database defaults file (.cnf) after it was used
+ - Do not silence shell output when mysql command is called
+
 ## [v5.0.5] - 2019-03-28
 
 ### Fixed
@@ -124,6 +130,8 @@ An example:
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
 
+[v5.0.6]: https://github.com/OXID-eSales/testing_library/compare/v5.0.5...v5.0.6
+[v5.0.5]: https://github.com/OXID-eSales/testing_library/compare/v5.0.4...v5.0.5
 [v5.0.4]: https://github.com/OXID-eSales/testing_library/compare/v5.0.3...v5.0.4
 [v5.0.3]: https://github.com/OXID-eSales/testing_library/compare/v5.0.2...v5.0.3
 [v5.0.2]: https://github.com/OXID-eSales/testing_library/compare/v5.0.1...v5.0.2

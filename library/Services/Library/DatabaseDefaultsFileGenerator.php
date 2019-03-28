@@ -28,7 +28,7 @@ class DatabaseDefaultsFileGenerator
      */
     public function generate(): string
     {
-        $file = tempnam(sys_get_temp_dir(), 'testing_lib') . '.cnf';
+        $file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('testing_lib', true) . '.cnf';
         $resource = fopen($file, 'w');
         $fileContents = "[client]"
             . "\nuser=" . $this->config->dbUser
