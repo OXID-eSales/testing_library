@@ -78,7 +78,7 @@ class DatabaseHandler
         $command .= ' ' .escapeshellarg($this->getDbName());
         $command .= ' < ' . escapeshellarg($sqlFile);
         $this->executeCommand($command);
-        unset($credentialsFile);
+        unlink($credentialsFile);
     }
 
     /**
@@ -96,7 +96,7 @@ class DatabaseHandler
         $command .= ' ' . escapeshellarg($this->getDbName()) . $tables;
         $command .= ' > ' . escapeshellarg($sqlFile);
         $this->executeCommand($command);
-        unset($credentialsFile);
+        unlink($credentialsFile);
     }
 
     /**
