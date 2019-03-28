@@ -7,14 +7,16 @@
 use org\bovigo\vfs\vfsStream;
 use OxidEsales\TestingLibrary\FileCopier;
 
-class oxFileCopierTest extends PHPUnit\Framework\TestCase
+class FileCopierTest extends PHPUnit\Framework\TestCase
 {
     public function testCopyLocalFile()
     {
         $expectedCommand = "cp -frT 'source' 'target'";
 
         /** @var FileCopier|PHPUnit\Framework\MockObject\MockObject $fileCopier */
-        $fileCopier = $this->getMock('\OxidEsales\TestingLibrary\FileCopier', array('executeCommand'));
+        $fileCopier = $this->getMockBuilder('\OxidEsales\TestingLibrary\FileCopier')
+            ->setMethods(['executeCommand'])
+            ->getMock();
         $fileCopier->expects($this->once())->method('executeCommand')->with($this->equalTo($expectedCommand));
 
         $fileCopier->copyFiles('source', 'target');
@@ -25,7 +27,9 @@ class oxFileCopierTest extends PHPUnit\Framework\TestCase
         $expectedCommand = "cp -frT 'source' 'target' && chmod 777 'target'";
 
         /** @var FileCopier|PHPUnit\Framework\MockObject\MockObject $fileCopier */
-        $fileCopier = $this->getMock('\OxidEsales\TestingLibrary\FileCopier', array('executeCommand'));
+        $fileCopier = $this->getMockBuilder('\OxidEsales\TestingLibrary\FileCopier')
+            ->setMethods(['executeCommand'])
+            ->getMock();
         $fileCopier->expects($this->once())->method('executeCommand')->with($this->equalTo($expectedCommand));
 
         $fileCopier->copyFiles('source', 'target', true);
@@ -36,7 +40,9 @@ class oxFileCopierTest extends PHPUnit\Framework\TestCase
         $expectedCommand = "scp -rp 'source' 'user@host:/target'";
 
         /** @var FileCopier|PHPUnit\Framework\MockObject\MockObject $fileCopier */
-        $fileCopier = $this->getMock('\OxidEsales\TestingLibrary\FileCopier', array('executeCommand'));
+        $fileCopier = $this->getMockBuilder('\OxidEsales\TestingLibrary\FileCopier')
+            ->setMethods(['executeCommand'])
+            ->getMock();
         $fileCopier->expects($this->once())->method('executeCommand')->with($this->equalTo($expectedCommand));
 
         $fileCopier->copyFiles('source', 'user@host:/target');
@@ -47,7 +53,9 @@ class oxFileCopierTest extends PHPUnit\Framework\TestCase
         $expectedCommand = "rsync -rp --perms --chmod=u+rwx,g+rwx,o+rwx 'source' 'user@host:/target'";
 
         /** @var FileCopier|PHPUnit\Framework\MockObject\MockObject $fileCopier */
-        $fileCopier = $this->getMock('\OxidEsales\TestingLibrary\FileCopier', array('executeCommand'));
+        $fileCopier = $this->getMockBuilder('\OxidEsales\TestingLibrary\FileCopier')
+            ->setMethods(array('executeCommand'))
+            ->getMock();
         $fileCopier->expects($this->once())->method('executeCommand')->with($this->equalTo($expectedCommand));
 
         $fileCopier->copyFiles('source', 'user@host:/target', true);

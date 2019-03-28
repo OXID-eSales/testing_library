@@ -6,7 +6,7 @@
 
 use OxidEsales\TestingLibrary\VfsStreamWrapper;
 
-class oxVfsStreamWrapperTest extends PHPUnit\Framework\TestCase
+class VfsStreamWrapperTest extends PHPUnit\Framework\TestCase
 {
     public function testCreationOfRoot()
     {

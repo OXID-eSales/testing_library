@@ -13,13 +13,17 @@ class ServiceFactoryTest extends PHPUnit\Framework\TestCase
 {
     public function testThrowingExceptionWhenServiceNotFound()
     {
+        $this->expectException('Exception');
         $message = "Service 'TestService' was not found!";
-        $this->setExpectedException('Exception', $message);
+        $this->expectExceptionMessage($message);
 
         vfsStream::setup('root', 777, array('bootstrap.php' => ''));
 
         /** @var ServiceConfig|PHPUnit\Framework\MockObject\MockObject $config */
-        $config = $this->getMock('OxidEsales\TestingLibrary\Services\Library\ServiceConfig', array('getServicesDirectory', 'getShopDirectory'), [], '', false);
+        $config = $this->getMockBuilder(OxidEsales\TestingLibrary\Services\Library\ServiceConfig::class)
+        ->setMethods(['getServicesDirectory', 'getShopDirectory'])
+            ->disableOriginalConstructor()
+        ->getMock();
         $config->expects($this->any())->method('getServicesDirectory')->will($this->returnValue(vfsStream::url('root')));
         $config->expects($this->any())->method('getShopDirectory')->will($this->returnValue(vfsStream::url('root')));
 

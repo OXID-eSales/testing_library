@@ -6,9 +6,10 @@
     "homepage": "https://www.oxid-esales.com/en/home.html",
     "license": "GPL-3.0-only",
     "require": {
+        "php": "^7.0",
         "phpunit/phpunit": "~6",
         "pdepend/pdepend": "2.5.0",
-        "mikey179/vfsStream": "~1.4.0",
+        "mikey179/vfsstream": "~1.4.0",
         "behat/mink": "~1.5.0",
         "oxid-esales/mink-selenium-driver": "~v1.1.2",
         "symfony/yaml": "~3.0",

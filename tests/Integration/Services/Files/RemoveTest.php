@@ -9,9 +9,8 @@ namespace OxidEsales\TestingLibrary\Tests\Integration\Services\Files;
 use OxidEsales\TestingLibrary\Services\Files\Remove;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
-use PHPUnit\Framework\TestCase;
 
-class RemoveTest extends PHPUnit\Framework\TestCase
+class RemoveTest extends \OxidEsales\TestingLibrary\UnitTestCase
 {
     public function testRemoveWhenNoFilesProvided()
     {

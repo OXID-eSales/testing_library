@@ -18,7 +18,7 @@ class DatabaseDefaultsFileGenerator
     /**
      * @param ConfigFile $config
      */
-    public function __construct($config)
+    public function __construct(ConfigFile $config)
     {
         $this->config = $config;
     }
@@ -26,7 +26,7 @@ class DatabaseDefaultsFileGenerator
     /**
      * @return string File path.
      */
-    public function generate()
+    public function generate(): string
     {
         $file = tempnam(sys_get_temp_dir(), 'testing_lib') . '.cnf';
         $resource = fopen($file, 'w');
