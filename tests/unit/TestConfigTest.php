@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  * @package OxidEsales\TestingLibrary\Unit
  * @covers \OxidEsales\TestingLibrary\TestConfig
  */
-class TestConfigTest extends PHPUnit\Framework\TestCase
+class TestConfigTest extends TestCase
 {
 
     /**
@@ -25,15 +25,12 @@ class TestConfigTest extends PHPUnit\Framework\TestCase
     {
         $this->buildModuleStructureWithTwoModules();
 
-        $testConfig = $this->getMock(
-            '\OxidEsales\TestingLibrary\TestConfig',
-            [
-                'shouldRunModuleTests',
-                'getPartialModulePaths',
-                'getShopPath'
+        $testConfig = $this->getMockBuilder('\OxidEsales\TestingLibrary\TestConfig')->setMethods([
+            'shouldRunModuleTests',
+            'getPartialModulePaths',
+            'getShopPath'
 
-            ]
-        );
+        ])->getMock();
         $testConfig->expects($this->any())->method('shouldRunModuleTests')->will($this->returnValue(true));
         $testConfig->expects($this->any())->method('getPartialModulePaths')->will(
             $this->returnValue(

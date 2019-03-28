@@ -6,7 +6,7 @@
 
 use OxidEsales\TestingLibrary\Services\Library\DatabaseDefaultsFileGenerator;
 
-class DatabaseDefaultsFileGeneratorTest extends \PHPUnit_Framework_TestCase
+class DatabaseDefaultsFileGeneratorTest extends \OxidEsales\TestingLibrary\UnitTestCase
 {
     public function testFileGeneration()
     {
@@ -15,7 +15,10 @@ class DatabaseDefaultsFileGeneratorTest extends \PHPUnit_Framework_TestCase
         $host = 'testHost';
         $port = '1111';
 
-        $configFile = $this->getMockBuilder('ConfigFile')->getMock();
+        $configFile = $this->getMockBuilder('OxidEsales\Eshop\Core\ConfigFile')
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->getMock();
         $configFile->dbUser = $user;
         $configFile->dbPwd = $password;
         $configFile->dbHost = $host;

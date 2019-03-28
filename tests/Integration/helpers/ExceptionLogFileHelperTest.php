@@ -20,10 +20,10 @@ class ExceptionLogFileHelperTest extends \PHPUnit\Framework\TestCase
      */
     public function testConstructorThrowsExpectedExceptionOnWrongParameters($constructorParameters)
     {
-        $this->setExpectedException(
-            \OxidEsales\Eshop\Core\Exception\StandardException::class,
-            'Constructor parameter $exceptionLogFile must be a non empty string'
+        $this->expectException(
+            \OxidEsales\Eshop\Core\Exception\StandardException::class
         );
+        $this->expectExceptionMessage('Constructor parameter $exceptionLogFile must be a non empty string');
         new \OxidEsales\TestingLibrary\helpers\ExceptionLogFileHelper($constructorParameters);
     }
 

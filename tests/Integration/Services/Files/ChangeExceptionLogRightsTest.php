@@ -11,12 +11,12 @@ use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use PHPUnit\Framework\TestCase;
 
-class ChangeExceptionLogRightsTest extends PHPUnit\Framework\TestCase
+class ChangeExceptionLogRightsTest extends TestCase
 {
     public function testLogIsWritableForAllUsersWhenFileExist()
     {
         $rootPath = FilesHelper::prepareStructureAndReturnPath(['log' => ['oxid.log' => 'content']]);
-        $pathToExceptionLog = "$rootPath/log/oxid.log";
+        $pathToExceptionLog = "$rootPath/log/oxideshop.log";
         chmod($pathToExceptionLog, 0111);
 
         $this->assertFalse(is_writable($pathToExceptionLog));
@@ -31,7 +31,7 @@ class ChangeExceptionLogRightsTest extends PHPUnit\Framework\TestCase
     public function testCreateWhenFileDoesNotExist()
     {
         $rootPath = FilesHelper::prepareStructureAndReturnPath(['log' => []]);
-        $pathToExceptionLog = "$rootPath/log/oxid.log";
+        $pathToExceptionLog = "$rootPath/log/oxideshop.log";
 
         $this->assertFalse(file_exists($pathToExceptionLog));
 
