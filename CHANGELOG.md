@@ -22,6 +22,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Deprecated
  - \OxidEsales\TestingLibrary\UnitTestCase::getMock(): Simulated the getMock() method that is deprecated from phpunit Version 5  
 
+## [v5.0.5] - 2019-03-28
+
+### Fixed
+ - Warnings when using MySQL 5.7
+
 ## [v5.0.4] - 2018-10-05
 
 ### Changed
