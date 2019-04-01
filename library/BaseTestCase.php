@@ -168,4 +168,17 @@ abstract class BaseTestCase extends TestCase
             $this->fail('Test failed with ' . OX_LOG_FILE . ' entry:' . $exceptionLogEntries);
         }
     }
+
+    /**
+     * Test helper
+     */
+    protected function clearProxyCache()
+    {
+        if (class_exists('\OxidEsales\NginxModule\Cache\Backend', false)) {
+            $invalidatorRuleSet = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\NginxModule\Cache\InvalidatorRuleSet::class);
+            $invalidatorRuleSet->addRule(oxNew(\OxidEsales\NginxModule\Cache\InvalidatorRule\All::class, 'flush'));
+            $cache = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\NginxModule\Cache\Backend::class);
+            $cache->execute();
+        }
+    }
 }
