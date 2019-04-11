@@ -22,6 +22,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Deprecated
  - \OxidEsales\TestingLibrary\UnitTestCase::getMock(): Simulated the getMock() method that is deprecated from phpunit Version 5  
 
+## [v5.0.7] - No released
+
+### Fixed
+ - AcceptanceTestCase::assertElementText() was not doing any assertions
+
 ## [v5.0.6] - 2019-03-28
 
 ### Changed
