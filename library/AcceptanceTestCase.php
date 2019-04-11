@@ -1478,6 +1478,9 @@ abstract class AcceptanceTestCase extends MinkWrapper
         if (!$this->waitForElementText($value, $locator, 10)) {
             $this->fail($message);
         }
+
+        $element = $this->getElement($locator);
+        $this->assertEquals($value, $element->getText(), $message);
     }
 
     /**
