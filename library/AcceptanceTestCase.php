@@ -12,6 +12,7 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\IncompleteTest;
 use PHPUnit\Framework\SkippedTest;
+use PHPUnit\Util\Filter;
 use ReflectionClass;
 
 /**
@@ -1895,8 +1896,13 @@ abstract class AcceptanceTestCase extends MinkWrapper
     protected function createScreenShot($exception)
     {
         if ($this->shouldMakeScreenShot($exception)) {
-            $screenShotMessage = $this->_getScreenShot();
-            return new Exception($screenShotMessage, 0, $exception);
+            $trace = Filter::getFilteredStacktrace($exception, false);
+            $errorMessage = $this->_getScreenShot();
+            $errorMessage .= $exception->getMessage();
+            $errorMessage .= "\nSelected Frame: '" . $this->getSelectedFrame() . "'";
+            $errorMessage .= "\n\n" . $this->_formTrace($trace);
+            $errorMessage .= $this->getExceptionLogMessage();
+            return new Exception($errorMessage);
         }
 
         return $exception;
@@ -1940,8 +1946,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
             } else {
                 return '';
             }
-        } catch (\Selenium\Exception $e) {
-            return $e->getMessage();
+        } catch (Exception $e) {
+            return 'Exception occurred while making screenshot with message- "' . $e->getMessage() . '"';
         }
     }
 
