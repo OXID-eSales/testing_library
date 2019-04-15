@@ -250,9 +250,17 @@ class ShopInstaller implements ShopServiceInterface
             "INSERT INTO oxconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue) VALUES
               ('35863f223f91930177693956aafe69e6', 1, 'iLayoutCacheLifeTime', 'str', 0xB00FB55D),
               ('dbcfca66eed01fd43963443d35b109e0', 1, 'isOeVarnishModuleReverseProxyActive',  'bool', 0x07),
-              ('dbcfca66eed01fd43963443d35b109c1', 1, 'blReverseProxyActive',  'bool', 0x07),
-              ('x1xfca66eed01fd43963443d35b109c1', 1, 'blOnModuleEventDoNotFlushCache',  'bool', 0x07);"
+              ('dbcfca66eed01fd43963443d35b109c1', 1, 'blReverseProxyActive',  'bool', 0x07);"
         );
+
+        if (class_exists('\OxidEsales\VarnishModule\ReverseProxy\ReverseProxyBackend', false)
+            || class_exists('\OxidEsales\NginxModule\Cache\Backend', false)
+        ) {
+            $dbHandler->query(
+                "INSERT INTO oxconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue) VALUES
+              ('x1xfca66eed01fd43963443d35b109c1', 1, 'blOnModuleEventDoNotFlushCache',  'bool', 0x07);"
+            );
+        }
     }
 
     /**
