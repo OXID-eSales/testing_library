@@ -11,8 +11,11 @@ use modOxUtilsDate;
 
 use oxDatabaseHelper;
 use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Module\ModuleVariablesLocator;
+use OxidEsales\Eshop\Core\UtilsObject;
 use OxidEsales\EshopCommunity\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\EshopCommunity\Core\Database;
+use OxidEsales\TestingLibrary\Helper\SessionHelper;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
 
@@ -130,7 +133,7 @@ abstract class UnitTestCase extends BaseTestCase
 
         $this->setShopId(null);
         $this->setAdminMode(false);
-        \OxidEsales\Eshop\Core\UtilsObject::resetModuleVars();
+        UtilsObject::resetModuleVars();
     }
 
     /**
@@ -186,8 +189,9 @@ abstract class UnitTestCase extends BaseTestCase
             $this->getShopStateBackup()->resetRequestVariables();
             $this->getShopStateBackup()->resetRegistry();
 
-            \OxidEsales\Eshop\Core\UtilsObject::resetClassInstances();
-            \OxidEsales\Eshop\Core\UtilsObject::resetModuleVars();
+            UtilsObject::resetClassInstances();
+            ModuleVariablesLocator::resetModuleVariables();
+            SessionHelper::resetStaticPropertiesToDefaults();
 
             parent::tearDown();
         }
@@ -587,7 +591,7 @@ abstract class UnitTestCase extends BaseTestCase
         if (strpos($className, '\\') === false) {
             $className = strtolower($className);
         }
-        $editionClassName = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsObject::class)->getClassName($className);
+        $editionClassName = \OxidEsales\Eshop\Core\Registry::get(UtilsObject::class)->getClassName($className);
 
         return parent::getMockBuilder($editionClassName);
 
@@ -678,7 +682,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function getProxyClassName($superClassName)
     {
-        $superClassName = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsObject::class)->getClassName(strtolower($superClassName));
+        $superClassName = \OxidEsales\Eshop\Core\Registry::get(UtilsObject::class)->getClassName(strtolower($superClassName));
         $escapedSuperClassName = str_replace('\\', '_', $superClassName);
         $proxyClassName = "{$escapedSuperClassName}Proxy";
 
@@ -819,7 +823,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function addClassExtension($extension, $class)
     {
-        $utilsObject = new \OxidEsales\Eshop\Core\UtilsObject();
+        $utilsObject = new UtilsObject();
         $extensions = $utilsObject->getModuleVar("aModules");
 
         \OxidEsales\Eshop\Core\Registry::set($class, null);
@@ -839,7 +843,7 @@ abstract class UnitTestCase extends BaseTestCase
     {
         \OxidEsales\Eshop\Core\Registry::set($class, null);
 
-        $utilsObject = new \OxidEsales\Eshop\Core\UtilsObject();
+        $utilsObject = new UtilsObject();
         $extensions = $utilsObject->getModuleVar("aModules");
 
         if (!$extensions) {
