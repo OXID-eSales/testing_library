@@ -415,6 +415,16 @@ Library API
 - ``\OxidEsales\TestingLibrary\ServiceCaller``
 - ``OxidEsales\TestingLibrary\Services`` called via ``\OxidEsales\TestingLibrary\ServiceCaller``
 
+Testing library branching model
+-------------------------------
+
+Testing library branching model follows OXID eShop components branching model. Which means that branch names
+does not follow testing library version numbers, but represents OXID eShop compilation. For example branch:
+
+- b-6.1.x - latest OXID eShop compilation v6.1.*
+- b-6.x - Upcoming OXID eShop compilation next minor version - v6.*
+- master - Upcoming OXID eShop compilation major version
+
 Tests running workflow
 ----------------------
 
