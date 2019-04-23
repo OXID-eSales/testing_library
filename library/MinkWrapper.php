@@ -137,7 +137,12 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function open($sUrl)
     {
-        $this->getMinkSession()->visit($sUrl);
+        try {
+            $this->getMinkSession()->visit($sUrl);
+        } catch (\Selenium\Exception $exception) {
+            sleep(1);
+            $this->getMinkSession()->visit($sUrl);
+        }
     }
 
     /**
@@ -240,6 +245,7 @@ abstract class MinkWrapper extends BaseTestCase
         try {
             $this->getElementLazy($sSelector)->click();
         } catch (ElementException $e) {
+            sleep(1);
             $this->getElementLazy($sSelector)->click();
         }
     }
@@ -255,6 +261,7 @@ abstract class MinkWrapper extends BaseTestCase
         try {
             $this->getElementLazy($sSelector)->setValue($sText);
         } catch (ElementException $e) {
+            sleep(1);
             $this->getElementLazy($sSelector)->setValue($sText);
         }
     }
@@ -469,7 +476,7 @@ abstract class MinkWrapper extends BaseTestCase
         try {
             $sText = $oElement->getText();
         } catch (Exception $e) {
-            usleep(500000);
+            sleep(1);
             $sText = $oElement->getText();
         }
         return $sText;
@@ -490,6 +497,7 @@ abstract class MinkWrapper extends BaseTestCase
         try {
             $sType = $element->getAttribute('type');
         } catch (InvalidArgumentException $e) {
+            sleep(1);
             $sType = $element->getAttribute('type');
         }
         if ($sType == 'checkbox') {
@@ -582,7 +590,7 @@ abstract class MinkWrapper extends BaseTestCase
         try {
             $sSource = $this->getMinkSession()->getPage()->getContent();
         } catch (Exception $e) {
-            usleep(500000);
+            sleep(1);
             $sSource = $this->getMinkSession()->getPage()->getContent();
         }
         return $sSource;
@@ -775,6 +783,7 @@ abstract class MinkWrapper extends BaseTestCase
         try {
             return $this->getMinkSession()->getDriver()->getBrowser()->typeKeys($locator, $value);
         } catch (\Selenium\Exception $e) {
+            sleep(1);
             return $this->getMinkSession()->getDriver()->getBrowser()->typeKeys($locator, $value);
         }
     }
