@@ -135,6 +135,18 @@ abstract class AcceptanceTestCase extends MinkWrapper
         if ($this->isMinkSessionStarted()) {
             $this->clearCookies();
         }
+
+
+        \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->forceSlaveConnection();
+        $status = \OxidEsales\Eshop\Core\DatabaseProvider::getDb(\OxidEsales\Eshop\Core\DatabaseProvider::FETCH_MODE_ASSOC)->select('SHOW SLAVE STATUS');
+
+        if ($status != false && $status->count() > 0) {
+            $result = $status->fetchAll();
+            if($result[0]['Slave_SQL_Running_State'] !== 'Slave has read all relay log; waiting for more updates') {
+                sleep(1);
+            }
+        }
+        \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->forceMasterConnection();
     }
 
     /**

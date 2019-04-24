@@ -26,6 +26,9 @@ class DatabaseHandler
     /** @var DatabaseDefaultsFileGenerator */
     private $databaseDefaultsFileGenerator;
 
+    /** @var PDO Slave Database connection. */
+    private $slaveConnection;
+
     /**
      * Initiates class dependencies.
      *
@@ -54,6 +57,23 @@ class DatabaseHandler
             );
         } catch (\PDOException $exception) {
             throw new \Exception("Could not connect to '{$this->getDbHost()}' with user '{$this->getDbUser()}'\n");
+        }
+
+        if ($this->getSlaveHosts()) {
+            try {
+                $dbPort = $this->getDbPort();
+                $dsn = 'mysql' .
+                    ':host=' . $this->getSlaveHosts()[0] .
+                    (empty($this->getDbPort()) ? '' : ';port=' . $dbPort);
+                $this->slaveConnection = new PDO(
+                    $dsn,
+                    $this->getDbUser(),
+                    $this->getDbPassword(),
+                    array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8')
+                );
+            } catch (\PDOException $exception) {
+                throw new \Exception("Could not connect to '{$this->getDbHost()}' with user '{$this->getDbUser()}'\n");
+            }
         }
     }
 
@@ -229,6 +249,14 @@ class DatabaseHandler
     }
 
     /**
+     * @return array
+     */
+    public function getSlaveHosts()
+    {
+        return $this->configFile->aSlaveHosts;
+    }
+
+    /**
      * Returns database resource
      *
      * @return PDO
@@ -236,6 +264,14 @@ class DatabaseHandler
     public function getDbConnection()
     {
         return $this->dbConnection;
+    }
+
+    /**
+     * @return PDO
+     */
+    public function getSlaveConnection()
+    {
+        return $this->slaveConnection;
     }
 
     /**
