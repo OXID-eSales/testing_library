@@ -1738,11 +1738,13 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $modulesToActivate = $testConfig->getModulesToActivate();
         if ($modulesToActivate) {
             foreach ($modulesToActivate as $moduleToActivate) {
+                $this->clearTemp();
                 $serviceCaller = new ServiceCaller();
                 $serviceCaller->callService('ViewsGenerator');
                 $serviceCaller->setParameter('modulestoactivate', [$moduleToActivate]);
                 $serviceCaller->callService('ModuleInstaller', $shopId);
                 $serviceCaller->callService('ViewsGenerator');
+                $this->clearTemp();
             }
         }
     }
