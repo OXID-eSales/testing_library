@@ -11,6 +11,7 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
+use OxidEsales\TestingLibrary\Services\Library\Cache;
 
 /**
  * Class for module installation.
