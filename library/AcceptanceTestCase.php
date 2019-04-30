@@ -566,7 +566,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $this->select("lng", "$language");
         $this->select("prf", "Standard");
         $this->clickAndWait("//input[@type='submit']");
-
+        $this->waitForFrameToLoad('navigation', 1000);
         $this->frame("navigation");
 
         if ($this->getTestConfig()->isSubShop() && !$forceMainShop) {
