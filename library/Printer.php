@@ -20,26 +20,17 @@ class Printer extends \PHPUnit\TextUI\ResultPrinter
     {
         if ((PHP_SAPI == 'cli')) {
             \fwrite(STDOUT, $buffer);
-
-            if ($this->autoFlush) {
-                $this->incrementalFlush();
-            }
         } elseif ($this->out) {
             \fwrite($this->out, $buffer);
-
-            if ($this->autoFlush) {
-                $this->incrementalFlush();
-            }
         } else {
             if (PHP_SAPI != 'cli' && PHP_SAPI != 'phpdbg') {
                 $buffer = \htmlspecialchars($buffer, ENT_SUBSTITUTE);
             }
 
             print $buffer;
-
-            if ($this->autoFlush) {
-                $this->incrementalFlush();
-            }
+        }
+        if ($this->autoFlush) {
+            $this->incrementalFlush();
         }
     }
 

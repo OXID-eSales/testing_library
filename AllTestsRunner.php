@@ -6,8 +6,6 @@
 
 use PHPUnit\Framework\TestCase;
 
-echo "=========\nrunning php version " . phpversion() . "\n\n============\n";
-
 /**
  * This class is used as a base class to run all CE|PE|EE edition tests.
  */
@@ -50,7 +48,8 @@ class AllTestsRunner extends TestCase
                 continue;
             }
 
-            echo "Adding unit tests from $sFilesSelector\n";
+            $printer = new \OxidEsales\TestingLibrary\Printer();
+            $printer->write( "Adding unit tests from $sFilesSelector\n");
 
             $aTestFiles = array_diff($aTestFiles, static::$priorityTests);
             $oSuite = static::_addFilesToSuite($oSuite, $aTestFiles);
