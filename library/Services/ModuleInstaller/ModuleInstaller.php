@@ -39,8 +39,10 @@ class ModuleInstaller implements ShopServiceInterface
 
         $this->prepareModulesForActivation($moduleDirectory);
         foreach ($modulesToActivate as $modulePath) {
+            $this->clearShopTmpFolder();
             $this->installModule($modulePath);
         }
+        $this->clearShopTmpFolder();
     }
 
     public function switchToShop($shopId)
@@ -112,5 +114,14 @@ class ModuleInstaller implements ShopServiceInterface
             throw new Exception("Module not found");
         }
         return $module;
+    }
+
+    /**
+     * Test helper to clean tmp folder.
+     */
+    private function clearShopTmpFolder()
+    {
+        $cache = new Cache();
+        $cache->clearTemporaryDirectory();
     }
 }
