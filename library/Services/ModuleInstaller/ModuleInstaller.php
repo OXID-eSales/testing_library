@@ -11,7 +11,6 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
-use OxidEsales\TestingLibrary\Services\Library\Cache;
 
 /**
  * Class for module installation.
@@ -31,44 +30,13 @@ class ModuleInstaller implements ShopServiceInterface
      */
     public function init($request)
     {
-        if ($shopId = $request->getParameter('shp')) {
-            $this->switchToShop($shopId);
-        }
-
         $modulesToActivate = $request->getParameter("modulestoactivate");
         $moduleDirectory = \OxidEsales\Eshop\Core\Registry::getConfig()->getModulesDir();
 
         $this->prepareModulesForActivation($moduleDirectory);
         foreach ($modulesToActivate as $modulePath) {
-            $this->clearShopTmpFolder();
             $this->installModule($modulePath);
         }
-        $this->clearShopTmpFolder();
-    }
-
-    public function switchToShop($shopId)
-    {
-        $_POST['shp'] = $shopId;
-        $_POST['actshop'] = $shopId;
-        $keepThese = [\OxidEsales\Eshop\Core\ConfigFile::class];
-        $registryKeys = Registry::getKeys();
-        foreach ($registryKeys as $key) {
-            if (in_array($key, $keepThese)) {
-                continue;
-            }
-            Registry::set($key, null);
-        }
-        $utilsObject = new \OxidEsales\Eshop\Core\UtilsObject;
-        $utilsObject->resetInstanceCache();
-        Registry::set(\OxidEsales\Eshop\Core\UtilsObject::class, $utilsObject);
-        \OxidEsales\Eshop\Core\Module\ModuleVariablesLocator::resetModuleVariables();
-        Registry::getSession()->setVariable('shp', $shopId);
-        Registry::set(\OxidEsales\Eshop\Core\Config::class, null);
-        Registry::getConfig()->setConfig(null);
-        Registry::set(\OxidEsales\Eshop\Core\Config::class, null);
-        $moduleVariablesCache = new \OxidEsales\Eshop\Core\FileCache();
-        $shopIdCalculator = new \OxidEsales\Eshop\Core\ShopIdCalculator($moduleVariablesCache);
-        return  $shopIdCalculator->getShopId();
     }
 
     /**
@@ -115,14 +83,5 @@ class ModuleInstaller implements ShopServiceInterface
             throw new Exception("Module not found");
         }
         return $module;
-    }
-
-    /**
-     * Test helper to clean tmp folder.
-     */
-    private function clearShopTmpFolder()
-    {
-        $cache = new Cache();
-        $cache->clearTemporaryDirectory();
     }
 }
