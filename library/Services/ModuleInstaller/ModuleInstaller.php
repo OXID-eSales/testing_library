@@ -30,6 +30,10 @@ class ModuleInstaller implements ShopServiceInterface
      */
     public function init($request)
     {
+        if ($shopId = $request->getParameter('shp')) {
+            $this->switchToShop($shopId);
+        }
+
         $modulesToActivate = $request->getParameter("modulestoactivate");
         $moduleDirectory = \OxidEsales\Eshop\Core\Registry::getConfig()->getModulesDir();
 
@@ -37,6 +41,31 @@ class ModuleInstaller implements ShopServiceInterface
         foreach ($modulesToActivate as $modulePath) {
             $this->installModule($modulePath);
         }
+    }
+
+    public function switchToShop($shopId)
+    {
+        $_POST['shp'] = $shopId;
+        $_POST['actshop'] = $shopId;
+        $keepThese = [\OxidEsales\Eshop\Core\ConfigFile::class];
+        $registryKeys = Registry::getKeys();
+        foreach ($registryKeys as $key) {
+            if (in_array($key, $keepThese)) {
+                continue;
+            }
+            Registry::set($key, null);
+        }
+        $utilsObject = new \OxidEsales\Eshop\Core\UtilsObject;
+        $utilsObject->resetInstanceCache();
+        Registry::set(\OxidEsales\Eshop\Core\UtilsObject::class, $utilsObject);
+        \OxidEsales\Eshop\Core\Module\ModuleVariablesLocator::resetModuleVariables();
+        Registry::getSession()->setVariable('shp', $shopId);
+        Registry::set(\OxidEsales\Eshop\Core\Config::class, null);
+        Registry::getConfig()->setConfig(null);
+        Registry::set(\OxidEsales\Eshop\Core\Config::class, null);
+        $moduleVariablesCache = new \OxidEsales\Eshop\Core\FileCache();
+        $shopIdCalculator = new \OxidEsales\Eshop\Core\ShopIdCalculator($moduleVariablesCache);
+        return  $shopIdCalculator->getShopId();
     }
 
     /**
