@@ -30,7 +30,7 @@ class ModuleInstaller implements ShopServiceInterface
      */
     public function init($request)
     {
-        if ($shopId = $request->getParameter('shp')) {
+        if (($shopId = $request->getParameter('shp')) && (1 < $shopId)) {
             $this->switchToShop($shopId);
         }
 
