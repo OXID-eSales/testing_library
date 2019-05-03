@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v6.0.1] - Not released
 
+### Added
+ - Extend Cache::clearReverseProxyCache() method to also clear cache for Nginx and Varnish module.  
+
 ### Changed
  - Improved message when making screenshot
+ - Switch to subshop when activating a module for subshop.
 
 ## [v6.0.0] - 2018-09-17
 
