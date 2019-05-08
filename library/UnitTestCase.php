@@ -178,6 +178,9 @@ abstract class UnitTestCase extends BaseTestCase
         }
 
         if ($this->getResult() === null) {
+
+            $this->ensureNoPhpSession();
+
             $this->cleanUpDatabase();
 
             oxTestsStaticCleaner::clean('oxUtilsObject', '_aInstanceCache');
@@ -1047,5 +1050,17 @@ abstract class UnitTestCase extends BaseTestCase
         $databaseHelper = new oxDatabaseHelper(DatabaseProvider::getDb());
 
         return $databaseHelper->existsView($tableName);
+    }
+
+    /**
+     * Test helper to destroy PHP session.
+     * Some test might have started the session, so best
+     * ensure PHP session is destroyed on test tear down.
+     */
+    protected function ensureNoPhpSession()
+    {
+        if ((PHP_SESSION_ACTIVE == session_status()) && session_id()) {
+            session_destroy();
+        }
     }
 }
