@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
  - Improved message when making screenshot
  - Switch to subshop when activating a module for subshop.
+ - Destroy PHP session at test tear down.
+ - Use Printer::write() rather than print or echo for test result output.   
 
 ## [v6.0.0] - 2018-09-17
 
