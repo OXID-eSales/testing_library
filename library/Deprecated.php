@@ -420,7 +420,7 @@ abstract class modOXID
     {
         // cleaning up core info
         $oConfig = new \OxidEsales\Eshop\Core\Base();
-        $oConfig->setSession(null);
+        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Session::class, null);
         $oConfig->setUser(null);
         $oConfig->setAdminMode(null);
 

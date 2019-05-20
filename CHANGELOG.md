@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - Destroy PHP session at test tear down.
  - Use Printer::write() rather than print or echo for test result output.   
 
+### Removed
+  - Removed deprecated getSession and setSession usages around the code
+
 ## [v6.0.0] - 2018-09-17
 
 ### Changed
