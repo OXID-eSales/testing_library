@@ -6,6 +6,8 @@
 
 namespace OxidEsales\TestingLibrary\Services\ProjectConfiguration;
 
+use OxidEsales\TestingLibrary\Helper\ProjectConfigurationHelper;
+use OxidEsales\TestingLibrary\Services\Library\Exception\FileNotFoundException;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use OxidEsales\TestingLibrary\Services\Library\ProjectConfigurationHandler;
@@ -23,8 +25,9 @@ class ProjectConfiguration implements ShopServiceInterface
      *
      * @param ServiceConfig $config
      */
-    public function __construct($config){
-        $this->projectConfiguration = new ProjectConfigurationHandler();
+    public function __construct($config)
+    {
+        $this->projectConfiguration = new ProjectConfigurationHandler(new ProjectConfigurationHelper());
     }
 
     /**
@@ -32,8 +35,8 @@ class ProjectConfiguration implements ShopServiceInterface
      *
      * @param Request $request
      */
-    public function init($request){
-
+    public function init($request)
+    {
         if ($request->getParameter('backup')) {
             $this->projectConfiguration->backup();
         }
@@ -41,6 +44,11 @@ class ProjectConfiguration implements ShopServiceInterface
         if ($request->getParameter('restore')) {
             $this->projectConfiguration->restore();
         }
+
+        if ($request->getParameter('cleanup')) {
+            try {
+                $this->projectConfiguration->cleanup();
+            } catch (FileNotFoundException $exception) {}
+        }
     }
 }
-

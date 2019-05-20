@@ -15,10 +15,12 @@ use OxidEsales\Eshop\Core\Module\ModuleVariablesLocator;
 use OxidEsales\Eshop\Core\UtilsObject;
 use OxidEsales\EshopCommunity\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\EshopCommunity\Core\Database;
+use OxidEsales\TestingLibrary\Helper\ProjectConfigurationHelper;
 use OxidEsales\TestingLibrary\Helper\SessionHelper;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
 
+use OxidEsales\TestingLibrary\Services\Library\ProjectConfigurationHandler;
 use oxTestModules;
 use oxTestsStaticCleaner;
 use PHPUnit\Framework\TestResult;
@@ -106,6 +108,7 @@ abstract class UnitTestCase extends BaseTestCase
 
         if ($testConfig->shouldRestoreAfterUnitTests()) {
             $this->backupDatabase();
+            self::getProjectConfigurationHandler()->backup();
         }
 
         \OxidEsales\Eshop\Core\Registry::getUtils()->commitFileCache();
@@ -209,6 +212,7 @@ abstract class UnitTestCase extends BaseTestCase
         if ($testConfig->shouldRestoreAfterUnitTests()) {
             $dbRestore = self::_getDbRestore();
             $dbRestore->restoreDB();
+            self::getProjectConfigurationHandler()->restore();
             \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->closeConnection();
         }
     }
@@ -1061,5 +1065,13 @@ abstract class UnitTestCase extends BaseTestCase
         if ((PHP_SESSION_ACTIVE == session_status()) && session_id()) {
             session_destroy();
         }
+    }
+
+    /**
+     * @return ProjectConfigurationHandler
+     */
+    private static function getProjectConfigurationHandler(): ProjectConfigurationHandler
+    {
+        return new ProjectConfigurationHandler(new ProjectConfigurationHelper());
     }
 }

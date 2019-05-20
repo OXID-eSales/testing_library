@@ -6,7 +6,6 @@
 
 namespace OxidEsales\TestingLibrary\Bootstrap;
 
-use OxidEsales\TestingLibrary\Helper\ProjectConfigurationHelper;
 use OxidEsales\TestingLibrary\TestConfig;
 use OxidEsales\TestingLibrary\FileCopier;
 use OxidEsales\TestingLibrary\ServiceCaller;
@@ -41,8 +40,6 @@ abstract class BootstrapBase
 
         if ($testConfig->shouldRestoreShopAfterTestsSuite()) {
             $this->registerResetDbAfterSuite();
-            $this->registerResetoreProjectConfigurationAfterSuite();
-
         }
 
         if ($testConfig->shouldInstallShop()) {
@@ -57,6 +54,12 @@ abstract class BootstrapBase
         $config->setConfig($config);
 
         $config->init();
+
+        register_shutdown_function(function () {
+            $serviceCaller = new ServiceCaller($this->getTestConfig());
+            $serviceCaller->setParameter('cleanup', true);
+            $serviceCaller->callService('ProjectConfiguration');
+        });
     }
 
     /**
@@ -159,30 +162,6 @@ abstract class BootstrapBase
     }
 
     /**
-     * Backup and restore orginial project configuration yml file
-     * after the tests suite.
-     */
-    protected function registerResetoreProjectConfigurationAfterSuite()
-    {
-        $serviceCaller = new ServiceCaller($this->getTestConfig());
-        $serviceCaller->setParameter('backup',true);
-
-        try {
-            $serviceCaller->callService('ProjectConfiguration');
-        } catch (\Exception $e) {
-            define('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR', true);
-        }
-
-        register_shutdown_function(function () {
-            if (!defined('RESTORE_SHOP_AFTER_TEST_SUITE_ERROR')) {
-                $serviceCaller = new ServiceCaller();
-                $serviceCaller->setParameter('restore', true);
-                $serviceCaller->callService('projectConfiguration');
-            }
-        });
-    }
-
-    /**
      * Cleans exception log.
      */
     private function cleanUpExceptionLogFile()
@@ -202,5 +181,4 @@ abstract class BootstrapBase
 
         return new ExceptionLogFileHelper($exceptionLogPath);
     }
-
 }

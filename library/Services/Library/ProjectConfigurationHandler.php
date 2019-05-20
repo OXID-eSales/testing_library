@@ -6,62 +6,78 @@
 
 namespace OxidEsales\TestingLibrary\Services\Library;
 
-use OxidEsales\TestingLibrary\Helper\ProjectConfigurationHelper;
+use OxidEsales\TestingLibrary\Helper\ProjectConfigurationHelperInterface;
+use OxidEsales\TestingLibrary\Services\Library\Exception\FileNotFoundException;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
  */
 class ProjectConfigurationHandler
 {
+    const PROJECT_CONFIGURATION_FILE_NAME = 'project_configuration.yml';
+
+    const PROJECT_CONFIGURATION_BACKUP_FILE_NAME = 'project_configuration.yml.bak';
+
     /**
-     * @var string project configuration path
+     * @var ProjectConfigurationHelperInterface
      */
-    private $projectConfigurationDirectoryPath;
+    private $configurationHelper;
 
-    private $projectConfigurationOriginalFile = "project_configuration.yml";
-
-    private $projectConfigurationBackupFile = "project_configuration.yml.back";
-
-
-    public function __construct()
+    public function __construct(ProjectConfigurationHelperInterface $configurationHelper)
     {
-        $this->projectConfigurationDirectoryPath = (new ProjectConfigurationHelper())->getConfigurationDirectoryPath();
+        $this->configurationHelper = $configurationHelper;
     }
 
     /**
      * Backup project configuration.
+     * @throws FileNotFoundException
      */
     public function backup()
     {
-        if (file_exists($this->getOriginalFilePath())) {
-            file_put_contents($this->getBackupFilePath(), file_get_contents($this->getOriginalFilePath()));
+        if (!file_exists($this->getOriginalFilePath())) {
+            throw new FileNotFoundException('Unable to backup ' . $this->getOriginalFilePath() . 'file. It does not exist.');
         }
+        copy($this->getOriginalFilePath(), $this->getBackupFilePath());
     }
 
     /**
-     * Restore the configuration.
+     * Restore project configuration.
+     * @throws FileNotFoundException
      */
     public function restore()
     {
-        if (file_exists($this->getBackupFilePath())) {
-            file_put_contents($this->getOriginalFilePath(), file_get_contents($this->getBackupFilePath()));
-            unlink($this->getBackupFilePath());
+        if (!file_exists($this->getBackupFilePath())) {
+            throw new FileNotFoundException('Unable to restore ' . $this->getBackupFilePath() . 'file. It does not exist.');
         }
+        copy($this->getBackupFilePath(), $this->getOriginalFilePath());
     }
 
     /**
-     * @return Project Configuration original file path string
+     * Deletes project configuration backup file.
+     * @throws FileNotFoundException
+     */
+    public function cleanup()
+    {
+        if (!file_exists($this->getBackupFilePath())) {
+            throw new FileNotFoundException('Unable to delete ' . $this->getBackupFilePath() . 'file. It does not exist.');
+        }
+        unlink($this->getBackupFilePath());
+    }
+
+    /**
+     * @return string
      */
     private function getOriginalFilePath(): string
     {
-        return $this->projectConfigurationDirectoryPath . $this->projectConfigurationOriginalFile;
+        return Path::join($this->configurationHelper->getConfigurationDirectoryPath(), static::PROJECT_CONFIGURATION_FILE_NAME);
     }
 
     /**
-     * @return Project Configuration backup file path string
+     * @return string
      */
     private function getBackupFilePath(): string
     {
-        return $this->projectConfigurationDirectoryPath . $this->projectConfigurationBackupFile;
+        return Path::join($this->configurationHelper->getConfigurationDirectoryPath(), static::PROJECT_CONFIGURATION_BACKUP_FILE_NAME);
     }
 }
