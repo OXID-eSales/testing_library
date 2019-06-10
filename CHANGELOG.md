@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v6.0.1] - Not released
+## [v6.1.0] - Not released
 
 ### Added
  - Extend Cache::clearReverseProxyCache() method to also clear cache for Nginx and Varnish module.  
@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - Switch to subshop when activating a module for subshop.
  - Destroy PHP session at test tear down.
  - Use Printer::write() rather than print or echo for test result output.   
+ - Use direct /usr/bin/php instead of calling php through the /usr/bin/env [PR-16](https://github.com/OXID-eSales/testing_library/pull/16)
 
 ## [v6.0.0] - 2018-09-17
 
@@ -146,6 +147,8 @@ An example:
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
 
+[v6.1.0]: https://github.com/OXID-eSales/testing_library/compare/v6.0.1...master
+[v6.0.0]: https://github.com/OXID-eSales/testing_library/compare/v5.0.7...v6.0.0
 [v5.0.6]: https://github.com/OXID-eSales/testing_library/compare/v5.0.5...v5.0.6
 [v5.0.5]: https://github.com/OXID-eSales/testing_library/compare/v5.0.4...v5.0.5
 [v5.0.4]: https://github.com/OXID-eSales/testing_library/compare/v5.0.3...v5.0.4
