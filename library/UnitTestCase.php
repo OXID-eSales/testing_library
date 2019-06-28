@@ -48,7 +48,7 @@ abstract class UnitTestCase extends BaseTestCase
     private static $shopStateBackup;
 
     /** @var VfsStreamWrapper */
-    private static $vfsStreamWrapper;
+    private $vfsStreamWrapper;
 
     /** @var array MultiShop tables used in shop */
     private $multiShopTables = array(
@@ -776,11 +776,11 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function getVfsStreamWrapper()
     {
-        if (is_null(self::$vfsStreamWrapper)) {
-            self::$vfsStreamWrapper = new VfsStreamWrapper();
+        if ($this->vfsStreamWrapper === null) {
+            $this->vfsStreamWrapper = new VfsStreamWrapper();
         }
 
-        return self::$vfsStreamWrapper;
+        return $this->vfsStreamWrapper;
     }
 
     /**
