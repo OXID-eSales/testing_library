@@ -13,95 +13,122 @@ use Webmozart\PathUtil\Path;
 
 class ProjectConfigurationHandlerTest extends TestCase
 {
-    public function testFileBackup()
+    private $configurationDirectory;
+    private $configurationFileInSubDirectory;
+
+    protected function setUp()
     {
-        $projectConfigurationDirectoryPath = $this->makeVirtualProjectConfigurationDirectory();
-        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub($projectConfigurationDirectoryPath);
-
-        $handler = new ProjectConfigurationHandler($projectConfigurationHelperStub);
-        $handler->backup();
-
-        $this->assertFileExists(Path::join($projectConfigurationDirectoryPath, ProjectConfigurationHandler::PROJECT_CONFIGURATION_BACKUP_FILE_NAME));
+        parent::setUp();
+        $this->prepareVfsStructure();
     }
 
-    public function testFileBackupWhenItDoesNotExist()
+    public function testFileBackup()
     {
-        $this->expectException(FileNotFoundException::class);
+        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub();
 
-        $projectConfigurationDirectoryPath = $this->makeVirtualProjectConfigurationDirectory();
-        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub($projectConfigurationDirectoryPath);
-
-        unlink(Path::join($projectConfigurationDirectoryPath, ProjectConfigurationHandler::PROJECT_CONFIGURATION_FILE_NAME));
         $handler = new ProjectConfigurationHandler($projectConfigurationHelperStub);
         $handler->backup();
+
+        $this->assertFileExists($this->getBackupConfigurationFile());
+    }
+
+    public function testFolderBackupWithoutFile()
+    {
+        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub();
+
+        unlink($this->configurationFileInSubDirectory);
+        $handler = new ProjectConfigurationHandler($projectConfigurationHelperStub);
+        $handler->backup();
+
+        $this->assertDirectoryExists($this->getConfigurationBackupDirectory());
     }
 
     public function testFileRestoration()
     {
-        $projectConfigurationDirectoryPath = $this->makeVirtualProjectConfigurationDirectory();
-        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub($projectConfigurationDirectoryPath);
+        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub();
 
         $handler = new ProjectConfigurationHandler($projectConfigurationHelperStub);
         $handler->backup();
-        unlink(Path::join($projectConfigurationDirectoryPath, ProjectConfigurationHandler::PROJECT_CONFIGURATION_FILE_NAME));
+        unlink($this->configurationFileInSubDirectory);
         $handler->restore();
 
-        $this->assertFileExists(Path::join($projectConfigurationDirectoryPath, ProjectConfigurationHandler::PROJECT_CONFIGURATION_FILE_NAME));
+        $this->assertFileExists($this->getBackupConfigurationFile());
     }
 
-    public function testFileRestorationWhenItDoesNotExist()
+    public function testFolderRestorationWhenItDoesNotExist()
     {
         $this->expectException(FileNotFoundException::class);
 
-        $projectConfigurationDirectoryPath = $this->makeVirtualProjectConfigurationDirectory();
-        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub($projectConfigurationDirectoryPath);
+        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub();
 
         $handler = new ProjectConfigurationHandler($projectConfigurationHelperStub);
         $handler->restore();
     }
 
-    public function testFileCleanup()
+    public function testFolderCleanup()
     {
-        $projectConfigurationDirectoryPath = $this->makeVirtualProjectConfigurationDirectory();
-        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub($projectConfigurationDirectoryPath);
+        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub();
 
         $handler = new ProjectConfigurationHandler($projectConfigurationHelperStub);
         $handler->backup();
         $handler->cleanup();
 
-        $this->assertFileNotExists(Path::join($projectConfigurationDirectoryPath, ProjectConfigurationHandler::PROJECT_CONFIGURATION_BACKUP_FILE_NAME));
+        $this->assertFileNotExists($this->getBackupConfigurationFile());
     }
 
-    public function testFileCleanupWhenFileDoesNotExists()
+    public function testFolderCleanupWhenFileDoesNotExists()
     {
         $this->expectException(FileNotFoundException::class);
 
-        $projectConfigurationDirectoryPath = $this->makeVirtualProjectConfigurationDirectory();
-        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub($projectConfigurationDirectoryPath);
+        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub();
 
         $handler = new ProjectConfigurationHandler($projectConfigurationHelperStub);
         $handler->cleanup();
     }
 
-    /**
-     * @return string
-     */
-    private function makeVirtualProjectConfigurationDirectory(): string
+    private function prepareVfsStructure()
     {
-        $vfsDirectoryObject = vfsStream::setup();
-        vfsStream::newFile(ProjectConfigurationHandler::PROJECT_CONFIGURATION_FILE_NAME)->at($vfsDirectoryObject)->setContent("anything");
-        return $vfsDirectoryObject->url();
+        $structure = [
+            'configuration' => [
+                'project_configuration' => [
+                    'production' => [
+                        'configuration.yml'    => 'anything',
+                    ]
+                ]
+            ],
+        ];
+
+        $root = vfsStream::setup('root', null, $structure);
+
+        $this->configurationDirectory = vfsStream::url('root/configuration');
+        $this->configurationFileInSubDirectory = vfsStream::url(
+            'root/configuration/project_configuration/production/configuration.yml'
+        );
     }
 
-    /**
-     * @param string $projectConfigurationDirectoryPath
-     * @return ProjectConfigurationHelperInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
-    private function makeProjectConfigurationHelperStub(string $projectConfigurationDirectoryPath)
+    private function getBackupConfigurationFile()
+    {
+        return vfsStream::url(
+            'root/configuration-backup/project_configuration/production/configuration.yml'
+        );
+    }
+
+    private function getConfigurationBackupDirectory()
+    {
+        return vfsStream::url(
+            'root/configuration-backup'
+        );
+    }
+
+    private function makeProjectConfigurationHelperStub(): ProjectConfigurationHelperInterface
     {
         $projectConfigurationHelperStub = $this->getMockBuilder(ProjectConfigurationHelperInterface::class)
             ->getMock();
-        $projectConfigurationHelperStub->method('getConfigurationDirectoryPath')->willReturn($projectConfigurationDirectoryPath);
+
+        $projectConfigurationHelperStub
+            ->method('getConfigurationDirectoryPath')
+            ->willReturn($this->configurationDirectory);
+
         return $projectConfigurationHelperStub;
     }
 }

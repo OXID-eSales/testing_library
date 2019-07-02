@@ -8,6 +8,7 @@ namespace OxidEsales\TestingLibrary\Services\Library;
 
 use OxidEsales\TestingLibrary\Helper\ProjectConfigurationHelperInterface;
 use OxidEsales\TestingLibrary\Services\Library\Exception\FileNotFoundException;
+use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -15,10 +16,6 @@ use Webmozart\PathUtil\Path;
  */
 class ProjectConfigurationHandler
 {
-    const PROJECT_CONFIGURATION_FILE_NAME = 'project_configuration.yml';
-
-    const PROJECT_CONFIGURATION_BACKUP_FILE_NAME = 'project_configuration.yml.bak';
-
     /**
      * @var ProjectConfigurationHelperInterface
      */
@@ -35,10 +32,10 @@ class ProjectConfigurationHandler
      */
     public function backup()
     {
-        if (!file_exists($this->getOriginalFilePath())) {
-            throw new FileNotFoundException('Unable to backup ' . $this->getOriginalFilePath() . 'file. It does not exist.');
+        if (!file_exists($this->getOriginalConfigurationPath())) {
+            throw new FileNotFoundException('Unable to backup ' . $this->getOriginalConfigurationPath() . '. It does not exist.');
         }
-        copy($this->getOriginalFilePath(), $this->getBackupFilePath());
+        $this->recursiveCopy($this->getOriginalConfigurationPath(), $this->getBackupConfigurationPath());
     }
 
     /**
@@ -47,10 +44,11 @@ class ProjectConfigurationHandler
      */
     public function restore()
     {
-        if (!file_exists($this->getBackupFilePath())) {
-            throw new FileNotFoundException('Unable to restore ' . $this->getBackupFilePath() . 'file. It does not exist.');
+        if (!file_exists($this->getBackupConfigurationPath())) {
+            throw new FileNotFoundException('Unable to restore ' . $this->getBackupConfigurationPath() . '. It does not exist.');
         }
-        copy($this->getBackupFilePath(), $this->getOriginalFilePath());
+        $this->rmdirRecursive($this->getOriginalConfigurationPath());
+        $this->recursiveCopy($this->getBackupConfigurationPath(), $this->getOriginalConfigurationPath());
     }
 
     /**
@@ -59,25 +57,44 @@ class ProjectConfigurationHandler
      */
     public function cleanup()
     {
-        if (!file_exists($this->getBackupFilePath())) {
-            throw new FileNotFoundException('Unable to delete ' . $this->getBackupFilePath() . 'file. It does not exist.');
+        if (!file_exists($this->getBackupConfigurationPath())) {
+            throw new FileNotFoundException('Unable to delete ' . $this->getBackupConfigurationPath() . '. It does not exist.');
         }
-        unlink($this->getBackupFilePath());
+        $this->rmdirRecursive($this->getBackupConfigurationPath());
     }
 
     /**
      * @return string
      */
-    private function getOriginalFilePath(): string
+    private function getOriginalConfigurationPath(): string
     {
-        return Path::join($this->configurationHelper->getConfigurationDirectoryPath(), static::PROJECT_CONFIGURATION_FILE_NAME);
+        return Path::join($this->configurationHelper->getConfigurationDirectoryPath());
     }
 
     /**
      * @return string
      */
-    private function getBackupFilePath(): string
+    private function getBackupConfigurationPath(): string
     {
-        return Path::join($this->configurationHelper->getConfigurationDirectoryPath(), static::PROJECT_CONFIGURATION_BACKUP_FILE_NAME);
+        return Path::join($this->configurationHelper->getConfigurationDirectoryPath() . '-backup');
+    }
+
+    /**
+     * @param string $source
+     * @param string $destination
+     */
+    private function recursiveCopy(string $source, string $destination) : void
+    {
+        $filesystem = new Filesystem();
+        $filesystem->mirror($source, $destination);
+    }
+
+    /**
+     * @param string $directory
+     */
+    private function rmdirRecursive(string $directory): void
+    {
+        $filesystem = new Filesystem();
+        $filesystem->remove($directory);
     }
 }
