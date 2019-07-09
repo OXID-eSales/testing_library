@@ -118,7 +118,7 @@ class ModuleLoader
     {
         $module = new Module();
         if (!$module->loadByDir($modulePath)) {
-            throw new Exception("Module not found");
+            throw new Exception('Module configuration not found for module with path ' . $modulePath);
         }
         return $module;
     }

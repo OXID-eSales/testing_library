@@ -145,12 +145,13 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function setUpTestsSuite($testSuitePath)
     {
+
         if (!self::$testsSuiteStarted) {
             self::$testsSuiteStarted = true;
-            $this->dumpDb('reset_suite_db_dump');
+            $this->dumpDB('reset_suite_db_dump');
+            $this->backupShopConfiguration();
         } else {
-            $this->restoreDb('reset_suite_db_dump');
-
+            $this->restoreDB('reset_suite_db_dump');
             $this->resetCachedObjects();
         }
 
@@ -204,6 +205,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     protected function tearDown()
     {
         $this->restoreDB('reset_test_db_dump');
+        $this->restoreShopConfiguration();
 
         parent::tearDown();
     }
@@ -2181,5 +2183,18 @@ abstract class AcceptanceTestCase extends MinkWrapper
     {
         $this->exceptionLogEntries[] = $this->exceptionLogHelper->getExceptionLogFileContent();
     }
-}
 
+    private function restoreShopConfiguration()
+    {
+        $serviceCaller = new ServiceCaller($this->getTestConfig());
+        $serviceCaller->setParameter('restore', true);
+        $serviceCaller->callService('ProjectConfiguration');
+    }
+
+    private function backupShopConfiguration()
+    {
+        $serviceCaller = new ServiceCaller($this->getTestConfig());
+        $serviceCaller->setParameter('backup',true);
+        $serviceCaller->callService('ProjectConfiguration');
+    }
+}

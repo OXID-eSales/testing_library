@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [v6.1.0] - Not released
 
 ### Added
+ - ProjectConfiguration service for handling backup and restore of project configuration file.
  - Extend Cache::clearReverseProxyCache() method to also clear cache for Nginx and Varnish module.  
 
 ### Changed
