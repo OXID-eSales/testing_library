@@ -54,6 +54,12 @@ abstract class BootstrapBase
         $config->setConfig($config);
 
         $config->init();
+
+        register_shutdown_function(function () {
+            $serviceCaller = new ServiceCaller($this->getTestConfig());
+            $serviceCaller->setParameter('cleanup', true);
+            $serviceCaller->callService('ProjectConfiguration');
+        });
     }
 
     /**
