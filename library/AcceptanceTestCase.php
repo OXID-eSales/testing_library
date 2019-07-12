@@ -8,6 +8,7 @@ namespace OxidEsales\TestingLibrary;
 
 use Exception;
 use DateTime;
+use OxidEsales\EshopCommunity\Internal\Application\ContainerFactory;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\IncompleteTest;
@@ -135,6 +136,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
         if ($this->isMinkSessionStarted()) {
             $this->clearCookies();
         }
+
+        ContainerFactory::resetContainer();
     }
 
     /**
