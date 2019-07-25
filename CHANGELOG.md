@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
  - ProjectConfiguration service for handling backup and restore of project configuration file.
+ - Codeception test runner: bin/runtests-codeception
  - Extend Cache::clearReverseProxyCache() method to also clear cache for Nginx and Varnish module.  
 
 ### Changed
