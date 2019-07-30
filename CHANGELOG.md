@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v6.0.1] - Not released
+## [v6.0.1] - 2019-07-30
 
 ### Added
  - ProjectConfiguration service for handling backup and restore of project configuration file.
@@ -148,6 +148,8 @@ An example:
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
 
+[v6.0.1]: https://github.com/OXID-eSales/testing_library/compare/v6.0.0...v6.0.1
+[v6.0.0]: https://github.com/OXID-eSales/testing_library/compare/v5.0.3...v6.0.0
 [v5.0.7]: https://github.com/OXID-eSales/testing_library/compare/v5.0.6...v5.0.7
 [v5.0.6]: https://github.com/OXID-eSales/testing_library/compare/v5.0.5...v5.0.6
 [v5.0.5]: https://github.com/OXID-eSales/testing_library/compare/v5.0.4...v5.0.5
