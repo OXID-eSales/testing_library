@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Deprecated
  - \OxidEsales\TestingLibrary\UnitTestCase::getMock(): Simulated the getMock() method that is deprecated from phpunit Version 5  
 
-## [v5.0.7] - No released
+## [v5.0.7] - 2019-07-30
 
 ### Fixed
  - AcceptanceTestCase::assertElementText() was not doing any assertions
@@ -148,6 +148,7 @@ An example:
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
 
+[v5.0.7]: https://github.com/OXID-eSales/testing_library/compare/v5.0.6...v5.0.7
 [v5.0.6]: https://github.com/OXID-eSales/testing_library/compare/v5.0.5...v5.0.6
 [v5.0.5]: https://github.com/OXID-eSales/testing_library/compare/v5.0.4...v5.0.5
 [v5.0.4]: https://github.com/OXID-eSales/testing_library/compare/v5.0.3...v5.0.4
