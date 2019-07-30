@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v5.0.7] - No released
+## [v5.0.7] - 2019-07-30
 
 ### Fixed
  - AcceptanceTestCase::assertElementText() was not doing any assertions
