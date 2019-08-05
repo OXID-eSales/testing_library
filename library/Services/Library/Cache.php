@@ -36,9 +36,6 @@ class Cache
             $oReverseProxy->setFlush();
             $oReverseProxy->execute();
         }
-        if (class_exists('\OxidEsales\NginxModule\Core\Module', false)) {
-            \OxidEsales\NginxModule\Core\Module::clearNginxCache();
-        }
     }
 
     /**
