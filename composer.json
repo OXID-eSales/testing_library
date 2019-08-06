@@ -21,7 +21,7 @@
         "oxid-esales/oxideshop-unified-namespace-generator": "^1.0.0",
         "codeception/codeception": "^2.3",
         "oxid-esales/codeception-modules": "dev-b-1.x",
-        "oxid-esales/codeception-page-objects": "dev-b-0.x"
+        "oxid-esales/codeception-page-objects": "v0.0.1"
     },
     "bin": [
         "bin/reset-shop",
