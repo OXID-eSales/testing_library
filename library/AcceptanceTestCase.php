@@ -9,6 +9,7 @@ namespace OxidEsales\TestingLibrary;
 use Exception;
 use DateTime;
 use OxidEsales\EshopCommunity\Internal\Application\ContainerFactory;
+use OxidEsales\EshopEnterprise\Internal\Module\Configuration\Bridge\ShopConfigurationGeneratorBridgeInterface;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\IncompleteTest;
@@ -148,7 +149,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function setUpTestsSuite($testSuitePath)
     {
-
         if (!self::$testsSuiteStarted) {
             self::$testsSuiteStarted = true;
             $this->dumpDB('reset_suite_db_dump');
@@ -163,6 +163,10 @@ abstract class AcceptanceTestCase extends MinkWrapper
 
         $this->activateModules();
         $this->addTestData($testSuitePath);
+
+        if ($this->getTestConfig()->isSubShop()) {
+            $this->generateSubShopConfiguration();
+        }
 
         $oServiceCaller->callService('ViewsGenerator');
 
@@ -2202,5 +2206,13 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $serviceCaller = new ServiceCaller($this->getTestConfig());
         $serviceCaller->setParameter('backup',true);
         $serviceCaller->callService('ProjectConfiguration');
+    }
+
+    private function generateSubShopConfiguration(): void
+    {
+        ContainerFactory::getInstance()
+            ->getContainer()
+            ->get(ShopConfigurationGeneratorBridgeInterface::class)
+            ->generateForShop($this->getTestConfig()->getShopId());
     }
 }
