@@ -90,10 +90,8 @@ class ProjectConfigurationHandlerTest extends TestCase
     {
         $structure = [
             'configuration' => [
-                'project_configuration' => [
-                    'production' => [
-                        'configuration.yml'    => 'anything',
-                    ]
+                'shops' => [
+                    'configuration.yml' => 'anything',
                 ]
             ],
         ];
@@ -102,14 +100,14 @@ class ProjectConfigurationHandlerTest extends TestCase
 
         $this->configurationDirectory = vfsStream::url('root/configuration');
         $this->configurationFileInSubDirectory = vfsStream::url(
-            'root/configuration/project_configuration/production/configuration.yml'
+            'root/configuration/shops/configuration.yml'
         );
     }
 
     private function getBackupConfigurationFile()
     {
         return vfsStream::url(
-            'root/configuration-backup/project_configuration/production/configuration.yml'
+            'root/configuration-backup/shops/configuration.yml'
         );
     }
 
