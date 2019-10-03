@@ -7,7 +7,6 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          forceCoversAnnotation="false"
-         mapTestClassNameToCoveredClassName="false"
          printerClass="PHPUnit\TextUI\ResultPrinter"
          processIsolation="false"
          stopOnError="false"
@@ -17,17 +16,4 @@
          testSuiteLoaderClass="PHPUnit\Runner\StandardTestSuiteLoader"
          beStrictAboutTestsThatDoNotTestAnything="false"
          verbose="false">
-    <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../</directory>
-            <exclude>
-                <directory suffix=".php">../tests/</directory>
-                <directory suffix=".php">../tests2/</directory>
-                <directory suffix=".php">../translations/</directory>
-                <directory suffix=".php">../views/</directory>
-                <directory suffix=".php">../out/</directory>
-                <file suffix=".php">../metadata.php</file>
-            </exclude>
-        </whitelist>
-    </filter>
 </phpunit>

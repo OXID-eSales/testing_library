@@ -53,7 +53,7 @@ class MockStubFunc implements \PHPUnit\Framework\MockObject\Stub
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return 'call user-specified function ' . $this->_func;
     }

@@ -220,7 +220,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * Runs the bare test sequence.
      */
-    public function runBare()
+    public function runBare(): void
     {
         if ($this->_blStartMinkSession) {
             $this->startMinkSession();
@@ -865,12 +865,12 @@ abstract class AcceptanceTestCase extends MinkWrapper
     public static function assertEquals(
         $expected,
         $actual,
-        $message = '',
-        $delta = 0,
-        $maxDepth = 10,
-        $canonicalize = false,
-        $ignoreCase = false
-    ) {
+        string $message = '',
+        float $delta = 0,
+        int $maxDepth = 10,
+        bool $canonicalize = false,
+        bool $ignoreCase = false
+    ): void {
         $expected = self::translate($expected);
         $actual = self::translate($actual);
 
