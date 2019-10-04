@@ -22,7 +22,7 @@
         "phpunit/phpcov": "^4.0",
         "codeception/codeception": "^2.3",
         "oxid-esales/codeception-modules": "dev-master",
-        "oxid-esales/codeception-page-objects": "dev-master"
+        "oxid-esales/codeception-page-objects": "dev-OXDEV-2503-test-refund-functionality"
     },
     "bin": [
         "bin/reset-shop",
