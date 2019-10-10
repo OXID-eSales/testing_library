@@ -1,12 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors', "1");
-
-$currentErrorReportingLevel = (int) error_reporting();
-$travisErrorLevel = (int) getenv('TRAVIS_ERROR_LEVEL');
-if ($travisErrorLevel !== 0 && $currentErrorReportingLevel !== $travisErrorLevel) {
-    throw new Exception('Travis error reporting level defined in .travis.yml ('.$travisErrorLevel.') differs from current error reporting level in testing library (' .  $currentErrorReportingLevel . ')');
-}
+ini_set('display_errors', true);
 
 chdir(__DIR__);
 

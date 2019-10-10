@@ -173,8 +173,6 @@ class oxTestModules
      */
     public static function addFunction($class, $fncName, $func)
     {
-        $originalErrorReportingLevel = error_reporting();
-        error_reporting($originalErrorReportingLevel & ~E_NOTICE);
 
         try {
             $class = strtolower($class);
@@ -256,8 +254,6 @@ class oxTestModules
             return $name;
         } catch (\Throwable $throwable) {
             throw $throwable;
-        } finally {
-            error_reporting($originalErrorReportingLevel);
         }
     }
 
