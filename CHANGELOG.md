@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v7.0.0] - Unreleased
+
+### Changed
+ - Backwards compatibility break: changed shop services namespace.
+ 
 ## [v6.0.1] - 2019-07-30
 
 ### Added
@@ -151,7 +156,7 @@ An example:
 
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
-
+[v7.0.0]: https://github.com/OXID-eSales/testing_library/compare/v6.0.1...v7.0.0
 [v6.0.1]: https://github.com/OXID-eSales/testing_library/compare/v6.0.0...v6.0.1
 [v6.0.0]: https://github.com/OXID-eSales/testing_library/compare/v5.0.3...v6.0.0
 [v5.0.7]: https://github.com/OXID-eSales/testing_library/compare/v5.0.6...v5.0.7
