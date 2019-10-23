@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
  - Backwards compatibility break: changed shop services namespace.
+ - Update of Codeception version to 3.1
  
 ## [v6.0.1] - 2019-07-30
 
