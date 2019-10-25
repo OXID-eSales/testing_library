@@ -67,6 +67,9 @@ class ShopInstaller implements ShopServiceInterface
             throw new \Exception("Shop Setup directory has to be present!");
         }
 
+        $cache = new Cache();
+        $cache->clearTemporaryDirectory();
+
         $serialNumber = $request->getParameter('serial', false);
         $serialNumber = $serialNumber ? $serialNumber : $this->getDefaultSerial();
 
@@ -90,9 +93,6 @@ class ShopInstaller implements ShopServiceInterface
         if ($request->getParameter('turnOnVarnish', $default)) {
             $this->turnVarnishOn();
         }
-
-        $cache = new Cache();
-        $cache->clearTemporaryDirectory();
     }
 
     /**
