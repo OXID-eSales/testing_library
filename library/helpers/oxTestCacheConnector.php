@@ -59,7 +59,9 @@ class oxTestCacheConnector implements \OxidEsales\Eshop\Application\Model\Contra
     {
         if (is_array($mKey)) {
             return array_intersect_key($this->aCache, array_flip($mKey));
-        } else {
+        }
+
+        if (isset($this->aCache[$mKey])) {
             return $this->aCache[$mKey];
         }
     }
