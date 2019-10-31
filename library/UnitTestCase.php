@@ -183,10 +183,11 @@ abstract class UnitTestCase extends BaseTestCase
             oxTestModules::cleanUp();
             modOxid::globalCleanup();
 
+            \OxidEsales\Eshop\Core\UtilsObject::resetClassInstances();
+
             $this->getShopStateBackup()->resetRequestVariables();
             $this->getShopStateBackup()->resetRegistry();
 
-            \OxidEsales\Eshop\Core\UtilsObject::resetClassInstances();
             \OxidEsales\Eshop\Core\UtilsObject::resetModuleVars();
 
             parent::tearDown();
