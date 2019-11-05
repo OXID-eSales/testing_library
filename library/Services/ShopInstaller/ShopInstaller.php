@@ -308,15 +308,6 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
-     * @return string|false
-     */
-    protected function getConfigKey()
-    {
-        $configKey = $this->getShopConfig()->getVar('sConfigKey');
-        return $configKey ?: (defined('Config::DEFAULT_CONFIG_KEY') ? Config::DEFAULT_CONFIG_KEY : false);
-    }
-
-    /**
      * Returns shop id.
      *
      * @return string
