@@ -4,7 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v7.0.0] - Unreleased
+## [v7.0.1] - 2019-11-07
+
+### Fixed
+- Non stable versions of oxid-esales/codeception components.
+
+## [v7.0.0] - 2019-11-07
 
 ### Changed
  - Backwards compatibility break: changed shop services namespace.

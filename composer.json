@@ -21,8 +21,8 @@
         "phpunit/php-code-coverage": "^5.3",
         "phpunit/phpcov": "^4.0",
         "codeception/codeception": "^3.1",
-        "oxid-esales/codeception-modules": "dev-master",
-        "oxid-esales/codeception-page-objects": "dev-master"
+        "oxid-esales/codeception-modules": "^1.1.0",
+        "oxid-esales/codeception-page-objects": "^1.1.0"
     },
     "bin": [
         "bin/reset-shop",
