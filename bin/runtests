@@ -19,12 +19,14 @@ foreach ($argv as $argument) {
 }
 
 $php = getenv('PHPBIN') ? getenv('PHPBIN') : 'php';
+$verbose = getenv('VERBOSE') == 1 ? '--verbose' : '';
+$debug = getenv('DEBUG') == 1 ? '--debug' : '';
 
 $phpUnit = $testConfig->getVendorDirectory() ."/bin/phpunit";
 if (!file_exists($phpUnit)) {
     $phpUnit = "phpunit";
 }
-$phpUnit = "$php $phpUnit --bootstrap " .__DIR__ ."/../bootstrap.php";
+$phpUnit = "$php $phpUnit $verbose $debug --bootstrap " .__DIR__ ."/../bootstrap.php";
 
 $arguments = empty($arguments) ? array(escapeshellarg('AllTestsUnit')) : $arguments;
 
