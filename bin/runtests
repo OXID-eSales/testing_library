@@ -5,7 +5,13 @@
  * See LICENSE file for license details.
  */
 
-require_once __DIR__ .'/../base.php';
+use OxidEsales\TestingLibrary\Helper\TestResultsPrintingHelper;
+use OxidEsales\TestingLibrary\TestConfig;
+
+require_once __DIR__ . '/../base.php';
+
+$testConfig = new TestConfig();
+$resultsHelper = new TestResultsPrintingHelper();
 
 // NOTE: Presence of the correct UNC classes needs to be ensured before any shop classes can be used.
 \OxidEsales\TestingLibrary\TestConfig::prepareUnifiedNamespaceClasses();
@@ -20,52 +26,45 @@ foreach ($argv as $argument) {
 
 $php = getenv('PHPBIN') ? getenv('PHPBIN') : 'php';
 
-$phpUnit = $testConfig->getVendorDirectory() ."/bin/phpunit";
+$phpUnit = $testConfig->getVendorDirectory() . "/bin/phpunit";
 if (!file_exists($phpUnit)) {
     $phpUnit = "phpunit";
 }
-$phpUnit = "$php $phpUnit --bootstrap " .__DIR__ ."/../bootstrap.php";
+$phpUnit = "$php $phpUnit --bootstrap " . __DIR__ . "/../bootstrap.php";
 
 $arguments = empty($arguments) ? array(escapeshellarg('AllTestsUnit')) : $arguments;
 
 //print PHP version information
 $printer = new \OxidEsales\TestingLibrary\Printer();
-$printer->write( "=========\nrunning php version " . phpversion() . "\n\n============\n");
+$printer->write("=========\nrunning php version " . phpversion() . "\n\n============\n");
 
 $returnCode = 0;
+/** Replace markers (e.g. /logs/phpunit_log_TIMESTAMP.xml) with unique timestamp strings */
+$argumentString = $resultsHelper->insertReportTimestamps(implode(' ', $arguments));
 if (end($arguments) == escapeshellarg('AllTestsUnit')) {
     $testSuites = $testConfig->getTestSuites();
     foreach ($testSuites as $suite) {
-        $suiteReturnCode = runSuite($suite, $phpUnit, $arguments);
+        $suiteReturnCode = runSuite($suite, $phpUnit, $argumentString);
         $returnCode = $returnCode == 0 ? $suiteReturnCode : $returnCode;
     }
 } else {
     $suite = $testConfig->getCurrentTestSuite();
-    $returnCode = runSuite($suite, $phpUnit, $arguments);
+    $returnCode = runSuite($suite, $phpUnit, $argumentString);
 }
 
 exit($returnCode);
 
-/**
- * Runs test suite.
- *
- * @param string $suite     Suite path.
- * @param string $phpUnit   PHPUnit run command.
- * @param array  $arguments arguments to pass to PHPUnit.
- *
- * @return int Error code.
- */
-function runSuite($suite, $phpUnit, $arguments)
+function runSuite(string $suite, string $phpUnit, string $arguments)
 {
-    $configuration = '';
-    if (file_exists($suite ."/phpunit.xml")) {
-        $configuration = "-c ". escapeshellarg("$suite/phpunit.xml");
-    }
-
-    $arguments = implode(' ', $arguments);
     $return = 0;
+    $configuration = '';
+    if (file_exists($suite . "/phpunit.xml")) {
+        $configuration = "-c " . escapeshellarg("$suite/phpunit.xml");
+    }
     $suite = escapeshellarg($suite);
-    passthru("TEST_SUITE=$suite $phpUnit $configuration $arguments", $return);
-
+    passthru(
+        "TEST_SUITE=$suite $phpUnit $configuration $arguments",
+        $return
+    );
     return $return;
 }

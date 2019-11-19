@@ -5,9 +5,13 @@
  * See LICENSE file for license details.
  */
 
-require_once __DIR__ .'/../base.php';
+use OxidEsales\TestingLibrary\Helper\TestResultsPrintingHelper;
+use OxidEsales\TestingLibrary\TestConfig;
 
-$testConfig = new OxidEsales\TestingLibrary\TestConfig();
+require_once __DIR__ . '/../base.php';
+
+$testConfig = new TestConfig();
+$resultsHelper = new TestResultsPrintingHelper();
 
 $arguments = array();
 array_shift($argv);
@@ -17,48 +21,41 @@ foreach ($argv as $argument) {
 
 $php = getenv('PHPBIN') ? getenv('PHPBIN') : 'php';
 
-$phpUnit = $testConfig->getVendorDirectory() ."/bin/phpunit";
+$phpUnit = $testConfig->getVendorDirectory() . "/bin/phpunit";
 if (!file_exists($phpUnit)) {
     $phpUnit = "phpunit";
 }
-$phpUnit = "$php $phpUnit --bootstrap " .__DIR__ ."/../bootstrap.php";
+$phpUnit = "$php $phpUnit --bootstrap " . __DIR__ . "/../bootstrap.php";
 
 $arguments = empty($arguments) ? array(escapeshellarg('AllTestsSelenium')) : $arguments;
 
 $returnCode = 0;
+/** Replace markers (e.g. /logs/phpunit_log_TIMESTAMP.xml) with unique timestamp strings */
+$argumentString = $resultsHelper->insertReportTimestamps(implode(' ', $arguments));
 if (end($arguments) == escapeshellarg('AllTestsSelenium')) {
     $testSuites = $testConfig->getTestSuites();
     foreach ($testSuites as $suite) {
-        $suiteReturnCode = runSuite($suite, $phpUnit, $arguments);
+        $suiteReturnCode = runSuite($suite, $phpUnit, $argumentString);
         $returnCode = $returnCode == 0 ? $suiteReturnCode : $returnCode;
     }
 } else {
     $suite = $testConfig->getCurrentTestSuite();
-    $returnCode = runSuite($suite, $phpUnit, $arguments);
+    $returnCode = runSuite($suite, $phpUnit, $argumentString);
 }
 
 exit($returnCode);
 
-/**
- * Runs test suite.
- *
- * @param string $suite     Suite path.
- * @param string $phpUnit   PHPUnit run command.
- * @param array  $arguments arguments to pass to PHPUnit.
- *
- * @return int Error code.
- */
-function runSuite($suite, $phpUnit, $arguments)
+function runSuite(string $suite, string $phpUnit, string $arguments)
 {
-    $configuration = '';
-    if (file_exists($suite ."/phpunit.xml")) {
-        $configuration = "-c ". escapeshellarg("$suite/phpunit.xml");
-    }
-
-    $arguments = implode(' ', $arguments);
     $return = 0;
+    $configuration = '';
+    if (file_exists($suite . "/phpunit.xml")) {
+        $configuration = "-c " . escapeshellarg("$suite/phpunit.xml");
+    }
     $suite = escapeshellarg($suite);
-    passthru("TEST_SUITE=$suite $phpUnit $configuration $arguments", $return);
-
+    passthru(
+            "TEST_SUITE=$suite $phpUnit $configuration $arguments",
+            $return
+    );
     return $return;
 }
