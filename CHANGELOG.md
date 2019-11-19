@@ -4,11 +4,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v7.1.0] - Unreleased
-
-### Added
-- Added VERBOSE and DEBUG env. variables to trigger respective options of phpunit for the run
-
 ## [v7.0.1] - 2019-11-07
 
 ### Fixed
