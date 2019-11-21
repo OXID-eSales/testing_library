@@ -146,7 +146,7 @@ abstract class UnitTestCase extends BaseTestCase
      *
      * @return TestResult
      */
-    public function run(TestResult $result = null)
+    public function run(TestResult $result = null): TestResult
     {
         $originalErrorReportingLevel = error_reporting();
         error_reporting($originalErrorReportingLevel & ~E_NOTICE);
