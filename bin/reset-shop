@@ -24,5 +24,6 @@ $serviceCaller->setParameter('turnOnVarnish', $testConfig->shouldEnableVarnish()
 $serviceCaller->setParameter('setupPath', $testConfig->getShopSetupPath());
 $serviceCaller->callService('ShopInstaller');
 
+ContainerFactory::resetContainer();
 $container = ContainerFactory::getInstance()->getContainer();
 $container->get(ConfigurationResettingServiceInterface::class)->reset();
