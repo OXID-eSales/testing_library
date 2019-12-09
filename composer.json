@@ -22,7 +22,7 @@
         "phpunit/phpcov": "^5.0.0",
         "codeception/codeception": "^3.1",
         "oxid-esales/codeception-modules": "dev-master",
-        "oxid-esales/codeception-page-objects": "dev-master",
+        "oxid-esales/codeception-page-objects": "dev-OXDEV-2771-create_buyer_test",
         "oxid-esales/developer-tools": "^1.0.0"
     },
     "bin": [
