@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - command "reset-shop" sets default values for module configurations
 
+### Changed
+- Removed database encoding
+
 ## [v7.0.1] - 2019-11-07
 
 ### Fixed

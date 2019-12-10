@@ -166,8 +166,8 @@ class ShopInstaller implements ShopServiceInterface
         $dbHandler->query("delete from oxconfig where oxvarname in ('iSetUtfMode','blSendTechnicalInformationToOxid');");
         $dbHandler->query(
             "insert into oxconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue) values " .
-            "('config1', '{$sShopId}', 'iSetUtfMode',       'str',  ENCODE('0', '{$this->getConfigKey()}') )," .
-            "('config2', '{$sShopId}', 'blSendTechnicalInformationToOxid', 'bool', ENCODE('1', '{$this->getConfigKey()}') )"
+            "('config1', '{$sShopId}', 'iSetUtfMode',       'str',  '0' )," .
+            "('config2', '{$sShopId}', 'blSendTechnicalInformationToOxid', 'bool', '1')"
         );
     }
 
@@ -198,11 +198,11 @@ class ShopInstaller implements ShopServiceInterface
             $dbHandler->query("delete from oxconfig where oxvarname in ('aSerials','sTagList','IMD','IMA','IMS')");
             $dbHandler->query(
                 "insert into oxconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue) values " .
-                "('serial1', '{$shopId}', 'aSerials', 'arr', ENCODE('" . serialize(array($serialNumber)) . "','{$this->getConfigKey()}') )," .
-                "('serial2', '{$shopId}', 'sTagList', 'str', ENCODE('" . time() . "','{$this->getConfigKey()}') )," .
-                "('serial3', '{$shopId}', 'IMD',      'str', ENCODE('" . $maxDays . "','{$this->getConfigKey()}') )," .
-                "('serial4', '{$shopId}', 'IMA',      'str', ENCODE('" . $maxArticles . "','{$this->getConfigKey()}') )," .
-                "('serial5', '{$shopId}', 'IMS',      'str', ENCODE('" . $maxShops . "','{$this->getConfigKey()}') )"
+                "('serial1', '{$shopId}', 'aSerials', 'arr', '" . serialize(array($serialNumber)) . "')," .
+                "('serial2', '{$shopId}', 'sTagList', 'str', '" . time() . "')," .
+                "('serial3', '{$shopId}', 'IMD',      'str', '" . $maxDays . "')," .
+                "('serial4', '{$shopId}', 'IMA',      'str', '" . $maxArticles . "')," .
+                "('serial5', '{$shopId}', 'IMS',      'str', '" . $maxShops . "')"
             );
         }
     }
@@ -215,7 +215,7 @@ class ShopInstaller implements ShopServiceInterface
         $dbHandler = $this->getDbHandler();
 
         $rs = $dbHandler->query(
-            "SELECT oxvarname, oxvartype, DECODE( oxvarvalue, '{$this->getConfigKey()}') AS oxvarvalue
+            "SELECT oxvarname, oxvartype, oxvarvalue
                        FROM oxconfig
                        WHERE oxvartype IN ('str', 'arr', 'aarr')"
         );
@@ -233,7 +233,7 @@ class ShopInstaller implements ShopServiceInterface
         $shopId = 1;
 
         $query = "REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
-            ('3c4f033dfb8fd4fe692715dda19ecd28', $shopId, '', 'aCurrencies', 'arr', 0x4dbace2972e14bf2cbd3a9a45157004422e928891572b281961cdebd1e0bbafe8b2444b15f2c7b1cfcbe6e5982d87434c3b19629dacd7728776b54d7caeace68b4b05c6ddeff2df9ff89b467b14df4dcc966c504477a9eaeadd5bdfa5195a97f46768ba236d658379ae6d371bfd53acd9902de08a1fd1eeab18779b191f3e31c258a87b58b9778f5636de2fab154fc0a51a2ecc3a4867db070f85852217e9d5e9aa60507);";
+            ('3c4f033dfb8fd4fe692715dda19ecd28', $shopId, '', 'aCurrencies', 'arr', 'a:4:{i:0;s:23:\"EUR@ 1.00@ ,@ .@ €@ 2\";i:1;s:24:\"GBP@ 0.8565@ .@  @ £@ 2\";i:2;s:40:\"CHF@ 1.4326@ ,@ .@ <small>CHF</small>@ 2\";i:3;s:23:\"USD@ 1.2994@ .@  @ $@ 2\";}');";
 
         $dbHandler->query($query);
     }
@@ -248,8 +248,8 @@ class ShopInstaller implements ShopServiceInterface
         $dbHandler->query("DELETE from oxconfig WHERE oxshopid = 1 AND oxvarname in ('iLayoutCacheLifeTime', 'blReverseProxyActive');");
         $dbHandler->query(
             "INSERT INTO oxconfig (oxid, oxshopid, oxvarname, oxvartype, oxvarvalue) VALUES
-              ('35863f223f91930177693956aafe69e6', 1, 'iLayoutCacheLifeTime', 'str', 0xB00FB55D),
-              ('dbcfca66eed01fd43963443d35b109e0', 1, 'blReverseProxyActive',  'bool', 0x07);"
+              ('35863f223f91930177693956aafe69e6', 1, 'iLayoutCacheLifeTime', 'str', '3600'),
+              ('dbcfca66eed01fd43963443d35b109e0', 1, 'blReverseProxyActive',  'bool', '1');"
         );
     }
 
@@ -308,15 +308,6 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
-     * @return string
-     */
-    protected function getConfigKey()
-    {
-        $configKey = $this->getShopConfig()->getVar('sConfigKey');
-        return $configKey ?: Config::DEFAULT_CONFIG_KEY;
-    }
-
-    /**
      * Returns shop id.
      *
      * @return string
@@ -341,12 +332,12 @@ class ShopInstaller implements ShopServiceInterface
 
         $dbHandler->query("DELETE from oxconfig WHERE oxvarname = '$name';");
         $dbHandler->query("REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
-            ('$oxid', $shopId, '', '$name', '$type', ENCODE('{$value}','{$this->getConfigKey()}'));");
+            ('$oxid', $shopId, '', '$name', '$type', '{$value}');");
         if ($this->getServiceConfig()->getShopEdition() == EditionSelector::ENTERPRISE) {
             $oxid = md5("${name}_subshop");
             $shopId = 2;
             $dbHandler->query("REPLACE INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
-                ('$oxid', $shopId, '', '$name', '$type', ENCODE('{$value}','{$this->getConfigKey()}'));");
+                ('$oxid', $shopId, '', '$name', '$type', '{$value}');");
         }
     }
 
@@ -362,7 +353,7 @@ class ShopInstaller implements ShopServiceInterface
 
         $value = is_array($value) ? serialize($value) : $value;
         $value = $dbHandler->escape($value);
-        $dbHandler->query("update oxconfig set oxvarvalue = ENCODE( '{$value}','{$this->getConfigKey()}') where oxvarname = '{$id}';");
+        $dbHandler->query("update oxconfig set oxvarvalue = '{$value}' where oxvarname = '{$id}';");
     }
 
     /**
