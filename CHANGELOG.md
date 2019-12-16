@@ -122,6 +122,7 @@ An example:
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
 
+[v5.0.8]: https://github.com/OXID-eSales/testing_library/compare/v5.0.7...b-6.1.x
 [v5.0.7]: https://github.com/OXID-eSales/testing_library/compare/v5.0.6...v5.0.7
 [v5.0.6]: https://github.com/OXID-eSales/testing_library/compare/v5.0.5...v5.0.6
 [v5.0.5]: https://github.com/OXID-eSales/testing_library/compare/v5.0.4...v5.0.5
