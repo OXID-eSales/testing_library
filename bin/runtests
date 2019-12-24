@@ -41,6 +41,7 @@ $printer->write("=========\nrunning php version " . phpversion() . "\n\n========
 /** Replace markers (e.g. /logs/phpunit_log_TIMESTAMP.xml) with unique timestamp strings */
 $argumentString = $resultsHelper->insertReportTimestamps(implode(' ', $arguments));
 if (end($arguments) == escapeshellarg('AllTestsUnit')) {
+    $printer->write('List of modules to test: '.join(',',$testConfig->getPartialModulePaths());
     $testSuites = $testConfig->getTestSuites();
     $returnCode = 0;
     if (!count($testSuites)){
