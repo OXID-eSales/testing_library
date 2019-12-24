@@ -38,11 +38,16 @@ $arguments = empty($arguments) ? array(escapeshellarg('AllTestsUnit')) : $argume
 $printer = new \OxidEsales\TestingLibrary\Printer();
 $printer->write("=========\nrunning php version " . phpversion() . "\n\n============\n");
 
-$returnCode = 0;
 /** Replace markers (e.g. /logs/phpunit_log_TIMESTAMP.xml) with unique timestamp strings */
 $argumentString = $resultsHelper->insertReportTimestamps(implode(' ', $arguments));
 if (end($arguments) == escapeshellarg('AllTestsUnit')) {
     $testSuites = $testConfig->getTestSuites();
+    $returnCode = 0;
+    if (!count($testSuites)){
+        $printer->write("no test suites found");
+        $returnCode = 78; //78 because it is sysexits default for configuration error
+    }
+    
     foreach ($testSuites as $suite) {
         $suiteReturnCode = runSuite($suite, $phpUnit, $argumentString);
         $returnCode = $returnCode == 0 ? $suiteReturnCode : $returnCode;
