@@ -1717,7 +1717,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
 
         foreach ($aErrorTexts as $sError => $sMessage) {
             if (strpos($sHTML, $sError) !== false) {
-                $this->fail($sMessage);
+                $this->fail($sMessage . ' Page content: ' . $sHTML);
             }
         }
     }
