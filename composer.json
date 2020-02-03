@@ -15,9 +15,9 @@
         "symfony/yaml": "v5.0.4",
         "incenteev/composer-parameter-handler": "2.1.x-dev",
         "symfony/dom-crawler": "v2.7.*",
-        "symfony/filesystem": "^3.4",
-        "oxid-esales/oxideshop-facts": "^2.0.0",
-        "oxid-esales/oxideshop-unified-namespace-generator": "^2.0.0",
+        "symfony/filesystem": "v5.0.4",
+        "oxid-esales/oxideshop-facts": "dev-b-6.x-update_symfony-OXDEV-3039",
+        "oxid-esales/oxideshop-unified-namespace-generator": "dev-b-6.x-update_symfony-OXDEV-3039",
         "phpunit/php-code-coverage": "^7",
         "phpunit/phpcov": "6.0.x-dev",
         "codeception/codeception": "^4",
@@ -36,6 +36,8 @@
     "include-path": [
         "../../symfony/yaml/"
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {"OxidEsales\\TestingLibrary\\": "library/"}
     },
