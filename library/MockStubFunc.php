@@ -11,7 +11,7 @@ use PHPUnit\Framework\MockObject\Invocation;
 /**
  * Class for creating stub objects.
  */
-class MockStubFunc implements \PHPUnit\Framework\MockObject\Stub
+class MockStubFunc implements \PHPUnit\Framework\MockObject\Stub\Stub
 {
     /** @var string */
     private $_func;
