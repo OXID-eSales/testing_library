@@ -126,7 +126,7 @@ abstract class UnitTestCase extends BaseTestCase
      * Initialize the fixture.
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         \OxidEsales\Eshop\Core\Registry::getUtils()->cleanStaticCache();
@@ -163,7 +163,7 @@ abstract class UnitTestCase extends BaseTestCase
      * Cleans up database only if test does not have dependencies.
      * If test does have dependencies, any value instead of null should be returned.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         /**
          * This try catch block fixes some issues with tests that do interfere with the transaction nesting and lead to
@@ -207,7 +207,7 @@ abstract class UnitTestCase extends BaseTestCase
     /**
      * This method is called after the last test of this test class is run.
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::getShopStateBackup()->resetStaticVariables();
         $testConfig = self::getStaticTestConfig();
@@ -794,7 +794,7 @@ abstract class UnitTestCase extends BaseTestCase
      *
      * @return mixed
      */
-    public function createStub($className, $methods, $testMethods = array())
+    public function createOxidStub($className, $methods, $testMethods = array())
     {
         $mockedMethods = array_unique(array_merge(array_keys($methods), $testMethods));
 
@@ -1001,7 +1001,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     protected function _createStub($sClass, $aMethods, $aTestMethods = array())
     {
-        return $this->createStub($sClass, $aMethods, $aTestMethods);
+        return $this->createOxidStub($sClass, $aMethods, $aTestMethods);
     }
 
     /**
