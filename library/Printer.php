@@ -10,8 +10,9 @@ use Exception;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestSuite;
+use PHPUnit\TextUI\DefaultResultPrinter;
 
-class Printer extends \PHPUnit\TextUI\ResultPrinter
+class Printer extends DefaultResultPrinter
 {
     /** @var int */
     private $timeStats;
