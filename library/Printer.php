@@ -33,9 +33,6 @@ class Printer extends DefaultResultPrinter
 
             print $buffer;
         }
-        if ($this->autoFlush) {
-            $this->incrementalFlush();
-        }
     }
 
     /**

@@ -143,13 +143,13 @@ abstract class BaseTestCase extends TestCase
             $this->exceptionLogHelper->getParsedExceptions()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             $expectedExceptionClass,
             $this->exceptionLogHelper->getParsedExceptions()[0]
         );
 
         if ($expectedExceptionMessage) {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 $expectedExceptionMessage,
                 $this->exceptionLogHelper->getParsedExceptions()[0]
             );
