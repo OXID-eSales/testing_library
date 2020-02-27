@@ -62,8 +62,8 @@ function runSuite(string $suite, string $phpUnit, string $arguments)
         $configuration = "-c " . escapeshellarg("$suite/phpunit.xml");
     }
     $suite = escapeshellarg($suite);
-    if($arguments == "'AllTestsUnit'") {
-        $arguments = escapeshellarg(str_replace('\'', '', __DIR__."/../$arguments.php"));
+    if (strpos($arguments, "'AllTestsUnit'") !== false) {
+        $arguments = str_replace('AllTestsUnit', __DIR__."/../AllTestsUnit.php", $arguments);
     }
     passthru(
         "TEST_SUITE=$suite $phpUnit $configuration $arguments",
