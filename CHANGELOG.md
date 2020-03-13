@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Removed database encoding
+- Update symfony components to version 5
+- Update php unit to version 9
 
 ## [v7.1.0] - 2019-11-20
 
