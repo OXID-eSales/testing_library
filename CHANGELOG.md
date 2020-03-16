@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v5.0.8] - Unreleased
+## [v5.0.8] - 2019-03-16
 
 ### Fixed
  - Fixed the aTestSuites variable in AllTestsIntegration [PR-19](https://github.com/OXID-eSales/testing_library/pull/19)
@@ -122,7 +122,7 @@ An example:
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
 
-[v5.0.8]: https://github.com/OXID-eSales/testing_library/compare/v5.0.7...b-6.1.x
+[v5.0.8]: https://github.com/OXID-eSales/testing_library/compare/v5.0.7...v5.0.8
 [v5.0.7]: https://github.com/OXID-eSales/testing_library/compare/v5.0.6...v5.0.7
 [v5.0.6]: https://github.com/OXID-eSales/testing_library/compare/v5.0.5...v5.0.6
 [v5.0.5]: https://github.com/OXID-eSales/testing_library/compare/v5.0.4...v5.0.5
