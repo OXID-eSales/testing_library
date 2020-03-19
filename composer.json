@@ -16,7 +16,7 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "symfony/dom-crawler": "v2.7.*",
         "symfony/filesystem": "^3.0",
-        "oxid-esales/oxideshop-facts": "^2.0.0",
+        "oxid-esales/oxideshop-facts": "^2.3.2",
         "oxid-esales/oxideshop-unified-namespace-generator": "^2.0.0",
         "phpunit/php-code-coverage": "^5.3",
         "phpunit/phpcov": "^4.0",

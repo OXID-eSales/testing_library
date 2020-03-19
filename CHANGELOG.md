@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Deprecated
  - \OxidEsales\TestingLibrary\UnitTestCase::getMock(): Simulated the getMock() method that is deprecated from phpunit Version 5  
 
-## [v5.0.8] - Unreleased
+## [v5.0.8] - 2020-03-16
 
 ### Fixed
  - Fixed the aTestSuites variable in AllTestsIntegration [PR-19](https://github.com/OXID-eSales/testing_library/pull/19)
@@ -173,7 +173,7 @@ An example:
 [v7.0.0]: https://github.com/OXID-eSales/testing_library/compare/v6.0.1...v7.0.0
 [v6.0.1]: https://github.com/OXID-eSales/testing_library/compare/v6.0.0...v6.0.1
 [v6.0.0]: https://github.com/OXID-eSales/testing_library/compare/v5.0.3...v6.0.0
-[v5.0.8]: https://github.com/OXID-eSales/testing_library/compare/v5.0.7...b-6.1.x
+[v5.0.8]: https://github.com/OXID-eSales/testing_library/compare/v5.0.7...v5.0.8
 [v5.0.7]: https://github.com/OXID-eSales/testing_library/compare/v5.0.6...v5.0.7
 [v5.0.6]: https://github.com/OXID-eSales/testing_library/compare/v5.0.5...v5.0.6
 [v5.0.5]: https://github.com/OXID-eSales/testing_library/compare/v5.0.4...v5.0.5
