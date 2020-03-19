@@ -17,7 +17,7 @@
         "phpunit/phpcov": "~2.0.2",
         "symfony/dom-crawler": "v2.7.*",
         "symfony/filesystem": "^3.0",
-        "oxid-esales/oxideshop-facts": "^2.0.0",
+        "oxid-esales/oxideshop-facts": "^2.3.2",
         "oxid-esales/oxideshop-unified-namespace-generator": "^2.0.0"
     },
     "bin": [
