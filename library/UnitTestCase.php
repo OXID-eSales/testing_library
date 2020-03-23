@@ -246,7 +246,7 @@ abstract class UnitTestCase extends BaseTestCase
      * Sets parameter to POST.
      *
      * @param string $paramName
-     * @param string $paramValue
+     * @param string|array $paramValue
      */
     public function setRequestParameter($paramName, $paramValue)
     {
