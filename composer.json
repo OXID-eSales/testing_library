@@ -25,7 +25,7 @@
         "oxid-esales/codeception-modules": "dev-master",
         "oxid-esales/codeception-page-objects": "dev-master",
         "oxid-esales/developer-tools": "^1.0.0",
-        "phpspec/prophecy-phpunit": "^1.1"
+        "phpspec/prophecy-phpunit": "dev-master"
     },
     "bin": [
         "bin/reset-shop",
