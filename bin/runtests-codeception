@@ -35,7 +35,7 @@ foreach ($testConfig->getTestSuites() as $suite) {
     );
     $reportFileName = $resultsHelper->getReportFileName();
     passthru(
-            "TEST_SUITE=$suite $php $codecept $configuration run acceptance --xml $reportFileName --no-colors $arguments",
+            "TEST_SUITE=$suite $php $codecept $configuration run acceptance,acceptanceAdmin --xml $reportFileName --no-colors $arguments",
             $ccReturnCode
     );
     $returnCode = $returnCode == 0 ? $ccReturnCode : $returnCode;
