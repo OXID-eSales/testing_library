@@ -13,7 +13,6 @@
          stopOnFailure="false"
          stopOnIncomplete="false"
          stopOnSkipped="false"
-         testSuiteLoaderClass="PHPUnit\Runner\StandardTestSuiteLoader"
          strict="false"
          beStrictAboutTestsThatDoNotTestAnything="false"
          verbose="false">
