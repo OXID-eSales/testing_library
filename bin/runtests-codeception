@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+
 /**
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
@@ -12,7 +13,7 @@ require_once __DIR__ .'/../base.php';
 
 $testConfig = new TestConfig();
 $resultsHelper = new TestResultsPrintingHelper();
-
+$codeceptionSuites = $codeceptionSuites ?? 'acceptance,acceptanceAdmin';
 $arguments = [];
 array_shift($argv);
 foreach ($argv as $argument) {
@@ -35,7 +36,7 @@ foreach ($testConfig->getTestSuites() as $suite) {
     );
     $reportFileName = $resultsHelper->getReportFileName();
     passthru(
-            "TEST_SUITE=$suite $php $codecept $configuration run acceptance,acceptanceAdmin --xml $reportFileName --no-colors $arguments",
+            "TEST_SUITE=$suite $php $codecept $configuration run $codeceptionSuites --xml $reportFileName --no-colors $arguments",
             $ccReturnCode
     );
     $returnCode = $returnCode == 0 ? $ccReturnCode : $returnCode;

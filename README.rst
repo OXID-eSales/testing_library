@@ -145,6 +145,10 @@ Some usage examples:
    ``bin/runtests --filter match_pattern path/to/test/fileTest.php``
 3. Running one or multiple test suites -
    ``TEST_DIRS=unit,integration bin/runtests``
+4. Running all Codeception tests -
+   ``bin/runtests-codeception``
+5. Running a specific Codeception test from the main (shop) suite -
+   ``bin/runtests-codeception-shop GiftRegistryCest::addProductToUserGiftRegistry``
 
 One thing to note when adding parameters to these tools - always provide
 file/folder at the end as it will no longer be picked automatically. Use

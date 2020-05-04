@@ -32,6 +32,8 @@
         "bin/runmetrics",
         "bin/runtests",
         "bin/runtests-codeception",
+        "bin/runtests-codeception-admin",
+        "bin/runtests-codeception-shop",
         "bin/runtests-coverage",
         "bin/runtests-selenium"
     ],

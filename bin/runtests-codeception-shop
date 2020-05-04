@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+# Run Codeception test(s) selectively by a suite.
+<?php
+
+/**
+ * Copyright © OXID eSales AG. All rights reserved.
+ * See LICENSE file for license details.
+ */
+
+$codeceptionSuites = 'acceptance';
+exit(require_once 'runtests-codeception');

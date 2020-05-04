@@ -11,10 +11,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Update symfony components to version 5
 - Update php unit to version 9
 
+## [v7.1.1] - unreleased
+
+### Added
+- Commands for filtering Codeception tests by suites (and names):
+    - `runtests-codeception-admin`
+    - `runtests-codeception-shop`
+
 ## [v7.1.0] - 2019-11-20
 
 ### Added
-- command "reset-shop" sets default values for module configurations
+- Command `reset-shop` sets default values for module configurations
 
 ## [v7.0.1] - 2019-11-07
 
@@ -179,6 +186,7 @@ An example:
 
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
+[v7.1.1]: https://github.com/OXID-eSales/testing_library/compare/v7.1.0...v7.1.1
 [v7.1.0]: https://github.com/OXID-eSales/testing_library/compare/v7.0.1...v7.1.0
 [v7.0.1]: https://github.com/OXID-eSales/testing_library/compare/v7.0.0...v7.0.1
 [v7.0.0]: https://github.com/OXID-eSales/testing_library/compare/v6.0.1...v7.0.0
