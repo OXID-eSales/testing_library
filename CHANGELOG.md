@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v7.1.1] - unreleased
+## [v7.1.1] - 2020-05-05
 
 ### Added
 - Commands for filtering Codeception tests by suites (and names):
