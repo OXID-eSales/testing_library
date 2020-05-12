@@ -21,8 +21,11 @@ class AllTestsRunner extends TestCase
     /** @var OxidEsales\TestingLibrary\TestConfig */
     protected static $testConfig;
 
-    /** @var string Filter for test files. */
-    protected static $fileFilter = '*Test\.php';
+    /** @var string Filter for php test files. */
+    protected static $phpFileFilter = '*Test\.php';
+
+    /** @var string Filter for phpt test files. */
+    protected static $phptFileFilter = '*Test\.phpt';
 
     /** @var array Lower cased test paths. Used to check if test file was not already added. */
     protected static $testFiles = array();
@@ -41,8 +44,10 @@ class AllTestsRunner extends TestCase
         static::_addPriorityTests($oSuite, static::$priorityTests, $aTestDirectories);
 
         foreach ($aTestDirectories as $sDirectory) {
-            $sFilesSelector = "$sDirectory/" . static::$fileFilter;
-            $aTestFiles = glob($sFilesSelector);
+            $aTestFiles = array_merge(
+                glob("$sDirectory/" . static::$phpFileFilter),
+                glob("$sDirectory/" . static::$phptFileFilter)
+            );
 
             if (empty($aTestFiles)) {
                 continue;
