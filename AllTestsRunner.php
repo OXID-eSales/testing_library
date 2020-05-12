@@ -54,7 +54,7 @@ class AllTestsRunner extends TestCase
             }
 
             $printer = new \OxidEsales\TestingLibrary\Printer();
-            $printer->write( "Adding unit tests from $sFilesSelector\n");
+            $printer->write( "Adding unit tests from $sDirectory\n");
 
             $aTestFiles = array_diff($aTestFiles, static::$priorityTests);
             $oSuite = static::_addFilesToSuite($oSuite, $aTestFiles);
