@@ -114,7 +114,7 @@ class ModuleInstaller implements ShopServiceInterface
     {
         $module = oxNew(\OxidEsales\Eshop\Core\Module\Module::class);
         if (!$module->loadByDir($modulePath)) {
-            throw new Exception("Module not found");
+            throw new Exception("Module not found. Name: " . $module->getTitle() . ", Id: " . $module->getId() . ", Path: " . $modulePath);
         }
         return $module;
     }
