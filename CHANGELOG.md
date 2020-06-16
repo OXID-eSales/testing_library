@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v8.0.0] - Unreleased
 
+### Added
+- PHPT files include
+
 ### Changed
 - Removed database encoding
 - Update symfony components to version 5
