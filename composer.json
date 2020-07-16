@@ -20,10 +20,6 @@
         "oxid-esales/oxideshop-unified-namespace-generator": "dev-master",
         "phpunit/php-code-coverage": "^8",
         "phpunit/phpcov": "^7",
-        "codeception/codeception": "^4",
-        "codeception/module-asserts": "^1.1",
-        "oxid-esales/codeception-modules": "dev-master",
-        "oxid-esales/codeception-page-objects": "dev-master-improve-cc",
         "oxid-esales/developer-tools": "^1.0.0",
         "phpspec/prophecy-phpunit": "dev-master"
     },
