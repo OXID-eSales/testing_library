@@ -88,6 +88,11 @@ class ShopInstaller implements ShopServiceInterface
 
         $this->setSerialNumber($serialNumber);
 
+        /** @var \OxidEsales\Eshop\Core\Theme $oTheme */
+        $oTheme = oxNew(\OxidEsales\Eshop\Core\Theme::class);
+        $oTheme->load("flow");
+        $oTheme->activate();
+
         $config = $this->getShopConfig();
         $default = property_exists($config, 'turnOnVarnish') ? $config->turnOnVarnish : false;
         if ($request->getParameter('turnOnVarnish', $default)) {
