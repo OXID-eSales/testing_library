@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v8.0.0] - Unreleased
+## [master] - Unreleased
 
 ### Added
 - PHPT files include
@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Removed database encoding
 - Update symfony components to version 5
 - Update php unit to version 9
+
+## [v7.1.2] - 2020-07-16
+
+### Changed
+- Downgrade symfony/polyfill-intl-idn.
 
 ## [v7.1.1] - 2020-05-05
 
