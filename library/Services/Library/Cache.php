@@ -44,7 +44,7 @@ class Cache
     public function clearTemporaryDirectory()
     {
         if ($sCompileDir = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class)->getVar('sCompileDir')) {
-            CliExecutor::executeCommand("sudo chmod 777 -R $sCompileDir");
+            CliExecutor::executeCommand("sudo chmod -R 777 $sCompileDir");
             $this->removeTemporaryDirectory($sCompileDir, false);
         }
     }
