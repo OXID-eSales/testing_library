@@ -73,6 +73,9 @@ class ModuleLoader
     public function installModule($modulePath)
     {
         $module = $this->loadModule($modulePath);
+        if ($module->isActive()) {
+            return;
+        }
 
         $moduleCache = new ModuleCache($module);
         $moduleInstaller = new ModuleInstaller($moduleCache);
