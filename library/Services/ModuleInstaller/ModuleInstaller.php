@@ -83,6 +83,9 @@ class ModuleInstaller implements ShopServiceInterface
     public function installModule($modulePath)
     {
         $module = $this->loadModule($modulePath);
+        if ($module->isActive()) {
+            return;
+        }
 
         $moduleCache = oxNew(\OxidEsales\Eshop\Core\Module\ModuleCache::class, $module);
         $moduleInstaller = oxNew(\OxidEsales\Eshop\Core\Module\ModuleInstaller::class, $moduleCache);
