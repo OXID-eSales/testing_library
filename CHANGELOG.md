@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Do not try activating the module if its already activated [PR-25](https://github.com/OXID-eSales/testing_library/pull/25)
 
+### Fixed
+- Fix ``chmod`` command syntax and run it only if needed in ``Cache::clearTemporaryDirectory`` [PR-24](https://github.com/OXID-eSales/testing_library/pull/25)
+
 ## [v7.1.2] - 2020-07-16
 
 ### Changed
