@@ -241,6 +241,16 @@ class TestConfig
 
         if ($this->shouldActivateAllModules()) {
             $modulesToActivate = $this->getPartialModulePaths();
+        } else {
+            $current = $this->getCurrentTestSuite();
+            $modulesDir = $this->getShopPath() .'modules/';
+            foreach ($this->getPartialModulePaths() as $module) {
+                $fullPath = rtrim($modulesDir . $module, '/') .'/';
+                if (strpos($current, $fullPath) === 0) {
+                    $modulesToActivate[] = $module;
+                    break;
+                }
+            }
         }
 
         return $modulesToActivate;
