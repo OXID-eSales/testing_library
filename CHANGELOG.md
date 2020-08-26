@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Update symfony components to version 5
 - Update php unit to version 9
 
+## [v7.2.0] - Unreleased
+
+### Changed
+- Removed the magic module activation while ``activate_all_modules`` is set to false
+
 ## [v7.1.2] - 2020-07-16
 
 ### Changed
