@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Update symfony components to version 5
 - Update php unit to version 9
 
+### Removed
+- `OxidEsales\TestingLibrary\Services\ModuleInstaller\ModuleInstaller::installModule()`
+- `OxidEsales\TestingLibrary\ModuleLoader::installModule()`
+- `OxidEsales\TestingLibrary\ModuleLoader::useOriginalChain()`
+
 ## [v7.2.0] - Unreleased
 
 ### Changed

@@ -8,6 +8,11 @@ namespace OxidEsales\TestingLibrary\Services\ModuleInstaller;
 
 use Exception;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Bridge\ShopConfigurationDaoBridgeInterface;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\DataObject\ModuleConfiguration;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Setup\Bridge\ModuleActivationBridgeInterface;
+use OxidEsales\TestingLibrary\ModuleLoader;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
@@ -34,13 +39,7 @@ class ModuleInstaller implements ShopServiceInterface
             $this->switchToShop($shopId);
         }
 
-        $modulesToActivate = $request->getParameter("modulestoactivate");
-        $moduleDirectory = \OxidEsales\Eshop\Core\Registry::getConfig()->getModulesDir();
-
-        $this->prepareModulesForActivation($moduleDirectory);
-        foreach ($modulesToActivate as $modulePath) {
-            $this->installModule($modulePath);
-        }
+        (new ModuleLoader())->activateModules($request->getParameter("modulestoactivate"));
     }
 
     /**
@@ -71,54 +70,5 @@ class ModuleInstaller implements ShopServiceInterface
         $moduleVariablesCache = new \OxidEsales\Eshop\Core\FileCache();
         $shopIdCalculator = new \OxidEsales\Eshop\Core\ShopIdCalculator($moduleVariablesCache);
         return  $shopIdCalculator->getShopId();
-    }
-
-    /**
-     * Activates module.
-     *
-     * @param string $modulePath The path to the module.
-     *
-     * @throws Exception
-     */
-    public function installModule($modulePath)
-    {
-        $module = $this->loadModule($modulePath);
-        if ($module->isActive()) {
-            return;
-        }
-
-        $moduleCache = oxNew(\OxidEsales\Eshop\Core\Module\ModuleCache::class, $module);
-        $moduleInstaller = oxNew(\OxidEsales\Eshop\Core\Module\ModuleInstaller::class, $moduleCache);
-        if (!$moduleInstaller->activate($module)) {
-            throw new Exception("Error on module installation: " . $module->getId());
-        }
-    }
-
-    /**
-     * Prepares modules for activation. Registers all modules that exist in the shop.
-     *
-     * @param string $moduleDirectory The base directory of modules.
-     */
-    private function prepareModulesForActivation($moduleDirectory)
-    {
-        $moduleList = oxNew(\OxidEsales\Eshop\Core\Module\ModuleList::class);
-        $moduleList->getModulesFromDir($moduleDirectory);
-    }
-
-    /**
-     * Loads module object from given directory.
-     *
-     * @param string $modulePath The path to the module.
-     *
-     * @return \OxidEsales\Eshop\Core\Module\Module
-     * @throws Exception
-     */
-    private function loadModule($modulePath)
-    {
-        $module = oxNew(\OxidEsales\Eshop\Core\Module\Module::class);
-        if (!$module->loadByDir($modulePath)) {
-            throw new Exception("Module not found. Name: " . $module->getTitle() . ", Id: " . $module->getId() . ", Path: " . $modulePath);
-        }
-        return $module;
     }
 }

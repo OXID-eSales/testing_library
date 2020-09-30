@@ -6,13 +6,14 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use OxidEsales\Eshop\Core\Module\ModuleList;
-use OxidEsales\Eshop\Core\Module\ModuleCache;
-use OxidEsales\Eshop\Core\Module\ModuleInstaller;
-use OxidEsales\Eshop\Core\Module\Module;
 use Exception;
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\TestingLibrary\Services\Library\Cache;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Bridge\ShopConfigurationDaoBridgeInterface;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\DataObject\ModuleConfiguration;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Setup\Bridge\ModuleActivationBridgeInterface;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Setup\Exception\ModuleSetupException;
+use Psr\Container\ContainerInterface;
 
 /**
  * Module loader class. Can imitate loaded module for testing.
@@ -20,130 +21,44 @@ use OxidEsales\TestingLibrary\Services\Library\Cache;
 class ModuleLoader
 {
     /**
-     * @var bool Whether to use original chains.
-     */
-    protected static $useOriginalChains = false;
-
-    /**
-     * Sets the original chain loading command
-     *
-     * @param boolean $original
-     */
-    public function useOriginalChain($original)
-    {
-        self::$useOriginalChains = $original;
-    }
-
-    /**
-     * Loads modules and activates them.
-     *
      * @param array $modulesToActivate Array of modules to load.
      */
-    public function activateModules($modulesToActivate)
+    public function activateModules(array $modulesToActivate): void
     {
-        $this->clearModuleChain();
-
-        // First load all needed config options before the module will be installed.
-        $this->prepareModulesForActivation();
         foreach ($modulesToActivate as $modulePath) {
-            $this->installModule($modulePath);
+            $this->activateModule($modulePath);
         }
-
-        // Reset reverse proxy backend as module activation sets it to flush mode.
-        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Cache\ReverseProxy\ReverseProxyBackend::class, null);
     }
 
-    /**
-     * Prepares modules for activation. Registers all modules that exist in the shop.
-     */
-    private function prepareModulesForActivation()
+    private function activateModule(string $path): void
     {
-        $moduleDirectory = \OxidEsales\Eshop\Core\Registry::getConfig()->getModulesDir();
-        $moduleList = new ModuleList();
-        $moduleList->getModulesFromDir($moduleDirectory);
+        $moduleActivationService = $this->getContainer()->get(ModuleActivationBridgeInterface::class);
+
+        $moduleId = $this->getModuleConfiguration($path)->getId();
+
+        if (!$moduleActivationService->isActive($moduleId, Registry::getConfig()->getShopId())) {
+            $moduleActivationService->activate($moduleId, Registry::getConfig()->getShopId());
+        }
     }
 
-    /**
-     * Activates module.
-     *
-     * @param string $modulePath The path to the module.
-     *
-     * @throws Exception
-     */
-    public function installModule($modulePath)
+    private function getModuleConfiguration(string $path): ModuleConfiguration
     {
-        $module = $this->loadModule($modulePath);
-        if ($module->isActive()) {
-            return;
-        }
+        $moduleConfigurations = $this->getContainer()
+            ->get(ShopConfigurationDaoBridgeInterface::class)
+            ->get()
+            ->getModuleConfigurations();
 
-        $moduleCache = new ModuleCache($module);
-        $moduleInstaller = new ModuleInstaller($moduleCache);
-
-        /** Clean all caches before module activation */
-        $this->clearShopTmpFolder();
-
-        $database = \OxidEsales\Eshop\Core\DatabaseProvider::getInstance();
-        $database->flushTableDescriptionCache();
-
-        $cachedClassInstances = Registry::getKeys();
-
-        if (!$moduleInstaller->activate($module)) {
-            throw new Exception("Error on module installation: " . $module->getId());
-        }
-
-        foreach ($cachedClassInstances as $cachedClassInstance) {
-            if (\OxidEsales\Eshop\Core\ConfigFile::class !== $cachedClassInstance) {
-                Registry::set($cachedClassInstance, null);
+        foreach ($moduleConfigurations as $moduleConfiguration) {
+            if ($moduleConfiguration->getPath() === $path) {
+                return $moduleConfiguration;
             }
         }
-        $baseClass = new \OxidEsales\Eshop\Core\Base();
-        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Session::class, null);
-        $baseClass->setUser(null);
-        $baseClass->setAdminMode(null);
 
-        if (method_exists($baseClass, 'setRights')) {
-            $baseClass->setRights(null);
-        }
-
-        $this->clearShopTmpFolder();
+        throw new Exception('Module with path "' . $path . '" not found in shop module configuration.');
     }
 
-    /**
-     * Loads module object from given directory.
-     *
-     * @param string $modulePath The path to the module.
-     *
-     * @return Module
-     * @throws Exception
-     */
-    private function loadModule($modulePath)
+    private function getContainer(): ContainerInterface
     {
-        $module = new Module();
-        if (!$module->loadByDir($modulePath)) {
-            throw new Exception('Module configuration not found for module with path ' . $modulePath);
-        }
-        return $module;
-    }
-
-    /**
-     * Checks if extended files have to be added to "original" module chain or to empty chain.
-     */
-    private function clearModuleChain()
-    {
-        if (!self::$useOriginalChains) {
-            \OxidEsales\Eshop\Core\Registry::getConfig()->setConfigParam("aModules", '');
-        }
-    }
-
-    /**
-     * Shop cache should be deleted as some modules might try to clean cache on top.
-     * This creates problems if CI and Apache user is different.
-     * Some modules might not clean cache which would also lead to a random errors/failures.
-     */
-    private function clearShopTmpFolder()
-    {
-        $cache = new Cache();
-        $cache->clearTemporaryDirectory();
+        return ContainerFactory::getInstance()->getContainer();
     }
 }
