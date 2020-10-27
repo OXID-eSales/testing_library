@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Removed database encoding
 - Update symfony components to version 5
 - Update php unit to version 9
+- Update required vfsstream version to at least 1.6.8 [PR-23](https://github.com/OXID-eSales/testing_library/pull/23)
 
 ## [v7.2.0] - Unreleased
 
