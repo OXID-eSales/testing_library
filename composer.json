@@ -17,7 +17,6 @@
         "symfony/dom-crawler": "v2.7.*",
         "symfony/filesystem": "^3.0",
         "oxid-esales/oxideshop-facts": "^2.3.2",
-        "oxid-esales/oxideshop-unified-namespace-generator": "dev-b-1.x",
         "phpunit/php-code-coverage": "^5.3",
         "phpunit/phpcov": "^4.0",
         "codeception/codeception": "^3.1",
