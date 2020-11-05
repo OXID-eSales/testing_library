@@ -8,6 +8,7 @@ namespace OxidEsales\TestingLibrary\Services\ModuleInstaller;
 
 use Exception;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
@@ -41,6 +42,8 @@ class ModuleInstaller implements ShopServiceInterface
         foreach ($modulesToActivate as $modulePath) {
             $this->installModule($modulePath);
         }
+
+        $this->makeModuleServicesAvailableInDIContainer();
     }
 
     /**
@@ -122,5 +125,10 @@ class ModuleInstaller implements ShopServiceInterface
             throw new Exception("Module not found");
         }
         return $module;
+    }
+
+    private function makeModuleServicesAvailableInDIContainer(): void
+    {
+        ContainerFactory::resetContainer();
     }
 }

@@ -12,6 +12,7 @@ use OxidEsales\Eshop\Core\Module\ModuleInstaller;
 use OxidEsales\Eshop\Core\Module\Module;
 use Exception;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
 use OxidEsales\TestingLibrary\Services\Library\Cache;
 
 /**
@@ -48,6 +49,8 @@ class ModuleLoader
         foreach ($modulesToActivate as $modulePath) {
             $this->installModule($modulePath);
         }
+
+        $this->makeModuleServicesAvailableInDIContainer();
 
         // Reset reverse proxy backend as module activation sets it to flush mode.
         \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Cache\ReverseProxy\ReverseProxyBackend::class, null);
@@ -146,5 +149,10 @@ class ModuleLoader
     {
         $cache = new Cache();
         $cache->clearTemporaryDirectory();
+    }
+
+    private function makeModuleServicesAvailableInDIContainer(): void
+    {
+        ContainerFactory::resetContainer();
     }
 }
