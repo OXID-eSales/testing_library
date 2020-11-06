@@ -9,6 +9,7 @@ use OxidEsales\TestingLibrary\Helper\TestResultsPrintingHelper;
 use OxidEsales\TestingLibrary\TestConfig;
 
 require_once __DIR__ . '/../base.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 $testConfig = new TestConfig();
 $resultsHelper = new TestResultsPrintingHelper();

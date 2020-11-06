@@ -6,10 +6,9 @@ mandatory_parameters:
     # Path to eShop tests
     shop_tests_path: 'tests'
 
-    # When testing not activated module, specify module path in shop.
-    # Module path in shop, e.g. if module is in 'shop/modules/oe/mymodule' directory, value here should be 'oe/mymodule'.
-    # Multiple modules can be specified separated by comma: 'oe/module1,module2,tt/module3'.
-    partial_module_paths:
+    # When testing installed modules, specify the module id within shop. 
+    # Multiple module ids can be specified separated by comma: 'module1_id,module2_id,module3_id'.
+    module_ids:
 
 optional_parameters:
     # eShop base url (if not set, takes it from shop's config.inc.php file)
@@ -57,14 +56,14 @@ optional_parameters:
     # DatabaseRestorerToFile - used for selenium tests, but can also be used for units.
     database_restoration_class: 'DatabaseRestorer'
 
-    # Whether to activate all modules defined in partial_module_paths when running tests.
+    # Whether to activate all modules defined in module_ids when running tests.
     # Normally only tested module is activated during test run. Modules will be activated in the specified order.
     activate_all_modules: false
 
     # Whether to run shop unit tests. This applies only when correct shop_tests_path are set.
     run_tests_for_shop: true
 
-    # Whether to run modules unit tests. All modules provided in partial_module_paths will be tested.
+    # Whether to run modules unit tests. All modules provided in module_ids will be tested.
     # If shop_tests_path and run_shop_tests are set, shop tests will be run with module tests.
     run_tests_for_modules: true
 

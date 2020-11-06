@@ -32,7 +32,7 @@ require_once $vendorDirectory . 'autoload.php';
 // Bootstrap the shop framework
 require_once __DIR__ ."../../bootstrap.php";
 
-/** This constant should only be used in TestConfig class. Use TestConfig::getVendorPath() instead. */
+/** This constant should only be used in TestConfig class. Use TestConfig::getVendorDirectory() instead. */
 define('TEST_LIBRARY_VENDOR_DIRECTORY', $vendorDirectory);
 
 $request = new Request();

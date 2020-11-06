@@ -77,7 +77,7 @@ To install testing library within shop directory, update/create
                 "env-map": {
                     "shop_path": "SHOP_PATH",
                     "shop_tests_path": "SHOP_TESTS_PATH",
-                    "partial_module_paths": "PARTIAL_MODULE_PATHS"
+                    "module_ids": "MODULE_IDS"
                 }
             }
         }

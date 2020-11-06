@@ -26,7 +26,7 @@
             testData
             testSql;
 
-        if (        partial_module_paths
+        if (        module_ids
         has module configured?)
             :Activate the module;
         endif;

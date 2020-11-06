@@ -7,6 +7,8 @@
 namespace OxidEsales\TestingLibrary;
 
 use OxidEsales\Eshop\Core\Edition\EditionSelector;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Bridge\ShopConfigurationDaoBridgeInterface;
 use Symfony\Component\Yaml\Yaml;
 
 class TestConfig
@@ -34,6 +36,9 @@ class TestConfig
 
     /** @var string Temporary directory. */
     private $tempDirectory;
+
+    /** @var array Current module configuration. */
+    private $moduleConfiguration;
 
     /**
      * Initiates configuration from configuration yaml file.
@@ -179,14 +184,7 @@ class TestConfig
         return  $this->formFullPath($partialPath);
     }
 
-    /**
-     * Returns specific edition tests directory path.
-     *
-     * @param string $edition
-     *
-     * @return string
-     */
-    public function getEditionTestsPath($edition)
+    public function getEditionTestsPath(string $edition): string
     {
         $testsPath = $this->getShopTestsPath();
 
@@ -199,24 +197,12 @@ class TestConfig
         return $testsPath;
     }
 
-    /**
-     * Returns array of partial paths to all defined modules.
-     * Paths starts from shop/dir/modules/ folder.
-     * To get full path to module append shop/dir/modules/ to the start of each module path returned.
-     *
-     * @return array
-     */
-    public function getPartialModulePaths()
+    public function getModuleIds(): array
     {
-        return $this->parseMultipleValues('partial_module_paths');
+        return $this->parseMultipleValues('module_ids');
     }
 
-    /**
-     * Returns array of additional test paths.
-     *
-     * @return array
-     */
-    public function getAdditionalTestPaths()
+    public function getAdditionalTestPaths(): array
     {
         $testsPaths = array();
         $parsedConfigOptionValue = $this->parseMultipleValues('additional_test_paths');
@@ -230,25 +216,18 @@ class TestConfig
         return $testsPaths;
     }
 
-    /**
-     * Returns modules for activation.
-     *
-     * @return array
-     */
-    public function getModulesToActivate()
+    public function getModulesToActivate(): array
     {
         $modulesToActivate = array();
 
         if ($this->shouldActivateAllModules()) {
-            $modulesToActivate = $this->getPartialModulePaths();
+            $modulesToActivate = $this->getModuleIds();
         } else {
             $current = $this->getCurrentTestSuite();
-            $modulesDir = $this->getShopPath() .'modules/';
-            foreach ($this->getPartialModulePaths() as $module) {
-                $fullPath = rtrim($modulesDir . $module, '/') .'/';
-                if (strpos($current, $fullPath) === 0) {
-                    $modulesToActivate[] = $module;
-                    break;
+
+            foreach ($this->getModuleIds() as $moduleId) {
+                if ($current === $this->getModuleTestSuitePath($moduleId)) {
+                    $modulesToActivate[] = $moduleId;
                 }
             }
         }
@@ -505,45 +484,46 @@ class TestConfig
         return $this->testSuites;
     }
 
-    /**
-     * Returns defined modules test suites.
-     *
-     * @return array
-     */
-    public function getModuleTestSuites()
+    public function getModuleTestSuites(): array
     {
-        $testSuitePaths = array();
+        $moduleTestSuites = [];
         if ($this->shouldRunModuleTests()) {
-            foreach ($this->getPartialModulePaths() as $module) {
-                $testSuitePath = $this->getTestSuitePath($module);
-                if ($testSuitePath) {
-                    $testSuitePaths[] = $testSuitePath;
-                }
+            foreach ($this->getModuleIds() as $moduleId) {
+                $moduleTestSuites[] = $this->getModuleTestSuitePath($moduleId);
             }
         }
 
-        return $testSuitePaths;
+        return $moduleTestSuites;
     }
 
-    /**
-     * In namespaced modules, the directory containing tests should be named "Tests", otherwise "tests"
-     *
-     * @param string $moduleName
-     *
-     * @return string
-     */
-    private function getTestSuitePath($moduleName)
+    private function getModuleTestSuitePath(string $moduleId): string
     {
         $testSuitePathForModule = '';
-        $moduleDir = $this->getShopPath() . 'modules/' . $moduleName;
 
-        if (is_dir($moduleDir . '/tests/')) {
-            $testSuitePathForModule = $moduleDir . '/tests/';
-        } elseif (is_dir($moduleDir . '/Tests/')) {
-            $testSuitePathForModule = $moduleDir . '/Tests/';
+        if (isset($this->getModuleConfigurations()[$moduleId])) {
+            //Delete at least 1 vendor
+            $moduleDir = $this->getVendorDirectory() .
+                substr($this->getModuleConfigurations()[$moduleId]->getModuleSource(), 7);
+
+            if (is_dir($moduleDir . '/tests/')) {
+                $testSuitePathForModule = $moduleDir . '/tests';
+            } elseif (is_dir($moduleDir . '/Tests/')) {
+                $testSuitePathForModule = $moduleDir . '/Tests';
+            }
+        }
+        return $testSuitePathForModule;
+    }
+
+    private function getModuleConfigurations(): array
+    {
+        if (is_null($this->moduleConfiguration)) {
+            $this->moduleConfiguration = ContainerFactory::getInstance()->getContainer()
+            ->get(ShopConfigurationDaoBridgeInterface::class)
+            ->get()
+            ->getModuleConfigurations();
         }
 
-        return $testSuitePathForModule;
+        return $this->moduleConfiguration;
     }
 
     /**
@@ -634,16 +614,11 @@ class TestConfig
         return $testSuites;
     }
 
-    /**
-     * @var string $configOptionName
-     *
-     * @return array
-     */
-    private function parseMultipleValues($configOptionName)
+    private function parseMultipleValues(string $configOptionName): array
     {
-        $multipleValues = array();
-        if ($valueSeparatedComma = $this->getValue($configOptionName)) {
-            $multipleValues = explode(',', $valueSeparatedComma);
+        $multipleValues = [];
+        if ($commaSeparatedValue = $this->getValue($configOptionName)) {
+            $multipleValues = array_map('trim', explode(',', $commaSeparatedValue));
         }
 
         return $multipleValues;
