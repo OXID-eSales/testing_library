@@ -20,13 +20,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `OxidEsales\TestingLibrary\ModuleLoader::installModule()`
 - `OxidEsales\TestingLibrary\ModuleLoader::useOriginalChain()`
 
-## [v7.2.0] - Unreleased
+## [v7.2.0] - 2020-11-10
 
 ### Changed
 - Do not try activating the module if its already activated [PR-25](https://github.com/OXID-eSales/testing_library/pull/25)
 
 ### Fixed
 - Fix ``chmod`` command syntax and run it only if needed in ``Cache::clearTemporaryDirectory`` [PR-24](https://github.com/OXID-eSales/testing_library/pull/25)
+- Make module services available in the DI container
 
 ## [v7.1.2] - 2020-07-16
 
@@ -208,6 +209,8 @@ An example:
 
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
+[v7.2.0]: https://github.com/OXID-eSales/testing_library/compare/v7.1.2...v7.2.0
+[v7.1.2]: https://github.com/OXID-eSales/testing_library/compare/v7.1.1...v7.1.2
 [v7.1.1]: https://github.com/OXID-eSales/testing_library/compare/v7.1.0...v7.1.1
 [v7.1.0]: https://github.com/OXID-eSales/testing_library/compare/v7.0.1...v7.1.0
 [v7.0.1]: https://github.com/OXID-eSales/testing_library/compare/v7.0.0...v7.0.1

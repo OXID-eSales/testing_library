@@ -40,6 +40,8 @@ class ModuleInstaller implements ShopServiceInterface
         }
 
         (new ModuleLoader())->activateModules($request->getParameter("modulestoactivate"));
+
+        $this->makeModuleServicesAvailableInDIContainer();
     }
 
     /**
@@ -70,5 +72,10 @@ class ModuleInstaller implements ShopServiceInterface
         $moduleVariablesCache = new \OxidEsales\Eshop\Core\FileCache();
         $shopIdCalculator = new \OxidEsales\Eshop\Core\ShopIdCalculator($moduleVariablesCache);
         return  $shopIdCalculator->getShopId();
+    }
+
+    private function makeModuleServicesAvailableInDIContainer(): void
+    {
+        ContainerFactory::resetContainer();
     }
 }

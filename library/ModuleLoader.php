@@ -28,6 +28,8 @@ class ModuleLoader
         foreach ($modulesToActivate as $modulePath) {
             $this->activateModule($modulePath);
         }
+
+        $this->makeModuleServicesAvailableInDIContainer();
     }
 
     private function activateModule(string $path): void
@@ -60,5 +62,10 @@ class ModuleLoader
     private function getContainer(): ContainerInterface
     {
         return ContainerFactory::getInstance()->getContainer();
+    }
+
+    private function makeModuleServicesAvailableInDIContainer(): void
+    {
+        ContainerFactory::resetContainer();
     }
 }
