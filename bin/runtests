@@ -44,6 +44,11 @@ $returnCode = 0;
 $argumentString = $resultsHelper->insertReportTimestamps(implode(' ', $arguments));
 if (end($arguments) == escapeshellarg('AllTestsUnit')) {
     $testSuites = $testConfig->getTestSuites();
+    if (!count($testSuites)){
+        $printer->write("ERROR: No test suites found!\n");
+        $returnCode = 78; //78 because it is sysexits default for configuration error
+    }
+    
     foreach ($testSuites as $suite) {
         $suiteReturnCode = runSuite($suite, $phpUnit, $argumentString);
         $returnCode = $returnCode == 0 ? $suiteReturnCode : $returnCode;
