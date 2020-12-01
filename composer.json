@@ -15,10 +15,7 @@
         "incenteev/composer-parameter-handler": "2.1.x-dev",
         "symfony/dom-crawler": "v2.7.*",
         "oxid-esales/oxideshop-facts": "dev-master",
-        "oxid-esales/oxideshop-unified-namespace-generator": "dev-master",
-        "phpunit/php-code-coverage": "^8",
-        "phpunit/phpcov": "^7",
-        "phpspec/prophecy-phpunit": "dev-master"
+        "oxid-esales/oxideshop-unified-namespace-generator": "dev-master"
     },
     "bin": [
         "bin/reset-shop",
