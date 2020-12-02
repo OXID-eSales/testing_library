@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 final class BasicContextTest extends TestCase
 {
-    use ContainerTrait;
+    //use ContainerTrait;
 
     /**
      * @var BasicContextInterface

@@ -31,7 +31,7 @@ use ReflectionClass;
  */
 abstract class DatabaseInterfaceImplementationTest extends DatabaseInterfaceImplementationBaseTest
 {
-    use ContainerTrait;
+   // use ContainerTrait;
 
     /**
      * The data provider for the method testGetAllForAllFetchModes.

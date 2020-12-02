@@ -15,7 +15,7 @@ use oxUser;
 
 class LoginTest extends UserTestCase
 {
-    use ContainerTrait;
+    //use ContainerTrait;
 
     /**
      * Tries to login with password which is generated with old algorithm

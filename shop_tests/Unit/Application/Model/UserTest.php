@@ -120,7 +120,7 @@ class UserTest_oxUtilsServerHelper2 extends oxUtilsServer
  */
 class UserTest extends \OxidTestCase
 {
-    use ContainerTrait;
+   // use ContainerTrait;
 
     protected $_aShops = array(1);
     protected $_aUsers = array();
