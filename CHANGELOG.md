@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `OxidEsales\TestingLibrary\ModuleLoader::installModule()`
 - `OxidEsales\TestingLibrary\ModuleLoader::useOriginalChain()`
 
+## [v7.3.0] - Unreleased
+### Added 
+- Support of codeception v4
+
 ## [v7.2.0] - 2020-11-10
 
 ### Changed
