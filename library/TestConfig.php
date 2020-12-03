@@ -595,7 +595,11 @@ class TestConfig
      */
     private function getConfigFileName()
     {
-        return $this->getVendorDirectory() ."../test_config.yml";
+        $configFile = $this->getVendorDirectory() ."../test_config.yml";
+        if (!file_exists($configFile)) {
+            $configFile = $this->getVendorDirectory() ."../tests_traditional/test_config.yml";
+        }
+        return $configFile;
     }
 
     /**
