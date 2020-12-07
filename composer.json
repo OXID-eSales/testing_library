@@ -24,6 +24,7 @@
         "codeception/module-asserts": "^1.3",
         "codeception/module-webdriver": "^1.1",
         "codeception/module-db": "^1.0",
+        "codeception/module-filesystem": "^1.0",
         "oxid-esales/codeception-modules": "dev-b-6.2.x",
         "oxid-esales/codeception-page-objects": "dev-b-6.2.x",
         "oxid-esales/developer-tools": "^1.0.0",
