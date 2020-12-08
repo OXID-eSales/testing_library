@@ -26,7 +26,6 @@
         "codeception/module-db": "^1.0",
         "oxid-esales/codeception-modules": "dev-master",
         "oxid-esales/codeception-page-objects": "dev-master",
-        "oxid-esales/developer-tools": "dev-master",
         "phpspec/prophecy-phpunit": "dev-master"
     },
     "bin": [
