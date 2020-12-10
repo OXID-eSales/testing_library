@@ -10,6 +10,8 @@ use Exception;
 use DateTime;
 use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
 use OxidEsales\EshopEnterprise\Internal\Framework\Module\Configuration\Bridge\ShopConfigurationGeneratorBridgeInterface;
+use OxidEsales\TestingLibrary\Helper\ProjectConfigurationHelper;
+use OxidEsales\TestingLibrary\Services\Library\ProjectConfigurationHandler;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\IncompleteTest;
@@ -152,7 +154,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
         if (!self::$testsSuiteStarted) {
             self::$testsSuiteStarted = true;
             $this->dumpDB('reset_suite_db_dump');
-            $this->backupShopConfiguration();
         } else {
             $this->restoreDB('reset_suite_db_dump');
             $this->resetCachedObjects();
@@ -171,6 +172,16 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $oServiceCaller->callService('ViewsGenerator');
 
         $this->dumpDb('reset_test_db_dump');
+    }
+
+    public static function setUpBeforeClass(): void
+    {
+        self::getProjectConfigurationHandler()->backup();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        self::getProjectConfigurationHandler()->restore();
     }
 
     /**
@@ -212,7 +223,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     protected function tearDown(): void
     {
         $this->restoreDB('reset_test_db_dump');
-        $this->restoreShopConfiguration();
 
         parent::tearDown();
     }
@@ -2191,25 +2201,19 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $this->exceptionLogEntries[] = $this->exceptionLogHelper->getExceptionLogFileContent();
     }
 
-    private function restoreShopConfiguration()
-    {
-        $serviceCaller = new ServiceCaller($this->getTestConfig());
-        $serviceCaller->setParameter('restore', true);
-        $serviceCaller->callService('ProjectConfiguration');
-    }
-
-    private function backupShopConfiguration()
-    {
-        $serviceCaller = new ServiceCaller($this->getTestConfig());
-        $serviceCaller->setParameter('backup',true);
-        $serviceCaller->callService('ProjectConfiguration');
-    }
-
     private function generateSubShopConfiguration(): void
     {
         ContainerFactory::getInstance()
             ->getContainer()
             ->get(ShopConfigurationGeneratorBridgeInterface::class)
             ->generateForShop($this->getTestConfig()->getShopId());
+    }
+
+    /**
+     * @return ProjectConfigurationHandler
+     */
+    private static function getProjectConfigurationHandler(): ProjectConfigurationHandler
+    {
+        return new ProjectConfigurationHandler(new ProjectConfigurationHelper());
     }
 }

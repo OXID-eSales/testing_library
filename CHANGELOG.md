@@ -14,11 +14,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Update symfony components to version 5
 - Update php unit to version 9
 - Update required vfsstream version to at least 1.6.8 [PR-23](https://github.com/OXID-eSales/testing_library/pull/23)
+- cleanup backup-configuration directory after each class teardown
 
 ### Removed
 - `OxidEsales\TestingLibrary\Services\ModuleInstaller\ModuleInstaller::installModule()`
 - `OxidEsales\TestingLibrary\ModuleLoader::installModule()`
 - `OxidEsales\TestingLibrary\ModuleLoader::useOriginalChain()`
+- `OxidEsales\TestingLibrary\Services\ProjectConfiguration\ProjectConfiguration`
+- `OxidEsales\TestingLibrary\Services\Library\ProjectConfiguration\ProjectConfigurationHandler::cleanup()`
+- runtests_coverage command
+
+### Fixed
+- Fix the testing library to run the code coverage
 
 ## [v7.3.0] - Unreleased
 

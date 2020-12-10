@@ -30,7 +30,7 @@ class ProjectConfigurationHandler
      * Backup project configuration.
      * @throws FileNotFoundException
      */
-    public function backup()
+    public function backup(): void
     {
         if (!file_exists($this->getOriginalConfigurationPath())) {
             throw new FileNotFoundException('Unable to backup ' . $this->getOriginalConfigurationPath() . '. It does not exist.');
@@ -42,26 +42,13 @@ class ProjectConfigurationHandler
      * Restore project configuration.
      * @throws FileNotFoundException
      */
-    public function restore()
+    public function restore(): void
     {
         if (!file_exists($this->getBackupConfigurationPath())) {
             throw new FileNotFoundException('Unable to restore ' . $this->getBackupConfigurationPath() . '. It does not exist.');
         }
         $this->rmdirRecursive($this->getOriginalConfigurationPath());
         $this->recursiveCopy($this->getBackupConfigurationPath(), $this->getOriginalConfigurationPath());
-    }
-
-    /**
-     * Deletes project configuration backup file.
-     * @throws FileNotFoundException
-     *
-     * @deprecated 7.3.0
-     */
-    public function cleanup()
-    {
-        if (!file_exists($this->getBackupConfigurationPath())) {
-            throw new FileNotFoundException('Unable to delete ' . $this->getBackupConfigurationPath() . '. It does not exist.');
-        }
         $this->rmdirRecursive($this->getBackupConfigurationPath());
     }
 

@@ -65,27 +65,6 @@ class ProjectConfigurationHandlerTest extends TestCase
         $handler->restore();
     }
 
-    public function testFolderCleanup()
-    {
-        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub();
-
-        $handler = new ProjectConfigurationHandler($projectConfigurationHelperStub);
-        $handler->backup();
-        $handler->cleanup();
-
-        $this->assertFileNotExists($this->getBackupConfigurationFile());
-    }
-
-    public function testFolderCleanupWhenFileDoesNotExists()
-    {
-        $this->expectException(FileNotFoundException::class);
-
-        $projectConfigurationHelperStub = $this->makeProjectConfigurationHelperStub();
-
-        $handler = new ProjectConfigurationHandler($projectConfigurationHelperStub);
-        $handler->cleanup();
-    }
-
     private function prepareVfsStructure()
     {
         $structure = [

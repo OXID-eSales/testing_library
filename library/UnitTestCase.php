@@ -92,6 +92,15 @@ abstract class UnitTestCase extends BaseTestCase
         }
     }
 
+    public static function setUpBeforeClass(): void
+    {
+        $testConfig = self::getStaticTestConfig();
+
+        if ($testConfig->shouldRestoreAfterUnitTests()) {
+            self::getProjectConfigurationHandler()->backup();
+        }
+    }
+
     /**
      * Runs necessary things before running tests suite.
      */

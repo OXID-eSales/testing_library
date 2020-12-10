@@ -51,12 +51,6 @@ abstract class BootstrapBase
         \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Config::class, $config);
 
         $config->init();
-
-        register_shutdown_function(function () {
-            $serviceCaller = new ServiceCaller($this->getTestConfig());
-            $serviceCaller->setParameter('cleanup', true);
-            $serviceCaller->callService('ProjectConfiguration');
-        });
     }
 
     /**
