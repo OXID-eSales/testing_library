@@ -54,6 +54,8 @@ class ProjectConfigurationHandler
     /**
      * Deletes project configuration backup file.
      * @throws FileNotFoundException
+     *
+     * @deprecated 7.3.0
      */
     public function cleanup()
     {

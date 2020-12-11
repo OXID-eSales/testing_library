@@ -13,6 +13,9 @@ use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use OxidEsales\TestingLibrary\Services\Library\ProjectConfigurationHandler;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 
+/**
+ * @deprecated 7.3.0
+ */
 class ProjectConfiguration implements ShopServiceInterface
 {
     /**

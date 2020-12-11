@@ -5,8 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v7.3.0] - Unreleased
+
 ### Added 
 - Support of codeception v4
+
+### Deprecated
+- bin/runtests_coverage
+- \OxidEsales\TestingLibrary\Services\Library\ProjectConfigurationHandler::cleanup()
+- \OxidEsales\TestingLibrary\library\Services\ProjectConfiguration\ProjectConfiguration
 
 ## [v7.2.0] - 2020-11-10
 
