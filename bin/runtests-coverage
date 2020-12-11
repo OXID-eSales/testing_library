@@ -3,6 +3,8 @@
 /**
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
+ *
+ * @deprecated 7.3.0
  */
 
 require_once __DIR__ .'/../base.php';
