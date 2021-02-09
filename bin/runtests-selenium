@@ -53,6 +53,9 @@ function runSuite(string $suite, string $phpUnit, string $arguments)
         $configuration = "-c " . escapeshellarg("$suite/phpunit.xml");
     }
     $suite = escapeshellarg($suite);
+    if (strpos($arguments, "'AllTestsSelenium'") !== false) {
+        $arguments = str_replace('AllTestsSelenium', __DIR__."/../AllTestsSelenium.php", $arguments);
+    }
     passthru(
             "TEST_SUITE=$suite $phpUnit $configuration $arguments",
             $return

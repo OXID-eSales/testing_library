@@ -16,7 +16,7 @@ class ProjectConfigurationHandlerTest extends TestCase
     private $configurationDirectory;
     private $configurationFileInSubDirectory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->prepareVfsStructure();

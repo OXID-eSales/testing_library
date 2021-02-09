@@ -118,7 +118,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * Sets up default environment for tests.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -209,7 +209,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * Restores database after every test.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->restoreDB('reset_test_db_dump');
         $this->restoreShopConfiguration();
@@ -220,7 +220,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * Runs the bare test sequence.
      */
-    public function runBare()
+    public function runBare(): void
     {
         if ($this->_blStartMinkSession) {
             $this->startMinkSession();
@@ -870,7 +870,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $maxDepth = 10,
         $canonicalize = false,
         $ignoreCase = false
-    ) {
+    ): void {
         $expected = self::translate($expected);
         $actual = self::translate($actual);
 
@@ -1861,7 +1861,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
      *
      * @throws Exception
      */
-    protected function onNotSuccessfulTest(\Throwable $exception)
+    protected function onNotSuccessfulTest(\Throwable $exception): void
     {
         $this->storeExceptionLogEntries();
         $this->exceptionLogHelper->clearExceptionLogFile();

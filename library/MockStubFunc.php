@@ -11,7 +11,7 @@ use PHPUnit\Framework\MockObject\Invocation;
 /**
  * Class for creating stub objects.
  */
-class MockStubFunc implements \PHPUnit\Framework\MockObject\Stub
+class MockStubFunc implements \PHPUnit\Framework\MockObject\Stub\Stub
 {
     /** @var string */
     private $_func;
@@ -53,7 +53,7 @@ class MockStubFunc implements \PHPUnit\Framework\MockObject\Stub
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return 'call user-specified function ' . $this->_func;
     }

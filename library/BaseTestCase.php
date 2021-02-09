@@ -115,7 +115,7 @@ abstract class BaseTestCase extends TestCase
     /**
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->failOnLoggedExceptions();
@@ -124,7 +124,7 @@ abstract class BaseTestCase extends TestCase
     /**
      * @throws \OxidEsales\Eshop\Core\Exception\StandardException
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         $this->failOnLoggedExceptions();
@@ -143,13 +143,13 @@ abstract class BaseTestCase extends TestCase
             $this->exceptionLogHelper->getParsedExceptions()
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             $expectedExceptionClass,
             $this->exceptionLogHelper->getParsedExceptions()[0]
         );
 
         if ($expectedExceptionMessage) {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 $expectedExceptionMessage,
                 $this->exceptionLogHelper->getParsedExceptions()[0]
             );

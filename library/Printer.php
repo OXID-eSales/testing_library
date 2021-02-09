@@ -7,8 +7,12 @@
 namespace OxidEsales\TestingLibrary;
 
 use Exception;
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestSuite;
+use PHPUnit\TextUI\ResultPrinter;
 
-class Printer extends \PHPUnit\TextUI\ResultPrinter
+class Printer extends ResultPrinter
 {
     /** @var int */
     private $timeStats;
@@ -16,7 +20,7 @@ class Printer extends \PHPUnit\TextUI\ResultPrinter
     /**
      * @param string $buffer
      */
-    public function write($buffer)
+    public function write(string $buffer): void
     {
         if ((PHP_SAPI == 'cli')) {
             \fwrite(STDOUT, $buffer);
@@ -29,26 +33,23 @@ class Printer extends \PHPUnit\TextUI\ResultPrinter
 
             print $buffer;
         }
-        if ($this->autoFlush) {
-            $this->incrementalFlush();
-        }
     }
 
     /**
      * @inheritdoc
      */
-    public function addError(\PHPUnit\Framework\Test $test, Exception $e, $time)
+    public function addError(Test $test, \Throwable $throwable, float $time): void
     {
         if ($this->verbose) {
-            $this->write("        ERROR: '" . $e->getMessage() . "'\n" . $e->getTraceAsString());
+            $this->write("        ERROR: '" . $throwable->getMessage() . "'\n" . $throwable->getTraceAsString());
         }
-        parent::addError($test, $e, $time);
+        parent::addError($test, $throwable, $time);
     }
 
     /**
      * @inheritdoc
      */
-    public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, $time)
+    public function addFailure(Test $test, AssertionFailedError $e, float $time): void
     {
         if ($this->verbose) {
             $this->write("        FAIL: '" . $e->getMessage() . "'\n" . $e->getTraceAsString());
@@ -59,7 +60,7 @@ class Printer extends \PHPUnit\TextUI\ResultPrinter
     /**
      * @inheritdoc
      */
-    public function endTest(\PHPUnit\Framework\Test $test, $time)
+    public function endTest(Test $test, float $time): void
     {
         if ($this->verbose) {
             $t = microtime(true) - $this->timeStats['startTime'];
@@ -78,7 +79,7 @@ class Printer extends \PHPUnit\TextUI\ResultPrinter
     /**
      * @inheritdoc
      */
-    public function endTestSuite(\PHPUnit\Framework\TestSuite $suite)
+    public function endTestSuite(TestSuite $suite): void
     {
         parent::endTestSuite($suite);
 
@@ -90,7 +91,7 @@ class Printer extends \PHPUnit\TextUI\ResultPrinter
     /**
      * @inheritdoc
      */
-    public function startTestSuite(\PHPUnit\Framework\TestSuite $suite)
+    public function startTestSuite(TestSuite $suite): void
     {
         if ($this->verbose) {
             $this->write("\n\n" . $suite->getName() . "\n");
@@ -104,7 +105,7 @@ class Printer extends \PHPUnit\TextUI\ResultPrinter
     /**
      * @inheritdoc
      */
-    public function startTest(\PHPUnit\Framework\Test $test)
+    public function startTest(Test $test): void
     {
         if ($this->verbose) {
             $this->write("\n        " . $test->getName());
