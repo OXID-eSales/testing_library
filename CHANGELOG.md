@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v7.3.0] - Unreleased
+## [v8.0.0] - Unreleased
 
 ### Added 
 - Support of codeception v4
+
+### Changed
+- Update phpunit to version 8
 
 ### Deprecated
 - bin/runtests_coverage
