@@ -38,6 +38,7 @@ class DatabaseDefaultsFileGenerator
             . "\n";
         fwrite($resource, $fileContents);
         fclose($resource);
+        chmod($file, 0750);
         return $file;
     }
 }
