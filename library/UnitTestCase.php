@@ -777,33 +777,6 @@ abstract class UnitTestCase extends BaseTestCase
     }
 
     /**
-     * Creates stub object from given class
-     *
-     * @param string $className   Class name
-     * @param array  $methods     Assoc array with method => value
-     * @param array  $testMethods Array with test methods for mocking
-     *
-     * @return mixed
-     */
-    public function createOxidStub($className, $methods, $testMethods = array())
-    {
-        $mockedMethods = array_unique(array_merge(array_keys($methods), $testMethods));
-
-        $object = $this->getMock($className, $mockedMethods, array(), '', false);
-
-        foreach ($methods as $method => $value) {
-            if (!in_array($method, $testMethods)) {
-                $object->expects($this->any())
-                    ->method($method)
-                    ->will($this->returnValue($value));
-            }
-        }
-
-        return $object;
-    }
-
-
-    /**
      * eval Func for invoke mock
      *
      * @param mixed $value
@@ -1003,7 +976,19 @@ abstract class UnitTestCase extends BaseTestCase
      */
     protected function _createStub($sClass, $aMethods, $aTestMethods = array())
     {
-        return $this->createOxidStub($sClass, $aMethods, $aTestMethods);
+        $mockedMethods = array_unique(array_merge(array_keys($methods), $testMethods));
+
+        $object = $this->getMock($className, $mockedMethods, array(), '', false);
+
+        foreach ($methods as $method => $value) {
+            if (!in_array($method, $testMethods)) {
+                $object->expects($this->any())
+                    ->method($method)
+                    ->will($this->returnValue($value));
+            }
+        }
+
+        return $object;
     }
 
     /**
