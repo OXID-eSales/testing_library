@@ -193,7 +193,7 @@ class TestConfig
         if ($edition === EditionSelector::PROFESSIONAL) {
             $testsPath = $this->getVendorDirectory() . '/oxid-esales/oxideshop-pe/Tests/';
         } elseif ($edition === EditionSelector::ENTERPRISE) {
-            $testsPath = $this->getVendorDirectory() . '/oxid-esales/oxideshop-ee/Tests/';
+            $testsPath = $this->getVendorDirectory() . '/oxid-esales/oxideshop-ee/tests_traditional/';
         }
 
         return $testsPath;
