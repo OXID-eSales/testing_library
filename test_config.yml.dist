@@ -86,7 +86,7 @@ optional_parameters:
     selenium_server_port: '4444'
 
     # For running additional tests, please specify paths separated by commas.
-    additional_test_paths: 'vendor/oxid-esales/oxideshop-ee/Tests,vendor/oxid-esales/oxideshop-pe/Tests'
+    additional_test_paths: 'vendor/oxid-esales/oxideshop-ee/tests_traditional,vendor/oxid-esales/oxideshop-pe/tests_traditional'
 
     # How many times to try test before marking it as failure.
     # Could be used for unstable tests which fails randomly.
