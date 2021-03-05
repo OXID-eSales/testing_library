@@ -16,7 +16,7 @@ class TestSqlPathProvider
 {
     const TEST_SQL_DIRECTORY = 'testSql';
 
-    const TESTS_DIRECTORY = 'tests';
+    const TESTS_DIRECTORY = 'tests_traditional';
 
     const ACCEPTANCE_DIRECTORY = 'Acceptance';
 
@@ -88,7 +88,7 @@ class TestSqlPathProvider
             $enterprisePathProvider = new EditionRootPathProvider($this->getEditionSelector());
             $pathToEditionTestDirectory =
                 $enterprisePathProvider->getDirectoryPath()
-                . '/' . ucfirst(static::TESTS_DIRECTORY)
+                . '/' . static::TESTS_DIRECTORY
                 . '/' . ucfirst(static::ACCEPTANCE_DIRECTORY)
                 . '/' . $testDirectoryName;
 
