@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
@@ -8,18 +9,15 @@ namespace OxidEsales\TestingLibrary;
 
 use modOXID;
 use modOxUtilsDate;
-
 use oxDatabaseHelper;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Module\ModuleVariablesLocator;
 use OxidEsales\Eshop\Core\UtilsObject;
 use OxidEsales\EshopCommunity\Core\Database\Adapter\DatabaseInterface;
-use OxidEsales\EshopCommunity\Core\Database;
 use OxidEsales\TestingLibrary\Helper\ProjectConfigurationHelper;
 use OxidEsales\TestingLibrary\Helper\SessionHelper;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerInterface;
-
 use OxidEsales\TestingLibrary\Services\Library\ProjectConfigurationHandler;
 use oxTestModules;
 use oxTestsStaticCleaner;
@@ -179,12 +177,12 @@ abstract class UnitTestCase extends BaseTestCase
          * transactions marked as rollback only, even when all the shop code has been executed.
          */
         try {
-            while (\OxidEsales\Eshop\Core\DatabaseProvider::getDb()->isTransactionActive() && \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->isRollbackOnly() ) {
+            while (\OxidEsales\Eshop\Core\DatabaseProvider::getDb()->isTransactionActive() && \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->isRollbackOnly()) {
                 \OxidEsales\Eshop\Core\DatabaseProvider::getDb()->rollbackTransaction();
             }
-        /**
-         * Catch exceptions, which happen when calling isRollbackOnly() on a connection which is not in a transaction.
-         */
+            /**
+             * Catch exceptions, which happen when calling isRollbackOnly() on a connection which is not in a transaction.
+             */
         } catch (Exception $exception) {
             // Do nothing
         }
@@ -567,29 +565,25 @@ abstract class UnitTestCase extends BaseTestCase
         $mockBuilder->setMockClassName($mockClassName);
         if ($callOriginalConstructor) {
             $mockBuilder->enableOriginalConstructor();
-        }
-        else {
+        } else {
             $mockBuilder->disableOriginalConstructor();
         }
         if ($callOriginalClone) {
             $mockBuilder->enableOriginalClone();
-        }
-        else {
+        } else {
             $mockBuilder->disableOriginalClone();
         }
         if ($callAutoload) {
             $mockBuilder->enableAutoload();
-        }
-        else {
+        } else {
             $mockBuilder->disableAutoload();
         }
         if ($cloneArguments) {
             $mockBuilder->enableArgumentCloning();
-        }
-        else {
+        } else {
             $mockBuilder->disableArgumentCloning();
         }
-        if (! is_null($proxyTarget)) {
+        if (!is_null($proxyTarget)) {
             $mockBuilder->setProxyTarget($proxyTarget);
         }
         return $mockBuilder->getMock();
@@ -611,7 +605,6 @@ abstract class UnitTestCase extends BaseTestCase
         $editionClassName = \OxidEsales\Eshop\Core\Registry::get(UtilsObject::class)->getClassName($className);
 
         return parent::getMockBuilder($editionClassName);
-
     }
     /**
      * Calls all the queries stored in $_aTeardownSqls
@@ -720,7 +713,6 @@ abstract class UnitTestCase extends BaseTestCase
                     {
                         \$this->\$name = \$value;
                     }
-
                     public function getNonPublicVar(\$name)
                     {
                         return \$this->\$name;
@@ -792,32 +784,6 @@ abstract class UnitTestCase extends BaseTestCase
         }
 
         return $this->vfsStreamWrapper;
-    }
-
-    /**
-     * Creates stub object from given class
-     *
-     * @param string $className   Class name
-     * @param array  $methods     Assoc array with method => value
-     * @param array  $testMethods Array with test methods for mocking
-     *
-     * @return mixed
-     */
-    public function createOxidStub($className, $methods, $testMethods = array())
-    {
-        $mockedMethods = array_unique(array_merge(array_keys($methods), $testMethods));
-
-        $object = $this->getMock($className, $mockedMethods, array(), '', false);
-
-        foreach ($methods as $method => $value) {
-            if (!in_array($method, $testMethods)) {
-                $object->expects($this->any())
-                    ->method($method)
-                    ->will($this->returnValue($value));
-            }
-        }
-
-        return $object;
     }
 
     /**
@@ -899,6 +865,17 @@ abstract class UnitTestCase extends BaseTestCase
         }
     }
 
+    public function assertArraySubsetOxid(array $subset, array $array): void
+    {
+        if ($array !== \array_replace_recursive($array, $subset)) {
+            $this->fail(sprintf(
+                "Failed asserting that %s has the subset %s",
+                \var_export($array, true),
+                \var_export($subset, true)
+            ));
+        }
+    }
+
     /**
      * Set a given protected property of a given class instance to a given value.
      *
@@ -925,7 +902,6 @@ abstract class UnitTestCase extends BaseTestCase
      *
      * Note: Please use this methods only for static 'mocking' or with other hard reasons!
      *       For the most possible non static usages there exist other solutions.
-
      * @param object $classInstance Instance of the class of which the property will be set
      * @param string $property      Name of the property to be retrieved
      *
@@ -1010,7 +986,19 @@ abstract class UnitTestCase extends BaseTestCase
      */
     protected function _createStub($sClass, $aMethods, $aTestMethods = array())
     {
-        return $this->createOxidStub($sClass, $aMethods, $aTestMethods);
+        $mockedMethods = array_unique(array_merge(array_keys($methods), $testMethods));
+
+        $object = $this->getMock($className, $mockedMethods, array(), '', false);
+
+        foreach ($methods as $method => $value) {
+            if (!in_array($method, $testMethods)) {
+                $object->expects($this->any())
+                    ->method($method)
+                    ->will($this->returnValue($value));
+            }
+        }
+
+        return $object;
     }
 
     /**

@@ -98,7 +98,7 @@ class DatabaseRestorer implements DatabaseRestorerInterface
         $dumpChecksum = $this->getDumpChecksum();
         $currentChecksum = $this->getTableChecksum($table);
 
-        if ($currentChecksum[$table] === $dumpChecksum[$table]) {
+        if (!isset($dumpChecksum[$table]) || $currentChecksum[$table] === $dumpChecksum[$table]) {
             return false;
         }
 

@@ -27,10 +27,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Fix the testing library to run the code coverage
 
-## [v7.3.0] - Unreleased
+## [v8.0.0] - Unreleased
 
 ### Added 
 - Support of codeception v4
+
+### Changed
+- Update phpunit to version 8
 
 ### Deprecated
 - bin/runtests_coverage

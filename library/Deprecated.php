@@ -76,7 +76,7 @@ function oxAddClassModule($sModuleClass, $sClass, $prependStrategy = false)
     //unset _possible_ registry instance
     \OxidEsales\Eshop\Core\Registry::set($sClass, null);
 
-    if ($aModules[$sClass]) {
+    if ($aModules && isset($aModules[$sClass]) && $aModules[$sClass]) {
         $sModuleClass = $prependStrategy
             ? $sModuleClass . '&' . $aModules[$sClass]
             : $aModules[$sClass] . '&' . $sModuleClass;
@@ -180,7 +180,7 @@ class oxTestModules
             $class = strtolower($class);
             $name = self::_getNextName($class);
 
-            if (is_array(self::$_addedmods[$class]) && $cnt = count(self::$_addedmods[$class])) {
+            if (isset(self::$_addedmods[$class]) && is_array(self::$_addedmods[$class]) && $cnt = count(self::$_addedmods[$class])) {
                 $last = self::$_addedmods[$class][$cnt - 1];
             } else {
                 $last = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\UtilsObject::class)->getClassName(strtolower($class));

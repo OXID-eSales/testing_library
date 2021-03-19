@@ -107,7 +107,7 @@ class ShopInstaller implements ShopServiceInterface
     {
         $dbHandler = $this->getDbHandler();
 
-        $dbHandler->getDbConnection()->exec('drop database `' . $dbHandler->getDbName() . '`');
+        $dbHandler->getDbConnection()->exec('DROP DATABASE IF EXISTS`' . $dbHandler->getDbName() . '`');
         $dbHandler->getDbConnection()->exec('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
 
         $baseEditionPathProvider = new EditionPathProvider(new EditionRootPathProvider(new EditionSelector(EditionSelector::COMMUNITY)));
