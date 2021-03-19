@@ -19,7 +19,7 @@
         "oxid-esales/oxideshop-facts": "dev-b-6.3.x",
         "oxid-esales/oxideshop-unified-namespace-generator": "dev-b-6.3.x",
         "phpunit/php-code-coverage": "^7.0.12",
-        "phpunit/phpcov": "^4.0",
+        "phpunit/phpcov": "^6.0.1",
         "codeception/codeception": "^4",
         "codeception/module-asserts": "^1.3",
         "codeception/module-webdriver": "^1.1",
