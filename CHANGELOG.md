@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v7.3.0] - Unreleased
+## [v7.3.0] - 2021-03-25
 
 ### Added 
 - Support of codeception v4
@@ -199,6 +199,7 @@ An example:
 
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
+[v7.3.0]: https://github.com/OXID-eSales/testing_library/compare/v7.2.0...v7.3.0
 [v7.2.0]: https://github.com/OXID-eSales/testing_library/compare/v7.1.2...v7.2.0
 [v7.1.2]: https://github.com/OXID-eSales/testing_library/compare/v7.1.1...v7.1.2
 [v7.1.1]: https://github.com/OXID-eSales/testing_library/compare/v7.1.0...v7.1.1
