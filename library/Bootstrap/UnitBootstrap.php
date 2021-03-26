@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
@@ -20,6 +19,9 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
         {
             parent::init();
             $this->initializeConfig();
+
+            error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_WARNING);
+
             $currentTestSuite = $this->getTestConfig()->getCurrentTestSuite();
             if (file_exists($currentTestSuite .'/additional.inc.php')) {
                 include_once $currentTestSuite .'/additional.inc.php';
