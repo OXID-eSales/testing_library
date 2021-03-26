@@ -428,9 +428,9 @@ For example:
 ===========   ===========================================================
 Branch Name   OXID eShop Compilation Target Version
 -----------   -----------------------------------------------------------
-b-6.1.x       v6.1.*  (Next patch release of OXID eShop compilation v6.1)
-b-6.x         v6.*  (Next minor release of OXID eShop compilation v6)
-master        v* (Next major release of OXID eShop compilation)
+b-6.2.x       v6.2.*  (Next patch release of OXID eShop compilation v6.2)
+b-6.3.x       v6.3.*  (Next patch release of OXID eShop compilation v6.3)
+master        OXID eShop compilation master branch
 ===========   ===========================================================
 
 Tests running workflow
