@@ -966,15 +966,15 @@ abstract class UnitTestCase extends BaseTestCase
     /**
      * Creates stub object from given class
      *
-     * @param string $sClass       Class name
-     * @param array  $aMethods     Assoc array with method => value
-     * @param array  $aTestMethods Array with test methods for mocking
+     * @param string $className       Class name
+     * @param array  $methods     Assoc array with method => value
+     * @param array  $testMethods Array with test methods for mocking
      *
      * @deprecated use oxUnitTestCase::createStub() instead.
      *
      * @return mixed
      */
-    protected function _createStub($sClass, $aMethods, $aTestMethods = array())
+    protected function _createStub($className, $methods, $testMethods = array())
     {
         $mockedMethods = array_unique(array_merge(array_keys($methods), $testMethods));
 
