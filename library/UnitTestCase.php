@@ -692,7 +692,10 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function getProxyClassName($superClassName)
     {
-        $superClassName = \OxidEsales\Eshop\Core\Registry::get(UtilsObject::class)->getClassName(strtolower($superClassName));
+        if (strpos($superClassName,'\\')===false) {
+            $superClassName = strtolower($superClassName);
+        }
+        $superClassName = Registry::get(UtilsObject::class)->getClassName($superClassName);
         $escapedSuperClassName = str_replace('\\', '_', $superClassName);
         $proxyClassName = "{$escapedSuperClassName}Proxy";
 

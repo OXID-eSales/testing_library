@@ -27,10 +27,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Fix the testing library to run the code coverage
 
-## [v8.0.0] - Unreleased
+## [v8.0.1] - Unreleased
+
+### Fixed
+- Do not lowercase namespaced class names in getProxyClassName
+
+## [v8.0.0] - 2021-04-12
 
 ### Changed
 - Update phpunit to version 8
+- Support php 8
 
 ## [v7.3.0] - 2021-03-25
 
@@ -231,6 +237,8 @@ An example:
 
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
+[v8.0.1]: https://github.com/OXID-eSales/testing_library/compare/v8.0.0...v8.0.1
+[v8.0.0]: https://github.com/OXID-eSales/testing_library/compare/v7.3.0...v8.0.0
 [v7.3.0]: https://github.com/OXID-eSales/testing_library/compare/v7.2.0...v7.3.0
 [v7.2.0]: https://github.com/OXID-eSales/testing_library/compare/v7.1.2...v7.2.0
 [v7.1.2]: https://github.com/OXID-eSales/testing_library/compare/v7.1.1...v7.1.2
