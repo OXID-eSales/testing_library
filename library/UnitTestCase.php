@@ -155,10 +155,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function run(TestResult $result = null): TestResult
     {
-        $originalErrorReportingLevel = error_reporting();
-        error_reporting($originalErrorReportingLevel & ~E_NOTICE);
         $result = parent::run($result);
-        error_reporting($originalErrorReportingLevel);
 
         oxTestModules::cleanUp();
 
