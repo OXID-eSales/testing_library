@@ -8,7 +8,6 @@ use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\ServiceFactory;
 
-error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 spl_autoload_register(function($className) {
