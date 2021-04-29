@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Update php unit to version 9
 - Update required vfsstream version to at least 1.6.8 [PR-23](https://github.com/OXID-eSales/testing_library/pull/23)
 - cleanup backup-configuration directory after each class teardown
+- Exit with 78 error code (+message: ERROR: No test suites found!) if no test suites found by current configuration [PR-26](https://github.com/OXID-eSales/testing_library/pull/26)
 
 ### Removed
 - `OxidEsales\TestingLibrary\Services\ModuleInstaller\ModuleInstaller::installModule()`
