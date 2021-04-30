@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Fix the testing library to run the code coverage
+- Deny temporary tests related mysql configuration file "others" reading rights [PR-27](https://github.com/OXID-eSales/testing_library/pull/27)
 
 ## [v8.0.1] - Unreleased
 
