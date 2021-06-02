@@ -26,7 +26,7 @@
         "codeception/module-db": "^1.0",
         "codeception/module-filesystem": "^1.0",
         "oxid-esales/codeception-modules": "dev-master",
-        "oxid-esales/codeception-page-objects": "dev-master",
+        "oxid-esales/codeception-page-objects": "dev-master-update_to_php8-OXDEV-4533",
         "oxid-esales/developer-tools": "dev-master",
         "phpspec/prophecy-phpunit": "dev-master"
     },
