@@ -131,7 +131,7 @@ class ShopInstaller implements ShopServiceInterface
 
         $php = getenv('PHPBIN') ? getenv('PHPBIN') . ' ': '';
 
-        CliExecutor::executeCommand( $php . '"' . $vendorDir . '/bin/oe-eshop-db_views_regenerate"');
+        CliExecutor::executeCommand( $php . '"' . $vendorDir . '/bin/oe-eshop-db_views_generate"');
     }
 
     /**
