@@ -41,7 +41,6 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
             parent::prepareShop();
 
             $shopConfig = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
-            $shopConfig->setVar('iUtfMode', 1);
             if ($testDatabase = $this->getTestConfig()->getTestDatabaseName()) {
                 $shopConfig->setVar('dbName', $testDatabase);
             }
@@ -55,7 +54,6 @@ namespace OxidEsales\TestingLibrary\Bootstrap {
             $config = \OxidEsales\Eshop\Core\Registry::getConfig();
             $configFile = \OxidEsales\Eshop\Core\Registry::get(\OxidEsales\Eshop\Core\ConfigFile::class);
             $config->reinitialize();
-            $config->setConfigParam('iUtfMode', $configFile->getVar('iUtfMode'));
             $config->setConfigParam('dbName', $configFile->getVar('dbName'));
         }
     }
