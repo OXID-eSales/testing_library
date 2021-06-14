@@ -7,6 +7,8 @@ namespace OxidEsales\TestingLibrary\Services\Library;
 
 
 
+use OxidEsales\Facts\Facts;
+
 /**
  * Class used for uploading files in services.
  */
@@ -72,8 +74,7 @@ class ServiceConfig
     public function getShopEdition()
     {
         if (is_null($this->shopEdition)) {
-            $config = new \OxidEsales\Eshop\Core\Config();
-            $shopEdition = $config->getEdition();
+            $shopEdition = (new Facts())->getEdition();
 
             $this->shopEdition = strtoupper($shopEdition);
         }
