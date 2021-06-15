@@ -70,7 +70,7 @@ use \OxidEsales\Eshop\Core\UtilsObject;
  */
 function oxAddClassModule($sModuleClass, $sClass, $prependStrategy = false)
 {
-    $oFactory = new \OxidEsales\Eshop\Core\UtilsObject();
+    $oFactory = \OxidEsales\Eshop\Core\UtilsObject::getInstance();
     $aModules = $oFactory->getModuleVar("aModules");
 
     //unset _possible_ registry instance
@@ -96,7 +96,7 @@ function oxRemClassModule($sModuleClass, $sClass = '')
 {
     \OxidEsales\Eshop\Core\Registry::set($sClass, null);
 
-    $oFactory = new \OxidEsales\Eshop\Core\UtilsObject();
+    $oFactory = \OxidEsales\Eshop\Core\UtilsObject::getInstance();
     $aModules = $oFactory->getModuleVar("aModules");
 
     if (!$aModules) {

@@ -63,7 +63,7 @@ class ModuleInstaller implements ShopServiceInterface
             }
             Registry::set($key, null);
         }
-        $utilsObject = new \OxidEsales\Eshop\Core\UtilsObject;
+        $utilsObject = \OxidEsales\Eshop\Core\UtilsObject::getInstance();
         $utilsObject->resetInstanceCache();
         Registry::set(\OxidEsales\Eshop\Core\UtilsObject::class, $utilsObject);
         \OxidEsales\Eshop\Core\Module\ModuleVariablesLocator::resetModuleVariables();

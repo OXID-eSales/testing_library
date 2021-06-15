@@ -7,6 +7,7 @@
 
 namespace OxidEsales\TestingLibrary;
 
+use Exception;
 use modOXID;
 use modOxUtilsDate;
 use oxDatabaseHelper;
@@ -21,10 +22,8 @@ use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorer
 use OxidEsales\TestingLibrary\Services\Library\ProjectConfigurationHandler;
 use oxTestModules;
 use oxTestsStaticCleaner;
-use PHPUnit\Framework\MockObject\MockBuilder;
 use PHPUnit\Framework\TestResult;
 use ReflectionClass;
-use Exception;
 
 require_once TEST_LIBRARY_HELPERS_PATH . 'oxDatabaseHelper.php';
 require_once TEST_LIBRARY_HELPERS_PATH . 'modOxUtilsDate.php';
@@ -806,7 +805,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function addClassExtension($extension, $class)
     {
-        $utilsObject = new UtilsObject();
+        $utilsObject = UtilsObject::getInstance();
         $extensions = $utilsObject->getModuleVar("aModules");
 
         \OxidEsales\Eshop\Core\Registry::set($class, null);
@@ -826,7 +825,7 @@ abstract class UnitTestCase extends BaseTestCase
     {
         \OxidEsales\Eshop\Core\Registry::set($class, null);
 
-        $utilsObject = new UtilsObject();
+        $utilsObject = UtilsObject::getInstance();
         $extensions = $utilsObject->getModuleVar("aModules");
 
         if (!$extensions) {
