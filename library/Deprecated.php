@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
@@ -44,76 +45,6 @@ class oxAcceptanceTestCase extends OxidEsales\TestingLibrary\AcceptanceTestCase
 use \OxidEsales\Eshop\Core\UtilsObject;
 
 /**
- * adds new module to specified class
- * Usable if you want to check how many calls of class AA method BB
- *    done while testing class XX.
- * Or can be used to disable some AA method like BB (e.g. die),
- *    which gets called while testing XX.
- * Since there are no modules in testing data, this function does not
- *    check module parent module
- *
- * e.g.
- *  - we need to disable \OxidEsales\Eshop\Core\Utils::showMessageAndDie
- *     class modUtils extends oxutils {
- *        function showMessageAndDie (){}
- *     };
- *  - and then in your test function
- *     oxAddClassModule('modUtils', 'oxutils');
- *  - and after doing some ...
- *     oxRemClassModule('modUtils');
- *
- * @param $sModuleClass
- * @param $sClass
- * @param bool $prependStrategy
- *
- * @deprecated since v4.0.0; Use native PHPUnit functionality like mocks for achieving similar result.
- */
-function oxAddClassModule($sModuleClass, $sClass, $prependStrategy = false)
-{
-    $oFactory = \OxidEsales\Eshop\Core\UtilsObject::getInstance();
-    $aModules = $oFactory->getModuleVar("aModules");
-
-    //unset _possible_ registry instance
-    \OxidEsales\Eshop\Core\Registry::set($sClass, null);
-
-    if ($aModules && isset($aModules[$sClass]) && $aModules[$sClass]) {
-        $sModuleClass = $prependStrategy
-            ? $sModuleClass . '&' . $aModules[$sClass]
-            : $aModules[$sClass] . '&' . $sModuleClass;
-    }
-    $aModules[strtolower($sClass)] = $sModuleClass;
-
-    $oFactory->setModuleVar("aModules", $aModules);
-}
-
-/**
- * @param $sModuleClass
- * @param string $sClass
- *
- * @deprecated since v4.0.0; Use native PHPUnit functionality like mocks for achieving similar result.
- */
-function oxRemClassModule($sModuleClass, $sClass = '')
-{
-    \OxidEsales\Eshop\Core\Registry::set($sClass, null);
-
-    $oFactory = \OxidEsales\Eshop\Core\UtilsObject::getInstance();
-    $aModules = $oFactory->getModuleVar("aModules");
-
-    if (!$aModules) {
-        $aModules = array();
-    }
-
-    if ($sClass) {
-        unset($aModules[$sClass]);
-    } else {
-        while (($sKey = array_search($sModuleClass, $aModules)) !== false) {
-            unset($aModules[$sKey]);
-        }
-    }
-    $oFactory->setModuleVar("aModules", $aModules);
-}
-
-/**
  * Class oxTestModules
  *
  * @deprecated
@@ -156,7 +87,7 @@ class oxTestModules
             $last = \OxidEsales\Eshop\Core\Registry::getUtilsObject()->getClassName(strtolower($class));
         }
         eval ("class $name extends $last { $access \$$varName = $default;}");
-        oxAddClassModule($name, $class);
+        (new oxUnitTestCase())->addClassExtension($name, $class);
         self::$_addedmods[$class][] = $name;
     }
 
@@ -246,7 +177,7 @@ class oxTestModules
             }
 
             eval ("class $name extends $last { function $fncName { $sCode }}");
-            oxAddClassModule($name, $class);
+            (new oxUnitTestCase())->addClassExtension($name, $class);
 
             self::$_addedmods[$class][] = $name;
 
@@ -303,9 +234,6 @@ class oxTestModules
     {
         self::$_aModuleMap = array();
         self::$_oOrigOxUtilsObj = null;
-        foreach (self::$_addedmods as $class => $arr) {
-            oxRemClassModule('allmods', $class);
-        }
         self::$_addedmods = array();
     }
 

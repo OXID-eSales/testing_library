@@ -12,7 +12,10 @@ use modOXID;
 use modOxUtilsDate;
 use oxDatabaseHelper;
 use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\FileCache;
 use OxidEsales\Eshop\Core\Module\ModuleVariablesLocator;
+use OxidEsales\Eshop\Core\ShopIdCalculator;
+use OxidEsales\Eshop\Core\SubShopSpecificFileCache;
 use OxidEsales\Eshop\Core\UtilsObject;
 use OxidEsales\EshopCommunity\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\TestingLibrary\Helper\ProjectConfigurationHelper;
@@ -28,11 +31,11 @@ use ReflectionClass;
 require_once TEST_LIBRARY_HELPERS_PATH . 'oxDatabaseHelper.php';
 require_once TEST_LIBRARY_HELPERS_PATH . 'modOxUtilsDate.php';
 
-/**
- * Base tests class. Most tests should extend this class.
- */
 abstract class UnitTestCase extends BaseTestCase
 {
+
+    /** @var array Buffer variable of queries for feature testing */
+    protected $dbQueryBuffer = array();
     /** @var bool Registry cache. */
     private static $setupBeforeTestSuiteDone = false;
 
@@ -68,9 +71,6 @@ abstract class UnitTestCase extends BaseTestCase
 
     /** @var array Tables to be restored after test run. */
     private $tablesForCleanup = array();
-
-    /** @var array Buffer variable of queries for feature testing */
-    protected $dbQueryBuffer = array();
 
     /**
      * Running setUpBeforeTestSuite action.
@@ -127,11 +127,6 @@ abstract class UnitTestCase extends BaseTestCase
         $this->getShopStateBackup()->backupRequestVariables();
     }
 
-
-    /**
-     * Initialize the fixture.
-     *
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -142,7 +137,7 @@ abstract class UnitTestCase extends BaseTestCase
 
         $this->setShopId(null);
         $this->setAdminMode(false);
-        UtilsObject::resetModuleVars();
+        ModuleVariablesLocator::resetModuleVariables();
     }
 
     /**
@@ -161,11 +156,6 @@ abstract class UnitTestCase extends BaseTestCase
         return $result;
     }
 
-    /**
-     * Executed after test is down.
-     * Cleans up database only if test does not have dependencies.
-     * If test does have dependencies, any value instead of null should be returned.
-     */
     protected function tearDown(): void
     {
         /**
@@ -805,16 +795,14 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function addClassExtension($extension, $class)
     {
-        $utilsObject = UtilsObject::getInstance();
-        $extensions = $utilsObject->getModuleVar("aModules");
-
+        $extensions = $this->getModuleVariablesLocator()->getModuleVariable('aModules');
         \OxidEsales\Eshop\Core\Registry::set($class, null);
 
         if ($extensions[strtolower($class)]) {
             $extension = $extensions[strtolower($class)] . '&' . $extension;
         }
         $extensions[strtolower($class)] = $extension;
-        $utilsObject->setModuleVar("aModules", $extensions);
+        $this->getModuleVariablesLocator()->setModuleVariable('aModules', $extensions);
     }
 
     /**
@@ -824,9 +812,7 @@ abstract class UnitTestCase extends BaseTestCase
     public function removeClassExtension($extension, $class = '')
     {
         \OxidEsales\Eshop\Core\Registry::set($class, null);
-
-        $utilsObject = UtilsObject::getInstance();
-        $extensions = $utilsObject->getModuleVar("aModules");
+        $extensions = $this->getModuleVariablesLocator()->getModuleVariable('aModules');
 
         if (!$extensions) {
             $extensions = array();
@@ -839,7 +825,7 @@ abstract class UnitTestCase extends BaseTestCase
                 unset($extensions[$key]);
             }
         }
-        $utilsObject->setModuleVar("aModules", $extensions);
+        $this->getModuleVariablesLocator()->setModuleVariable('aModules', $extensions);
     }
 
     /**
@@ -1071,5 +1057,15 @@ abstract class UnitTestCase extends BaseTestCase
     private static function getProjectConfigurationHandler(): ProjectConfigurationHandler
     {
         return new ProjectConfigurationHandler(new ProjectConfigurationHelper());
+    }
+
+    /** @return ModuleVariablesLocator */
+    private function getModuleVariablesLocator(): ModuleVariablesLocator
+    {
+        $shopIdCalculator = new ShopIdCalculator(
+            new FileCache()
+        );
+        $subShopSpecificCache = new SubShopSpecificFileCache($shopIdCalculator);
+        return new ModuleVariablesLocator($subShopSpecificCache, $shopIdCalculator);
     }
 }
