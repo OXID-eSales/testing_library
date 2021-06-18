@@ -7,6 +7,7 @@
 
 namespace OxidEsales\TestingLibrary;
 
+use OxidEsales\Eshop\Core\Registry;
 use Exception;
 use modOXID;
 use modOxUtilsDate;
@@ -255,7 +256,7 @@ abstract class UnitTestCase extends BaseTestCase
      */
     public function getRequestParameter($parameterName)
     {
-        return $this->getConfig()->getRequestParameter($parameterName);
+        return Registry::getRequest()->getRequestEscapedParameter($parameterName);
     }
 
     /**
