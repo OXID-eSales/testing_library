@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
@@ -6,8 +7,11 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use OxidEsales\Eshop\Core\Edition\EditionRootPathProvider;
-use OxidEsales\Eshop\Core\Edition\EditionSelector;
+use OxidEsales\EshopCommunity\Core\Registry;
+use OxidEsales\EshopCommunity\Setup\Utilities;
+use OxidEsales\Facts\Edition\EditionSelector;
+use OxidEsales\Facts\Facts;
+use Webmozart\PathUtil\Path;
 
 /**
  * Class responsible for providing path to testData directory.
@@ -84,13 +88,15 @@ class TestSqlPathProvider
     {
         $pathParts = explode(static::TESTS_DIRECTORY . '/' . static::ACCEPTANCE_DIRECTORY, $pathToTestSql);
         if (count($pathParts) > 1) {
+            /** @var Utilities $utilities */
+            $utilities = Registry::get(Utilities::class);
             $testDirectoryName = $pathParts[count($pathParts) - 1];
-            $enterprisePathProvider = new EditionRootPathProvider($this->getEditionSelector());
-            $pathToEditionTestDirectory =
-                $enterprisePathProvider->getDirectoryPath()
-                . '/' . ucfirst(static::TESTS_DIRECTORY)
-                . '/' . ucfirst(static::ACCEPTANCE_DIRECTORY)
-                . '/' . $testDirectoryName;
+            $pathToEditionTestDirectory = Path::join(
+                $utilities->getRootDirectory(),
+                ucfirst(static::TESTS_DIRECTORY),
+                ucfirst(static::ACCEPTANCE_DIRECTORY),
+                $testDirectoryName
+            );
 
             $pathToTestSql = realpath($pathToEditionTestDirectory);
         }

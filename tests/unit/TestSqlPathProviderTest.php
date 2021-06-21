@@ -1,14 +1,36 @@
 <?php
+
 /**
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
  */
 
-use OxidEsales\Eshop\Core\Edition\EditionSelector;
-use OxidEsales\TestingLibrary\TestSqlPathProvider;
+declare(strict_types=1);
 
-class TestSqlPathProviderTest extends PHPUnit\Framework\TestCase
+namespace OxidEsales\TestingLibrary\Unit;
+
+use OxidEsales\Facts\Edition\EditionSelector;
+use OxidEsales\TestingLibrary\TestSqlPathProvider;
+use PHPUnit\Framework\TestCase;
+
+final class TestSqlPathProviderTest extends TestCase
 {
+    /**
+     * @dataProvider providerChecksForCorrectPath
+     */
+    public function testGetDataPathBySuitePath(string $testSuitePath, string $edition, string $resultPath): void
+    {
+        $shopPath = '/var/www/oxideshop/source';
+        $editionSelectorMock = $this->createMock(EditionSelector::class);
+        $editionSelectorMock->method('isEnterprise')
+            ->willReturn($edition === EditionSelector::ENTERPRISE);
+        $testDataPathProvider = new TestSqlPathProvider($editionSelectorMock, $shopPath);
+
+        $datPath = $testDataPathProvider->getDataPathBySuitePath($testSuitePath);
+
+        $this->assertSame($resultPath, $datPath);
+    }
+
     public function providerChecksForCorrectPath()
     {
         return [
@@ -33,21 +55,5 @@ class TestSqlPathProviderTest extends PHPUnit\Framework\TestCase
                 '/var/www/oxideshop/tests/Acceptance/Admin/testSql'
             ],
         ];
-    }
-
-    /**
-     * @param string $testSuitePath
-     * @param string $edition
-     * @param string $resultPath
-     *
-     * @dataProvider providerChecksForCorrectPath
-     */
-    public function testChecksForCorrectPath($testSuitePath, $edition, $resultPath)
-    {
-        $shopPath = '/var/www/oxideshop/source';
-        $editionSelector = new EditionSelector($edition);
-        $testDataPathProvider = new TestSqlPathProvider($editionSelector, $shopPath);
-
-        $this->assertSame($resultPath, $testDataPathProvider->getDataPathBySuitePath($testSuitePath));
     }
 }

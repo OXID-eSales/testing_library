@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
@@ -7,26 +8,21 @@
 namespace OxidEsales\TestingLibrary\Services\ShopInstaller;
 
 use OxidEsales\Eshop\Core\ConfigFile;
-use OxidEsales\Eshop\Core\Config;
-use OxidEsales\Eshop\Core\Edition\EditionPathProvider;
-use OxidEsales\Eshop\Core\Edition\EditionRootPathProvider;
-use OxidEsales\Eshop\Core\Edition\EditionSelector;
 use OxidEsales\EshopCommunity\Setup\Core;
+use OxidEsales\EshopCommunity\Setup\Utilities;
+use OxidEsales\EshopProfessional\Core\Serial;
+use OxidEsales\Facts\Edition\EditionSelector;
 use OxidEsales\TestingLibrary\Services\Library\Cache;
+use OxidEsales\TestingLibrary\Services\Library\CliExecutor;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseHandler;
 use OxidEsales\TestingLibrary\Services\Library\Request;
 use OxidEsales\TestingLibrary\Services\Library\ServiceConfig;
 use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
-use OxidEsales\TestingLibrary\Services\Library\CliExecutor;
-use OxidEsales\EshopProfessional\Core\Serial;
 use OxidEsales\TestingLibrary\TestConfig;
-use OxidEsales\EshopCommunity\Setup\Utilities;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Webmozart\PathUtil\Path;
 
-/**
- * Class for shop installation.
- */
 class ShopInstaller implements ShopServiceInterface
 {
     /** @var DatabaseHandler */
@@ -38,14 +34,6 @@ class ShopInstaller implements ShopServiceInterface
     /** @var ConfigFile */
     private $shopConfig;
 
-    /** @var EditionPathProvider */
-    private $editionPathProvider;
-
-    /**
-     * Includes configuration files.
-     *
-     * @param ServiceConfig $config
-     */
     public function __construct($config)
     {
         $this->serviceConfig = $config;
@@ -110,10 +98,12 @@ class ShopInstaller implements ShopServiceInterface
         $dbHandler->getDbConnection()->exec('DROP DATABASE IF EXISTS`' . $dbHandler->getDbName() . '`');
         $dbHandler->getDbConnection()->exec('create database `' . $dbHandler->getDbName() . '` collate ' . $dbHandler->getCharsetMode() . '_general_ci');
 
-        $baseEditionPathProvider = new EditionPathProvider(new EditionRootPathProvider(new EditionSelector(EditionSelector::COMMUNITY)));
-
-        $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/database_schema.sql");
-        $dbHandler->import($baseEditionPathProvider->getDatabaseSqlDirectory() . "/initial_data.sql");
+        $dbHandler->import(
+            $this->getDatabaseSchemaSqlFilePath()
+        );
+        $dbHandler->import(
+            $this->getInitialDataSqlFilePath()
+        );
 
         $output = new ConsoleOutput();
         $output->setVerbosity(ConsoleOutputInterface::VERBOSITY_QUIET);
@@ -300,19 +290,6 @@ class ShopInstaller implements ShopServiceInterface
     }
 
     /**
-     * @return EditionPathProvider
-     */
-    protected function getEditionPathProvider()
-    {
-        if (is_null($this->editionPathProvider)) {
-            $editionPathSelector = new EditionRootPathProvider(new EditionSelector());
-            $this->editionPathProvider = new EditionPathProvider($editionPathSelector);
-        }
-
-        return $this->editionPathProvider;
-    }
-
-    /**
      * Returns shop id.
      *
      * @return string
@@ -381,5 +358,15 @@ class ShopInstaller implements ShopServiceInterface
         }
 
         return $input;
+    }
+
+    private function getInitialDataSqlFilePath(): string
+    {
+        return Path::join((new Utilities())->getSqlDirectory(), 'initial_data.sql');
+    }
+
+    private function getDatabaseSchemaSqlFilePath(): string
+    {
+        return Path::join((new Utilities())->getSqlDirectory(), 'database_schema.sql');
     }
 }
