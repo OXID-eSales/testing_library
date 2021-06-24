@@ -15,16 +15,6 @@ class modOxUtilsDate extends \OxidEsales\Eshop\Core\UtilsDate
 
     /**
      * @param string $sTime
-     *
-     * @deprecated Still used for old tests to work. Use setTime instead.
-     */
-    public function UNITSetTime($sTime)
-    {
-        $this->setTime($sTime);
-    }
-
-    /**
-     * @param string $sTime
      */
     public function setTime($sTime)
     {
