@@ -960,61 +960,12 @@ abstract class UnitTestCase extends BaseTestCase
     }
 
     /**
-     * Creates stub object from given class
-     *
-     * @param string $className       Class name
-     * @param array  $methods     Assoc array with method => value
-     * @param array  $testMethods Array with test methods for mocking
-     *
-     * @deprecated use oxUnitTestCase::createStub() instead.
-     *
-     * @return mixed
-     */
-    protected function _createStub($className, $methods, $testMethods = array())
-    {
-        $mockedMethods = array_unique(array_merge(array_keys($methods), $testMethods));
-
-        $object = $this->getMock($className, $mockedMethods, array(), '', false);
-
-        foreach ($methods as $method => $value) {
-            if (!in_array($method, $testMethods)) {
-                $object->expects($this->any())
-                    ->method($method)
-                    ->will($this->returnValue($value));
-            }
-        }
-
-        return $object;
-    }
-
-    /**
      * Backs up database for later restorations.
      */
     protected function backupDatabase()
     {
         $oDbRestore = self::_getDbRestore();
         $oDbRestore->dumpDB();
-    }
-
-    /**
-     * OnlineCaller rethrows exception in method _castExceptionAndWriteToLog
-     * this way we mock it from writing to log.
-     *
-     * @param string $exceptionClassName The name of the exception we want to stub, to not log its output.
-     * @param string $saveUnderClassName The name under which we save the stubbed exception in the testing library.
-     *
-     * @return MockObject The mocked exception.
-     *
-     * @deprecated since v.3.4.0 (2018-01-11); The method was using deprecated oxTestModules and was made obsolet now
-     */
-    protected function stubExceptionToNotWriteToLog($exceptionClassName = 'oxException', $saveUnderClassName = 'oxException')
-    {
-        $exception = $this->getMock($exceptionClassName, ['debugOut']);
-        $exception->expects($this->any())->method('debugOut');
-
-        oxTestModules::addModuleObject($saveUnderClassName, $exception);
-
-        return $exception;
     }
 
     protected function assertViewExists($tableName)

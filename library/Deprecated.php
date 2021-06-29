@@ -209,21 +209,6 @@ class oxTestModules
     }
 
     /**
-     * publicize method = creates a wrapper for it named p_XXX instead of _XXX
-     *
-     * @param mixed $class
-     * @param mixed $fnc
-     *
-     * @static
-     * @access public
-     * @return string
-     */
-    public static function publicize($class, $fnc)
-    {
-        return self::addFunction($class, preg_replace('/^_/', 'p_', $fnc), "array(\$this, '$fnc')");
-    }
-
-    /**
      * clean Ups loaded modules
      *
      * @static

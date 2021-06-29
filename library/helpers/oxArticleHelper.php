@@ -27,7 +27,7 @@ class oxArticleHelper extends \OxidEsales\Eshop\Application\Model\Article
     public static function cleanup()
     {
         self::resetArticleCategories();
-        self::resetCache();
+        self::resetArticleCache();
         self::resetAmountPrice();
     }
 
@@ -57,7 +57,7 @@ class oxArticleHelper extends \OxidEsales\Eshop\Application\Model\Article
     /**
      * Reset cached private variable values.
      */
-    public static function resetCache()
+    public static function resetArticleCache()
     {
         parent::$_aArticleVendors = array();
         parent::$_aArticleManufacturers = array();
