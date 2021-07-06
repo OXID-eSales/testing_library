@@ -14,7 +14,7 @@
         "oxid-esales/mink-selenium-driver": "~v1.1.2",
         "symfony/yaml": "^5.0.4",
         "symfony/filesystem": "^5.0.4",
-        "incenteev/composer-parameter-handler": "2.1.x-dev",
+        "incenteev/composer-parameter-handler": "^2.1.4",
         "symfony/dom-crawler": "v2.7.*",
         "oxid-esales/oxideshop-facts": "^v3.0.0",
         "oxid-esales/oxideshop-unified-namespace-generator": "^v3.0.0",
@@ -25,10 +25,10 @@
         "codeception/module-webdriver": "^1.1",
         "codeception/module-db": "^1.0",
         "codeception/module-filesystem": "^1.0",
-        "oxid-esales/codeception-modules": "dev-master",
-        "oxid-esales/codeception-page-objects": "dev-master",
-        "oxid-esales/developer-tools": "dev-master",
-        "phpspec/prophecy-phpunit": "dev-master"
+        "oxid-esales/codeception-modules": "^v2.0.0",
+        "oxid-esales/codeception-page-objects": "^v3.0.0",
+        "oxid-esales/developer-tools": "^v2.0.0",
+        "phpspec/prophecy-phpunit": "^v2.0.1"
     },
     "bin": [
         "bin/reset-shop",
