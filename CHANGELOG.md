@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [master] - Unreleased
+## [v9.0.0] - 2021-07-06
 
 ### Added
 - PHPT files include
@@ -239,6 +239,7 @@ An example:
 
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
+[v9.0.0]: https://github.com/OXID-eSales/testing_library/compare/v8.0.1...v9.0.0
 [v8.0.1]: https://github.com/OXID-eSales/testing_library/compare/v8.0.0...v8.0.1
 [v8.0.0]: https://github.com/OXID-eSales/testing_library/compare/v7.3.0...v8.0.0
 [v7.3.0]: https://github.com/OXID-eSales/testing_library/compare/v7.2.0...v7.3.0
