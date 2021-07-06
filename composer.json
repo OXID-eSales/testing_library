@@ -26,7 +26,7 @@
         "codeception/module-db": "^1.0",
         "codeception/module-filesystem": "^1.0",
         "oxid-esales/codeception-modules": "^v2.0.0",
-        "oxid-esales/codeception-page-objects": "^v3.0.0",
+        "oxid-esales/codeception-page-objects": "dev-master-unstable-tests-debug",
         "oxid-esales/developer-tools": "^v2.0.0",
         "phpspec/prophecy-phpunit": "^v2.0.1"
     },
