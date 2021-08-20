@@ -20,14 +20,6 @@
         "oxid-esales/oxideshop-unified-namespace-generator": "^v3.0.0",
         "phpunit/php-code-coverage": "^9",
         "phpunit/phpcov": "^8",
-        "codeception/codeception": "^4",
-        "codeception/module-asserts": "^1.3",
-        "codeception/module-webdriver": "^1.1",
-        "codeception/module-db": "^1.0",
-        "codeception/module-filesystem": "^1.0",
-        "oxid-esales/codeception-modules": "^v2.0.0",
-        "oxid-esales/codeception-page-objects": "^v3.0.0",
-        "oxid-esales/developer-tools": "^v2.0.0",
         "phpspec/prophecy-phpunit": "^v2.0.1"
     },
     "bin": [
