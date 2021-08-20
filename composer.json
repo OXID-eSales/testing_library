@@ -10,7 +10,6 @@
         "phpunit/phpunit": "^9.1.1",
         "pdepend/pdepend": "2.7.0",
         "mikey179/vfsstream": "~1.6.8",
-        "behat/mink": "~1.5.0",
         "oxid-esales/mink-selenium-driver": "~v1.1.2",
         "symfony/yaml": "^5.0.4",
         "symfony/filesystem": "^5.0.4",
