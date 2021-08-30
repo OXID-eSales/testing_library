@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v10.0.0] - Unreleased
+### Removed
+- `AcceptanceTestCase::getShopVersionNumber()`
+
 ## [v9.0.0] - 2021-07-06
 
 ### Added
@@ -239,6 +243,7 @@ An example:
 
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
+[v10.0.0]: https://github.com/OXID-eSales/testing_library/compare/v9.0.0...dev-master
 [v9.0.0]: https://github.com/OXID-eSales/testing_library/compare/v8.0.1...v9.0.0
 [v8.0.1]: https://github.com/OXID-eSales/testing_library/compare/v8.0.0...v8.0.1
 [v8.0.0]: https://github.com/OXID-eSales/testing_library/compare/v7.3.0...v8.0.0

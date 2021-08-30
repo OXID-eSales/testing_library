@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
@@ -336,25 +337,19 @@ abstract class AcceptanceTestCase extends MinkWrapper
     /**
      * opens shop frontend and runs checkForErrors().
      *
-     * @param bool        $blForceMainShop Opens main shop even if SubShop is being tested.
-     * @param bool        $blClearCache    Whether to clear cache.
-     * @param bool|string $mForceSubShop   Opens sub shop even if man shop is being tested.
-     *
+     * @param bool $forceMainShop Opens main shop even if SubShop is being tested.
+     * @param bool $clearCache Whether to clear cache.
+     * @param bool|string $forceSubShop Opens sub shop even if man shop is being tested.
      */
-    public function openShop($blForceMainShop = false, $blClearCache = false, $mForceSubShop = false)
+    public function openShop($forceMainShop = false, $clearCache = false, $forceSubShop = false)
     {
-        $this->openNewWindow(shopURL, $blClearCache);
-
-        if ($this->getTestConfig()->isSubShop() || $mForceSubShop) {
-            if (!$blForceMainShop) {
-                if (!is_string($mForceSubShop)) {
-                    $mForceSubShop = "link=subshop";
-                }
-                $this->clickAndWait($mForceSubShop);
-            } else {
-                $sShopNr = $this->getShopVersionNumber();
-                $this->clickAndWait("link=OXID eShop " . $sShopNr);
-            }
+        $this->openNewWindow($this->getTestConfig()->getShopUrl(), $clearCache);
+        if ($forceSubShop || $this->getTestConfig()->isSubShop()) {
+            $linkToMainShop = 'link=OXID eShop';
+            $linkToSubShop = is_string($forceSubShop) ? $forceSubShop : 'link=subshop';
+            $this->clickAndWait(
+                $forceMainShop ? $linkToMainShop : $linkToSubShop
+            );
         }
         $this->checkForErrors();
     }
@@ -1704,18 +1699,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
     }
 
 //----------------------------- Other functions, PHPUnit fixes, etc ------------------------------------
-
-    /**
-     * Return main shop number.
-     * To use to form link to main shop and etc.
-     *
-     * @return string
-     */
-    public function getShopVersionNumber()
-    {
-        return '6';
-    }
-
     /**
      * tests if none of php possible errors are displayed into shop frontend page.
      *
