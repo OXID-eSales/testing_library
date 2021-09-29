@@ -276,19 +276,14 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function openNewWindow($sUrl, $blClearCache = true)
     {
-        $this->selectedFrame = 'relative=top';
-        try {
-            $this->selectWindow(null);
-            $this->windowMaximize();
-        } catch (\Behat\Mink\Exception\Exception $e) {
-            // Do nothing if methods not implemented, for example with headless driver.
-        }
+        $this->selectWindow(null);
 
         if ($blClearCache) {
             $this->clearTemp();
         }
 
         $this->open($sUrl);
+        $this->windowMaximize();
         $this->checkForErrors();
     }
 

@@ -33,6 +33,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fix the testing library to run the code coverage
 - Deny temporary tests related mysql configuration file "others" reading rights [PR-27](https://github.com/OXID-eSales/testing_library/pull/27)
 
+## [v8.1.0] - Unreleased
+
+### Removed
+- Support for PHP 7.3
+
+## [v8.0.2] - 2021-07-14
+
+### Fixed
+- Remove deprecated parameters from phpunit configuration.
+
 ## [v8.0.1] - 2021-07-06
 
 ### Fixed
@@ -244,7 +254,9 @@ An example:
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
 [v10.0.0]: https://github.com/OXID-eSales/testing_library/compare/v9.0.0...dev-master
-[v9.0.0]: https://github.com/OXID-eSales/testing_library/compare/v8.0.1...v9.0.0
+[v9.0.0]: https://github.com/OXID-eSales/testing_library/compare/v8.0.2...v9.0.0
+[v8.1.0]: https://github.com/OXID-eSales/testing_library/compare/v8.0.2...v8.1.0
+[v8.0.2]: https://github.com/OXID-eSales/testing_library/compare/v8.0.1...v8.0.2
 [v8.0.1]: https://github.com/OXID-eSales/testing_library/compare/v8.0.0...v8.0.1
 [v8.0.0]: https://github.com/OXID-eSales/testing_library/compare/v7.3.0...v8.0.0
 [v7.3.0]: https://github.com/OXID-eSales/testing_library/compare/v7.2.0...v7.3.0
