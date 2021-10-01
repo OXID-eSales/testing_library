@@ -126,11 +126,18 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $this->currentMinkDriver = $this->_blDefaultMinkDriver;
         $this->selectedWindow = null;
 
+        if (!self::$testsSuiteStarted) {
+            $this->backupShopConfiguration();
+        }
+        if ($this->getTestConfig()->isSubShop()) {
+            $this->generateSubShopConfiguration();
+        }
         $currentTestsSuitePath = $this->getSuitePath();
         if (self::$testsSuitePath !== $currentTestsSuitePath) {
             $this->setUpTestsSuite($currentTestsSuitePath);
             self::$testsSuitePath = $currentTestsSuitePath;
         }
+
         $this->getTranslator()->setLanguage($this->translateLanguageId);
 
         $this->clearTemp();
@@ -152,7 +159,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
         if (!self::$testsSuiteStarted) {
             self::$testsSuiteStarted = true;
             $this->dumpDB('reset_suite_db_dump');
-            $this->backupShopConfiguration();
         } else {
             $this->restoreDB('reset_suite_db_dump');
             $this->resetCachedObjects();
@@ -163,10 +169,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
 
         $this->activateModules();
         $this->addTestData($testSuitePath);
-
-        if ($this->getTestConfig()->isSubShop()) {
-            $this->generateSubShopConfiguration();
-        }
 
         $oServiceCaller->callService('ViewsGenerator');
 
