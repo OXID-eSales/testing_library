@@ -129,6 +129,9 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $this->currentMinkDriver = $this->_blDefaultMinkDriver;
         $this->selectedWindow = null;
 
+        if ($this->getTestConfig()->isSubShop()) {
+            $this->generateSubShopConfiguration();
+        }
         $currentTestsSuitePath = $this->getSuitePath();
         if (self::$testsSuitePath !== $currentTestsSuitePath) {
             $this->setUpTestsSuite($currentTestsSuitePath);
@@ -165,10 +168,6 @@ abstract class AcceptanceTestCase extends MinkWrapper
 
         $this->activateModules();
         $this->addTestData($testSuitePath);
-
-        if ($this->getTestConfig()->isSubShop()) {
-            $this->generateSubShopConfiguration();
-        }
 
         $oServiceCaller->callService('ViewsGenerator');
 
