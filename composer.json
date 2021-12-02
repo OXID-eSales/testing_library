@@ -24,8 +24,8 @@
         "codeception/module-webdriver": "^1.1",
         "codeception/module-db": "^1.0",
         "codeception/module-filesystem": "^1.0",
-        "oxid-esales/codeception-modules": "^v1.5.0",
-        "oxid-esales/codeception-page-objects": "^v2.0.0",
+        "oxid-esales/codeception-modules": "^v1.6.0",
+        "oxid-esales/codeception-page-objects": "^v2.2.0",
         "oxid-esales/developer-tools": "^1.0.0",
         "symfony/polyfill-intl-idn": "1.17.1"
     },
