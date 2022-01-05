@@ -384,17 +384,11 @@ abstract class AcceptanceTestCase extends MinkWrapper
      */
     public function loginInFrontend($userName, $userPass, $waitForLogin = true)
     {
-        $this->selectWindow(null);
+        $this->waitForPageToLoad(10000, true);
         $this->click("//ul[@id='topMenu']/li[1]/a");
-        try {
-            $this->waitForItemAppear("loginBox", 2);
-        } catch (Exception $e) {
-            $this->click("//ul[@id='topMenu']/li[1]/a");
-            $this->waitForItemAppear("loginBox", 2);
-        }
+        $this->waitForItemAppear('loginBox');
         $this->type("//div[@id='loginBox']//input[@name='lgn_usr']", $userName);
         $this->type("//div[@id='loginBox']//input[@name='lgn_pwd']", $userPass);
-
         $this->clickAndWait("//div[@id='loginBox']//button[@type='submit']");
         if ($waitForLogin) {
             $this->waitForElement("//a[@id='logoutLink']");
