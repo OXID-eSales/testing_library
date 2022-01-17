@@ -12,10 +12,11 @@
         "mikey179/vfsstream": "~1.6.8",
         "behat/mink": "~1.5.0",
         "oxid-esales/mink-selenium-driver": "~v1.1.2",
-        "symfony/yaml": "~3.0",
+        "symfony/yaml": "^4.4",
         "incenteev/composer-parameter-handler": "~2.0",
         "symfony/dom-crawler": "v2.7.*",
         "symfony/filesystem": "^4.4.17",
+        "symfony/polyfill-intl-idn": "^1.0",
         "oxid-esales/oxideshop-facts": "^2.4.0",
         "oxid-esales/oxideshop-unified-namespace-generator": "^2.2.0",
         "phpunit/php-code-coverage": "^7.0.12",
@@ -26,8 +27,7 @@
         "codeception/module-filesystem": "^1.0",
         "oxid-esales/codeception-modules": "^v1.6.0",
         "oxid-esales/codeception-page-objects": "^v2.2.0",
-        "oxid-esales/developer-tools": "^1.0.0",
-        "symfony/polyfill-intl-idn": "1.17.1"
+        "oxid-esales/developer-tools": "^1.0.0"
     },
     "bin": [
         "bin/reset-shop",
