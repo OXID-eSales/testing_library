@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
@@ -518,7 +519,7 @@ abstract class MinkWrapper extends BaseTestCase
 
         $aOptions = $oSelect->findAll('xpath', '//option[@selected]');
 
-        if (empty($oOptions)) {
+        if (empty($aOptions)) {
             $value = $this->_getValue($oSelect->getXpath());
             $value = $this->getMinkSession()->getSelectorsHandler()->xpathLiteral($value);
             $aOptions = $oSelect->findAll('xpath', '//option[@value=' . $value . ']');
@@ -1015,8 +1016,7 @@ value = null;
 }
 } else {
 value = node.getAttribute('value');
-}
-JSON.stringify(value)
+}; JSON.stringify(value);
 JS;
         $sResult = json_decode($this->getMinkSession()->getDriver()->getBrowser()->getEval($script));
 

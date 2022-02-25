@@ -34,6 +34,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fix the testing library to run the code coverage
 - Deny temporary tests related mysql configuration file "others" reading rights [PR-27](https://github.com/OXID-eSales/testing_library/pull/27)
 
+## [v8.2.0] - Unreleased
+
+### Changed
+- Updated Symfony components
+
 ## [v8.1.0] - 2021-11-26
 
 ### Removed
@@ -114,10 +119,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - Switch to subshop when activating a module for subshop.
  - Destroy PHP session at test tear down.
  - Use Printer::write() rather than print or echo for test result output.   
- - Use direct /usr/bin/php instead of calling php through the /usr/bin/env [PR-16](https://github.com/OXID-eSales/testing_library/pull/16)
-
-### Removed
-  - Removed deprecated getSession and setSession usages around the code
 
 ## [v6.0.0] - 2018-09-17
 
