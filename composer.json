@@ -1,35 +1,56 @@
 {
     "name": "oxid-esales/testing-library",
     "description": "OXID eShop testing library",
-    "type": "library",
-    "keywords": ["oxid", "testing", "library", "modules", "eShop"],
-    "homepage": "https://www.oxid-esales.com/en/home.html",
     "license": "GPL-3.0-only",
+    "type": "library",
+    "keywords": [
+        "oxid",
+        "testing",
+        "library",
+        "modules",
+        "eShop"
+    ],
+    "homepage": "https://www.oxid-esales.com/en/home.html",
     "require": {
         "php": "^7.4 || ^8.0",
-        "phpunit/phpunit": "^9.1.1",
-        "pdepend/pdepend": "2.7.0",
-        "mikey179/vfsstream": "~1.6.8",
         "behat/mink": "~1.5.0",
-        "oxid-esales/mink-selenium-driver": "~v1.1.2",
-        "symfony/yaml": "^5.0.4",
-        "symfony/filesystem": "^5.0.4",
-        "incenteev/composer-parameter-handler": "^2.1.4",
-        "symfony/dom-crawler": "v2.7.*",
-        "oxid-esales/oxideshop-facts": "*",
-        "oxid-esales/oxideshop-unified-namespace-generator": "*",
-        "phpunit/php-code-coverage": "^9",
-        "phpunit/phpcov": "^8",
         "codeception/codeception": "^4",
         "codeception/module-asserts": "^1.3",
-        "codeception/module-webdriver": "^1.1",
         "codeception/module-db": "^1.0",
         "codeception/module-filesystem": "^1.0",
+        "codeception/module-webdriver": "^1.1",
+        "incenteev/composer-parameter-handler": "^2.1.4",
+        "mikey179/vfsstream": "~1.6.8",
         "oxid-esales/codeception-modules": "^v2.0.0",
         "oxid-esales/codeception-page-objects": "dev-b-7.0.x",
         "oxid-esales/developer-tools": "^v2.0.0",
-        "phpspec/prophecy-phpunit": "^v2.0.1"
+        "oxid-esales/mink-selenium-driver": "~v1.1.2",
+        "oxid-esales/oxideshop-facts": "*",
+        "oxid-esales/oxideshop-unified-namespace-generator": "*",
+        "pdepend/pdepend": "2.7.0",
+        "phpspec/prophecy-phpunit": "^v2.0.1",
+        "phpunit/php-code-coverage": "^9",
+        "phpunit/phpcov": "^8",
+        "phpunit/phpunit": "^9.1.1",
+        "symfony/dom-crawler": "v2.7.*",
+        "symfony/filesystem": "^5.0.4",
+        "symfony/yaml": "^5.0.4"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "OxidEsales\\TestingLibrary\\": "library/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OxidEsales\\TestingLibrary\\Tests\\": "./tests"
+        }
+    },
+    "include-path": [
+        "../../symfony/yaml/"
+    ],
     "bin": [
         "bin/reset-shop",
         "bin/runmetrics",
@@ -40,17 +61,15 @@
         "bin/runtests-coverage",
         "bin/runtests-selenium"
     ],
-    "include-path": [
-        "../../symfony/yaml/"
-    ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "autoload": {
-        "psr-4": {"OxidEsales\\TestingLibrary\\": "library/"}
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "OxidEsales\\TestingLibrary\\Tests\\": "./tests"
+    "extra": {
+        "incenteev-parameters": {
+            "env-map": {
+                "module_ids": "MODULE_IDS",
+                "shop_path": "SHOP_PATH",
+                "shop_tests_path": "SHOP_TESTS_PATH"
+            },
+            "file": "test_config.yml",
+            "parameter-key": "mandatory_parameters"
         }
     },
     "scripts": {
@@ -60,16 +79,5 @@
         "post-update-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
         ]
-    },
-    "extra": {
-        "incenteev-parameters": {
-            "file": "test_config.yml",
-            "parameter-key": "mandatory_parameters",
-            "env-map": {
-                "shop_path": "SHOP_PATH",
-                "shop_tests_path": "SHOP_TESTS_PATH",
-                "module_ids": "MODULE_IDS"
-            }
-        }
     }
 }
