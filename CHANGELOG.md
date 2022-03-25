@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [v10.0.0] - Unreleased
 
 ### Removed
+- PHP v7 support
 - `AcceptanceTestCase::getShopVersionNumber()`
 
 ## [v9.0.0] - 2021-07-06
