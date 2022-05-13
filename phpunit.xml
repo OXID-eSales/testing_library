@@ -1,21 +1,22 @@
-<phpunit backupGlobals="true"
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         backupGlobals="true"
          backupStaticAttributes="false"
          bootstrap="bootstrap.php"
-         cacheTokens="true"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          forceCoversAnnotation="false"
-         printerClass="PHPUnit\TextUI\ResultPrinter"
+         printerClass="PHPUnit\TextUI\DefaultResultPrinter"
          processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"
          stopOnIncomplete="false"
          stopOnSkipped="false"
-         testSuiteLoaderClass="PHPUnit\Runner\StandardTestSuiteLoader"
          beStrictAboutTestsThatDoNotTestAnything="false"
-         verbose="false">
+         verbose="false"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">../</directory>
