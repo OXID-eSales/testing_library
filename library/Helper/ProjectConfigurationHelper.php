@@ -19,6 +19,6 @@ class ProjectConfigurationHelper implements ProjectConfigurationHelperInterface
      */
     public function getConfigurationDirectoryPath(): string
     {
-        return Path::join((new Facts())->getShopRootPath(), '/var/configuration/');
+        return Path::join((new Facts())->getShopRootPath(), '/var/');
     }
 }
