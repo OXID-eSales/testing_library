@@ -37,6 +37,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v8.2.0] - Unreleased
 
+### Added
+- Support of phpunit 9
+
+### Removed
+- `OxidEsales\TestingLibrary\Printer`
+- 
 ### Changed
 - Updated Symfony components
 
