@@ -35,6 +35,10 @@ $phpUnit = "$php $phpUnit --bootstrap " . __DIR__ . "/../bootstrap.php";
 
 $arguments = empty($arguments) ? array(escapeshellarg('AllTestsUnit')) : $arguments;
 
+//print PHP version information
+$printer = new \OxidEsales\TestingLibrary\Printer();
+$printer->write("=========\nrunning php version " . phpversion() . "\n\n============\n");
+
 $returnCode = 0;
 /** Replace markers (e.g. /logs/phpunit_log_TIMESTAMP.xml) with unique timestamp strings */
 $argumentString = $resultsHelper->insertReportTimestamps(implode(' ', $arguments));
