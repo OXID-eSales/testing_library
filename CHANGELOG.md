@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v8.2.1] - Unreleased
+
+### Changed
+- Run tested module activations in a separate processes
+
 ## [v8.2.0] - 2022-07-19
 
 ### Changed
@@ -225,6 +230,7 @@ An example:
 
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
+[v8.2.1]: https://github.com/OXID-eSales/testing_library/compare/v8.2.0...b-6.5.x
 [v8.2.0]: https://github.com/OXID-eSales/testing_library/compare/v8.1.0...v8.2.0
 [v8.1.0]: https://github.com/OXID-eSales/testing_library/compare/v8.0.2...v8.1.0
 [v8.0.2]: https://github.com/OXID-eSales/testing_library/compare/v8.0.1...v8.0.2

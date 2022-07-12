@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © OXID eSales AG. All rights reserved.
  * See LICENSE file for license details.
@@ -6,18 +7,20 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use OxidEsales\Eshop\Core\Module\ModuleList;
-use OxidEsales\Eshop\Core\Module\ModuleCache;
-use OxidEsales\Eshop\Core\Module\ModuleInstaller;
-use OxidEsales\Eshop\Core\Module\Module;
 use Exception;
+use OxidEsales\Eshop\Core\Module\Module;
+use OxidEsales\Eshop\Core\Module\ModuleCache;
+use OxidEsales\Eshop\Core\Module\ModuleList;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\Facts\Facts;
 use OxidEsales\TestingLibrary\Services\Library\Cache;
+use RuntimeException;
+use Symfony\Component\Process\Process;
+use Webmozart\PathUtil\Path;
 
-/**
- * Module loader class. Can imitate loaded module for testing.
- */
+use function is_file;
+
 class ModuleLoader
 {
     /**
@@ -80,9 +83,6 @@ class ModuleLoader
             return;
         }
 
-        $moduleCache = new ModuleCache($module);
-        $moduleInstaller = new ModuleInstaller($moduleCache);
-
         /** Clean all caches before module activation */
         $this->clearShopTmpFolder();
 
@@ -91,9 +91,8 @@ class ModuleLoader
 
         $cachedClassInstances = Registry::getKeys();
 
-        if (!$moduleInstaller->activate($module)) {
-            throw new Exception("Error on module installation: " . $module->getId());
-        }
+        $this->activateModule($module->getId());
+        Registry::getConfig()->reinitialize();
 
         foreach ($cachedClassInstances as $cachedClassInstance) {
             if (\OxidEsales\Eshop\Core\ConfigFile::class !== $cachedClassInstance) {
@@ -154,5 +153,29 @@ class ModuleLoader
     private function makeModuleServicesAvailableInDIContainer(): void
     {
         ContainerFactory::resetContainer();
+    }
+
+    private function activateModule(string $moduleId): void
+    {
+        $rootPath =  (new Facts())->getShopRootPath();
+        $process = new Process(
+            [$this->getConsoleRunner($rootPath), 'oe:module:activate', $moduleId],
+            $rootPath
+        );
+        $process->mustRun();
+    }
+
+    public function getConsoleRunner(string $rootPath): string
+    {
+        $possiblePaths = [
+            'bin/oe-console',
+            'vendor/bin/oe-console',
+        ];
+        foreach ($possiblePaths as $path) {
+            if (is_file(Path::join($rootPath, $path))) {
+                return $path;
+            }
+        }
+        throw new RuntimeException('Could not find script "bin/oe-console" to activate module');
     }
 }

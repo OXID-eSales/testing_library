@@ -17,6 +17,7 @@
         "symfony/dom-crawler": "v2.7.*",
         "symfony/filesystem": "*",
         "symfony/polyfill-intl-idn": "^1.0",
+        "symfony/process": "*",
         "oxid-esales/oxideshop-facts": "*",
         "oxid-esales/oxideshop-unified-namespace-generator": "*",
         "phpunit/php-code-coverage": "^7.0.12",
