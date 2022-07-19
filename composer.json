@@ -26,8 +26,8 @@
         "codeception/module-db": "^1.0",
         "codeception/module-filesystem": "^1.0",
         "oxid-esales/codeception-modules": "^v1.6.0",
-        "oxid-esales/codeception-page-objects": "dev-b-6.5.x",
-        "oxid-esales/developer-tools": "dev-b-6.5.x"
+        "oxid-esales/codeception-page-objects": "^v2.3.0",
+        "oxid-esales/developer-tools": "^v1.1.0"
     },
     "bin": [
         "bin/reset-shop",

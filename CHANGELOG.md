@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v8.2.0] - Unreleased
+## [v8.2.0] - 2022-07-19
 
 ### Changed
 - Updated Symfony components
@@ -225,6 +225,7 @@ An example:
 
 - add helping methods markTestSkippedIfSubShop and markTestSkippedIfNoSubShopto the library/UnitTestCase
 
+[v8.2.0]: https://github.com/OXID-eSales/testing_library/compare/v8.1.0...v8.2.0
 [v8.1.0]: https://github.com/OXID-eSales/testing_library/compare/v8.0.2...v8.1.0
 [v8.0.2]: https://github.com/OXID-eSales/testing_library/compare/v8.0.1...v8.0.2
 [v8.0.1]: https://github.com/OXID-eSales/testing_library/compare/v8.0.0...v8.0.1
