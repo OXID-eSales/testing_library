@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v10.0.0] - Unreleased
 
+### Changed
+- Updated Codeception to v5
+
 ### Removed
 - PHP v7 support
 - `AcceptanceTestCase::getShopVersionNumber()`
