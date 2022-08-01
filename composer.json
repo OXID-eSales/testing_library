@@ -34,6 +34,7 @@
         "phpunit/phpunit": "^9.1.1",
         "symfony/dom-crawler": "v2.7.*",
         "symfony/filesystem": "*",
+        "symfony/process": "*",
         "symfony/yaml": "*"
     },
     "minimum-stability": "dev",
