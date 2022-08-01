@@ -165,7 +165,7 @@ class ModuleLoader
         $process->mustRun();
     }
 
-    public function getConsoleRunner(string $rootPath): string
+    private function getConsoleRunner(string $rootPath): string
     {
         $possiblePaths = [
             'bin/oe-console',
