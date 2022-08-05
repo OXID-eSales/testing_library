@@ -8,7 +8,6 @@
 namespace OxidEsales\TestingLibrary;
 
 use Behat\Mink\Element\NodeElement;
-use Behat\Mink\Exception\ElementException;
 use Exception;
 use InvalidArgumentException;
 
@@ -228,12 +227,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function click($sSelector)
     {
-        try {
-            $this->getElementLazy($sSelector)->click();
-        } catch (ElementException $e) {
-            sleep(1);
-            $this->getElementLazy($sSelector)->click();
-        }
+        $this->getElementLazy($sSelector)->click();
     }
 
     /**
@@ -244,12 +238,7 @@ abstract class MinkWrapper extends BaseTestCase
      */
     public function type($sSelector, $sText)
     {
-        try {
-            $this->getElementLazy($sSelector)->setValue($sText);
-        } catch (ElementException $e) {
-            sleep(1);
-            $this->getElementLazy($sSelector)->setValue($sText);
-        }
+        $this->getElementLazy($sSelector)->setValue($sText);
     }
 
     /**
