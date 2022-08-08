@@ -800,9 +800,10 @@ abstract class UnitTestCase extends BaseTestCase
         \OxidEsales\Eshop\Core\Registry::set($class, null);
 
         if ($extensions[strtolower($class)]) {
-            $extension = $extensions[strtolower($class)] . '&' . $extension;
+            $extensions[strtolower($class)][] = $extension;
+        } else {
+            $extensions[strtolower($class)] = [$extension];
         }
-        $extensions[strtolower($class)] = $extension;
         $this->getModuleVariablesLocator()->setModuleVariable('aModules', $extensions);
     }
 
