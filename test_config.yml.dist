@@ -4,7 +4,7 @@ mandatory_parameters:
     shop_path: 'source'
 
     # Path to eShop tests
-    shop_tests_path: 'tests'
+    shop_tests_path: 'traditional_tests'
 
     # When testing installed modules, specify the module id within shop. 
     # Multiple module ids can be specified separated by comma: 'module1_id,module2_id,module3_id'.
