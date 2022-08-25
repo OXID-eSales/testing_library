@@ -53,13 +53,8 @@
     ],
     "extra": {
         "incenteev-parameters": {
-            "env-map": {
-                "module_ids": "MODULE_IDS",
-                "shop_path": "SHOP_PATH",
-                "shop_tests_path": "SHOP_TESTS_PATH"
-            },
             "file": "test_config.yml",
-            "parameter-key": "mandatory_parameters"
+            "dist-file": "test_config.yml.dist"
         }
     },
     "scripts": {
