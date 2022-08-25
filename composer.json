@@ -51,18 +51,12 @@
         "bin/runtests-coverage",
         "bin/runtests-selenium"
     ],
-    "extra": {
-        "incenteev-parameters": {
-            "file": "test_config.yml",
-            "dist-file": "test_config.yml.dist"
-        }
-    },
     "scripts": {
         "post-install-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+            "php -r \"copy('test_config.yml.dist', 'test_config.yml');\""
         ],
         "post-update-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+            "php -r \"copy('test_config.yml.dist', 'test_config.yml');\""
         ]
     }
 }
