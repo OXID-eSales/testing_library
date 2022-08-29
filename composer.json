@@ -21,7 +21,7 @@
         "codeception/module-webdriver": "^1.1",
         "incenteev/composer-parameter-handler": "^2.1.4",
         "mikey179/vfsstream": "~1.6.8",
-        "oxid-esales/codeception-modules": "^v2.0.0",
+        "oxid-esales/codeception-modules": "dev-b-7.0.x",
         "oxid-esales/codeception-page-objects": "dev-b-7.0.x",
         "oxid-esales/developer-tools": "dev-b-7.0.x",
         "oxid-esales/mink-selenium-driver": "~v1.1.2",
