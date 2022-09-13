@@ -31,28 +31,28 @@ final class TestSqlPathProviderTest extends TestCase
         $this->assertSame($resultPath, $datPath);
     }
 
-    public function providerChecksForCorrectPath()
+    public function providerChecksForCorrectPath(): array
     {
         return [
             [
-                '/var/www/oxideshop/tests/Acceptance/Admin',
+                '/var/www/vendor/oxid-esales/tests-deprecated-ee/Acceptance/Admin',
                 EditionSelector::ENTERPRISE,
-                '/var/www/oxideshop/vendor/oxid-esales/oxideshop-ee/Tests/Acceptance/Admin/testSql'
+                '/var/www/vendor/oxid-esales/tests-deprecated-ee/Acceptance/Admin/testSql'
             ],
             [
-                '/var/www/oxideshop/source/Edition/Enterprise/Tests/Acceptance/Admin',
+                '/var/www/vendor/oxid-esales/tests-deprecated-ee/Acceptance/Frontend',
                 EditionSelector::ENTERPRISE,
-                '/var/www/oxideshop/source/Edition/Enterprise/Tests/Acceptance/Admin/testSql'
+                '/var/www/vendor/oxid-esales/tests-deprecated-ee/Acceptance/Frontend/testSql'
             ],
             [
-                '/var/www/oxideshop/tests/Acceptance/Admin',
+                '/var/www/vendor/oxid-esales/tests-deprecated-ce/Acceptance/Admin',
                 EditionSelector::COMMUNITY,
-                '/var/www/oxideshop/tests/Acceptance/Admin/testSql'
+                '/var/www/vendor/oxid-esales/tests-deprecated-ce/Acceptance/Admin/testSql'
             ],
             [
-                '/var/www/oxideshop/tests/Acceptance/Admin',
+                '/var/www/vendor/oxid-esales/tests-deprecated-pe/Acceptance/Admin',
                 EditionSelector::PROFESSIONAL,
-                '/var/www/oxideshop/tests/Acceptance/Admin/testSql'
+                '/var/www/vendor/oxid-esales/tests-deprecated-pe/Acceptance/Admin/testSql'
             ],
         ];
     }

@@ -86,14 +86,14 @@ class TestSqlPathProvider
      */
     protected function updatePathToTestSql($pathToTestSql)
     {
-        $pathParts = explode(static::TESTS_DIRECTORY . '/' . static::ACCEPTANCE_DIRECTORY, $pathToTestSql);
+        $pathParts = explode('/' . static::ACCEPTANCE_DIRECTORY, $pathToTestSql);
         if (count($pathParts) > 1) {
             /** @var Utilities $utilities */
-            $utilities = Registry::get(Utilities::class);
-            $testDirectoryName = $pathParts[count($pathParts) - 1];
+            $testDirectoryName = $pathParts[(int)count($pathParts) - 1];
             $pathToEditionTestDirectory = Path::join(
-                $utilities->getRootDirectory(),
-                ucfirst(static::TESTS_DIRECTORY),
+                (new Facts())->getVendorPath(),
+                Facts::COMPOSER_VENDOR_OXID_ESALES,
+                'tests-deprecated-ee',
                 ucfirst(static::ACCEPTANCE_DIRECTORY),
                 $testDirectoryName
             );
