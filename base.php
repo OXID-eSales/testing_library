@@ -7,6 +7,7 @@ chdir(__DIR__);
 /** @deprecated do not use this constant. Use normal class autoloading instead. */
 define('TEST_LIBRARY_PATH', __DIR__ .'/library/');
 define('TEST_LIBRARY_HELPERS_PATH', TEST_LIBRARY_PATH .'helpers/');
+define('ACTIVE_THEME', getenv('ACTIVE_THEME') ? getenv('ACTIVE_THEME') : 'twig');
 
 $vendorDirectory = __DIR__ . "/../../../vendor/";
 if (!file_exists($vendorDirectory)) {

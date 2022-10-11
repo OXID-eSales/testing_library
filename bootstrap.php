@@ -12,7 +12,6 @@ require_once TEST_LIBRARY_PATH .'Deprecated.php';
 \OxidEsales\TestingLibrary\TestConfig::prepareUnifiedNamespaceClasses();
 
 define('OXID_PHP_UNIT', true);
-define('ACTIVE_THEME', getenv('ACTIVE_THEME') ? getenv('ACTIVE_THEME') : 'twig');
 $sTestFilePath = strtolower(implode(",", $_SERVER['argv']));
 $sTestType = 'unit';
 foreach (array('acceptance', 'selenium', 'javascript') as $search) {
