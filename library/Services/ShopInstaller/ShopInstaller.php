@@ -78,7 +78,7 @@ class ShopInstaller implements ShopServiceInterface
 
         /** @var \OxidEsales\Eshop\Core\Theme $oTheme */
         $oTheme = oxNew(\OxidEsales\Eshop\Core\Theme::class);
-        $oTheme->load("twig");
+        $oTheme->load(ACTIVE_THEME);
         $oTheme->activate();
 
         $config = $this->getShopConfig();
