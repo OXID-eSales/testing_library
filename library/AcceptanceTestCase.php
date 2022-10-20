@@ -40,7 +40,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
         "header" => "header",
         "edit" => "basefrm/edit",
         "list" => "basefrm/list",
-        "navigation" => "navigationfrm/adminnav",
+        "navigationfrm" => "navigationfrm/adminnav",
         "adminnav" => "navigationfrm/adminnav",
         "dynexport_main" => "basefrm/dynexport_main",
         "dynexport_do" => "basefrm/dynexport_do",
