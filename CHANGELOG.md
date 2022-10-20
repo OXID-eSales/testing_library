@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Updated Codeception to v5
+- Use renamed navigation frame as navigationfrm
 
 ### Removed
 - PHP v7 support
