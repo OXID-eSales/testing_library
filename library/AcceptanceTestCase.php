@@ -564,8 +564,8 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $this->select("lng", "$language");
         $this->select("prf", "Standard");
         $this->clickAndWait("//input[@type='submit']");
-        $this->waitForFrameToLoad('navigation', 1000);
-        $this->frame("navigation");
+        $this->waitForFrameToLoad('navigationfrm', 1000);
+        $this->frame("navigationfrm");
 
         if ($this->getTestConfig()->isSubShop() && !$forceMainShop) {
             $this->selectAndWaitFrame("selectshop", "label=subshop", "basefrm");
@@ -620,7 +620,7 @@ abstract class AcceptanceTestCase extends MinkWrapper
         $this->select("profile", "label=Standard");
         $this->clickAndWait("//input[@type='submit']");
 
-        $this->frame("navigation");
+        $this->frame("navigationfrm");
 
         $this->selectAndWaitFrame("selectshop", "label=subshop", "basefrm");
 
