@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Run tested module activations in a separate processes
-- Use renamed navigation frame as navigationfrm
 
 ## [v8.2.0] - 2022-07-19
 
