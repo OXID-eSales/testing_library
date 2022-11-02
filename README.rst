@@ -4,6 +4,8 @@ OXID eShop Testing Library
 .. image:: https://img.shields.io/packagist/v/oxid-esales/testing-library.svg?maxAge=3600
     :target: https://packagist.org/packages/oxid-esales/testing-library
 
+Warning! Testing library is deprecated. Please use native PHPUnit for testing.
+
 The OXID eShop testing library can be used to test OXID eShop with
 existing or new Unit, Integration, Mink or QUnit tests. Furthermore, it
 can also be very helpful to developers who create a module for the OXID
