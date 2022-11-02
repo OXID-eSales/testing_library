@@ -8,6 +8,7 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "phpunit/phpunit": "^8.5.14",
+        "phpspec/prophecy": "^v1.15",
         "pdepend/pdepend": "^2.6",
         "mikey179/vfsstream": "~1.6.8",
         "behat/mink": "~1.5.0",
