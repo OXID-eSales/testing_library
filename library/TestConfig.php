@@ -187,12 +187,12 @@ class TestConfig
 
     public function getEditionTestsPath(string $edition): string
     {
-        $testsPath = $this->getShopTestsPath();
-
-        if ($edition === EditionSelector::PROFESSIONAL) {
-            $testsPath = $this->getVendorDirectory() . '/oxid-esales/tests-deprecated-pe/';
-        } elseif ($edition === EditionSelector::ENTERPRISE) {
+        if ($edition === EditionSelector::ENTERPRISE) {
             $testsPath = $this->getVendorDirectory() . '/oxid-esales/tests-deprecated-ee/';
+        } elseif ($edition === EditionSelector::PROFESSIONAL) {
+            $testsPath = $this->getVendorDirectory() . '/oxid-esales/tests-deprecated-pe/';
+        } else {
+            $testsPath = $this->getVendorDirectory() . '/oxid-esales/tests-deprecated-ce/';
         }
 
         return $testsPath;
@@ -465,7 +465,7 @@ class TestConfig
                     }
                 }
             }
-            $this->currentTestSuite = $currentSuite ? $currentSuite : $this->getShopTestsPath();
+            $this->currentTestSuite = $currentSuite ?: $this->getShopTestsPath();
         }
 
         return $this->currentTestSuite;
