@@ -158,16 +158,18 @@ AllTestsUnit or AllTestsSelenium respectively to run all tests.
 Run with PHPStorm
 ~~~~~~~~~~~~~~~~~
 
-You need to setup path to bootstrap in order to run tests with PHPStorm.
+You need to setup path to bootstrap and configuration file in order to run tests with PHPStorm.
 
 1. Open PHPStorm.
 2. Open Run/Debug configurations window.
 3. Press on configuration icon (wrench) right after the "Use alternative
    configuration file" input.
-4. New PHPUnit window pops up. Check "Default bootstrap file" checkbox
-   and choose path to bootstrap.
+4. New PHPUnit window pops up. Check "Default bootstrap file" and "Default configuration file" checkbox
+   and choose paths to bootstrap and configuration file.
    Path to bootstrap:
    {source}/vendor/oxid-esales/testing-library/bootstrap.php
+   Path to the configuration file:
+   {source}/vendor/oxid-esales/testing-library/phpunit.xml
 
 Configuration
 -------------
