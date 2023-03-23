@@ -140,13 +140,16 @@ abstract class UnitTestCase extends BaseTestCase
         $this->setShopId(null);
         $this->setAdminMode(false);
 
+//
+//            ContainerFactory::getInstance()
+//                ->getContainer()
+//                ->get(ModuleCacheServiceBridgeInterface::class)
+//                ->invalidateAll();
 
-            ContainerFactory::getInstance()
-                ->getContainer()
-                ->get(ModuleCacheServiceBridgeInterface::class)
-                ->invalidateAll();
+        $directory = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sCompileDir');
+        system("rm -f $directory/modules/*");
 
-        //ModuleVariablesLocator::resetModuleVariables();
+        ModuleVariablesLocator::resetModuleVariables();
     }
 
     /**
