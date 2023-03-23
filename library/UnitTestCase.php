@@ -7,7 +7,6 @@
 
 namespace OxidEsales\TestingLibrary;
 
-use OxidEsales\Eshop\Core\Registry;
 use Exception;
 use modOXID;
 use modOxUtilsDate;
@@ -15,10 +14,13 @@ use oxDatabaseHelper;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\FileCache;
 use OxidEsales\Eshop\Core\Module\ModuleVariablesLocator;
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ShopIdCalculator;
 use OxidEsales\Eshop\Core\SubShopSpecificFileCache;
 use OxidEsales\Eshop\Core\UtilsObject;
 use OxidEsales\EshopCommunity\Core\Database\Adapter\DatabaseInterface;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Module\Cache\ModuleCacheServiceBridgeInterface;
 use OxidEsales\TestingLibrary\Helper\ProjectConfigurationHelper;
 use OxidEsales\TestingLibrary\Helper\SessionHelper;
 use OxidEsales\TestingLibrary\Services\Library\DatabaseRestorer\DatabaseRestorerFactory;
@@ -34,7 +36,6 @@ require_once TEST_LIBRARY_HELPERS_PATH . 'modOxUtilsDate.php';
 
 abstract class UnitTestCase extends BaseTestCase
 {
-
     /** @var array Buffer variable of queries for feature testing */
     protected $dbQueryBuffer = array();
     /** @var bool Registry cache. */
@@ -192,6 +193,11 @@ abstract class UnitTestCase extends BaseTestCase
             $this->getShopStateBackup()->resetRegistry();
 
             ModuleVariablesLocator::resetModuleVariables();
+
+            ContainerFactory::getInstance()
+                ->getContainer()
+                ->get(ModuleCacheServiceBridgeInterface::class)
+                ->invalidateAll();
             SessionHelper::resetStaticPropertiesToDefaults();
 
             parent::tearDown();
