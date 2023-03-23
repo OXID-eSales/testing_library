@@ -147,7 +147,7 @@ abstract class UnitTestCase extends BaseTestCase
 //                ->invalidateAll();
 
         $directory = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sCompileDir');
-        system("rm -f $directory/modules/*");
+        system("rm -rf $directory/modules/*");
 
         ModuleVariablesLocator::resetModuleVariables();
     }
