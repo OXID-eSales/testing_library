@@ -194,10 +194,10 @@ abstract class UnitTestCase extends BaseTestCase
 
             ModuleVariablesLocator::resetModuleVariables();
 
-            ContainerFactory::getInstance()
-                ->getContainer()
-                ->get(ModuleCacheServiceBridgeInterface::class)
-                ->invalidateAll();
+//            ContainerFactory::getInstance()
+//                ->getContainer()
+//                ->get(ModuleCacheServiceBridgeInterface::class)
+//                ->invalidateAll();
             SessionHelper::resetStaticPropertiesToDefaults();
 
             parent::tearDown();
