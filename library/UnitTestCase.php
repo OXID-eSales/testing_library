@@ -139,7 +139,14 @@ abstract class UnitTestCase extends BaseTestCase
 
         $this->setShopId(null);
         $this->setAdminMode(false);
-        ModuleVariablesLocator::resetModuleVariables();
+
+
+            ContainerFactory::getInstance()
+                ->getContainer()
+                ->get(ModuleCacheServiceBridgeInterface::class)
+                ->invalidateAll();
+
+        //ModuleVariablesLocator::resetModuleVariables();
     }
 
     /**
@@ -194,10 +201,6 @@ abstract class UnitTestCase extends BaseTestCase
 
             ModuleVariablesLocator::resetModuleVariables();
 
-//            ContainerFactory::getInstance()
-//                ->getContainer()
-//                ->get(ModuleCacheServiceBridgeInterface::class)
-//                ->invalidateAll();
             SessionHelper::resetStaticPropertiesToDefaults();
 
             parent::tearDown();
