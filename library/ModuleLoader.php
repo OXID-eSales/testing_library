@@ -16,7 +16,7 @@ use OxidEsales\Facts\Facts;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Symfony\Component\Process\Process;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ModuleLoader
 {

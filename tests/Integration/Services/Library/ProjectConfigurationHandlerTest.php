@@ -9,7 +9,6 @@ use OxidEsales\TestingLibrary\Helper\ProjectConfigurationHelperInterface;
 use OxidEsales\TestingLibrary\Services\Library\Exception\FileNotFoundException;
 use OxidEsales\TestingLibrary\Services\Library\ProjectConfigurationHandler;
 use PHPUnit\Framework\TestCase;
-use Webmozart\PathUtil\Path;
 
 class ProjectConfigurationHandlerTest extends TestCase
 {
