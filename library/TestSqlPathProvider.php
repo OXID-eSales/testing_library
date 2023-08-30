@@ -11,7 +11,7 @@ use OxidEsales\EshopCommunity\Core\Registry;
 use OxidEsales\EshopCommunity\Setup\Utilities;
 use OxidEsales\Facts\Edition\EditionSelector;
 use OxidEsales\Facts\Facts;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Class responsible for providing path to testData directory.

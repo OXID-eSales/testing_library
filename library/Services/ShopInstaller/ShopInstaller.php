@@ -21,7 +21,7 @@ use OxidEsales\TestingLibrary\Services\Library\ShopServiceInterface;
 use OxidEsales\TestingLibrary\TestConfig;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ShopInstaller implements ShopServiceInterface
 {
