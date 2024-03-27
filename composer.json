@@ -17,7 +17,7 @@
         "incenteev/composer-parameter-handler": "^2.1.4",
         "mikey179/vfsstream": "^1.6.8",
         "oxid-esales/developer-tools": "*",
-        "oxid-esales/mink-selenium-driver": "dev-b-7.1.x",
+        "oxid-esales/mink-selenium-driver": "dev-b-7.2.x",
         "oxid-esales/oxideshop-facts": "*",
         "oxid-esales/oxideshop-unified-namespace-generator": "*",
         "pdepend/pdepend": "^2.7",
